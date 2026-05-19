@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { main } from './gemini.js';
+import { main } from './onyx.js';
 import {
   debugLogger,
   SessionEndReason,

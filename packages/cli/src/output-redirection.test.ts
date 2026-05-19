@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { initializeOutputListenersAndFlush } from './gemini.js';
+import { initializeOutputListenersAndFlush } from './onyx.js';
 import { coreEvents, CoreEvent, type Config } from '@onyx/core';
 
 // Mock core dependencies

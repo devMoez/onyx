@@ -140,7 +140,7 @@ async function run() {
   } else {
     // --- Heavy Child Process ---
     // Now we can safely import everything.
-    const { main } = await import('./src/gemini.js');
+    const { main } = await import('./src/onyx.js');
     const { FatalError, writeToStderr } = await import('@onyx/core');
     const { runExitCleanup } = await import('./src/utils/cleanup.js');
 

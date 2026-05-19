@@ -21,7 +21,7 @@ import {
   startInteractiveUI,
   getNodeMemoryArgs,
   resolveSessionId,
-} from './gemini.js';
+} from './onyx.js';
 import {
   loadCliConfig,
   parseArguments,
@@ -390,7 +390,7 @@ describe('initializeOutputListenersAndFlush', () => {
 
   it('should flush backlogs and setup listeners if no listeners exist', async () => {
     const { coreEvents } = await import('@onyx/core');
-    const { initializeOutputListenersAndFlush } = await import('./gemini.js');
+    const { initializeOutputListenersAndFlush } = await import('./onyx.js');
 
     // Mock listenerCount to return 0
     vi.spyOn(coreEvents, 'listenerCount').mockReturnValue(0);

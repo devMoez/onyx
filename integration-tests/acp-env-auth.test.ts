@@ -53,7 +53,7 @@ describe.skip('ACP Environment and Auth', () => {
         'GEMINI_API_KEY=test-key-from-env\n',
       );
 
-      const bundlePath = join(import.meta.dirname, '..', 'bundle/gemini.js');
+      const bundlePath = join(import.meta.dirname, '..', 'bundle/onyx.js');
 
       child = spawn('node', [bundlePath, '--acp'], {
         cwd: rig.homeDir!,
@@ -118,36 +118,9 @@ describe.skip('ACP Environment and Auth', () => {
     async () => {
       rig.setup('acp-auth-failure');
 
-      const bundlePath = join(import.meta.dirname, '..', 'bundle/gemini.js');
+      const bundlePath = join(import.meta.dirname, '..', 'bundle/onyx.js');
 
       child = spawn('node', [bundlePath, '--acp'], {
-        cwd: rig.homeDir!,
-        stdio: ['pipe', 'pipe', 'inherit'],
-        env: {
-          ...process.env,
-          GEMINI_CLI_HOME: rig.homeDir!,
-          GEMINI_API_KEY: undefined,
-          VERBOSE: 'true',
-        },
-      });
-
-      const input = Writable.toWeb(child.stdin!);
-      const output = Readable.toWeb(
-        child.stdout!,
-      ) as ReadableStream<Uint8Array>;
-      const testClient = new MockClient();
-      const stream = acp.ndJsonStream(input, output);
-      const connection = new acp.ClientSideConnection(() => testClient, stream);
-
-      await connection.initialize({
-        protocolVersion: acp.PROTOCOL_VERSION,
-        clientCapabilities: {
-          fs: { readTextFile: false, writeTextFile: false },
-        },
-      });
-
-      await expect(
-        connection.newSession({
           cwd: resolve(rig.testDir!),
           mcpServers: [],
         }),
