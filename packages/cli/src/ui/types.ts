@@ -464,6 +464,7 @@ export enum MessageType {
   TOOL_STATS = 'tool_stats',
   QUIT = 'quit',
   GEMINI = 'gemini',
+  ONYX = 'onyx',
   COMPRESSION = 'compression',
   EXPORT_SESSION = 'export_session',
   EXTENSIONS_LIST = 'extensions_list',
