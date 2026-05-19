@@ -42,7 +42,7 @@ import {
 } from './text-buffer.js';
 import { cpLen } from '../../utils/textUtils.js';
 import { type Key } from '../../hooks/useKeypress.js';
-import { escapePath } from '@google/gemini-cli-core';
+import { escapePath } from '@onyx/core';
 
 const defaultVisualLayout: VisualLayout = {
   visualLines: [''],

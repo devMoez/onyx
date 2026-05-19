@@ -6,10 +6,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TestRig } from './test-helper.js';
-import {
-  WhisperModelManager,
-  WhisperTranscriptionProvider,
-} from '@google/gemini-cli-core';
+import { WhisperModelManager, WhisperTranscriptionProvider } from '@onyx/core';
 import * as fs from 'node:fs';
 import commandExists from 'command-exists';
 

@@ -1,4 +1,4 @@
-# Gemini CLI Core (`@google/gemini-cli-core`)
+# Onyx CLI Core (`@onyx/core`)
 
 Backend logic for Gemini CLI: API orchestration, prompt construction, tool
 execution, and agent management.
@@ -42,6 +42,5 @@ execution, and agent management.
 
 ## Testing
 
-- Run tests: `npm test -w @google/gemini-cli-core`
-- Run a specific test:
-  `npm test -w @google/gemini-cli-core -- src/path/to/file.test.ts`
+- Run tests: `npm test -w @onyx/core`
+- Run a specific test: `npm test -w @onyx/core -- src/path/to/file.test.ts`

@@ -9,11 +9,10 @@ import { getInstallationInfo, PackageManager } from './installationInfo.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as childProcess from 'node:child_process';
-import { isGitRepository, debugLogger } from '@google/gemini-cli-core';
+import { isGitRepository, debugLogger } from '@onyx/core';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     isGitRepository: vi.fn(),

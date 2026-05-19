@@ -5,11 +5,7 @@
  */
 
 import type { CommandModule } from 'yargs';
-import {
-  debugLogger,
-  type SkillDefinition,
-  getErrorMessage,
-} from '@google/gemini-cli-core';
+import { debugLogger, type SkillDefinition, getErrorMessage } from '@onyx/core';
 import { exitCli } from '../utils.js';
 import { installSkill } from '../../utils/skillUtils.js';
 import chalk from 'chalk';

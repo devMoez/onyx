@@ -10,7 +10,7 @@ import {
   isHeadlessMode,
   loadTrustedFolders as loadCoreTrustedFolders,
   type LoadedTrustedFolders,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 import type { Settings } from './settings.js';
 
 export {
@@ -18,7 +18,7 @@ export {
   isTrustLevel,
   resetTrustedFoldersForTesting,
   saveTrustedFolders,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 
 export type {
   TrustRule,
@@ -26,7 +26,7 @@ export type {
   TrustedFoldersFile,
   TrustResult,
   LoadedTrustedFolders,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 
 /** Is folder trust feature enabled per the current applied settings */
 export function isFolderTrustEnabled(settings: Settings): boolean {

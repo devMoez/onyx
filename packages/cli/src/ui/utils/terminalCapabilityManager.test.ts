@@ -7,10 +7,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TerminalCapabilityManager } from './terminalCapabilityManager.js';
 import { EventEmitter } from 'node:events';
-import {
-  enableKittyKeyboardProtocol,
-  enableModifyOtherKeys,
-} from '@google/gemini-cli-core';
+import { enableKittyKeyboardProtocol, enableModifyOtherKeys } from '@onyx/core';
 import * as fs from 'node:fs';
 
 // Mock fs
@@ -19,7 +16,7 @@ vi.mock('node:fs', () => ({
 }));
 
 // Mock core
-vi.mock('@google/gemini-cli-core', () => ({
+vi.mock('@onyx/core', () => ({
   debugLogger: {
     log: vi.fn(),
     warn: vi.fn(),

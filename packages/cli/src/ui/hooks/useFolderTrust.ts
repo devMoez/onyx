@@ -20,7 +20,7 @@ import {
   isHeadlessMode,
   FolderTrustDiscoveryService,
   type FolderDiscoveryResults,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 import { runExitCleanup } from '../../utils/cleanup.js';
 
 export const useFolderTrust = (
@@ -105,7 +105,7 @@ export const useFolderTrust = (
       } catch {
         coreEvents.emitFeedback(
           'error',
-          'Failed to save trust settings. Exiting Gemini CLI.',
+          'Failed to save trust settings. Exiting Onyx CLI.',
         );
         setTimeout(async () => {
           await runExitCleanup();

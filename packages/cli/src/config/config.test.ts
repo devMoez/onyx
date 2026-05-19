@@ -20,14 +20,14 @@ import {
   type MCPServerConfig,
   type GeminiCLIExtension,
   Storage,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 import { loadCliConfig, parseArguments, type CliArgs } from './config.js';
 import {
   type Settings,
   type MergedSettings,
   createTestMergedSettings,
 } from './settings.js';
-import * as ServerConfig from '@google/gemini-cli-core';
+import * as ServerConfig from '@onyx/core';
 
 import { isWorkspaceTrusted } from './trustedFolders.js';
 import { ExtensionManager } from './extension-manager.js';
@@ -97,10 +97,8 @@ vi.mock('read-package-up', () => ({
   ),
 }));
 
-vi.mock('@google/gemini-cli-core', async () => {
-  const actualServer = await vi.importActual<typeof ServerConfig>(
-    '@google/gemini-cli-core',
-  );
+vi.mock('@onyx/core', async () => {
+  const actualServer = await vi.importActual<typeof ServerConfig>('@onyx/core');
   return {
     ...actualServer,
     IdeClient: {

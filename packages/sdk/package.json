@@ -1,11 +1,11 @@
 {
-  "name": "@google/gemini-cli-sdk",
-  "version": "0.44.0-nightly.20260512.g022e8baef",
-  "description": "Gemini CLI SDK",
+  "name": "@onyx/sdk",
+  "version": "1.0.0-onyx.1",
+  "description": "Onyx CLI SDK",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/google-gemini/gemini-cli.git"
+    "url": "git+https://github.com/devMoez/onyx.git"
   },
   "type": "module",
   "main": "dist/index.js",
@@ -22,7 +22,7 @@
     "dist"
   ],
   "dependencies": {
-    "@google/gemini-cli-core": "file:../core",
+    "@onyx/core": "file:../core",
     "zod": "^3.23.8",
     "zod-to-json-schema": "^3.23.1"
   },

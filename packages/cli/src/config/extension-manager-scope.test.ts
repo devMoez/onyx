@@ -10,17 +10,13 @@ import * as path from 'node:path';
 import * as os from 'node:os';
 import { ExtensionManager } from './extension-manager.js';
 import { createTestMergedSettings } from './settings.js';
-import { cleanupTmpDir } from '@google/gemini-cli-test-utils';
-import {
-  loadAgentsFromDirectory,
-  loadSkillsFromDir,
-} from '@google/gemini-cli-core';
+import { cleanupTmpDir } from '@onyx/test-utils';
+import { loadAgentsFromDirectory, loadSkillsFromDir } from '@onyx/core';
 
 let currentTempHome = '';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     homedir: () => currentTempHome,

@@ -26,11 +26,7 @@ import { loadConfig, loadEnvironment, setTargetDir } from '../config/config.js';
 import { loadSettings } from '../config/settings.js';
 import { loadExtensions } from '../config/extension.js';
 import { commandRegistry } from '../commands/command-registry.js';
-import {
-  debugLogger,
-  SimpleExtensionLoader,
-  GitService,
-} from '@google/gemini-cli-core';
+import { debugLogger, SimpleExtensionLoader, GitService } from '@onyx/core';
 import type { Command, CommandArgument } from '../commands/types.js';
 
 type CommandResponse = {

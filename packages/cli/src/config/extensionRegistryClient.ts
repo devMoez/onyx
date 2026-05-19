@@ -5,11 +5,7 @@
  */
 
 import * as fs from 'node:fs/promises';
-import {
-  fetchWithTimeout,
-  resolveToRealPath,
-  isPrivateIp,
-} from '@google/gemini-cli-core';
+import { fetchWithTimeout, resolveToRealPath, isPrivateIp } from '@onyx/core';
 import { AsyncFzf } from 'fzf';
 
 export interface RegistryExtension {

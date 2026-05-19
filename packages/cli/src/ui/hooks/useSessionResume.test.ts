@@ -14,7 +14,7 @@ import type {
   ConversationRecord,
   MessageRecord,
   HistoryTurn,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 import type { UseHistoryManagerReturn } from './useHistoryManager.js';
 import type { HistoryItemWithoutId } from '../types.js';
 

@@ -15,7 +15,7 @@ import {
   checkExhaustive,
   AuthType,
   UserAccountManager,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 import { ConsoleSummaryDisplay } from './ConsoleSummaryDisplay.js';
 import process from 'node:process';
 import os from 'node:os';

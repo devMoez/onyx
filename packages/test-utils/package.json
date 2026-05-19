@@ -1,6 +1,6 @@
 {
-  "name": "@google/gemini-cli-test-utils",
-  "version": "0.44.0-nightly.20260512.g022e8baef",
+  "name": "@onyx/test-utils",
+  "version": "1.0.0-onyx.1",
   "private": true,
   "main": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@google/gemini-cli-core": "file:../core",
+    "@onyx/core": "file:../core",
     "@lydell/node-pty": "1.1.0",
     "asciichart": "^1.5.25",
     "strip-ansi": "^7.1.2",

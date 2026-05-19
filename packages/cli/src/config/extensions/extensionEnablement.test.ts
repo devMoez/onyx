@@ -14,11 +14,7 @@ import { ExtensionStorage } from './storage.js';
 
 vi.mock('./storage.js');
 
-import {
-  coreEvents,
-  GEMINI_DIR,
-  type GeminiCLIExtension,
-} from '@google/gemini-cli-core';
+import { coreEvents, GEMINI_DIR, type GeminiCLIExtension } from '@onyx/core';
 
 vi.mock('node:os', () => ({
   homedir: vi.fn().mockReturnValue('/virtual-home'),

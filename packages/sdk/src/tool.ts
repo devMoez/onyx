@@ -14,7 +14,7 @@ import {
   type ExecuteOptions,
   Kind,
   type MessageBus,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 import type { SessionContext } from './types.js';
 
 export { z };

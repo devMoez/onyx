@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  REFERENCE_CONTENT_START,
-  REFERENCE_CONTENT_END,
-} from '@google/gemini-cli-core';
+import { REFERENCE_CONTENT_START, REFERENCE_CONTENT_END } from '@onyx/core';
 
 export const formatBytes = (bytes: number): string => {
   const gb = bytes / (1024 * 1024 * 1024);

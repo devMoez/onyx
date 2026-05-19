@@ -13,16 +13,15 @@ import {
   type Config,
   type PolicyUpdateConfirmationRequest,
   PolicyIntegrityManager,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 
 const { mockAcceptIntegrity } = vi.hoisted(() => ({
   mockAcceptIntegrity: vi.fn(),
 }));
 
 // Mock PolicyIntegrityManager
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const original =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const original = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...original,
     PolicyIntegrityManager: vi.fn().mockImplementation(() => ({

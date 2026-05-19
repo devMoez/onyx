@@ -7,11 +7,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { cleanupExpiredSessions } from './sessionCleanup.js';
 import type { Settings } from '../config/settings.js';
-import {
-  SESSION_FILE_PREFIX,
-  type Config,
-  debugLogger,
-} from '@google/gemini-cli-core';
+import { SESSION_FILE_PREFIX, type Config, debugLogger } from '@onyx/core';
 
 // Create a mock config for integration testing
 function createTestConfig(): Config {

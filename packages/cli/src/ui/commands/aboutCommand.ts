@@ -16,7 +16,7 @@ import {
   UserAccountManager,
   debugLogger,
   getVersion,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 
 export const aboutCommand: SlashCommand = {
   name: 'about',

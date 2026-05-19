@@ -90,36 +90,29 @@ if (!argv.s) {
   execSync('npm run build --workspaces', { stdio: 'inherit' });
 }
 
-console.log('packing @google/gemini-cli ...');
+console.log('packing @onyx/cli ...');
 const cliPackageDir = join('packages', 'cli');
-rmSync(join(cliPackageDir, 'dist', 'google-gemini-cli-*.tgz'), { force: true });
-execSync(
-  `npm pack -w @google/gemini-cli --pack-destination ./packages/cli/dist`,
-  {
-    stdio: 'ignore',
-  },
-);
+rmSync(join(cliPackageDir, 'dist', 'onyx-cli-*.tgz'), { force: true });
+execSync(`npm pack -w @onyx/cli --pack-destination ./packages/cli/dist`, {
+  stdio: 'ignore',
+});
 
-console.log('packing @google/gemini-cli-core ...');
+console.log('packing @onyx/core ...');
 const corePackageDir = join('packages', 'core');
-rmSync(join(corePackageDir, 'dist', 'google-gemini-cli-core-*.tgz'), {
+rmSync(join(corePackageDir, 'dist', 'onyx-core-*.tgz'), {
   force: true,
 });
-execSync(
-  `npm pack -w @google/gemini-cli-core --pack-destination ./packages/core/dist`,
-  { stdio: 'ignore' },
-);
+execSync(`npm pack -w @onyx/core --pack-destination ./packages/core/dist`, {
+  stdio: 'ignore',
+});
 
 const packageVersion = JSON.parse(
   readFileSync(join(process.cwd(), 'package.json'), 'utf-8'),
 ).version;
 
+chmodSync(join(cliPackageDir, 'dist', `onyx-cli-${packageVersion}.tgz`), 0o755);
 chmodSync(
-  join(cliPackageDir, 'dist', `google-gemini-cli-${packageVersion}.tgz`),
-  0o755,
-);
-chmodSync(
-  join(corePackageDir, 'dist', `google-gemini-cli-core-${packageVersion}.tgz`),
+  join(corePackageDir, 'dist', `onyx-core-${packageVersion}.tgz`),
   0o755,
 );
 

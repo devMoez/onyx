@@ -13,7 +13,7 @@ import os from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
-import { GEMINI_DIR } from '@google/gemini-cli-core';
+import { ONYX_DIR } from '@onyx/core';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,18 +27,18 @@ const projectHash = crypto
 // Returns the home directory, respecting GEMINI_CLI_HOME
 const homedir = () => process.env['GEMINI_CLI_HOME'] || os.homedir();
 
-// User-level .gemini directory in home
-const USER_GEMINI_DIR = path.join(homedir(), GEMINI_DIR);
-// Project-level .gemini directory in the workspace
-const WORKSPACE_GEMINI_DIR = path.join(projectRoot, GEMINI_DIR);
+// User-level .onyx directory in home
+const USER_ONYX_DIR = path.join(homedir(), ONYX_DIR);
+// Project-level .onyx directory in the workspace
+const WORKSPACE_ONYX_DIR = path.join(projectRoot, ONYX_DIR);
 
-// Telemetry artifacts are stored in a hashed directory under the user's ~/.gemini/tmp
-export const OTEL_DIR = path.join(USER_GEMINI_DIR, 'tmp', projectHash, 'otel');
+// Telemetry artifacts are stored in a hashed directory under the user's ~/.onyx/tmp
+export const OTEL_DIR = path.join(USER_ONYX_DIR, 'tmp', projectHash, 'otel');
 export const BIN_DIR = path.join(OTEL_DIR, 'bin');
 
-// Workspace settings remain in the project's .gemini directory
+// Workspace settings remain in the project's .onyx directory
 export const WORKSPACE_SETTINGS_FILE = path.join(
-  WORKSPACE_GEMINI_DIR,
+  WORKSPACE_ONYX_DIR,
   'settings.json',
 );
 

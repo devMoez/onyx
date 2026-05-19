@@ -6,11 +6,7 @@
 
 import { SettingScope } from '../config/settings.js';
 import type { SkillActionResult } from './skillSettings.js';
-import {
-  Storage,
-  loadSkillsFromDir,
-  type SkillDefinition,
-} from '@google/gemini-cli-core';
+import { Storage, loadSkillsFromDir, type SkillDefinition } from '@onyx/core';
 import { cloneFromGit } from '../config/extensions/github.js';
 import extract from 'extract-zip';
 import * as fs from 'node:fs/promises';

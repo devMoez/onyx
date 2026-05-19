@@ -8,11 +8,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { act } from 'react';
 import { renderHook } from '../../test-utils/render.js';
 import { useAuthCommand, validateAuthMethodWithSettings } from './useAuth.js';
-import {
-  AuthType,
-  type Config,
-  ProjectIdRequiredError,
-} from '@google/gemini-cli-core';
+import { AuthType, type Config, ProjectIdRequiredError } from '@onyx/core';
 import { AuthState } from '../types.js';
 import type { LoadedSettings } from '../../config/settings.js';
 
@@ -20,9 +16,8 @@ import type { LoadedSettings } from '../../config/settings.js';
 const mockLoadApiKey = vi.fn();
 const mockValidateAuthMethod = vi.fn();
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     loadApiKey: () => mockLoadApiKey(),

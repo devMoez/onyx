@@ -6,11 +6,7 @@
 
 import { useCallback, useSyncExternalStore } from 'react';
 import type { ConsoleMessageItem } from '../types.js';
-import {
-  coreEvents,
-  CoreEvent,
-  type ConsoleLogPayload,
-} from '@google/gemini-cli-core';
+import { coreEvents, CoreEvent, type ConsoleLogPayload } from '@onyx/core';
 
 export interface UseErrorCountReturn {
   errorCount: number;

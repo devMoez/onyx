@@ -14,16 +14,15 @@ import {
   debugLogger,
   TOOL_OUTPUTS_DIR,
   Storage,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 import type { Settings } from '../config/settings.js';
 import {
   cleanupExpiredSessions,
   cleanupToolOutputFiles,
 } from './sessionCleanup.js';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     debugLogger: {

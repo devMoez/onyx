@@ -5,7 +5,7 @@
  */
 
 /**
- * Gemini Scheduled Lifecycle Manager Script
+ * Onyx Scheduled Lifecycle Manager Script
  * @param {object} param0
  * @param {import('@octokit/rest').Octokit} param0.github
  * @param {import('@actions/github/lib/context').Context} param0.context

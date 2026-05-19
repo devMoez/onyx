@@ -14,11 +14,7 @@ import {
   type LoadableSettingScope,
   type LoadedSettings,
 } from '../../config/settings.js';
-import {
-  AuthType,
-  clearCachedCredentialFile,
-  type Config,
-} from '@google/gemini-cli-core';
+import { AuthType, clearCachedCredentialFile, type Config } from '@onyx/core';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { AuthState } from '../types.js';
 import { validateAuthMethodWithSettings } from './useAuth.js';
@@ -202,7 +198,7 @@ export function AuthDialog({
         alignItems="flex-start"
       >
         <Text color={theme.text.primary}>
-          Logging in with Google... Restarting Gemini CLI to continue.
+          Logging in with Google... Restarting Onyx CLI to continue.
         </Text>
       </Box>
     );
@@ -247,7 +243,7 @@ export function AuthDialog({
         </Box>
         <Box marginTop={1}>
           <Text color={theme.text.primary}>
-            Terms of Services and Privacy Notice for Gemini CLI
+            Terms of Services and Privacy Notice for Onyx CLI
           </Text>
         </Box>
         <Box marginTop={1}>

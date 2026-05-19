@@ -4,11 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  listMemoryFiles,
-  refreshMemory,
-  showMemory,
-} from '@google/gemini-cli-core';
+import { listMemoryFiles, refreshMemory, showMemory } from '@onyx/core';
 import type {
   Command,
   CommandContext,

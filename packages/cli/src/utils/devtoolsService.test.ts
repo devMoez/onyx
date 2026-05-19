@@ -5,7 +5,7 @@
  */
 
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import type { Config } from '@google/gemini-cli-core';
+import type { Config } from '@onyx/core';
 
 // --- Mocks (hoisted) ---
 
@@ -75,7 +75,7 @@ const mockOpenBrowserSecurely = vi.hoisted(() =>
   vi.fn(() => Promise.resolve()),
 );
 
-vi.mock('@google/gemini-cli-core', () => ({
+vi.mock('@onyx/core', () => ({
   debugLogger: {
     log: vi.fn(),
     debug: vi.fn(),

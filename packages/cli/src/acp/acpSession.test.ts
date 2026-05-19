@@ -26,7 +26,7 @@ import {
   InvalidStreamError,
   GeminiEventType,
   type ServerGeminiStreamEvent,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 import type { LoadedSettings } from '../config/settings.js';
 import { type Part, FinishReason } from '@google/genai';
 import * as fs from 'node:fs/promises';
@@ -43,10 +43,8 @@ vi.mock('node:path', async (importOriginal) => {
 });
 
 vi.mock(
-  '@google/gemini-cli-core',
-  async (
-    importOriginal: () => Promise<typeof import('@google/gemini-cli-core')>,
-  ) => {
+  '@onyx/core',
+  async (importOriginal: () => Promise<typeof import('@onyx/core')>) => {
     const actual = await importOriginal();
     return {
       ...actual,
@@ -566,9 +564,7 @@ describe('Session', () => {
   });
 
   it('should send sessionUpdate when approval mode changes', async () => {
-    const { coreEvents, CoreEvent, ApprovalMode } = await import(
-      '@google/gemini-cli-core'
-    );
+    const { coreEvents, CoreEvent, ApprovalMode } = await import('@onyx/core');
 
     coreEvents.emit(CoreEvent.ApprovalModeChanged, {
       sessionId: 'session-1',

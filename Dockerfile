@@ -41,7 +41,7 @@ RUN HUSKY=0 npm run build && \
 # ---- Stage 2: Runtime ----
 FROM docker.io/library/node:20-slim
 
-ARG SANDBOX_NAME="gemini-cli-sandbox"
+ARG SANDBOX_NAME="onyx-cli-sandbox"
 ARG CLI_VERSION_ARG
 ENV SANDBOX="$SANDBOX_NAME"
 ENV CLI_VERSION=$CLI_VERSION_ARG
@@ -80,15 +80,15 @@ ENV PATH=$PATH:/usr/local/share/npm-global/bin
 # switch to non-root user node
 USER node
 
-# install gemini-cli and clean up
-COPY --chown=node:node packages/cli/dist/google-gemini-cli-*.tgz /tmp/gemini-cli.tgz
-COPY --chown=node:node packages/core/dist/google-gemini-cli-core-*.tgz /tmp/gemini-core.tgz
-RUN npm install -g /tmp/gemini-core.tgz \
-  && npm install -g /tmp/gemini-cli.tgz \
-  && node -e "const fs=require('node:fs'); JSON.parse(fs.readFileSync('/usr/local/share/npm-global/lib/node_modules/@google/gemini-cli/package.json','utf8')); JSON.parse(fs.readFileSync('/usr/local/share/npm-global/lib/node_modules/@google/gemini-cli-core/package.json','utf8'));" \
-  && gemini --version > /dev/null \
+# install onyx-cli and clean up
+COPY --chown=node:node packages/cli/dist/onyx-cli-*.tgz /tmp/onyx-cli.tgz
+COPY --chown=node:node packages/core/dist/onyx-core-*.tgz /tmp/onyx-core.tgz
+RUN npm install -g /tmp/onyx-core.tgz \
+  && npm install -g /tmp/onyx-cli.tgz \
+  && node -e "const fs=require('node:fs'); JSON.parse(fs.readFileSync('/usr/local/share/npm-global/lib/node_modules/@onyx/cli/package.json','utf8')); JSON.parse(fs.readFileSync('/usr/local/share/npm-global/lib/node_modules/@onyx/core/package.json','utf8'));" \
+  && onyx --version > /dev/null \
   && npm cache clean --force \
-  && rm -f /tmp/gemini-{cli,core}.tgz
+  && rm -f /tmp/onyx-{cli,core}.tgz
 
 # default entrypoint when none specified
-ENTRYPOINT ["/usr/local/share/npm-global/bin/gemini"]
+ENTRYPOINT ["/usr/local/share/npm-global/bin/onyx"]

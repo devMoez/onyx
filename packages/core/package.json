@@ -1,11 +1,11 @@
 {
-  "name": "@google/gemini-cli-core",
-  "version": "0.44.0-nightly.20260512.g022e8baef",
-  "description": "Gemini CLI Core",
+  "name": "@onyx/core",
+  "version": "1.0.0-onyx.1",
+  "description": "Onyx CLI Core",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/google-gemini/gemini-cli.git"
+    "url": "git+https://github.com/devMoez/onyx.git"
   },
   "type": "module",
   "main": "dist/index.js",
@@ -105,7 +105,7 @@
     "node-pty": "^1.0.0"
   },
   "devDependencies": {
-    "@google/gemini-cli-test-utils": "file:../test-utils",
+    "@onyx/test-utils": "file:../test-utils",
     "@types/fast-levenshtein": "^0.0.4",
     "@types/js-yaml": "^4.0.9",
     "@types/json-stable-stringify": "^1.1.0",

@@ -1,9 +1,7 @@
-# Gemini CLI Roadmap
+# Onyx CLI Roadmap
 
-The
-[Official Gemini CLI Roadmap](https://github.com/orgs/google-gemini/projects/11/)
-
-Gemini CLI is an open-source AI agent that brings the power of Gemini directly
+[Official Onyx CLI Roadmap](https://github.com/orgs/google-gemini/projects/11/)
+Onyx CLI is an open-source AI agent that brings the power of Gemini directly
 into your terminal. It provides lightweight access to Gemini, giving you the
 most direct path from your prompt to our model.
 

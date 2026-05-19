@@ -6,7 +6,7 @@
 
 import { renderWithProviders, cleanup } from '../../test-utils/render.js';
 import { createMockSettings } from '../../test-utils/settings.js';
-import { makeFakeConfig } from '@google/gemini-cli-core';
+import { makeFakeConfig } from '@onyx/core';
 import { waitFor } from '../../test-utils/async.js';
 import { act, useState, useMemo } from 'react';
 import type { EventEmitter } from 'node:events';
@@ -26,7 +26,7 @@ const { fakeTranscriptionProvider } = vi.hoisted(() => {
   };
 });
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
+vi.mock('@onyx/core', async (importOriginal) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const actual = (await importOriginal()) as any;
   return {
@@ -49,12 +49,7 @@ import {
   calculateTransformedLine,
   type TextBuffer,
 } from './shared/text-buffer.js';
-import {
-  ApprovalMode,
-  debugLogger,
-  coreEvents,
-  type Config,
-} from '@google/gemini-cli-core';
+import { ApprovalMode, debugLogger, coreEvents, type Config } from '@onyx/core';
 import * as path from 'node:path';
 import {
   CommandKind,

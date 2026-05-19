@@ -1,16 +1,16 @@
 {
-  "name": "@google/gemini-cli",
-  "version": "0.44.0-nightly.20260512.g022e8baef",
-  "description": "Gemini CLI",
+  "name": "@onyx/cli",
+  "version": "1.0.0-onyx.1",
+  "description": "Onyx CLI",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/google-gemini/gemini-cli.git"
+    "url": "git+https://github.com/devMoez/onyx.git"
   },
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "gemini": "dist/index.js"
+    "onyx": "dist/index.js"
   },
   "scripts": {
     "build": "node ../../scripts/build_package.js",
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@agentclientprotocol/sdk": "^0.16.1",
-    "@google/gemini-cli-core": "file:../core",
+    "@onyx/core": "file:../core",
     "@google/genai": "1.30.0",
     "@iarna/toml": "^2.2.5",
     "@modelcontextprotocol/sdk": "^1.23.0",
@@ -72,7 +72,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@google/gemini-cli-test-utils": "file:../test-utils",
+    "@onyx/test-utils": "file:../test-utils",
     "@types/command-exists": "^1.2.3",
     "@types/hast": "^3.0.4",
     "@types/node": "^20.11.24",

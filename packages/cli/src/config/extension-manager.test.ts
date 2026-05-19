@@ -18,11 +18,7 @@ import {
   loadTrustedFolders,
   isWorkspaceTrusted,
 } from './trustedFolders.js';
-import {
-  getRealPath,
-  type CustomTheme,
-  IntegrityDataStatus,
-} from '@google/gemini-cli-core';
+import { getRealPath, type CustomTheme, IntegrityDataStatus } from '@onyx/core';
 
 const mockHomedir = vi.hoisted(() => vi.fn(() => '/tmp/mock-home'));
 const mockIntegrityManager = vi.hoisted(() => ({
@@ -38,9 +34,8 @@ vi.mock('os', async (importOriginal) => {
   };
 });
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     homedir: mockHomedir,

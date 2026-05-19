@@ -27,7 +27,7 @@ import {
   loadSkillsFromDir,
   getRealPath,
   normalizePath,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 import {
   loadSettings,
   createTestMergedSettings,
@@ -108,9 +108,8 @@ const mockIntegrityManager = vi.hoisted(() => ({
   verify: vi.fn().mockResolvedValue('verified'),
   store: vi.fn().mockResolvedValue(undefined),
 }));
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     logExtensionEnable: mockLogExtensionEnable,

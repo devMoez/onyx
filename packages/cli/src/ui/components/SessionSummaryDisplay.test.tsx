@@ -10,15 +10,10 @@ import { SessionSummaryDisplay } from './SessionSummaryDisplay.js';
 import * as SessionContext from '../contexts/SessionContext.js';
 import { useConfig } from '../contexts/ConfigContext.js';
 import { type SessionMetrics } from '../contexts/SessionContext.js';
-import {
-  ToolCallDecision,
-  isWindows,
-  type WorktreeSettings,
-} from '@google/gemini-cli-core';
+import { ToolCallDecision, isWindows, type WorktreeSettings } from '@onyx/core';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     isWindows: vi.fn(),

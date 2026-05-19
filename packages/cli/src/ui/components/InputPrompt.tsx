@@ -51,12 +51,7 @@ import { useKeypress, type Key } from '../hooks/useKeypress.js';
 import { Command } from '../key/keyMatchers.js';
 import { formatCommand } from '../key/keybindingUtils.js';
 import type { CommandContext, SlashCommand } from '../commands/types.js';
-import {
-  ApprovalMode,
-  coreEvents,
-  debugLogger,
-  type Config,
-} from '@google/gemini-cli-core';
+import { ApprovalMode, coreEvents, debugLogger, type Config } from '@onyx/core';
 import { useVoiceMode } from '../hooks/useVoiceMode.js';
 import {
   parseInputForHighlighting,

@@ -1,13 +1,13 @@
 {
-  "name": "gemini-cli-vscode-ide-companion",
-  "displayName": "Gemini CLI Companion",
-  "description": "Enable Gemini CLI with direct access to your IDE workspace.",
-  "version": "0.44.0-nightly.20260512.g022e8baef",
-  "publisher": "google",
+  "name": "onyx-cli-vscode-ide-companion",
+  "displayName": "Onyx CLI Companion",
+  "description": "Enable Onyx CLI with direct access to your IDE workspace.",
+  "version": "1.0.0-onyx.1",
+  "publisher": "devMoez",
   "icon": "assets/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/google-gemini/gemini-cli.git",
+    "url": "https://github.com/devMoez/onyx.git",
     "directory": "packages/vscode-ide-companion"
   },
   "engines": {
@@ -19,10 +19,10 @@
     "AI"
   ],
   "keywords": [
-    "gemini-cli",
-    "gemini cli",
-    "gemini",
-    "gemini code",
+    "onyx-cli",
+    "onyx cli",
+    "onyx",
+    "onyx code",
     "cli",
     "ide integration",
     "ide companion"
@@ -32,74 +32,74 @@
   ],
   "contributes": {
     "configuration": {
-      "title": "Gemini CLI",
+      "title": "Onyx CLI",
       "properties": {
-        "gemini-cli.debug.logging.enabled": {
+        "onyx-cli.debug.logging.enabled": {
           "type": "boolean",
           "default": false,
-          "description": "Enable detailed logging for debugging the Gemini CLI Companion."
+          "description": "Enable detailed logging for debugging the Onyx CLI Companion."
         }
       }
     },
     "languages": [
       {
-        "id": "gemini-diff-editable"
+        "id": "onyx-diff-editable"
       }
     ],
     "commands": [
       {
-        "command": "gemini.diff.accept",
-        "title": "Gemini CLI: Accept Diff",
+        "command": "onyx.diff.accept",
+        "title": "Onyx CLI: Accept Diff",
         "icon": "$(check)"
       },
       {
-        "command": "gemini.diff.cancel",
-        "title": "Gemini CLI: Close Diff Editor",
+        "command": "onyx.diff.cancel",
+        "title": "Onyx CLI: Close Diff Editor",
         "icon": "$(close)"
       },
       {
-        "command": "gemini-cli.runGeminiCLI",
-        "title": "Gemini CLI: Run"
+        "command": "onyx-cli.runOnyxCLI",
+        "title": "Onyx CLI: Run"
       },
       {
-        "command": "gemini-cli.showNotices",
-        "title": "Gemini CLI: View Third-Party Notices"
+        "command": "onyx-cli.showNotices",
+        "title": "Onyx CLI: View Third-Party Notices"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "gemini.diff.accept",
-          "when": "gemini.diff.isVisible"
+          "command": "onyx.diff.accept",
+          "when": "onyx.diff.isVisible"
         },
         {
-          "command": "gemini.diff.cancel",
-          "when": "gemini.diff.isVisible"
+          "command": "onyx.diff.cancel",
+          "when": "onyx.diff.isVisible"
         }
       ],
       "editor/title": [
         {
-          "command": "gemini.diff.accept",
-          "when": "gemini.diff.isVisible",
+          "command": "onyx.diff.accept",
+          "when": "onyx.diff.isVisible",
           "group": "navigation"
         },
         {
-          "command": "gemini.diff.cancel",
-          "when": "gemini.diff.isVisible",
+          "command": "onyx.diff.cancel",
+          "when": "onyx.diff.isVisible",
           "group": "navigation"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "gemini.diff.accept",
+        "command": "onyx.diff.accept",
         "key": "ctrl+s",
-        "when": "gemini.diff.isVisible"
+        "when": "onyx.diff.isVisible"
       },
       {
-        "command": "gemini.diff.accept",
+        "command": "onyx.diff.accept",
         "key": "cmd+s",
-        "when": "gemini.diff.isVisible"
+        "when": "onyx.diff.isVisible"
       }
     ]
   },

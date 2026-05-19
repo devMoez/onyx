@@ -14,7 +14,7 @@ import {
   type StartupWarning,
   isHeadlessMode,
   FatalUntrustedWorkspaceError,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 import type { Settings } from '../config/settingsSchema.js';
 import {
   isFolderTrustEnabled,

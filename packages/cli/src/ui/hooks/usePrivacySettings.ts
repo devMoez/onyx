@@ -11,7 +11,7 @@ import {
   UserTierId,
   getCodeAssistServer,
   debugLogger,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 
 export interface PrivacyState {
   isLoading: boolean;

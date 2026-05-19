@@ -25,15 +25,11 @@ import * as extract from 'extract-zip';
 import type { ExtensionManager } from '../extension-manager.js';
 import { fetchJson } from './github_fetch.js';
 import { EventEmitter } from 'node:events';
-import type {
-  GeminiCLIExtension,
-  ExtensionInstallMetadata,
-} from '@google/gemini-cli-core';
+import type { GeminiCLIExtension, ExtensionInstallMetadata } from '@onyx/core';
 import type { ExtensionConfig } from '../extension.js';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     Storage: {

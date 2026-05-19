@@ -18,7 +18,7 @@ import {
 } from './consent.js';
 import type { ConfirmationRequest } from '../../ui/types.js';
 import type { ExtensionConfig } from '../extension.js';
-import { debugLogger, type SkillDefinition } from '@google/gemini-cli-core';
+import { debugLogger, type SkillDefinition } from '@onyx/core';
 
 const mockReadline = vi.hoisted(() => ({
   createInterface: vi.fn().mockReturnValue({
@@ -47,9 +47,8 @@ vi.mock('node:fs/promises', async (importOriginal) => {
   };
 });
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     debugLogger: {

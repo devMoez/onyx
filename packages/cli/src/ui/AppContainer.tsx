@@ -91,7 +91,7 @@ import {
   ApiKeyUpdatedEvent,
   LegacyAgentProtocol,
   type InjectionSource,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 import { validateAuthMethod } from '../config/auth.js';
 import process from 'node:process';
 import { useHistory } from './hooks/useHistoryManager.js';
@@ -841,9 +841,9 @@ export const AppContainer = (props: AppContainerProps) => {
           config.isBrowserLaunchSuppressed()
         ) {
           writeToStdout(`
-----------------------------------------------------------------
-Logging in with Google... Restarting Gemini CLI to continue.
-----------------------------------------------------------------
+          ----------------------------------------------------------------
+          Logging in with Google... Restarting Onyx CLI to continue.
+          ----------------------------------------------------------------
           `);
           await relaunchApp();
         }

@@ -10,7 +10,7 @@ import { bugMemoryCommand } from './bugMemoryCommand.js';
 import { captureHeapSnapshot } from '../utils/memorySnapshot.js';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
 import { MessageType } from '../types.js';
-import type { Config } from '@google/gemini-cli-core';
+import type { Config } from '@onyx/core';
 
 vi.mock('../utils/memorySnapshot.js', () => ({
   captureHeapSnapshot: vi.fn(),
@@ -25,9 +25,8 @@ vi.mock('node:fs/promises', async (importOriginal) => {
   };
 });
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     debugLogger: {

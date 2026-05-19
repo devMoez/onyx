@@ -8,9 +8,8 @@ import { renderWithProviders } from '../../test-utils/render.js';
 import { ContextUsageDisplay } from './ContextUsageDisplay.js';
 import { describe, it, expect, vi } from 'vitest';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     tokenLimit: () => 10000,

@@ -14,14 +14,13 @@ import {
   getMCPDiscoveryState,
   DiscoveredMCPTool,
   type MessageBus,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 
 import type { CallableTool } from '@google/genai';
 import { MessageType, type HistoryItemMcpStatus } from '../types.js';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   const mockAuthenticate = vi.fn();
   return {
     ...actual,

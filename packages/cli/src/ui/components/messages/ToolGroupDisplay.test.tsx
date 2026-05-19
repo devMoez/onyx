@@ -8,10 +8,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { renderWithProviders } from '../../../test-utils/render.js';
 import { createMockSettings } from '../../../test-utils/settings.js';
 import { ToolGroupDisplay } from './ToolGroupDisplay.js';
-import {
-  CoreToolCallStatus,
-  UPDATE_TOPIC_DISPLAY_NAME,
-} from '@google/gemini-cli-core';
+import { CoreToolCallStatus, UPDATE_TOPIC_DISPLAY_NAME } from '@onyx/core';
 import type {
   HistoryItemToolDisplayGroup,
   ToolDisplayItem,

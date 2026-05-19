@@ -9,7 +9,7 @@ import open from 'open';
 import path from 'node:path';
 import { bugCommand } from './bugCommand.js';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
-import { getVersion, type Config } from '@google/gemini-cli-core';
+import { getVersion, type Config } from '@onyx/core';
 import { GIT_COMMIT_INFO } from '../../generated/git-commit.js';
 import { formatBytes } from '../utils/formatters.js';
 import { MessageType } from '../types.js';
@@ -49,9 +49,8 @@ vi.mock('../utils/historyExportUtils.js', async (importOriginal) => {
 });
 import { exportHistoryToFile } from '../utils/historyExportUtils.js';
 
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     IdeClient: {

@@ -4,11 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  getErrorMessage,
-  getMCPServerPrompts,
-  type Config,
-} from '@google/gemini-cli-core';
+import { getErrorMessage, getMCPServerPrompts, type Config } from '@onyx/core';
 import {
   CommandKind,
   type CommandContext,

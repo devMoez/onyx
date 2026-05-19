@@ -6,12 +6,11 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { initializeOutputListenersAndFlush } from './gemini.js';
-import { coreEvents, CoreEvent, type Config } from '@google/gemini-cli-core';
+import { coreEvents, CoreEvent, type Config } from '@onyx/core';
 
 // Mock core dependencies
-vi.mock('@google/gemini-cli-core', async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import('@google/gemini-cli-core')>();
+vi.mock('@onyx/core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@onyx/core')>();
   return {
     ...actual,
     writeToStdout: vi.fn(),
@@ -19,7 +18,7 @@ vi.mock('@google/gemini-cli-core', async (importOriginal) => {
   };
 });
 
-import { writeToStdout, writeToStderr } from '@google/gemini-cli-core';
+import { writeToStdout, writeToStderr } from '@onyx/core';
 
 describe('Output Redirection', () => {
   beforeEach(() => {

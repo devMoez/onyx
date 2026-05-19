@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { execSync } from 'node:child_process';
-import { TestRig } from '@google/gemini-cli-test-utils';
+import { TestRig } from '@onyx/test-utils';
 import {
   createUnauthorizedToolError,
   parseAgentMarkdown,
@@ -20,7 +20,7 @@ import {
   getErrorMessage,
 } from '@google/gemini-cli-core';
 
-export * from '@google/gemini-cli-test-utils';
+export * from '@onyx/test-utils';
 
 /**
  * The default model used for all evaluations.

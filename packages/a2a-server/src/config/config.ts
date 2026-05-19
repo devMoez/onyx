@@ -28,7 +28,7 @@ import {
   type TelemetryTarget,
   type ConfigParameters,
   type ExtensionLoader,
-} from '@google/gemini-cli-core';
+} from '@onyx/core';
 
 import { logger } from '../utils/logger.js';
 import type { Settings } from './settings.js';
