@@ -20,8 +20,8 @@ import {
   CoreToolCallStatus,
 } from '@onyx/core';
 
-vi.mock('../GeminiRespondingSpinner.js', () => ({
-  GeminiRespondingSpinner: () => null,
+vi.mock('../OnyxRespondingSpinner.js', () => ({
+  OnyxRespondingSpinner: () => null,
 }));
 
 vi.mock('./ToolResultDisplay.js', () => ({
@@ -131,3 +131,4 @@ describe('Focus Hint', () => {
     unmount();
   });
 });
+

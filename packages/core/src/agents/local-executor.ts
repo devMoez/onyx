@@ -8,7 +8,7 @@ import { type AgentLoopContext } from '../config/agent-loop-context.js';
 import { reportError } from '../utils/errorReporting.js';
 import { randomUUID } from 'node:crypto';
 import { ApprovalMode } from '../policy/types.js';
-import { GeminiChat, StreamEventType } from '../core/geminiChat.js';
+import { onyxChat, StreamEventType } from '../core/onyxChat.js';
 import {
   type Content,
   type Part,
@@ -327,7 +327,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
    * or stop the agent loop.
    */
   private async executeTurn(
-    chat: GeminiChat,
+    chat: onyxChat,
     currentMessage: Content,
     turnCounter: number,
     combinedSignal: AbortSignal,
@@ -440,7 +440,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
    * @returns The final result string if recovery was successful, or `null` if it failed.
    */
   private async executeFinalWarningTurn(
-    chat: GeminiChat,
+    chat: onyxChat,
     turnCounter: number,
     reason:
       | AgentTerminateMode.TIMEOUT
@@ -600,7 +600,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
       new AgentStartEvent(this.agentId, this.definition.name),
     );
 
-    let chat: GeminiChat | undefined;
+    let chat: onyxChat | undefined;
     let tools: FunctionDeclaration[] | undefined;
     try {
       // Inject standard runtime context into inputs
@@ -896,7 +896,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
   }
 
   private async tryCompressChat(
-    chat: GeminiChat,
+    chat: onyxChat,
     prompt_id: string,
     abortSignal?: AbortSignal,
   ): Promise<void> {
@@ -946,7 +946,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
    * @returns The model's response, including any tool calls or text.
    */
   private async callModel(
-    chat: GeminiChat,
+    chat: onyxChat,
     message: Content,
     signal: AbortSignal,
     promptId: string,
@@ -1044,11 +1044,11 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
     return { functionCalls, textResponse, modelToUse };
   }
 
-  /** Initializes a `GeminiChat` instance for the agent run. */
+  /** Initializes a `onyxChat` instance for the agent run. */
   private async createChatObject(
     inputs: AgentInputs,
     tools: FunctionDeclaration[],
-  ): Promise<GeminiChat> {
+  ): Promise<onyxChat> {
     const { promptConfig } = this.definition;
 
     if (!promptConfig.systemPrompt && !promptConfig.initialMessages) {
@@ -1068,7 +1068,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
       : undefined;
 
     try {
-      const chat = new GeminiChat(
+      const chat = new onyxChat(
         this.executionContext,
         systemInstruction,
         [{ functionDeclarations: tools }],
@@ -1096,7 +1096,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
    * @returns A new `Content` object for history, any submitted output, and completion status.
    */
   private async processFunctionCalls(
-    chat: GeminiChat,
+    chat: onyxChat,
     model: string,
     functionCalls: FunctionCall[],
     signal: AbortSignal,
@@ -1516,3 +1516,4 @@ Important Rules:
     return { args: {} };
   }
 }
+

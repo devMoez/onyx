@@ -90,7 +90,7 @@ export const planCommand: SlashCommand = {
       coreEvents.emitFeedback('info', `Approved Plan: ${fileName}`);
 
       context.ui.addItem({
-        type: MessageType.GEMINI,
+        type: MessageType.onyx,
         text: partToString(content.llmContent),
       });
       return;
@@ -114,3 +114,4 @@ export const planCommand: SlashCommand = {
     },
   ],
 };
+

@@ -33,7 +33,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
   const os = await import('node:os');
   return {
     ...actual,
-    GEMINI_DIR: '.gemini',
+    GEMINI_DIR: '.onyx',
     debugLogger: {
       error: vi.fn(),
     },
@@ -48,8 +48,8 @@ describe('loadSettings', () => {
     os.tmpdir(),
     `gemini-workspace-${mocks.suffix}`,
   );
-  const mockGeminiHomeDir = path.join(mockHomeDir, '.gemini');
-  const mockGeminiWorkspaceDir = path.join(mockWorkspaceDir, '.gemini');
+  const mockGeminiHomeDir = path.join(mockHomeDir, '.onyx');
+  const mockGeminiWorkspaceDir = path.join(mockWorkspaceDir, '.onyx');
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -154,3 +154,4 @@ describe('loadSettings', () => {
     expect(result.fileFiltering?.enableRecursiveFileSearch).toBeUndefined();
   });
 });
+

@@ -793,12 +793,12 @@ async function buildExistingSkillsSummary(
 
       if (globalSkills.length > 0) {
         sections.push(
-          `## Global Skills (~/.gemini/skills — do NOT duplicate)\n${globalSkills.join('\n')}`,
+          `## Global Skills (~/.onyx/skills — do NOT duplicate)\n${globalSkills.join('\n')}`,
         );
       }
       if (workspaceSkills.length > 0) {
         sections.push(
-          `## Workspace Skills (.gemini/skills — do NOT duplicate)\n${workspaceSkills.join('\n')}`,
+          `## Workspace Skills (.onyx/skills — do NOT duplicate)\n${workspaceSkills.join('\n')}`,
         );
       }
       if (extensionSkills.length > 0) {
@@ -1485,3 +1485,4 @@ export async function startMemoryService(config: Config): Promise<void> {
     }
   }
 }
+

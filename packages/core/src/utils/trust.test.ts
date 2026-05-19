@@ -92,7 +92,7 @@ describe('Trust Utility (Core)', () => {
 
   it('should handle TRUST_PARENT', () => {
     const config = {
-      [path.resolve('/project/.gemini')]: TrustLevel.TRUST_PARENT,
+      [path.resolve('/project/.onyx')]: TrustLevel.TRUST_PARENT,
     };
     fs.writeFileSync(trustedFoldersPath, JSON.stringify(config));
 
@@ -100,7 +100,7 @@ describe('Trust Utility (Core)', () => {
 
     expect(folders.isPathTrusted(path.resolve('/project/file.txt'))).toBe(true);
     expect(
-      folders.isPathTrusted(path.resolve('/project/.gemini/config.yaml')),
+      folders.isPathTrusted(path.resolve('/project/.onyx/config.yaml')),
     ).toBe(true);
   });
 
@@ -205,3 +205,4 @@ describe('Trust Utility (Core)', () => {
     });
   });
 });
+

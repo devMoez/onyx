@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { GeminiMessage } from './GeminiMessage.js';
+import { OnyxMessage } from './OnyxMessage.js';
 import { StreamingState } from '../../types.js';
 import { renderWithProviders } from '../../../test-utils/render.js';
 
-describe('<GeminiMessage /> - Raw Markdown Display Snapshots', () => {
+describe('<OnyxMessage /> - Raw Markdown Display Snapshots', () => {
   const baseProps = {
     text: 'Test **bold** and `code` markdown\n\n```javascript\nconst x = 1;\n```',
     isPending: false,
@@ -25,7 +25,7 @@ describe('<GeminiMessage /> - Raw Markdown Display Snapshots', () => {
     'renders with renderMarkdown=$renderMarkdown $description',
     async ({ renderMarkdown }) => {
       const { lastFrame, unmount } = await renderWithProviders(
-        <GeminiMessage {...baseProps} />,
+        <OnyxMessage {...baseProps} />,
         {
           uiState: { renderMarkdown, streamingState: StreamingState.Idle },
         },
@@ -39,7 +39,7 @@ describe('<GeminiMessage /> - Raw Markdown Display Snapshots', () => {
     'renders pending state with renderMarkdown=$renderMarkdown',
     async ({ renderMarkdown }) => {
       const { lastFrame, unmount } = await renderWithProviders(
-        <GeminiMessage {...baseProps} isPending={true} />,
+        <OnyxMessage {...baseProps} isPending={true} />,
         {
           uiState: { renderMarkdown, streamingState: StreamingState.Idle },
         },
@@ -54,7 +54,7 @@ describe('<GeminiMessage /> - Raw Markdown Display Snapshots', () => {
     const text =
       'This is a long line that should wrap correctly without truncation';
     const { lastFrame, unmount } = await renderWithProviders(
-      <GeminiMessage
+      <OnyxMessage
         text={text}
         isPending={false}
         terminalWidth={terminalWidth}
@@ -67,3 +67,4 @@ describe('<GeminiMessage /> - Raw Markdown Display Snapshots', () => {
     unmount();
   });
 });
+

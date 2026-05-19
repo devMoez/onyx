@@ -25,7 +25,7 @@ import {
   UnauthorizedError,
   toFriendlyError,
 } from '../utils/errors.js';
-import { InvalidStreamError, type GeminiChat } from './geminiChat.js';
+import { InvalidStreamError, type onyxChat } from './onyxChat.js';
 import { parseThought, type ThoughtSummary } from '../utils/thoughtUtils.js';
 import type { ModelConfigKey } from '../services/modelConfigService.js';
 import { getCitations } from '../utils/generateContentResponseUtilities.js';
@@ -248,7 +248,7 @@ export class Turn {
   private hasLoggedRagTrace = false;
 
   constructor(
-    private readonly chat: GeminiChat,
+    private readonly chat: onyxChat,
     private readonly prompt_id: string,
   ) {}
 
@@ -515,3 +515,4 @@ export class Turn {
     return this.cachedResponseText;
   }
 }
+

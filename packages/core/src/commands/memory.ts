@@ -83,11 +83,11 @@ export function listMemoryFiles(config: Config): MessageActionReturn {
   let content: string;
 
   if (fileCount > 0) {
-    content = `There are ${fileCount} GEMINI.md file(s) in use:\n\n${filePaths.join(
+    content = `There are ${fileCount} onyx.md file(s) in use:\n\n${filePaths.join(
       '\n',
     )}`;
   } else {
-    content = 'No GEMINI.md files in use.';
+    content = 'No onyx.md files in use.';
   }
 
   return {
@@ -259,7 +259,7 @@ export async function moveInboxSkill(
   await fs.rm(sourcePath, { recursive: true, force: true });
 
   const label =
-    destination === 'global' ? '~/.gemini/skills' : '.gemini/skills';
+    destination === 'global' ? '~/.onyx/skills' : '.onyx/skills';
   return {
     success: true,
     message: `Moved "${dirName}" to ${label}.`,
@@ -1372,3 +1372,4 @@ export async function dismissInboxPatch(
     message: `Dismissed "${fileName}" from inbox.`,
   };
 }
+

@@ -198,7 +198,7 @@ describe('ExtensionManager theme loading', () => {
       getImportFormat: () => 'tree',
       getFileFilteringOptions: () => ({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectonyxIgnore: true,
       }),
       getDiscoveryMaxDirs: () => 200,
       getMemoryBoundaryMarkers: () => ['.git'],
@@ -237,3 +237,4 @@ describe('ExtensionManager theme loading', () => {
     expect(themeManager.getActiveTheme().name).toBe(DEFAULT_THEME.name);
   });
 });
+

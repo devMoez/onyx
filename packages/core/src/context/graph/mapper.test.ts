@@ -51,7 +51,7 @@ describe('ContextGraphMapper (Round-Trip Fidelity)', () => {
           ],
         },
       },
-      // Note: GeminiChat records these as separate sequential user turns initially
+      // Note: onyxChat records these as separate sequential user turns initially
       {
         id: 'tool_resp_B_id',
         content: {
@@ -108,3 +108,4 @@ describe('ContextGraphMapper (Round-Trip Fidelity)', () => {
     expect(hardenedReconstructed).toEqual(hardenedOriginal);
   });
 });
+

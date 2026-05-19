@@ -203,7 +203,7 @@ describe('SandboxManager Integration', () => {
         expect(result.stdout.trim()).toBe('sandbox test');
       });
 
-      // The Windows sandbox wrapper (GeminiSandbox.exe) uses standard pipes
+      // The Windows sandbox wrapper (onyxSandbox.exe) uses standard pipes
       // for I/O interception, which breaks ConPTY pseudo-terminal inheritance.
       it.skipIf(Platform.isWindows)(
         'supports interactive terminals',
@@ -306,7 +306,7 @@ describe('SandboxManager Integration', () => {
           { workspace, modeConfig: { readonly: true, allowOverrides: true } },
         );
 
-        const plansDir = path.join(workspace, '.gemini/tmp/session-123/plans');
+        const plansDir = path.join(workspace, '.onyx/tmp/session-123/plans');
         fs.mkdirSync(plansDir, { recursive: true });
         const planFile = path.join(plansDir, 'feature-plan.md');
 
@@ -1257,3 +1257,4 @@ describe('SandboxManager Integration', () => {
     });
   });
 });
+

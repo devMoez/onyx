@@ -251,7 +251,7 @@ ${testRootDir}${path.sep}
     it('should ignore files and folders specified in .gitignore', async () => {
       await fsPromises.writeFile(
         path.join(testRootDir, '.gitignore'),
-        'ignored.txt\nnode_modules/\n.gemini/*\n!/.gemini/config.yaml',
+        'ignored.txt\nnode_modules/\n.onyx/*\n!/.onyx/config.yaml',
       );
       await createTestFile('file1.txt');
       await createTestFile('node_modules', 'some-package', 'index.js');
@@ -283,7 +283,7 @@ ${testRootDir}${path.sep}
       const structure = await getFolderStructure(testRootDir, {
         fileService,
         fileFilteringOptions: {
-          respectGeminiIgnore: false,
+          respectonyxIgnore: false,
           respectGitIgnore: false,
           customIgnoreFilePaths: [],
         },
@@ -294,11 +294,11 @@ ${testRootDir}${path.sep}
     });
   });
 
-  describe('with geminiignore', () => {
-    it('should ignore geminiignore files by default', async () => {
+  describe('with onyxIgnore', () => {
+    it('should ignore onyxIgnore files by default', async () => {
       await fsPromises.writeFile(
         path.join(testRootDir, GEMINI_IGNORE_FILE_NAME),
-        'ignored.txt\nnode_modules/\n.gemini/\n!/.gemini/config.yaml',
+        'ignored.txt\nnode_modules/\n.onyx/\n!/.onyx/config.yaml',
       );
       await createTestFile('file1.txt');
       await createTestFile('node_modules', 'some-package', 'index.js');
@@ -315,10 +315,10 @@ ${testRootDir}${path.sep}
       expect(structure).not.toContain('logs.json');
     });
 
-    it('should not ignore files if respectGeminiIgnore is false', async () => {
+    it('should not ignore files if respectonyxIgnore is false', async () => {
       await fsPromises.writeFile(
         path.join(testRootDir, GEMINI_IGNORE_FILE_NAME),
-        'ignored.txt\nnode_modules/\n.gemini/\n!/.gemini/config.yaml',
+        'ignored.txt\nnode_modules/\n.onyx/\n!/.onyx/config.yaml',
       );
       await createTestFile('file1.txt');
       await createTestFile('node_modules', 'some-package', 'index.js');
@@ -330,7 +330,7 @@ ${testRootDir}${path.sep}
       const structure = await getFolderStructure(testRootDir, {
         fileService,
         fileFilteringOptions: {
-          respectGeminiIgnore: false,
+          respectonyxIgnore: false,
           respectGitIgnore: true, // Explicitly disable gemini ignore only
           customIgnoreFilePaths: [],
         },
@@ -341,3 +341,4 @@ ${testRootDir}${path.sep}
     });
   });
 });
+

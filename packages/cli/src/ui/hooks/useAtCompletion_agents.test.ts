@@ -59,7 +59,7 @@ describe('useAtCompletion with Agents', () => {
     mockConfig = {
       getFileFilteringOptions: vi.fn(() => ({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectonyxIgnore: true,
       })),
       getEnableRecursiveFileSearch: () => true,
       getFileFilteringDisableFuzzySearch: () => false,
@@ -117,3 +117,4 @@ describe('useAtCompletion with Agents', () => {
     );
   });
 });
+

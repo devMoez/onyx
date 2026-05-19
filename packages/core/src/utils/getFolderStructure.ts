@@ -133,7 +133,7 @@ async function readFullStructure(
     const subFoldersInCurrentDir: FullFolderInfo[] = [];
     const filterFileOptions: FilterFilesOptions = {
       respectGitIgnore: options.fileFilteringOptions?.respectGitIgnore,
-      respectGeminiIgnore: options.fileFilteringOptions?.respectGeminiIgnore,
+      respectonyxIgnore: options.fileFilteringOptions?.respectonyxIgnore,
     };
 
     // Process files first in the current directory
@@ -358,3 +358,4 @@ export async function getFolderStructure(
     return `Error processing directory "${resolvedPath}": ${getErrorMessage(error)}`;
   }
 }
+

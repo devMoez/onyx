@@ -52,7 +52,7 @@ const LiveAPIResponseSchema = z.object({
 /**
  * Connects to the Gemini Live API using raw WebSockets to support API Key authentication.
  */
-export class GeminiLiveTranscriptionProvider
+export class onyxLiveTranscriptionProvider
   extends EventEmitter<TranscriptionEvents>
   implements TranscriptionProvider
 {
@@ -176,3 +176,4 @@ export class GeminiLiveTranscriptionProvider
     }
   }
 }
+

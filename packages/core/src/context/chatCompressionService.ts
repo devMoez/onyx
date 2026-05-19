@@ -6,7 +6,7 @@
 
 import type { Content } from '@google/genai';
 import type { Config } from '../config/config.js';
-import type { GeminiChat } from '../core/geminiChat.js';
+import type { onyxChat } from '../core/onyxChat.js';
 import { type ChatCompressionInfo, CompressionStatus } from '../core/turn.js';
 import { tokenLimit } from '../core/tokenLimits.js';
 import { getCompressionPrompt } from '../core/prompts.js';
@@ -236,7 +236,7 @@ async function truncateHistoryToBudget(
 
 export class ChatCompressionService {
   async compress(
-    chat: GeminiChat,
+    chat: onyxChat,
     promptId: string,
     force: boolean,
     model: string,
@@ -479,3 +479,4 @@ export class ChatCompressionService {
     }
   }
 }
+

@@ -622,7 +622,7 @@ export interface ConfigParameters {
   usageStatisticsEnabled?: boolean;
   fileFiltering?: {
     respectGitIgnore?: boolean;
-    respectGeminiIgnore?: boolean;
+    respectonyxIgnore?: boolean;
     enableFileWatcher?: boolean;
     enableRecursiveFileSearch?: boolean;
     enableFuzzySearch?: boolean;
@@ -810,7 +810,7 @@ export class Config implements McpContext, AgentLoopContext {
   private readonly modelAvailabilityService: ModelAvailabilityService;
   private readonly fileFiltering: {
     respectGitIgnore: boolean;
-    respectGeminiIgnore: boolean;
+    respectonyxIgnore: boolean;
     enableFileWatcher: boolean;
     enableRecursiveFileSearch: boolean;
     enableFuzzySearch: boolean;
@@ -1093,9 +1093,9 @@ export class Config implements McpContext, AgentLoopContext {
       respectGitIgnore:
         params.fileFiltering?.respectGitIgnore ??
         DEFAULT_FILE_FILTERING_OPTIONS.respectGitIgnore,
-      respectGeminiIgnore:
-        params.fileFiltering?.respectGeminiIgnore ??
-        DEFAULT_FILE_FILTERING_OPTIONS.respectGeminiIgnore,
+      respectonyxIgnore:
+        params.fileFiltering?.respectonyxIgnore ??
+        DEFAULT_FILE_FILTERING_OPTIONS.respectonyxIgnore,
       enableFileWatcher:
         params.fileFiltering?.enableFileWatcher ??
         DEFAULT_FILE_FILTERING_OPTIONS.enableFileWatcher ??
@@ -1777,7 +1777,7 @@ export class Config implements McpContext, AgentLoopContext {
 
     this._sandboxForbiddenPaths = await this.getFileService().getIgnoredPaths({
       respectGitIgnore: false,
-      respectGeminiIgnore: true,
+      respectonyxIgnore: true,
     });
 
     return this._sandboxForbiddenPaths;
@@ -2888,7 +2888,7 @@ export class Config implements McpContext, AgentLoopContext {
 
   /**
    * Updates the system instruction with the latest user memory.
-   * Whenever the user memory (GEMINI.md files) is updated.
+   * Whenever the user memory (onyx.md files) is updated.
    */
   updateSystemInstructionIfInitialized(): void {
     const geminiClient = this.geminiClient;
@@ -2921,8 +2921,8 @@ export class Config implements McpContext, AgentLoopContext {
     return this.fileFiltering.respectGitIgnore;
   }
 
-  getFileFilteringRespectGeminiIgnore(): boolean {
-    return this.fileFiltering.respectGeminiIgnore;
+  getFileFilteringRespectonyxIgnore(): boolean {
+    return this.fileFiltering.respectonyxIgnore;
   }
 
   getCustomIgnoreFilePaths(): string[] {
@@ -2932,7 +2932,7 @@ export class Config implements McpContext, AgentLoopContext {
   getFileFilteringOptions(): FileFilteringOptions {
     return {
       respectGitIgnore: this.fileFiltering.respectGitIgnore,
-      respectGeminiIgnore: this.fileFiltering.respectGeminiIgnore,
+      respectonyxIgnore: this.fileFiltering.respectonyxIgnore,
       enableFileWatcher: this.fileFiltering.enableFileWatcher,
       maxFileCount: this.fileFiltering.maxFileCount,
       searchTimeout: this.fileFiltering.searchTimeout,
@@ -2984,7 +2984,7 @@ export class Config implements McpContext, AgentLoopContext {
     if (!this.fileDiscoveryService) {
       this.fileDiscoveryService = new FileDiscoveryService(this.targetDir, {
         respectGitIgnore: this.fileFiltering.respectGitIgnore,
-        respectGeminiIgnore: this.fileFiltering.respectGeminiIgnore,
+        respectonyxIgnore: this.fileFiltering.respectonyxIgnore,
         customIgnoreFilePaths: this.fileFiltering.customIgnoreFilePaths,
       });
     }
@@ -3212,8 +3212,8 @@ export class Config implements McpContext, AgentLoopContext {
   /**
    * Checks if a given absolute path is allowed for file system operations.
    * A path is allowed if it's within the workspace context, the project's
-   * temporary directory, or is exactly the global personal `~/.gemini/GEMINI.md`
-   * file (the latter is the only file under `~/.gemini/` that is reachable —
+   * temporary directory, or is exactly the global personal `~/.onyx/onyx.md`
+   * file (the latter is the only file under `~/.onyx/` that is reachable —
    * settings, credentials, keybindings, etc. remain disallowed).
    *
    * One subtree is *carved back out*: `<projectMemoryDir>/.inbox/` is owned by
@@ -3271,10 +3271,10 @@ export class Config implements McpContext, AgentLoopContext {
       return true;
     }
 
-    // Surgical allowlist: the global personal GEMINI.md file (and ONLY that
+    // Surgical allowlist: the global personal onyx.md file (and ONLY that
     // file) is reachable so the prompt-driven memory flow can persist
     // cross-project personal preferences. This deliberately does NOT
-    // allowlist the rest of `~/.gemini/`.
+    // allowlist the rest of `~/.onyx/`.
     const globalMemoryFilePath = path.join(
       Storage.getGlobalGeminiDir(),
       getCurrentGeminiMdFilename(),
@@ -4133,3 +4133,4 @@ export class Config implements McpContext, AgentLoopContext {
 }
 // Export model constants for use in CLI
 export { DEFAULT_GEMINI_FLASH_MODEL };
+

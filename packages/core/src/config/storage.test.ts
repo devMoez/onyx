@@ -80,7 +80,7 @@ vi.mock('../utils/paths.js', async (importOriginal) => {
 });
 
 describe('Storage – getGlobalSettingsPath', () => {
-  it('returns path to ~/.gemini/settings.json', () => {
+  it('returns path to ~/.onyx/settings.json', () => {
     const expected = path.join(os.homedir(), GEMINI_DIR, 'settings.json');
     expect(Storage.getGlobalSettingsPath()).toBe(expected);
   });
@@ -90,7 +90,7 @@ describe('Storage - Security', () => {
   it('falls back to tmp for gemini but returns empty for agents if the home directory cannot be determined', () => {
     vi.mocked(homedir).mockReturnValue('');
 
-    // .gemini falls back for backward compatibility
+    // .onyx falls back for backward compatibility
     expect(Storage.getGlobalGeminiDir()).toBe(
       path.join(os.tmpdir(), GEMINI_DIR),
     );
@@ -112,42 +112,42 @@ describe('Storage – additional helpers', () => {
       .mockReturnValue(PROJECT_SLUG);
   });
 
-  it('getWorkspaceSettingsPath returns project/.gemini/settings.json', () => {
+  it('getWorkspaceSettingsPath returns project/.onyx/settings.json', () => {
     const expected = path.join(projectRoot, GEMINI_DIR, 'settings.json');
     expect(storage.getWorkspaceSettingsPath()).toBe(expected);
   });
 
-  it('getUserCommandsDir returns ~/.gemini/commands', () => {
+  it('getUserCommandsDir returns ~/.onyx/commands', () => {
     const expected = path.join(os.homedir(), GEMINI_DIR, 'commands');
     expect(Storage.getUserCommandsDir()).toBe(expected);
   });
 
-  it('getProjectCommandsDir returns project/.gemini/commands', () => {
+  it('getProjectCommandsDir returns project/.onyx/commands', () => {
     const expected = path.join(projectRoot, GEMINI_DIR, 'commands');
     expect(storage.getProjectCommandsDir()).toBe(expected);
   });
 
-  it('getUserSkillsDir returns ~/.gemini/skills', () => {
+  it('getUserSkillsDir returns ~/.onyx/skills', () => {
     const expected = path.join(os.homedir(), GEMINI_DIR, 'skills');
     expect(Storage.getUserSkillsDir()).toBe(expected);
   });
 
-  it('getProjectSkillsDir returns project/.gemini/skills', () => {
+  it('getProjectSkillsDir returns project/.onyx/skills', () => {
     const expected = path.join(projectRoot, GEMINI_DIR, 'skills');
     expect(storage.getProjectSkillsDir()).toBe(expected);
   });
 
-  it('getUserAgentsDir returns ~/.gemini/agents', () => {
+  it('getUserAgentsDir returns ~/.onyx/agents', () => {
     const expected = path.join(os.homedir(), GEMINI_DIR, 'agents');
     expect(Storage.getUserAgentsDir()).toBe(expected);
   });
 
-  it('getProjectAgentsDir returns project/.gemini/agents', () => {
+  it('getProjectAgentsDir returns project/.onyx/agents', () => {
     const expected = path.join(projectRoot, GEMINI_DIR, 'agents');
     expect(storage.getProjectAgentsDir()).toBe(expected);
   });
 
-  it('getProjectMemoryDir returns ~/.gemini/tmp/<identifier>/memory', async () => {
+  it('getProjectMemoryDir returns ~/.onyx/tmp/<identifier>/memory', async () => {
     await storage.initialize();
     const expected = path.join(
       os.homedir(),
@@ -159,7 +159,7 @@ describe('Storage – additional helpers', () => {
     expect(storage.getProjectMemoryDir()).toBe(expected);
   });
 
-  it('getMcpOAuthTokensPath returns ~/.gemini/mcp-oauth-tokens.json', () => {
+  it('getMcpOAuthTokensPath returns ~/.onyx/mcp-oauth-tokens.json', () => {
     const expected = path.join(
       os.homedir(),
       GEMINI_DIR,
@@ -168,19 +168,19 @@ describe('Storage – additional helpers', () => {
     expect(Storage.getMcpOAuthTokensPath()).toBe(expected);
   });
 
-  it('getGlobalBinDir returns ~/.gemini/tmp/bin', () => {
+  it('getGlobalBinDir returns ~/.onyx/tmp/bin', () => {
     const expected = path.join(os.homedir(), GEMINI_DIR, 'tmp', 'bin');
     expect(Storage.getGlobalBinDir()).toBe(expected);
   });
 
-  it('getProjectTempPlansDir returns ~/.gemini/tmp/<identifier>/plans when no sessionId is provided', async () => {
+  it('getProjectTempPlansDir returns ~/.onyx/tmp/<identifier>/plans when no sessionId is provided', async () => {
     await storage.initialize();
     const tempDir = storage.getProjectTempDir();
     const expected = path.join(tempDir, 'plans');
     expect(storage.getProjectTempPlansDir()).toBe(expected);
   });
 
-  it('getProjectTempPlansDir returns ~/.gemini/tmp/<identifier>/<sessionId>/plans when sessionId is provided', async () => {
+  it('getProjectTempPlansDir returns ~/.onyx/tmp/<identifier>/<sessionId>/plans when sessionId is provided', async () => {
     const sessionId = 'test-session-id';
     const storageWithSession = new Storage(projectRoot, sessionId);
     ProjectRegistry.prototype.getShortId = vi
@@ -192,14 +192,14 @@ describe('Storage – additional helpers', () => {
     expect(storageWithSession.getProjectTempPlansDir()).toBe(expected);
   });
 
-  it('getProjectTempTrackerDir returns ~/.gemini/tmp/<identifier>/tracker when no sessionId is provided', async () => {
+  it('getProjectTempTrackerDir returns ~/.onyx/tmp/<identifier>/tracker when no sessionId is provided', async () => {
     await storage.initialize();
     const tempDir = storage.getProjectTempDir();
     const expected = path.join(tempDir, 'tracker');
     expect(storage.getProjectTempTrackerDir()).toBe(expected);
   });
 
-  it('getProjectTempTrackerDir returns ~/.gemini/tmp/<identifier>/<sessionId>/tracker when sessionId is provided', async () => {
+  it('getProjectTempTrackerDir returns ~/.onyx/tmp/<identifier>/<sessionId>/tracker when sessionId is provided', async () => {
     const sessionId = 'test-session-id';
     const storageWithSession = new Storage(projectRoot, sessionId);
     ProjectRegistry.prototype.getShortId = vi
@@ -456,3 +456,4 @@ describe('Storage - System Paths', () => {
     }
   });
 });
+

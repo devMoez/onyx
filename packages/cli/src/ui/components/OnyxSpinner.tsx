@@ -19,7 +19,7 @@ interface GeminiSpinnerProps {
   altText?: string;
 }
 
-export const GeminiSpinner: React.FC<GeminiSpinnerProps> = ({
+export const OnyxSpinner: React.FC<GeminiSpinnerProps> = ({
   spinnerType = 'dots',
   altText,
 }) => {
@@ -61,3 +61,4 @@ export const GeminiSpinner: React.FC<GeminiSpinnerProps> = ({
     </Text>
   );
 };
+

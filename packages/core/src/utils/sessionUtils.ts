@@ -6,7 +6,7 @@
 
 import { type Part, type PartListUnion } from '@google/genai';
 import { type ConversationRecord } from '../services/chatRecordingService.js';
-import { partListUnionToString } from '../core/geminiRequest.js';
+import { partListUnionToString } from '../core/onyxRequest.js';
 import { type HistoryTurn } from '../core/agentChatHistory.js';
 
 /**
@@ -151,3 +151,4 @@ export function convertSessionToClientHistory(
 
   return clientHistory;
 }
+

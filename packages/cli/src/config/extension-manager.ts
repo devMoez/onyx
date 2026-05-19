@@ -1273,7 +1273,7 @@ export async function copyExtension(
 
 function getContextFileNames(config: ExtensionConfig): string[] {
   if (!config.contextFileName) {
-    return ['GEMINI.md'];
+    return ['onyx.md'];
   } else if (!Array.isArray(config.contextFileName)) {
     return [config.contextFileName];
   }
@@ -1357,3 +1357,4 @@ export function getExtensionId(
 export function hashValue(value: string): string {
   return createHash('sha256').update(value).digest('hex');
 }
+

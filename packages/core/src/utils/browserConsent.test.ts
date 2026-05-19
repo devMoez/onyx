@@ -28,7 +28,7 @@ import { getBrowserConsentIfNeeded } from './browserConsent.js';
 describe('browserConsent', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.mocked(Storage.getGlobalGeminiDir).mockReturnValue('/mock/.gemini');
+    vi.mocked(Storage.getGlobalGeminiDir).mockReturnValue('/mock/.onyx');
   });
 
   afterEach(() => {
@@ -115,3 +115,4 @@ describe('browserConsent', () => {
     );
   });
 });
+

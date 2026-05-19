@@ -111,12 +111,12 @@ vi.mock('@onyx/core', async () => {
     loadEnvironment: vi.fn(),
     DEFAULT_MEMORY_FILE_FILTERING_OPTIONS: {
       respectGitIgnore: false,
-      respectGeminiIgnore: true,
+      respectonyxIgnore: true,
       customIgnoreFilePaths: [],
     },
     DEFAULT_FILE_FILTERING_OPTIONS: {
       respectGitIgnore: true,
-      respectGeminiIgnore: true,
+      respectonyxIgnore: true,
       customIgnoreFilePaths: [],
     },
     createPolicyEngineConfig: vi.fn(
@@ -997,8 +997,8 @@ describe('loadCliConfig', () => {
     expect(config.getFileFilteringRespectGitIgnore()).toBe(
       DEFAULT_FILE_FILTERING_OPTIONS.respectGitIgnore,
     );
-    expect(config.getFileFilteringRespectGeminiIgnore()).toBe(
-      DEFAULT_FILE_FILTERING_OPTIONS.respectGeminiIgnore,
+    expect(config.getFileFilteringRespectonyxIgnore()).toBe(
+      DEFAULT_FILE_FILTERING_OPTIONS.respectonyxIgnore,
     );
     expect(config.getCustomIgnoreFilePaths()).toEqual(
       DEFAULT_FILE_FILTERING_OPTIONS.customIgnoreFilePaths,
@@ -3069,13 +3069,13 @@ describe('loadCliConfig fileFiltering', () => {
       value: false,
     },
     {
-      property: 'respectGeminiIgnore',
-      getter: (c) => c.getFileFilteringRespectGeminiIgnore(),
+      property: 'respectonyxIgnore',
+      getter: (c) => c.getFileFilteringRespectonyxIgnore(),
       value: true,
     },
     {
-      property: 'respectGeminiIgnore',
-      getter: (c) => c.getFileFilteringRespectGeminiIgnore(),
+      property: 'respectonyxIgnore',
+      getter: (c) => c.getFileFilteringRespectonyxIgnore(),
       value: false,
     },
     {
@@ -3725,7 +3725,7 @@ describe('loadCliConfig mcpEnabled', () => {
   describe('extension plan settings', () => {
     beforeEach(() => {
       vi.spyOn(Storage.prototype, 'getProjectTempDir').mockReturnValue(
-        '/mock/home/user/.gemini/tmp/test-project',
+        '/mock/home/user/.onyx/tmp/test-project',
       );
     });
 
@@ -3817,7 +3817,7 @@ describe('loadCliConfig mcpEnabled', () => {
           '/mock',
           'home',
           'user',
-          '.gemini',
+          '.onyx',
           'tmp',
           'test-project',
           'test-session',
@@ -3882,3 +3882,4 @@ describe('loadCliConfig acpMode and clientName', () => {
     expect(config.getClientName()).toBe('tui');
   });
 });
+

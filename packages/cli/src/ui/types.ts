@@ -545,7 +545,7 @@ export interface SubmitPromptResult {
 }
 
 /**
- * Defines the result of the slash command processor for its consumer (useGeminiStream).
+ * Defines the result of the slash command processor for its consumer (useOnyxStream).
  */
 export type SlashCommandProcessorResult =
   | {
@@ -580,3 +580,4 @@ export interface ActiveHook {
   index?: number;
   total?: number;
 }
+

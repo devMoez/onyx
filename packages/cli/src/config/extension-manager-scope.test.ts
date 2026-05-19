@@ -51,7 +51,7 @@ describe('ExtensionManager Settings Scope', () => {
     tempWorkspace = fs.mkdtempSync(
       path.join(os.tmpdir(), 'gemini-cli-test-workspace-'),
     );
-    extensionsDir = path.join(currentTempHome, '.gemini', 'extensions');
+    extensionsDir = path.join(currentTempHome, '.onyx', 'extensions');
     extensionDir = path.join(extensionsDir, extensionName);
 
     fs.mkdirSync(extensionDir, { recursive: true });
@@ -206,3 +206,4 @@ describe('ExtensionManager Settings Scope', () => {
     expect(output).not.toContain('Test Setting: [not set] (Workspace)');
   });
 });
+

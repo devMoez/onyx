@@ -33,7 +33,7 @@ vi.mock('../utils/paths.js', async (importOriginal) => {
 describe('Config Path Validation', () => {
   let config: Config;
   const targetDir = '/mock/workspace';
-  const globalGeminiDir = path.join(os.homedir(), '.gemini');
+  const globalGeminiDir = path.join(os.homedir(), '.onyx');
 
   beforeEach(() => {
     config = new Config({
@@ -45,8 +45,8 @@ describe('Config Path Validation', () => {
     });
   });
 
-  it('should allow access to a file under ~/.gemini once that directory is added to the workspace', () => {
-    // Use settings.json rather than GEMINI.md as the example: the latter is
+  it('should allow access to a file under ~/.onyx once that directory is added to the workspace', () => {
+    // Use settings.json rather than onyx.md as the example: the latter is
     // now reachable via a surgical isPathAllowed allowlist regardless of
     // workspace membership (covered by dedicated tests in config.test.ts), so
     // it can no longer demonstrate the workspace-addition semantic on its
@@ -54,7 +54,7 @@ describe('Config Path Validation', () => {
     // original "denied -> add to workspace -> allowed" flow this test was
     // written to verify, and additionally double-asserts the least-privilege
     // guarantee that the allowlist does not leak access to other files
-    // under ~/.gemini/.
+    // under ~/.onyx/.
     const settingsPath = path.join(globalGeminiDir, 'settings.json');
 
     // Before adding, it should be denied
@@ -75,3 +75,4 @@ describe('Config Path Validation', () => {
     expect(config.validatePathAccess(workspacePath, 'read')).toBeNull();
   });
 });
+

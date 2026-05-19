@@ -57,10 +57,11 @@ describe('saveClipboardImage Windows Path Escaping', () => {
     const args = vi.mocked(spawnAsync).mock.calls[0][1];
     const script = args[2];
 
-    // The path C:\User's Files\.gemini-clipboard\clipboard-....png
+    // The path C:\User's Files\.onyx-clipboard\clipboard-....png
     // should be escaped in the script as 'C:\User''s Files\...'
 
     // Check if the script contains the escaped path
     expect(script).toMatch(/'C:\\User''s Files/);
   });
 });
+

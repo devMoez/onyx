@@ -17,7 +17,7 @@ import {
 import { act } from 'react';
 import { renderHookWithProviders } from '../../test-utils/render.js';
 import { waitFor } from '../../test-utils/async.js';
-import { useGeminiStream } from './useGeminiStream.js';
+import { useOnyxStream } from './useOnyxStream.js';
 import { useKeypress } from './useKeypress.js';
 import * as atCommandProcessor from './atCommandProcessor.js';
 import {
@@ -272,8 +272,8 @@ vi.mock('./useAlternateBuffer.js', () => ({
 
 // --- END MOCKS ---
 
-// --- Tests for useGeminiStream Hook ---
-describe('useGeminiStream', () => {
+// --- Tests for useOnyxStream Hook ---
+describe('useOnyxStream', () => {
   let mockAddItem = vi.fn();
   let mockOnDebugMessage = vi.fn();
   let mockHandleSlashCommand = vi.fn().mockResolvedValue(false);
@@ -395,7 +395,7 @@ describe('useGeminiStream', () => {
     // The GeminiClient constructor itself is mocked at the module level.
     mockStartChat.mockClear().mockResolvedValue({
       sendMessageStream: mockSendMessageStream,
-    } as unknown as any); // GeminiChat -> any
+    } as unknown as any); // onyxChat -> any
     mockSendMessageStream
       .mockClear()
       .mockReturnValue((async function* () {})());
@@ -409,7 +409,7 @@ describe('useGeminiStream', () => {
       ui: { errorVerbosity: 'full' },
     },
     user: { path: '/user/settings.json', settings: {} },
-    workspace: { path: '/workspace/.gemini/settings.json', settings: {} },
+    workspace: { path: '/workspace/.onyx/settings.json', settings: {} },
     errors: [],
     forScope: vi.fn(),
     setValue: vi.fn(),
@@ -482,7 +482,7 @@ describe('useGeminiStream', () => {
 
     const { result, rerender } = await renderHookWithProviders(
       (props: typeof initialProps) =>
-        useGeminiStream(
+        useOnyxStream(
           props.client,
           props.history,
           props.addItem,
@@ -584,7 +584,7 @@ describe('useGeminiStream', () => {
     } = options;
 
     return renderHookWithProviders(() =>
-      useGeminiStream(
+      useOnyxStream(
         new MockedGeminiClientClass(mockConfig),
         [],
         mockAddItem,
@@ -761,7 +761,7 @@ describe('useGeminiStream', () => {
     });
 
     await renderHookWithProviders(() =>
-      useGeminiStream(
+      useOnyxStream(
         new MockedGeminiClientClass(mockConfig),
         [],
         mockAddItem,
@@ -861,7 +861,7 @@ describe('useGeminiStream', () => {
     });
 
     await renderHookWithProviders(() =>
-      useGeminiStream(
+      useOnyxStream(
         new MockedGeminiClientClass(mockConfig),
         [],
         mockAddItem,
@@ -995,7 +995,7 @@ describe('useGeminiStream', () => {
     });
 
     await renderHookWithProviders(() =>
-      useGeminiStream(
+      useOnyxStream(
         client,
         [],
         mockAddItem,
@@ -1092,7 +1092,7 @@ describe('useGeminiStream', () => {
     });
 
     await renderHookWithProviders(() =>
-      useGeminiStream(
+      useOnyxStream(
         client,
         [],
         mockAddItem,
@@ -1352,7 +1352,7 @@ describe('useGeminiStream', () => {
     });
 
     await renderHookWithProviders(() =>
-      useGeminiStream(
+      useOnyxStream(
         client,
         [],
         mockAddItem,
@@ -1469,7 +1469,7 @@ describe('useGeminiStream', () => {
     });
 
     const { result, rerender } = await renderHookWithProviders(() =>
-      useGeminiStream(
+      useOnyxStream(
         new MockedGeminiClientClass(mockConfig),
         [],
         mockAddItem,
@@ -1606,7 +1606,7 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(mockStream);
 
       const { result } = await renderHookWithProviders(() =>
-        useGeminiStream(
+        useOnyxStream(
           mockConfig.getGeminiClient(),
           [],
           mockAddItem,
@@ -1647,7 +1647,7 @@ describe('useGeminiStream', () => {
       mockSendMessageStream.mockReturnValue(mockStream);
 
       const { result } = await renderHookWithProviders(() =>
-        useGeminiStream(
+        useOnyxStream(
           mockConfig.getGeminiClient(),
           [],
           mockAddItem,
@@ -2100,7 +2100,7 @@ describe('useGeminiStream', () => {
 
     it('should not call handleSlashCommand is shell mode is active', async () => {
       const { result } = await renderHookWithProviders(() =>
-        useGeminiStream(
+        useOnyxStream(
           new MockedGeminiClientClass(mockConfig),
           [],
           mockAddItem,
@@ -2130,7 +2130,7 @@ describe('useGeminiStream', () => {
       });
     });
 
-    it('should record client-initiated tool calls in GeminiChat history', async () => {
+    it('should record client-initiated tool calls in onyxChat history', async () => {
       const { result, client: mockGeminiClient } = await renderTestHook();
 
       mockHandleSlashCommand.mockResolvedValue({
@@ -2176,7 +2176,7 @@ describe('useGeminiStream', () => {
         }
       });
 
-      // Verify that the tool call and response were added to GeminiChat history
+      // Verify that the tool call and response were added to onyxChat history
       expect(mockGeminiClient.addHistory).toHaveBeenCalledWith({
         role: 'model',
         parts: [
@@ -2269,7 +2269,7 @@ describe('useGeminiStream', () => {
       } as unknown as Config;
 
       const { result } = await renderHookWithProviders(() =>
-        useGeminiStream(
+        useOnyxStream(
           new MockedGeminiClientClass(testConfig),
           [],
           mockAddItem,
@@ -2576,7 +2576,7 @@ describe('useGeminiStream', () => {
       );
 
       const { result } = await renderHookWithProviders(() =>
-        useGeminiStream(
+        useOnyxStream(
           new MockedGeminiClientClass(mockConfig),
           [],
           mockAddItem,
@@ -2681,7 +2681,7 @@ describe('useGeminiStream', () => {
       );
 
       const { result } = await renderHookWithProviders(() =>
-        useGeminiStream(
+        useOnyxStream(
           new MockedGeminiClientClass(mockConfig),
           [],
           mockAddItem,
@@ -2889,7 +2889,7 @@ describe('useGeminiStream', () => {
     });
 
     const { result } = await renderHookWithProviders(() =>
-      useGeminiStream(
+      useOnyxStream(
         new MockedGeminiClientClass(mockConfig),
         [],
         mockAddItem,
@@ -2960,7 +2960,7 @@ describe('useGeminiStream', () => {
     });
 
     const { result } = await renderHookWithProviders(() =>
-      useGeminiStream(
+      useOnyxStream(
         mockConfig.getGeminiClient(),
         [],
         mockAddItem,
@@ -3125,7 +3125,7 @@ describe('useGeminiStream', () => {
       );
 
       const { result } = await renderHookWithProviders(() =>
-        useGeminiStream(
+        useOnyxStream(
           new MockedGeminiClientClass(mockConfig),
           [],
           mockAddItem,
@@ -3225,7 +3225,7 @@ describe('useGeminiStream', () => {
       );
 
       const { result } = await renderHookWithProviders(() =>
-        useGeminiStream(
+        useOnyxStream(
           new MockedGeminiClientClass(mockConfig),
           [],
           mockAddItem,
@@ -3307,7 +3307,7 @@ describe('useGeminiStream', () => {
       ]);
 
       const { result, rerender } = await renderHookWithProviders(() =>
-        useGeminiStream(
+        useOnyxStream(
           mockConfig.getGeminiClient(),
           [],
           mockAddItem,
@@ -3378,7 +3378,7 @@ describe('useGeminiStream', () => {
       );
 
       const { result } = await renderHookWithProviders(() =>
-        useGeminiStream(
+        useOnyxStream(
           new MockedGeminiClientClass(mockConfig),
           [],
           mockAddItem,
@@ -3435,7 +3435,7 @@ describe('useGeminiStream', () => {
       );
 
       const { result } = await renderHookWithProviders(() =>
-        useGeminiStream(
+        useOnyxStream(
           new MockedGeminiClientClass(mockConfig),
           [],
           mockAddItem,
@@ -3503,7 +3503,7 @@ describe('useGeminiStream', () => {
       );
 
       const { result } = await renderHookWithProviders(() =>
-        useGeminiStream(
+        useOnyxStream(
           new MockedGeminiClientClass(mockConfig),
           [],
           mockAddItem,
@@ -4184,3 +4184,4 @@ describe('useGeminiStream', () => {
     expect(spanMetadata.input).toBe('telemetry test query');
   });
 });
+

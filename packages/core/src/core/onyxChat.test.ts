@@ -13,14 +13,14 @@ import {
 } from '@google/genai';
 import type { ContentGenerator } from '../core/contentGenerator.js';
 import {
-  GeminiChat,
+  onyxChat,
   InvalidStreamError,
   StreamEventType,
   SYNTHETIC_THOUGHT_SIGNATURE,
   type StreamEvent,
   stripToolCallIdPrefixes,
   type HistoryTurn,
-} from './geminiChat.js';
+} from './onyxChat.js';
 import {
   type CompletedToolCall,
   CoreToolCallStatus,
@@ -120,9 +120,9 @@ vi.mock('../telemetry/uiTelemetry.js', () => ({
   },
 }));
 
-describe('GeminiChat', () => {
+describe('onyxChat', () => {
   let mockContentGenerator: ContentGenerator;
-  let chat: GeminiChat;
+  let chat: onyxChat;
   let mockConfig: Config;
 
   beforeEach(() => {
@@ -225,7 +225,7 @@ describe('GeminiChat', () => {
     // Disable 429 simulation for tests
     setSimulate429(false);
     // Reset history for each test by creating a new instance
-    chat = new GeminiChat(mockConfig);
+    chat = new onyxChat(mockConfig);
     mockConfig.getHookSystem = vi.fn().mockReturnValue(undefined);
   });
 
@@ -240,7 +240,7 @@ describe('GeminiChat', () => {
         { id: '1', content: { role: 'user', parts: [{ text: 'Hello' }] } },
         { id: '2', content: { role: 'model', parts: [{ text: 'Hi there' }] } },
       ];
-      const chatWithHistory = new GeminiChat(mockConfig, '', [], history);
+      const chatWithHistory = new onyxChat(mockConfig, '', [], history);
       // 'Hello': 5 chars * 0.25 = 1.25
       // 'Hi there': 8 chars * 0.25 = 2.0
       // Total: 3.25 -> floor(3.25) = 3
@@ -248,7 +248,7 @@ describe('GeminiChat', () => {
     });
 
     it('should initialize lastPromptTokenCount for empty history', () => {
-      const chatEmpty = new GeminiChat(mockConfig);
+      const chatEmpty = new onyxChat(mockConfig);
       expect(chatEmpty.getLastPromptTokenCount()).toBe(0);
     });
 
@@ -292,7 +292,7 @@ describe('GeminiChat', () => {
       ];
 
       // 3. Instantiate the chat, providing both.
-      const chat = new GeminiChat(
+      const chat = new onyxChat(
         mockConfig,
         '',
         [],
@@ -312,7 +312,7 @@ describe('GeminiChat', () => {
       const initialHistory: HistoryTurn[] = [
         { id: '1', content: { role: 'user', parts: [{ text: 'Hello' }] } },
       ];
-      const chatWithHistory = new GeminiChat(
+      const chatWithHistory = new onyxChat(
         mockConfig,
         '',
         [],
@@ -2248,7 +2248,7 @@ describe('GeminiChat', () => {
 
   describe('ensureActiveLoopHasThoughtSignatures', () => {
     it('should add thoughtSignature to the first functionCall in each model turn of the active loop', () => {
-      const chat = new GeminiChat(mockConfig, '', [], []);
+      const chat = new onyxChat(mockConfig, '', [], []);
       const history: Content[] = [
         { role: 'user', parts: [{ text: 'Old message' }] },
         {
@@ -2305,7 +2305,7 @@ describe('GeminiChat', () => {
     });
 
     it('should not modify contents if there is no user text message', () => {
-      const chat = new GeminiChat(mockConfig, '', [], []);
+      const chat = new onyxChat(mockConfig, '', [], []);
       const history: Content[] = [
         {
           role: 'user',
@@ -2322,14 +2322,14 @@ describe('GeminiChat', () => {
     });
 
     it('should handle an empty history', () => {
-      const chat = new GeminiChat(mockConfig, '', []);
+      const chat = new onyxChat(mockConfig, '', []);
       const history: Content[] = [];
       const newContents = chat.ensureActiveLoopHasThoughtSignatures(history);
       expect(newContents).toEqual([]);
     });
 
     it('should handle history with only a user message', () => {
-      const chat = new GeminiChat(mockConfig, '', []);
+      const chat = new onyxChat(mockConfig, '', []);
       const history: Content[] = [{ role: 'user', parts: [{ text: 'Hello' }] }];
       const newContents = chat.ensureActiveLoopHasThoughtSignatures(history);
       expect(newContents).toEqual(history);
@@ -3101,3 +3101,4 @@ describe('GeminiChat', () => {
     });
   });
 });
+

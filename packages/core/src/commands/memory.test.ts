@@ -127,7 +127,7 @@ describe('memory commands', () => {
 
   describe('listMemoryFiles', () => {
     it('should list the memory files in use', () => {
-      const filePaths = ['/path/to/GEMINI.md', '/other/path/GEMINI.md'];
+      const filePaths = ['/path/to/onyx.md', '/other/path/onyx.md'];
       vi.mocked(mockConfig.getGeminiMdFilePaths).mockReturnValue(filePaths);
 
       const result = listMemoryFiles(mockConfig);
@@ -136,7 +136,7 @@ describe('memory commands', () => {
       if (result.type === 'message') {
         expect(result.messageType).toBe('info');
         expect(result.content).toContain(
-          'There are 2 GEMINI.md file(s) in use:',
+          'There are 2 onyx.md file(s) in use:',
         );
         expect(result.content).toContain(filePaths.join('\n'));
       }
@@ -150,7 +150,7 @@ describe('memory commands', () => {
       expect(result.type).toBe('message');
       if (result.type === 'message') {
         expect(result.messageType).toBe('info');
-        expect(result.content).toBe('No GEMINI.md files in use.');
+        expect(result.content).toBe('No onyx.md files in use.');
       }
     });
 
@@ -164,7 +164,7 @@ describe('memory commands', () => {
       expect(result.type).toBe('message');
       if (result.type === 'message') {
         expect(result.messageType).toBe('info');
-        expect(result.content).toBe('No GEMINI.md files in use.');
+        expect(result.content).toBe('No onyx.md files in use.');
       }
     });
   });
@@ -404,7 +404,7 @@ describe('memory commands', () => {
       await fs.mkdir(patchDir, { recursive: true });
       await fs.writeFile(
         path.join(patchDir, 'escape.patch'),
-        buildCreationPatch(path.join(projectRoot, 'GEMINI.md'), 'Hi.\n'),
+        buildCreationPatch(path.join(projectRoot, 'onyx.md'), 'Hi.\n'),
       );
 
       const patches = await listInboxMemoryPatches(patchConfig);
@@ -464,7 +464,7 @@ describe('memory commands', () => {
     });
 
     it('omits global patches with disallowed targets from the listing', async () => {
-      // Same defense for the global tier: only ~/.gemini/GEMINI.md is allowed.
+      // Same defense for the global tier: only ~/.onyx/onyx.md is allowed.
       // memory.md (legacy lowercase), sibling .md files, and settings.json all
       // get filtered out of the listing instead of confusing the user.
       const patchDir = path.join(memoryTempDir, '.inbox', 'global');
@@ -490,7 +490,7 @@ describe('memory commands', () => {
       await fs.writeFile(
         path.join(patchDir, 'nested.patch'),
         buildCreationPatch(
-          path.join(globalMemoryDir, 'GEMINI.md', 'nested.md'),
+          path.join(globalMemoryDir, 'onyx.md', 'nested.md'),
           'rejected\n',
         ),
       );
@@ -699,8 +699,8 @@ describe('memory commands', () => {
       );
     });
 
-    it('applies a global creation patch to ~/.gemini/GEMINI.md', async () => {
-      const target = path.join(globalMemoryDir, 'GEMINI.md');
+    it('applies a global creation patch to ~/.onyx/onyx.md', async () => {
+      const target = path.join(globalMemoryDir, 'onyx.md');
       // Sanity check: target does not exist before apply.
       await expect(fs.access(target)).rejects.toThrow();
 
@@ -726,8 +726,8 @@ describe('memory commands', () => {
       ).rejects.toThrow();
     });
 
-    it('applies a global update patch to ~/.gemini/GEMINI.md', async () => {
-      const target = path.join(globalMemoryDir, 'GEMINI.md');
+    it('applies a global update patch to ~/.onyx/onyx.md', async () => {
+      const target = path.join(globalMemoryDir, 'onyx.md');
       await fs.writeFile(target, '- prefer X\n');
 
       const patchDir = path.join(memoryTempDir, '.inbox', 'global');
@@ -753,7 +753,7 @@ describe('memory commands', () => {
     it.runIf(isCaseInsensitivePathPlatform)(
       'accepts global memory patch targets with different path casing',
       async () => {
-        const target = path.join(globalMemoryDir, 'GEMINI.md');
+        const target = path.join(globalMemoryDir, 'onyx.md');
         await fs.writeFile(target, '- prefer X\n');
 
         const patchDir = path.join(memoryTempDir, '.inbox', 'global');
@@ -789,7 +789,7 @@ describe('memory commands', () => {
       await fs.writeFile(
         path.join(patchDir, 'GEMINI.patch'),
         buildCreationPatch(
-          path.join(globalMemoryDir, 'GEMINI.md'),
+          path.join(globalMemoryDir, 'onyx.md'),
           'Prefer concise.\n',
         ),
       );
@@ -910,7 +910,7 @@ describe('memory commands', () => {
       await expect(fs.access(path.join(patchDir, 'b.patch'))).rejects.toThrow();
     });
 
-    it('rejects global patches that target anything other than ~/.gemini/GEMINI.md', async () => {
+    it('rejects global patches that target anything other than ~/.onyx/onyx.md', async () => {
       const patchDir = path.join(memoryTempDir, '.inbox', 'global');
       await fs.mkdir(patchDir, { recursive: true });
 
@@ -923,7 +923,7 @@ describe('memory commands', () => {
         ),
       );
 
-      // Sibling .md files in ~/.gemini/ are also not allowed.
+      // Sibling .md files in ~/.onyx/ are also not allowed.
       await fs.writeFile(
         path.join(patchDir, 'sibling.patch'),
         buildCreationPatch(
@@ -945,7 +945,7 @@ describe('memory commands', () => {
       await fs.writeFile(
         path.join(patchDir, 'nested.patch'),
         buildCreationPatch(
-          path.join(globalMemoryDir, 'GEMINI.md', 'nested.md'),
+          path.join(globalMemoryDir, 'onyx.md', 'nested.md'),
           'Should be rejected.\n',
         ),
       );
@@ -972,7 +972,7 @@ describe('memory commands', () => {
         ).rejects.toThrow();
       }
       await expect(
-        fs.access(path.join(globalMemoryDir, 'GEMINI.md', 'nested.md')),
+        fs.access(path.join(globalMemoryDir, 'onyx.md', 'nested.md')),
       ).rejects.toThrow();
     });
 
@@ -1062,7 +1062,7 @@ describe('memory commands', () => {
       const result = await moveInboxSkill(moveConfig, 'my-skill', 'global');
 
       expect(result.success).toBe(true);
-      expect(result.message).toBe('Moved "my-skill" to ~/.gemini/skills.');
+      expect(result.message).toBe('Moved "my-skill" to ~/.onyx/skills.');
 
       // Verify the skill was copied to global
       const targetSkill = await fs.readFile(
@@ -1083,7 +1083,7 @@ describe('memory commands', () => {
       const result = await moveInboxSkill(moveConfig, 'my-skill', 'project');
 
       expect(result.success).toBe(true);
-      expect(result.message).toBe('Moved "my-skill" to .gemini/skills.');
+      expect(result.message).toBe('Moved "my-skill" to .onyx/skills.');
 
       // Verify the skill was copied to project
       const targetSkill = await fs.readFile(
@@ -1937,3 +1937,4 @@ describe('memory commands', () => {
     });
   });
 });
+

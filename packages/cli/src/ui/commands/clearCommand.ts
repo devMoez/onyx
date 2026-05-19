@@ -36,7 +36,7 @@ export const clearCommand: SlashCommand = {
 
     // Start a new conversation recording with a new session ID
     // We MUST do this before calling resetChat() so the new ChatRecordingService
-    // initialized by GeminiChat picks up the new session ID.
+    // initialized by onyxChat picks up the new session ID.
     let newSessionId: string | undefined;
     if (config) {
       newSessionId = randomUUID();
@@ -86,3 +86,4 @@ export const clearCommand: SlashCommand = {
     }
   },
 };
+

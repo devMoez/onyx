@@ -131,7 +131,7 @@ describe('bfsFileSearch', () => {
         fileService,
         fileFilteringOptions: {
           respectGitIgnore: true,
-          respectGeminiIgnore: true,
+          respectonyxIgnore: true,
           customIgnoreFilePaths: [],
         },
       });
@@ -155,7 +155,7 @@ describe('bfsFileSearch', () => {
         fileService,
         fileFilteringOptions: {
           respectGitIgnore: false,
-          respectGeminiIgnore: true,
+          respectonyxIgnore: true,
           customIgnoreFilePaths: [],
         },
       });
@@ -185,7 +185,7 @@ describe('bfsFileSearch', () => {
         fileService,
         fileFilteringOptions: {
           respectGitIgnore: false,
-          respectGeminiIgnore: false,
+          respectonyxIgnore: false,
           customIgnoreFilePaths: [],
         },
       });
@@ -214,16 +214,16 @@ describe('bfsFileSearch', () => {
     for (let i = 0; i < numTargetDirs; i++) {
       // Add target files in some directories
       fileCreationPromises.push(
-        createTestFile('content', `dir${i}`, 'GEMINI.md'),
+        createTestFile('content', `dir${i}`, 'onyx.md'),
       );
       fileCreationPromises.push(
-        createTestFile('content', `dir${i}`, 'subdir1', 'GEMINI.md'),
+        createTestFile('content', `dir${i}`, 'subdir1', 'onyx.md'),
       );
     }
     const expectedFiles = await Promise.all(fileCreationPromises);
 
     const result = await bfsFileSearch(testRootDir, {
-      fileName: 'GEMINI.md',
+      fileName: 'onyx.md',
       // Provide a generous maxDirs limit to ensure it doesn't prematurely stop
       // in this large test case. Total dirs created is 200.
       maxDirs: 250,
@@ -319,7 +319,7 @@ describe('bfsFileSearchSync', () => {
       fileService,
       fileFilteringOptions: {
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectonyxIgnore: true,
         customIgnoreFilePaths: [],
       },
     });
@@ -327,3 +327,4 @@ describe('bfsFileSearchSync', () => {
     expect(result).toEqual([targetFilePath]);
   });
 });
+

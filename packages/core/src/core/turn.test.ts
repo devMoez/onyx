@@ -16,8 +16,8 @@ import { reportError } from '../utils/errorReporting.js';
 import {
   InvalidStreamError,
   StreamEventType,
-  type GeminiChat,
-} from './geminiChat.js';
+  type onyxChat,
+} from './onyxChat.js';
 import { LlmRole } from '../telemetry/types.js';
 
 const mockSendMessageStream = vi.fn();
@@ -74,7 +74,7 @@ describe('Turn', () => {
         },
       },
     };
-    turn = new Turn(mockChatInstance as unknown as GeminiChat, 'prompt-id-1');
+    turn = new Turn(mockChatInstance as unknown as onyxChat, 'prompt-id-1');
     mockGetHistory.mockReturnValue([]);
     mockSendMessageStream.mockResolvedValue((async function* () {})());
   });
@@ -909,3 +909,4 @@ describe('Turn', () => {
     });
   });
 });
+

@@ -59,7 +59,7 @@ const __dirname = path.dirname(__filename);
  * Uses a native C# helper to bypass PowerShell restrictions.
  */
 export class WindowsSandboxManager implements SandboxManager {
-  static readonly HELPER_EXE = 'GeminiSandbox.exe';
+  static readonly HELPER_EXE = 'onyxSandbox.exe';
 
   private readonly helperPath: string;
   private readonly denialCache: SandboxDenialCache = createSandboxDenialCache();
@@ -228,7 +228,7 @@ export class WindowsSandboxManager implements SandboxManager {
     const command = req.command;
     const args = req.args;
 
-    // Native commands __read and __write are passed directly to GeminiSandbox.exe
+    // Native commands __read and __write are passed directly to onyxSandbox.exe
 
     const isYolo = this.options.modeConfig?.yolo ?? false;
 
@@ -503,3 +503,4 @@ function touch(filePath: string, isDirectory: boolean): void {
     fs.closeSync(fs.openSync(filePath, 'a'));
   }
 }
+

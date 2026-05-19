@@ -147,7 +147,7 @@ vi.mock('../tools/memoryTool', async (importOriginal) => {
   return {
     ...actual,
     setGeminiMdFilename: vi.fn(),
-    getCurrentGeminiMdFilename: vi.fn(() => 'GEMINI.md'),
+    getCurrentGeminiMdFilename: vi.fn(() => 'onyx.md'),
   };
 });
 
@@ -1162,7 +1162,7 @@ describe('Server Config (config.ts)', () => {
       ...baseParams,
       fileFiltering: {
         respectGitIgnore: false,
-        respectGeminiIgnore: false,
+        respectonyxIgnore: false,
         customIgnoreFilePaths: ['.myignore'],
       },
     };
@@ -1174,7 +1174,7 @@ describe('Server Config (config.ts)', () => {
       path.resolve(TARGET_DIR),
       {
         respectGitIgnore: false,
-        respectGeminiIgnore: false,
+        respectonyxIgnore: false,
         customIgnoreFilePaths: ['.myignore'],
       },
     );
@@ -3493,7 +3493,7 @@ describe('Config JIT Initialization', () => {
         .fn()
         .mockReturnValue('Environment Memory\n\nMCP Instructions'),
       getUserProjectMemory: vi.fn().mockReturnValue(''),
-      getLoadedPaths: vi.fn().mockReturnValue(new Set(['/path/to/GEMINI.md'])),
+      getLoadedPaths: vi.fn().mockReturnValue(new Set(['/path/to/onyx.md'])),
     } as unknown as MemoryContextManager;
     (MemoryContextManager as unknown as Mock).mockImplementation(
       () => mockMemoryContextManager,
@@ -3549,14 +3549,14 @@ describe('Config JIT Initialization', () => {
 
     // Verify state update (delegated to MemoryContextManager)
     expect(config.getGeminiMdFileCount()).toBe(1);
-    expect(config.getGeminiMdFilePaths()).toEqual(['/path/to/GEMINI.md']);
+    expect(config.getGeminiMdFilePaths()).toEqual(['/path/to/onyx.md']);
   });
 
   describe('memory path access', () => {
-    it('should NOT add the global ~/.gemini directory to the workspace', async () => {
-      // Memory does not broaden the workspace to include the global ~/.gemini/
+    it('should NOT add the global ~/.onyx directory to the workspace', async () => {
+      // Memory does not broaden the workspace to include the global ~/.onyx/
       // directory. Cross-project personal preferences are routed to
-      // ~/.gemini/GEMINI.md via the surgical isPathAllowed allowlist instead.
+      // ~/.onyx/onyx.md via the surgical isPathAllowed allowlist instead.
       const params: ConfigParameters = {
         sessionId: 'test-session',
         targetDir: '/tmp/test',
@@ -3572,9 +3572,9 @@ describe('Config JIT Initialization', () => {
       expect(directories).not.toContain(Storage.getGlobalGeminiDir());
     });
 
-    it('should allow isPathAllowed to write the global ~/.gemini/GEMINI.md file', async () => {
+    it('should allow isPathAllowed to write the global ~/.onyx/onyx.md file', async () => {
       // Surgical allowlist: the prompt routes cross-project personal
-      // preferences to ~/.gemini/GEMINI.md, so the agent must be able to edit
+      // preferences to ~/.onyx/onyx.md, so the agent must be able to edit
       // that exact file via edit/write_file.
       const params: ConfigParameters = {
         sessionId: 'test-session',
@@ -3589,13 +3589,13 @@ describe('Config JIT Initialization', () => {
 
       const globalGeminiMdPath = path.join(
         Storage.getGlobalGeminiDir(),
-        'GEMINI.md',
+        'onyx.md',
       );
       expect(config.isPathAllowed(globalGeminiMdPath)).toBe(true);
     });
 
-    it('should NOT allow isPathAllowed to write other files under ~/.gemini/ (least privilege)', async () => {
-      // The allowlist is surgical: only ~/.gemini/GEMINI.md is reachable.
+    it('should NOT allow isPathAllowed to write other files under ~/.onyx/ (least privilege)', async () => {
+      // The allowlist is surgical: only ~/.onyx/onyx.md is reachable.
       // settings.json, keybindings.json, credentials, etc. remain disallowed.
       const params: ConfigParameters = {
         sessionId: 'test-session',
@@ -3797,7 +3797,7 @@ describe('Config JIT Initialization', () => {
       );
       const activeMemoryPath = path.join(fakeMemoryTempDir, 'MEMORY.md');
       const projectTempPath = path.join(fakeProjectTempDir, 'logs', 'run.log');
-      const workspaceMemoryPath = path.join('/tmp/test', 'GEMINI.md');
+      const workspaceMemoryPath = path.join('/tmp/test', 'onyx.md');
 
       expect(config.validatePathAccess(activeMemoryPath)).toBeNull();
 
@@ -4278,3 +4278,4 @@ describe('ADKSettings', () => {
     expect(config.getAgentSessionNoninteractiveEnabled()).toBe(true);
   });
 });
+

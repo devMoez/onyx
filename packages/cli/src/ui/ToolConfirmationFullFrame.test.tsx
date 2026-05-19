@@ -25,8 +25,8 @@ vi.mock('ink', async (importOriginal) => {
   };
 });
 
-vi.mock('./components/GeminiSpinner.js', () => ({
-  GeminiSpinner: () => null,
+vi.mock('./components/OnyxSpinner.js', () => ({
+  OnyxSpinner: () => null,
 }));
 
 vi.mock('./components/CliSpinner.js', () => ({
@@ -34,7 +34,7 @@ vi.mock('./components/CliSpinner.js', () => ({
 }));
 
 // Mock hooks to align with codebase style, even if App uses UIState directly
-vi.mock('./hooks/useGeminiStream.js');
+vi.mock('./hooks/useOnyxStream.js');
 vi.mock('./hooks/useHistoryManager.js');
 vi.mock('./hooks/useQuotaAndFallback.js');
 vi.mock('./hooks/useThemeCommand.js');
@@ -175,3 +175,4 @@ describe('Full Terminal Tool Confirmation Snapshot', () => {
     unmount();
   });
 });
+

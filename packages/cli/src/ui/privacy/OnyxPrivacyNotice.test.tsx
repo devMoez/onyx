@@ -7,7 +7,7 @@
 import { render } from '../../test-utils/render.js';
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { act } from 'react';
-import { GeminiPrivacyNotice } from './GeminiPrivacyNotice.js';
+import { OnyxPrivacyNotice } from './OnyxPrivacyNotice.js';
 import { useKeypress } from '../hooks/useKeypress.js';
 
 // Mocks
@@ -17,7 +17,7 @@ vi.mock('../hooks/useKeypress.js', () => ({
 
 const mockedUseKeypress = useKeypress as Mock;
 
-describe('GeminiPrivacyNotice', () => {
+describe('OnyxPrivacyNotice', () => {
   const onExit = vi.fn();
 
   beforeEach(() => {
@@ -26,7 +26,7 @@ describe('GeminiPrivacyNotice', () => {
 
   it('renders correctly', async () => {
     const { lastFrame, unmount } = await render(
-      <GeminiPrivacyNotice onExit={onExit} />,
+      <OnyxPrivacyNotice onExit={onExit} />,
     );
 
     expect(lastFrame()).toContain('Gemini API Key Notice');
@@ -37,7 +37,7 @@ describe('GeminiPrivacyNotice', () => {
 
   it('exits on Escape', async () => {
     const { waitUntilReady, unmount } = await render(
-      <GeminiPrivacyNotice onExit={onExit} />,
+      <OnyxPrivacyNotice onExit={onExit} />,
     );
 
     const keypressHandler = mockedUseKeypress.mock.calls[0][0];
@@ -53,3 +53,4 @@ describe('GeminiPrivacyNotice', () => {
     unmount();
   });
 });
+

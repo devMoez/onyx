@@ -182,8 +182,8 @@ export function createMockEnvironment(
     () => llmClient as BaseLlmClient,
     'mock-session',
     'mock-prompt-id',
-    '/tmp/.gemini/trace',
-    '/tmp/.gemini/tool-outputs',
+    '/tmp/.onyx/trace',
+    '/tmp/.onyx/tool-outputs',
     tracer,
     1,
     eventBus,
@@ -332,3 +332,4 @@ export function setupContextComponentTest(
   // The async async pipeline is now internally managed by ContextManager
   return { chatHistory, contextManager };
 }
+

@@ -57,7 +57,7 @@ export class AtFileProcessor implements IPromptProcessor {
         try {
           const fileContentParts = await readPathFromWorkspace(pathStr, config);
           if (fileContentParts.length === 0) {
-            const uiMessage = `File '@{${pathStr}}' was ignored by .gitignore or .geminiignore and was not included in the prompt.`;
+            const uiMessage = `File '@{${pathStr}}' was ignored by .gitignore or .onyxIgnore and was not included in the prompt.`;
             context.ui.addItem(
               { type: MessageType.INFO, text: uiMessage },
               Date.now(),
@@ -96,3 +96,4 @@ export class AtFileProcessor implements IPromptProcessor {
     });
   }
 }
+

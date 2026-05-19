@@ -18,7 +18,7 @@ interface GeminiMessageProps {
   terminalWidth: number;
 }
 
-export const GeminiMessage: React.FC<GeminiMessageProps> = ({
+export const OnyxMessage: React.FC<GeminiMessageProps> = ({
   text,
   isPending,
   availableTerminalHeight,
@@ -51,3 +51,4 @@ export const GeminiMessage: React.FC<GeminiMessageProps> = ({
     </Box>
   );
 };
+

@@ -24,7 +24,7 @@ vi.mock('@onyx/core', () => ({
     log: vi.fn(),
     warn: vi.fn(),
   },
-  GEMINI_DIR: '.gemini',
+  GEMINI_DIR: '.onyx',
 }));
 
 describe('sandboxUtils', () => {
@@ -109,7 +109,7 @@ describe('sandboxUtils', () => {
     it('should source sandbox.bashrc if exists', () => {
       vi.mocked(fs.existsSync).mockReturnValue(true);
       const args = entrypoint('/work', ['node', 'gemini', 'arg1']);
-      expect(args[2]).toContain('source .gemini/sandbox.bashrc');
+      expect(args[2]).toContain('source .onyx/sandbox.bashrc');
     });
 
     it('should include socat commands for ports', () => {
@@ -239,3 +239,4 @@ describe('sandboxUtils', () => {
     });
   });
 });
+

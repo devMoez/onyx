@@ -38,12 +38,12 @@ export * from './core/client.js';
 export * from './core/contentGenerator.js';
 export * from './core/fakeContentGenerator.js';
 export * from './core/loggingContentGenerator.js';
-export * from './core/geminiChat.js';
+export * from './core/onyxChat.js';
 export * from './core/logger.js';
 export * from './core/prompts.js';
 export * from './core/tokenLimits.js';
 export * from './core/turn.js';
-export * from './core/geminiRequest.js';
+export * from './core/onyxRequest.js';
 export * from './scheduler/scheduler.js';
 export * from './scheduler/types.js';
 export * from './scheduler/tool-executor.js';
@@ -306,8 +306,9 @@ export * from './utils/trust.js';
 // Export voice utilities
 export * from './voice/audioRecorder.js';
 export * from './voice/transcriptionProvider.js';
-export * from './voice/geminiLiveTranscriptionProvider.js';
+export * from './voice/onyxLiveTranscriptionProvider.js';
 export * from './voice/whisperTranscriptionProvider.js';
 export * from './voice/transcriptionFactory.js';
 export * from './voice/whisperModelManager.js';
 export { isBinaryAvailable } from './utils/binaryCheck.js';
+

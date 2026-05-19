@@ -617,7 +617,7 @@ describe('memoryService', () => {
             path.join(inboxDir, 'global', 'reply-style.patch'),
             [
               `--- /dev/null`,
-              `+++ ${path.join(globalMemoryDir, 'GEMINI.md')}`,
+              `+++ ${path.join(globalMemoryDir, 'onyx.md')}`,
               `@@ -0,0 +1,1 @@`,
               `+Prefer concise architecture summaries.`,
               ``,
@@ -1956,7 +1956,7 @@ describe('memoryService', () => {
         patchPath,
         [
           `--- ${targetFile}`,
-          '+++ .gemini/skills/foo/SKILL.md',
+          '+++ .onyx/skills/foo/SKILL.md',
           '@@ -1,3 +1,4 @@',
           ' line1',
           ' line2',
@@ -2224,3 +2224,4 @@ describe('memoryService', () => {
     });
   });
 });
+

@@ -39,21 +39,21 @@ const ONYX_DIR = '.onyx';
 
 const homedir = () => process.env['ONYX_CLI_HOME'] || os.homedir();
 
-let geminiSandbox = process.env.GEMINI_SANDBOX;
+let onyxSandbox = process.env.GEMINI_SANDBOX;
 
-if (!geminiSandbox) {
+if (!onyxSandbox) {
   const userSettingsFile = join(homedir(), GEMINI_DIR, 'settings.json');
   if (existsSync(userSettingsFile)) {
     const settings = JSON.parse(
       stripJsonComments(readFileSync(userSettingsFile, 'utf-8')),
     );
     if (settings.sandbox) {
-      geminiSandbox = settings.sandbox;
+      onyxSandbox = settings.sandbox;
     }
   }
 }
 
-if (!geminiSandbox) {
+if (!onyxSandbox) {
   let currentDir = process.cwd();
   while (true) {
     const geminiEnv = join(currentDir, ONYX_DIR, '.env');
@@ -71,10 +71,10 @@ if (!geminiSandbox) {
     }
     currentDir = parentDir;
   }
-  geminiSandbox = process.env.GEMINI_SANDBOX;
+  onyxSandbox = process.env.GEMINI_SANDBOX;
 }
 
-geminiSandbox = (geminiSandbox || '').toLowerCase();
+onyxSandbox = (onyxSandbox || '').toLowerCase();
 
 const commandExists = (cmd) => {
   const checkCommand = os.platform() === 'win32' ? 'where' : 'command -v';
@@ -95,7 +95,7 @@ const commandExists = (cmd) => {
 };
 
 let command = '';
-if (['1', 'true'].includes(geminiSandbox)) {
+if (['1', 'true'].includes(onyxSandbox)) {
   if (commandExists('docker')) {
     command = 'docker';
   } else if (commandExists('podman')) {
@@ -106,12 +106,12 @@ if (['1', 'true'].includes(geminiSandbox)) {
     );
     process.exit(1);
   }
-} else if (geminiSandbox && !['0', 'false'].includes(geminiSandbox)) {
-  if (commandExists(geminiSandbox)) {
-    command = geminiSandbox;
+} else if (onyxSandbox && !['0', 'false'].includes(onyxSandbox)) {
+  if (commandExists(onyxSandbox)) {
+    command = onyxSandbox;
   } else {
     console.error(
-      `ERROR: missing sandbox command '${geminiSandbox}' (from GEMINI_SANDBOX)`,
+      `ERROR: missing sandbox command '${onyxSandbox}' (from GEMINI_SANDBOX)`,
     );
     process.exit(1);
   }
@@ -131,3 +131,4 @@ if (!argv.q) {
   console.log(command);
 }
 process.exit(0);
+

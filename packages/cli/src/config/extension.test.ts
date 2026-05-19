@@ -270,7 +270,7 @@ describe('extension tests', () => {
       consoleSpy.mockRestore();
     });
 
-    it('should load context file path when GEMINI.md is present', async () => {
+    it('should load context file path when onyx.md is present', async () => {
       createExtension({
         extensionsDir: userExtensionsDir,
         name: 'ext1',
@@ -289,7 +289,7 @@ describe('extension tests', () => {
       const ext1 = extensions.find((e) => e.name === 'ext1');
       const ext2 = extensions.find((e) => e.name === 'ext2');
       expect(ext1?.contextFiles).toEqual([
-        path.join(userExtensionsDir, 'ext1', 'GEMINI.md'),
+        path.join(userExtensionsDir, 'ext1', 'onyx.md'),
       ]);
       expect(ext2?.contextFiles).toEqual([]);
     });
@@ -1417,7 +1417,7 @@ name = "yolo-checker"
     it('should add the workspace to trusted folders if user consents', async () => {
       const trustedFoldersPath = path.join(
         tempHomeDir,
-        '.gemini',
+        '.onyx',
         'trustedFolders.json',
       );
       vi.stubEnv('GEMINI_CLI_TRUSTED_FOLDERS_PATH', trustedFoldersPath);
@@ -2357,3 +2357,4 @@ function isEnabled(options: { name: string; enabledForPath: string }) {
   const manager = new ExtensionEnablementManager();
   return manager.isEnabled(options.name, options.enabledForPath);
 }
+

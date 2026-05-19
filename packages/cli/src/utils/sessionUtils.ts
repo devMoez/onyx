@@ -622,11 +622,11 @@ export function convertSessionToHistoryFormats(
           messageType = MessageType.WARNING;
           break;
         case 'gemini':
-          messageType = MessageType.GEMINI;
+          messageType = MessageType.onyx;
           break;
         default:
           checkExhaustive(msg);
-          messageType = MessageType.GEMINI;
+          messageType = MessageType.onyx;
           break;
       }
 
@@ -666,3 +666,4 @@ export function convertSessionToHistoryFormats(
     uiHistory,
   };
 }
+

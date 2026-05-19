@@ -47,7 +47,7 @@ async function getMemoryNodeArgs(): Promise<string[]> {
     const { join } = await import('node:path');
     // Respect GEMINI_CLI_HOME environment variable, falling back to os.homedir()
     const baseDir =
-      process.env['GEMINI_CLI_HOME'] || join(os.homedir(), '.gemini');
+      process.env['GEMINI_CLI_HOME'] || join(os.homedir(), '.onyx');
     const settingsPath = join(baseDir, 'settings.json');
     const rawSettings = readFileSync(settingsPath, 'utf8');
     const settings = JSON.parse(rawSettings);
@@ -182,3 +182,4 @@ async function run() {
 }
 
 run();
+

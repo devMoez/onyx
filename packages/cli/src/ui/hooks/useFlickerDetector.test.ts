@@ -21,7 +21,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
   return {
     ...actual,
     recordFlickerFrame: vi.fn(),
-    GEMINI_DIR: '.gemini',
+    GEMINI_DIR: '.onyx',
   };
 });
 vi.mock('ink', async (importOriginal) => {
@@ -118,3 +118,4 @@ describe('useFlickerDetector', () => {
     expect(mockAppEventsEmit).toHaveBeenCalledTimes(1);
   });
 });
+

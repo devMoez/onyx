@@ -99,7 +99,7 @@ describe('Environment Isolation', () => {
     delete process.env['GEMINI_API_KEY'];
   });
 
-  it('should still load .gemini/.env even if ignoreLocalEnv is true', () => {
+  it('should still load .onyx/.env even if ignoreLocalEnv is true', () => {
     const workspaceGeminiEnv = path.join(mockWorkspace, GEMINI_DIR, '.env');
     vi.mocked(fs.existsSync).mockImplementation(
       (p) => p.toString() === workspaceGeminiEnv,
@@ -235,3 +235,4 @@ describe('Environment Isolation', () => {
     expect(process.env['GEMINI_API_KEY']).toBeUndefined();
   });
 });
+

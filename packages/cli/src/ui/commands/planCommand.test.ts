@@ -165,7 +165,7 @@ describe('planCommand', () => {
       'Approved Plan: approved-plan.md',
     );
     expect(mockContext.ui.addItem).toHaveBeenCalledWith({
-      type: MessageType.GEMINI,
+      type: MessageType.onyx,
       text: '# Approved Plan Content',
     });
   });
@@ -212,3 +212,4 @@ describe('planCommand', () => {
     });
   });
 });
+

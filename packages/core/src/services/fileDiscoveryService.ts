@@ -21,7 +21,7 @@ import * as path from 'node:path';
 
 export interface FilterFilesOptions {
   respectGitIgnore?: boolean;
-  respectGeminiIgnore?: boolean;
+  respectonyxIgnore?: boolean;
   customIgnoreFilePaths?: string[];
 }
 
@@ -38,7 +38,7 @@ export class FileDiscoveryService {
     null;
   private defaultFilterFileOptions: FilterFilesOptions = {
     respectGitIgnore: true,
-    respectGeminiIgnore: true,
+    respectonyxIgnore: true,
     customIgnoreFilePaths: [],
   };
   private projectRoot: string;
@@ -65,7 +65,7 @@ export class FileDiscoveryService {
       const customPatterns = this.customIgnoreFilter
         ? this.customIgnoreFilter.getPatterns()
         : [];
-      // Create combined parser: .gitignore + .geminiignore + custom ignore
+      // Create combined parser: .gitignore + .onyxIgnore + custom ignore
       this.combinedIgnoreFilter = new GitIgnoreParser(
         this.projectRoot,
         // customPatterns should go the last to ensure overwriting of geminiPatterns
@@ -145,9 +145,9 @@ export class FileDiscoveryService {
     if (options.respectGitIgnore !== undefined) {
       this.defaultFilterFileOptions.respectGitIgnore = options.respectGitIgnore;
     }
-    if (options.respectGeminiIgnore !== undefined) {
-      this.defaultFilterFileOptions.respectGeminiIgnore =
-        options.respectGeminiIgnore;
+    if (options.respectonyxIgnore !== undefined) {
+      this.defaultFilterFileOptions.respectonyxIgnore =
+        options.respectonyxIgnore;
     }
     if (options.customIgnoreFilePaths) {
       this.defaultFilterFileOptions.customIgnoreFilePaths =
@@ -177,7 +177,7 @@ export class FileDiscoveryService {
     filePaths: string[],
     opts: FilterFilesOptions = {
       respectGitIgnore: true,
-      respectGeminiIgnore: true,
+      respectonyxIgnore: true,
     },
   ): FilterReport {
     const filteredPaths = this.filterFiles(filePaths, opts);
@@ -219,10 +219,10 @@ export class FileDiscoveryService {
   ): boolean {
     const {
       respectGitIgnore = this.defaultFilterFileOptions.respectGitIgnore,
-      respectGeminiIgnore = this.defaultFilterFileOptions.respectGeminiIgnore,
+      respectonyxIgnore = this.defaultFilterFileOptions.respectonyxIgnore,
     } = options;
 
-    if (respectGitIgnore && respectGeminiIgnore && this.combinedIgnoreFilter) {
+    if (respectGitIgnore && respectonyxIgnore && this.combinedIgnoreFilter) {
       return this.combinedIgnoreFilter.isIgnored(filePath, isDirectory);
     }
 
@@ -238,7 +238,7 @@ export class FileDiscoveryService {
     }
 
     if (
-      respectGeminiIgnore &&
+      respectonyxIgnore &&
       this.geminiIgnoreFilter?.isIgnored(filePath, isDirectory)
     ) {
       return true;
@@ -248,13 +248,13 @@ export class FileDiscoveryService {
   }
 
   /**
-   * Returns the list of ignore files being used (e.g. .geminiignore) excluding .gitignore.
+   * Returns the list of ignore files being used (e.g. .onyxIgnore) excluding .gitignore.
    */
   getIgnoreFilePaths(): string[] {
     const paths: string[] = [];
     if (
       this.geminiIgnoreFilter &&
-      this.defaultFilterFileOptions.respectGeminiIgnore
+      this.defaultFilterFileOptions.respectonyxIgnore
     ) {
       paths.push(...this.geminiIgnoreFilter.getIgnoreFilePaths());
     }
@@ -282,3 +282,4 @@ export class FileDiscoveryService {
     return paths.concat(this.getIgnoreFilePaths());
   }
 }
+

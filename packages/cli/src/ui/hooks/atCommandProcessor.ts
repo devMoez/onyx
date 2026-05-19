@@ -248,13 +248,13 @@ async function resolveFilePaths(
       respectFileIgnore.respectGitIgnore &&
       fileDiscovery.shouldIgnoreFile(pathName, {
         respectGitIgnore: true,
-        respectGeminiIgnore: false,
+        respectonyxIgnore: false,
       });
     const geminiIgnored =
-      respectFileIgnore.respectGeminiIgnore &&
+      respectFileIgnore.respectonyxIgnore &&
       fileDiscovery.shouldIgnoreFile(pathName, {
         respectGitIgnore: false,
-        respectGeminiIgnore: true,
+        respectonyxIgnore: true,
       });
 
     if (gitIgnored || geminiIgnored) {
@@ -532,7 +532,7 @@ async function readLocalFiles(
     include: pathSpecsToRead,
     file_filtering_options: {
       respect_git_ignore: respectFileIgnore.respectGitIgnore,
-      respect_gemini_ignore: respectFileIgnore.respectGeminiIgnore,
+      respect_gemini_ignore: respectFileIgnore.respectonyxIgnore,
     },
   };
 
@@ -788,3 +788,4 @@ function convertResourceContentsToParts(response: {
     return [];
   });
 }
+

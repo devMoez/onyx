@@ -25,7 +25,7 @@ vi.mock('../../utils/paths.js', async (importOriginal) => {
   return {
     ...actual,
     homedir: () => '/mock/home',
-    GEMINI_DIR: '.gemini',
+    GEMINI_DIR: '.onyx',
   };
 });
 
@@ -90,7 +90,7 @@ describe('ExtensionIntegrityManager', () => {
       const key = await manager.getSecretKey();
       expect(key).toBeDefined();
       expect(fs.promises.writeFile).toHaveBeenCalledWith(
-        path.join('/mock/home', '.gemini', 'integrity.key'),
+        path.join('/mock/home', '.onyx', 'integrity.key'),
         key,
         { mode: 0o600 },
       );
@@ -201,3 +201,4 @@ describe('ExtensionIntegrityManager', () => {
     });
   });
 });
+

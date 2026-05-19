@@ -11,8 +11,8 @@ import type { Config } from '@onyx/core';
 
 describe('Tips', () => {
   it.each([
-    { fileCount: 0, description: 'renders all tips including GEMINI.md tip' },
-    { fileCount: 5, description: 'renders fewer tips when GEMINI.md exists' },
+    { fileCount: 0, description: 'renders all tips including onyx.md tip' },
+    { fileCount: 5, description: 'renders fewer tips when onyx.md exists' },
   ])('$description', async ({ fileCount }) => {
     const config = {
       getGeminiMdFileCount: vi.fn().mockReturnValue(fileCount),
@@ -23,3 +23,4 @@ describe('Tips', () => {
     unmount();
   });
 });
+

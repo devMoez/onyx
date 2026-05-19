@@ -10,10 +10,10 @@ import { PrivacyNotice } from './PrivacyNotice.js';
 import type { AuthType, Config, ContentGeneratorConfig } from '@onyx/core';
 
 // Mock child components
-vi.mock('./GeminiPrivacyNotice.js', async () => {
+vi.mock('./OnyxPrivacyNotice.js', async () => {
   const { Text } = await import('ink');
   return {
-    GeminiPrivacyNotice: () => <Text>GeminiPrivacyNotice</Text>,
+    OnyxPrivacyNotice: () => <Text>OnyxPrivacyNotice</Text>,
   };
 });
 
@@ -44,7 +44,7 @@ describe('PrivacyNotice', () => {
   it.each([
     {
       authType: 'gemini-api-key' as AuthType,
-      expectedComponent: 'GeminiPrivacyNotice',
+      expectedComponent: 'OnyxPrivacyNotice',
     },
     {
       authType: 'vertex-ai' as AuthType,
@@ -74,3 +74,4 @@ describe('PrivacyNotice', () => {
     },
   );
 });
+

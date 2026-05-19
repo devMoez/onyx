@@ -97,7 +97,7 @@ describe('ReadManyFilesTool', () => {
 
       getFileFilteringOptions: () => ({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectonyxIgnore: true,
         customIgnoreFilePaths: [],
       }),
       getTargetDir: () => tempRootDir,
@@ -536,7 +536,7 @@ describe('ReadManyFilesTool', () => {
       ]);
     });
 
-    it('should return error if path is ignored by a .geminiignore pattern', async () => {
+    it('should return error if path is ignored by a .onyxIgnore pattern', async () => {
       createFile('foo.bar', '');
       createFile('bar.ts', '');
       createFile('foo.quux', '');
@@ -569,7 +569,7 @@ describe('ReadManyFilesTool', () => {
         getFileSystemService: () => new StandardFileSystemService(),
         getFileFilteringOptions: () => ({
           respectGitIgnore: true,
-          respectGeminiIgnore: true,
+          respectonyxIgnore: true,
           customIgnoreFilePaths: [],
         }),
         getWorkspaceContext: () => new WorkspaceContext(tempDir1, [tempDir2]),
@@ -919,7 +919,7 @@ Content of file[1]
     it('should discover JIT context sequentially to avoid duplicate shared parent context', async () => {
       const { discoverJitContext } = await import('./jit-context.js');
 
-      // Simulate two subdirectories sharing a parent GEMINI.md.
+      // Simulate two subdirectories sharing a parent onyx.md.
       // Sequential execution means the second call sees the parent already
       // loaded, so it only returns its own leaf context.
       const callOrder: string[] = [];
@@ -976,3 +976,4 @@ Content of file[1]
     });
   });
 });
+

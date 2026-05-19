@@ -24,7 +24,7 @@ import { logger } from '../utils/logger.js';
 
 export class InitCommand implements Command {
   name = 'init';
-  description = 'Analyzes the project and creates a tailored GEMINI.md file';
+  description = 'Analyzes the project and creates a tailored onyx.md file';
   requiresWorkspace = true;
   streaming = true;
 
@@ -137,7 +137,7 @@ export class InitCommand implements Command {
 
     const geminiMdPath = path.join(
       process.env['CODER_AGENT_WORKSPACE_PATH']!,
-      'GEMINI.md',
+      'onyx.md',
     );
     const result = performInit(fs.existsSync(geminiMdPath));
 
@@ -167,3 +167,4 @@ export class InitCommand implements Command {
     }
   }
 }
+

@@ -454,10 +454,10 @@ describe('settings-validation', () => {
       if (result.error) {
         const formatted = formatValidationError(
           result.error,
-          '~/.gemini/settings.json',
+          '~/.onyx/settings.json',
         );
 
-        expect(formatted).toContain('~/.gemini/settings.json');
+        expect(formatted).toContain('~/.onyx/settings.json');
         expect(formatted).toContain('model.summarizeToolOutput');
       }
     });
@@ -558,3 +558,4 @@ describe('settings-validation', () => {
     });
   });
 });
+

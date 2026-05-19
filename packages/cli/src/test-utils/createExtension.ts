@@ -43,7 +43,7 @@ export function createExtension({
   );
 
   if (addContextFile) {
-    fs.writeFileSync(path.join(extDir, 'GEMINI.md'), 'context');
+    fs.writeFileSync(path.join(extDir, 'onyx.md'), 'context');
   }
 
   if (contextFileName) {
@@ -58,3 +58,4 @@ export function createExtension({
   }
   return extDir;
 }
+

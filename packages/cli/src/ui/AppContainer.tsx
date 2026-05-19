@@ -118,7 +118,7 @@ import { basename } from 'node:path';
 import { computeTerminalTitle } from '../utils/windowTitle.js';
 import { useTextBuffer } from './components/shared/text-buffer.js';
 import { useLogger } from './hooks/useLogger.js';
-import { useGeminiStream } from './hooks/useGeminiStream.js';
+import { useOnyxStream } from './hooks/useOnyxStream.js';
 import { useAgentStream } from './hooks/useAgentStream.js';
 import { type BackgroundTask } from './hooks/useExecutionLifecycle.js';
 import { useVim } from './hooks/vim.js';
@@ -1069,7 +1069,7 @@ export const AppContainer = (props: AppContainerProps) => {
     historyManager.addItem(
       {
         type: MessageType.INFO,
-        text: 'Refreshing hierarchical memory (GEMINI.md or other context files)...',
+        text: 'Refreshing hierarchical memory (onyx.md or other context files)...',
       },
       Date.now(),
     );
@@ -1190,7 +1190,7 @@ export const AppContainer = (props: AppContainerProps) => {
         logger,
       })
     : // eslint-disable-next-line react-hooks/rules-of-hooks
-      useGeminiStream(
+      useOnyxStream(
         config.getGeminiClient(),
         historyManager.history,
         historyManager.addItem,
@@ -2886,3 +2886,4 @@ export const AppContainer = (props: AppContainerProps) => {
     </UIStateContext.Provider>
   );
 };
+

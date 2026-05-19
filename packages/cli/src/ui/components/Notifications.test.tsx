@@ -63,16 +63,16 @@ vi.mock('node:path', async () => {
 vi.mock('@onyx/core', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@onyx/core')>();
   const MockStorage = vi.fn().mockImplementation(() => ({
-    getExtensionsDir: () => '/mock/home/.gemini/extensions',
+    getExtensionsDir: () => '/mock/home/.onyx/extensions',
   }));
   Object.assign(MockStorage, {
     getGlobalTempDir: () => '/mock/temp',
-    getGlobalSettingsPath: () => '/mock/home/.gemini/settings.json',
-    getGlobalGeminiDir: () => '/mock/home/.gemini',
+    getGlobalSettingsPath: () => '/mock/home/.onyx/settings.json',
+    getGlobalGeminiDir: () => '/mock/home/.onyx',
   });
   return {
     ...actual,
-    GEMINI_DIR: '.gemini',
+    GEMINI_DIR: '.onyx',
     homedir: () => '/mock/home',
     WarningPriority: {
       Low: 'low',
@@ -352,3 +352,4 @@ describe('Notifications', () => {
     unmount();
   });
 });
+

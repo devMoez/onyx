@@ -58,7 +58,7 @@ export class RefreshMemoryCommand implements Command {
 
 export class ListMemoryCommand implements Command {
   readonly name = 'memory list';
-  readonly description = 'Lists the paths of the GEMINI.md files in use.';
+  readonly description = 'Lists the paths of the onyx.md files in use.';
 
   async execute(
     context: CommandContext,
@@ -68,3 +68,4 @@ export class ListMemoryCommand implements Command {
     return { name: this.name, data: result.content };
   }
 }
+

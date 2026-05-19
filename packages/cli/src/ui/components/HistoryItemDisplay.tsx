@@ -10,7 +10,7 @@ import { escapeAnsiCtrlCodes } from '../utils/textUtils.js';
 import type { HistoryItem } from '../types.js';
 import { UserMessage } from './messages/UserMessage.js';
 import { UserShellMessage } from './messages/UserShellMessage.js';
-import { GeminiMessage } from './messages/GeminiMessage.js';
+import { OnyxMessage } from './messages/OnyxMessage.js';
 import { InfoMessage } from './messages/InfoMessage.js';
 import { ErrorMessage } from './messages/ErrorMessage.js';
 import { ToolGroupMessage } from './messages/ToolGroupMessage.js';
@@ -101,7 +101,7 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
         <UserShellMessage text={itemForDisplay.text} width={terminalWidth} />
       )}
       {itemForDisplay.type === 'gemini' && (
-        <GeminiMessage
+        <OnyxMessage
           text={itemForDisplay.text}
           isPending={isPending}
           availableTerminalHeight={
@@ -249,3 +249,4 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
     </Box>
   );
 };
+

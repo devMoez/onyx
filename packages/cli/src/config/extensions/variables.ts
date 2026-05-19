@@ -20,7 +20,7 @@ const UNMARSHALL_KEY_IGNORE_LIST: Set<string> = new Set<string>([
 
 export const EXTENSIONS_DIRECTORY_NAME = path.join(GEMINI_DIR, 'extensions');
 export const EXTENSIONS_CONFIG_FILENAME = 'gemini-extension.json';
-export const INSTALL_METADATA_FILENAME = '.gemini-extension-install.json';
+export const INSTALL_METADATA_FILENAME = '.onyx-extension-install.json';
 export const EXTENSION_SETTINGS_FILENAME = '.env';
 
 export type JsonObject = { [key: string]: JsonValue };
@@ -90,3 +90,4 @@ export function recursivelyHydrateStrings<T>(
   }
   return obj;
 }
+

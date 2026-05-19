@@ -121,8 +121,8 @@ describe.skipIf(os.platform() === 'win32')('buildBwrapArgs', () => {
       `${workspace}/.gitignore`,
       `${workspace}/.gitignore`,
       '--ro-bind',
-      `${workspace}/.geminiignore`,
-      `${workspace}/.geminiignore`,
+      `${workspace}/.onyxIgnore`,
+      `${workspace}/.onyxIgnore`,
     ]);
   });
 
@@ -417,3 +417,4 @@ describe.skipIf(os.platform() === 'win32')('buildBwrapArgs', () => {
     expect(worktreeBindIndex).toBeGreaterThan(writeBindIndex);
   });
 });
+

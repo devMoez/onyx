@@ -203,7 +203,7 @@ const resumeCheckpointCommand: SlashCommand = {
 
     const rolemap: { [key: string]: MessageType } = {
       user: MessageType.USER,
-      model: MessageType.GEMINI,
+      model: MessageType.onyx,
     };
 
     const uiHistory: HistoryItemWithoutId[] = [];
@@ -220,7 +220,7 @@ const resumeCheckpointCommand: SlashCommand = {
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       uiHistory.push({
-        type: (item.role && rolemap[item.role]) || MessageType.GEMINI,
+        type: (item.role && rolemap[item.role]) || MessageType.onyx,
         text,
       } as HistoryItemWithoutId);
     }
@@ -428,3 +428,4 @@ export const chatCommand: SlashCommand = {
   },
   subCommands: chatResumeSubCommands,
 };
+

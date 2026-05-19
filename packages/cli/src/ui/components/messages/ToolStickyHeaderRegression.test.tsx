@@ -26,8 +26,8 @@ vi.mock('../AnsiOutput.js', () => ({
   AnsiOutputText: () => <Text>MockAnsiOutput</Text>,
 }));
 
-vi.mock('../GeminiRespondingSpinner.js', () => ({
-  GeminiRespondingSpinner: () => <Text>MockRespondingSpinner</Text>,
+vi.mock('../OnyxRespondingSpinner.js', () => ({
+  OnyxRespondingSpinner: () => <Text>MockRespondingSpinner</Text>,
 }));
 
 vi.mock('./DiffRenderer.js', () => ({
@@ -211,3 +211,4 @@ describe('ToolMessage Sticky Header Regression', () => {
     unmount();
   });
 });
+

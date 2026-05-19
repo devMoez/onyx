@@ -77,7 +77,7 @@ describe('chatCommand', () => {
               authType: AuthType.LOGIN_WITH_GOOGLE,
             }),
             storage: {
-              getProjectTempDir: () => '/project/root/.gemini/tmp/mockhash',
+              getProjectTempDir: () => '/project/root/.onyx/tmp/mockhash',
             },
           },
           geminiClient: {
@@ -761,3 +761,4 @@ Hi there!`;
     });
   });
 });
+

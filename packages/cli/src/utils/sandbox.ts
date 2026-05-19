@@ -70,8 +70,8 @@ export async function start_sandbox(
       let profileFile = fileURLToPath(
         new URL(`sandbox-macos-${profile}.sb`, import.meta.url),
       );
-      // if profile name is not recognized, look in user-level ~/.gemini first,
-      // then fall back to project-level .gemini. path.basename() strips any
+      // if profile name is not recognized, look in user-level ~/.onyx first,
+      // then fall back to project-level .onyx. path.basename() strips any
       // directory separators to prevent path traversal via SEATBELT_PROFILE.
       if (!BUILTIN_SEATBELT_PROFILES.includes(profile)) {
         const safeProfile = path.basename(profile);
@@ -1218,3 +1218,4 @@ async function ensureSandboxImageIsPresent(
   );
   return false; // Pull command failed or image still not present
 }
+

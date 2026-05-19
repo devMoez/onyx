@@ -35,9 +35,9 @@ vi.mock('@onyx/core', async (importOriginal) => {
       resizePty: vi.fn(),
       subscribe: vi.fn(() => vi.fn()),
       getLogFilePath: vi.fn(
-        (pid) => `~/.gemini/tmp/background-processes/background-${pid}.log`,
+        (pid) => `~/.onyx/tmp/background-processes/background-${pid}.log`,
       ),
-      getLogDir: vi.fn(() => '~/.gemini/tmp/background-processes'),
+      getLogDir: vi.fn(() => '~/.onyx/tmp/background-processes'),
     },
   };
 });
@@ -404,3 +404,4 @@ describe('<BackgroundTaskDisplay />', () => {
     unmount();
   });
 });
+

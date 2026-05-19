@@ -47,7 +47,7 @@ async function restoreAction(
     return {
       type: 'message',
       messageType: 'error',
-      content: 'Could not determine the .gemini directory path.',
+      content: 'Could not determine the .onyx directory path.',
     };
   }
 
@@ -97,7 +97,7 @@ async function restoreAction(
 
     // We safely cast here because:
     // 1. ToolCallDataSchema strictly validates the existence of 'history' as an array and 'id'/'type' on each item.
-    // 2. We trust that files valid according to this schema (written by useGeminiStream) contain the full HistoryItem structure.
+    // 2. We trust that files valid according to this schema (written by useOnyxStream) contain the full HistoryItem structure.
     const toolCallData = parseResult.data as ToolCallData<
       HistoryItem[],
       Record<string, unknown>
@@ -171,3 +171,4 @@ export const restoreCommand = (config: Config | null): SlashCommand | null => {
     completion,
   };
 };
+

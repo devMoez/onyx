@@ -52,7 +52,7 @@ import {
 import { handleFallback } from '../fallback/handler.js';
 import { isFunctionResponse } from '../utils/messageInspectors.js';
 import { scrubHistory } from '../utils/historyHardening.js';
-import { partListUnionToString } from './geminiRequest.js';
+import { partListUnionToString } from './onyxRequest.js';
 import { BINARY_INJECTION_KEY } from '../utils/generateContentResponseUtilities.js';
 import type { ModelConfigKey } from '../services/modelConfigService.js';
 import { estimateTokenCountSync } from '../utils/tokenCalculation.js';
@@ -265,7 +265,7 @@ export class AgentExecutionBlockedError extends Error {
  * @remarks
  * The session maintains all the turns between user and model.
  */
-export class GeminiChat {
+export class onyxChat {
   // A promise to represent the current state of the message being sent to the
   // model.
   private sendPromise: Promise<void> = Promise.resolve();
@@ -468,7 +468,7 @@ export class GeminiChat {
     const requestHistory = this.getHistoryTurns(true);
 
     const streamWithRetries = async function* (
-      this: GeminiChat,
+      this: onyxChat,
     ): AsyncGenerator<StreamEvent, void, void> {
       try {
         const maxAttempts = this.context.config.getMaxAttempts();
@@ -1105,7 +1105,7 @@ export class GeminiChat {
                 id = `synth_${this.context.promptId}_${Date.now()}_${this.callCounter++}`;
                 callIndexToId.set(globalIndex, id);
                 debugLogger.log(
-                  `[GeminiChat] Assigned synthetic ID: ${id} to tool at index ${globalIndex}: ${fnCall.name}`,
+                  `[onyxChat] Assigned synthetic ID: ${id} to tool at index ${globalIndex}: ${fnCall.name}`,
                 );
               }
               fnCall.id = id;
@@ -1204,7 +1204,7 @@ export class GeminiChat {
     let currentCallSourceIndex = -1;
     if (this.context.config.isContextManagementEnabled()) {
       debugLogger.log(
-        `[GeminiChat] Starting consolidation for ${modelResponseParts.length} raw parts and ${finalFunctionCalls.length} assembled function calls.`,
+        `[onyxChat] Starting consolidation for ${modelResponseParts.length} raw parts and ${finalFunctionCalls.length} assembled function calls.`,
       );
       for (const part of modelResponseParts) {
         if (part.functionCall) {
@@ -1434,3 +1434,4 @@ export function stripToolCallIdPrefixes(contents: Content[]): Content[] {
     }),
   }));
 }
+

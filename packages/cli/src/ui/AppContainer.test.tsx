@@ -160,7 +160,7 @@ vi.mock('./hooks/useConsoleMessages.js');
 vi.mock('./hooks/useTerminalSize.js', () => ({
   useTerminalSize: vi.fn(() => ({ columns: 80, rows: 24 })),
 }));
-vi.mock('./hooks/useGeminiStream.js');
+vi.mock('./hooks/useOnyxStream.js');
 vi.mock('./hooks/vim.js');
 vi.mock('./hooks/useFocus.js');
 vi.mock('./hooks/useBracketedPaste.js');
@@ -225,7 +225,7 @@ import { useSettingsCommand } from './hooks/useSettingsCommand.js';
 import { useModelCommand } from './hooks/useModelCommand.js';
 import { useSlashCommandProcessor } from './hooks/slashCommandProcessor.js';
 import { useErrorCount } from './hooks/useConsoleMessages.js';
-import { useGeminiStream } from './hooks/useGeminiStream.js';
+import { useOnyxStream } from './hooks/useOnyxStream.js';
 import { useVim } from './hooks/vim.js';
 import { useFolderTrust } from './hooks/useFolderTrust.js';
 import { useIdeTrustListener } from './hooks/useIdeTrustListener.js';
@@ -309,7 +309,7 @@ describe('AppContainer State Management', () => {
   const mockedUseModelCommand = useModelCommand as Mock;
   const mockedUseSlashCommandProcessor = useSlashCommandProcessor as Mock;
   const mockedUseConsoleMessages = useErrorCount as Mock;
-  const mockedUseGeminiStream = useGeminiStream as Mock;
+  const mockeduseOnyxStream = useOnyxStream as Mock;
   const mockedUseVim = useVim as Mock;
   const mockedUseFolderTrust = useFolderTrust as Mock;
   const mockedUseIdeTrustListener = useIdeTrustListener as Mock;
@@ -415,7 +415,7 @@ describe('AppContainer State Management', () => {
       handleNewMessage: vi.fn(),
       clearErrorCount: vi.fn(),
     });
-    mockedUseGeminiStream.mockReturnValue(DEFAULT_GEMINI_STREAM_MOCK);
+    mockeduseOnyxStream.mockReturnValue(DEFAULT_GEMINI_STREAM_MOCK);
     mockedUseVim.mockReturnValue({ handleInput: vi.fn() });
     mockedUseFolderTrust.mockReturnValue({
       isFolderTrustDialogOpen: false,
@@ -614,7 +614,7 @@ describe('AppContainer State Management', () => {
         isFocused: false,
         hasReceivedFocusEvent: true,
       });
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         pendingHistoryItems: [
           {
@@ -658,7 +658,7 @@ describe('AppContainer State Management', () => {
         isFocused: true,
         hasReceivedFocusEvent: true,
       });
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         pendingHistoryItems: [
           {
@@ -697,7 +697,7 @@ describe('AppContainer State Management', () => {
         isFocused: true,
         hasReceivedFocusEvent: false,
       });
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         pendingHistoryItems: [
           {
@@ -735,7 +735,7 @@ describe('AppContainer State Management', () => {
         hasReceivedFocusEvent: true,
       });
       let currentStreamingState: 'idle' | 'responding' = 'responding';
-      mockedUseGeminiStream.mockImplementation(() => ({
+      mockeduseOnyxStream.mockImplementation(() => ({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: currentStreamingState,
       }));
@@ -766,7 +766,7 @@ describe('AppContainer State Management', () => {
         hasReceivedFocusEvent: false,
       });
       let currentStreamingState: 'idle' | 'responding' = 'responding';
-      mockedUseGeminiStream.mockImplementation(() => ({
+      mockeduseOnyxStream.mockImplementation(() => ({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: currentStreamingState,
       }));
@@ -800,7 +800,7 @@ describe('AppContainer State Management', () => {
         handleProQuotaChoice: vi.fn(),
       });
       let currentStreamingState: 'idle' | 'responding' = 'responding';
-      mockedUseGeminiStream.mockImplementation(() => ({
+      mockeduseOnyxStream.mockImplementation(() => ({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: currentStreamingState,
       }));
@@ -847,7 +847,7 @@ describe('AppContainer State Management', () => {
         },
       ];
 
-      mockedUseGeminiStream.mockImplementation(() => ({
+      mockeduseOnyxStream.mockImplementation(() => ({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         pendingHistoryItems,
       }));
@@ -1455,7 +1455,7 @@ describe('AppContainer State Management', () => {
       });
 
       // Mock the streaming state as Active
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: 'Some thought' },
@@ -1490,7 +1490,7 @@ describe('AppContainer State Management', () => {
       });
 
       // Mock the streaming state
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: 'Some thought' },
@@ -1551,7 +1551,7 @@ describe('AppContainer State Management', () => {
 
       // Mock the streaming state and thought
       const thoughtSubject = 'Processing request';
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: thoughtSubject },
@@ -1586,7 +1586,7 @@ describe('AppContainer State Management', () => {
       });
 
       // Mock the streaming state as Idle with no thought
-      mockedUseGeminiStream.mockReturnValue(DEFAULT_GEMINI_STREAM_MOCK);
+      mockeduseOnyxStream.mockReturnValue(DEFAULT_GEMINI_STREAM_MOCK);
 
       // Act: Render the container
       const { unmount } = await act(async () =>
@@ -1618,7 +1618,7 @@ describe('AppContainer State Management', () => {
 
       // Mock the streaming state and thought
       const thoughtSubject = 'Confirm tool execution';
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: 'waiting_for_confirmation',
         thought: { subject: thoughtSubject },
@@ -1672,7 +1672,7 @@ describe('AppContainer State Management', () => {
         });
 
         // Mock an active shell pty but not focused
-        mockedUseGeminiStream.mockReturnValue({
+        mockeduseOnyxStream.mockReturnValue({
           ...DEFAULT_GEMINI_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
@@ -1728,7 +1728,7 @@ describe('AppContainer State Management', () => {
         });
 
         // Mock an active shell pty with redirection active
-        mockedUseGeminiStream.mockReturnValue({
+        mockeduseOnyxStream.mockReturnValue({
           ...DEFAULT_GEMINI_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
@@ -1795,7 +1795,7 @@ describe('AppContainer State Management', () => {
         });
 
         // Mock an active shell pty with NO output since operation started (silent)
-        mockedUseGeminiStream.mockReturnValue({
+        mockeduseOnyxStream.mockReturnValue({
           ...DEFAULT_GEMINI_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
@@ -1843,7 +1843,7 @@ describe('AppContainer State Management', () => {
 
         // Mock an active shell pty but not focused
         let lastOutputTime = startTime + 1000;
-        mockedUseGeminiStream.mockImplementation(() => ({
+        mockeduseOnyxStream.mockImplementation(() => ({
           ...DEFAULT_GEMINI_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
@@ -1868,7 +1868,7 @@ describe('AppContainer State Management', () => {
 
         // Update lastOutputTime to simulate new output
         lastOutputTime = startTime + 21000;
-        mockedUseGeminiStream.mockImplementation(() => ({
+        mockeduseOnyxStream.mockImplementation(() => ({
           ...DEFAULT_GEMINI_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
@@ -1924,7 +1924,7 @@ describe('AppContainer State Management', () => {
 
       // Mock the streaming state and thought with a short subject
       const shortTitle = 'Short';
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: shortTitle },
@@ -1961,7 +1961,7 @@ describe('AppContainer State Management', () => {
 
       // Mock the streaming state and thought
       const title = 'Test Title';
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: title },
@@ -1998,7 +1998,7 @@ describe('AppContainer State Management', () => {
       vi.stubEnv('CLI_TITLE', 'Custom Gemini Title');
 
       // Mock the streaming state
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: 'responding',
       });
@@ -2137,7 +2137,7 @@ describe('AppContainer State Management', () => {
 
       // Mock request cancellation
       mockCancelOngoingRequest = vi.fn();
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         cancelOngoingRequest: mockCancelOngoingRequest,
       });
@@ -2161,7 +2161,7 @@ describe('AppContainer State Management', () => {
 
     describe('CTRL+C', () => {
       it('should cancel ongoing request on first press', async () => {
-        mockedUseGeminiStream.mockReturnValue({
+        mockeduseOnyxStream.mockReturnValue({
           ...DEFAULT_GEMINI_STREAM_MOCK,
           streamingState: 'responding',
           cancelOngoingRequest: mockCancelOngoingRequest,
@@ -2276,7 +2276,7 @@ describe('AppContainer State Management', () => {
     describe('Focus Handling (Tab / Shift+Tab)', () => {
       beforeEach(() => {
         // Mock activePtyId to enable focus
-        mockedUseGeminiStream.mockReturnValue({
+        mockeduseOnyxStream.mockReturnValue({
           ...DEFAULT_GEMINI_STREAM_MOCK,
           activePtyId: 1,
         });
@@ -2306,7 +2306,7 @@ describe('AppContainer State Management', () => {
 
       it('should auto-unfocus when activePtyId becomes null', async () => {
         // Start with active pty and focused
-        mockedUseGeminiStream.mockReturnValue({
+        mockeduseOnyxStream.mockReturnValue({
           ...DEFAULT_GEMINI_STREAM_MOCK,
           activePtyId: 1,
         });
@@ -2323,7 +2323,7 @@ describe('AppContainer State Management', () => {
         expect(capturedUIState.embeddedShellFocused).toBe(true);
 
         // Now mock activePtyId becoming null
-        mockedUseGeminiStream.mockReturnValue({
+        mockeduseOnyxStream.mockReturnValue({
           ...DEFAULT_GEMINI_STREAM_MOCK,
           activePtyId: null,
         });
@@ -2339,7 +2339,7 @@ describe('AppContainer State Management', () => {
 
       it('should focus background shell on Tab when already visible (not toggle it off)', async () => {
         const mockToggleBackgroundTask = vi.fn();
-        mockedUseGeminiStream.mockReturnValue({
+        mockeduseOnyxStream.mockReturnValue({
           ...DEFAULT_GEMINI_STREAM_MOCK,
           activePtyId: null,
           isBackgroundTaskVisible: true,
@@ -2367,7 +2367,7 @@ describe('AppContainer State Management', () => {
     describe('Background Shell Toggling (CTRL+B)', () => {
       it('should toggle background shell on Ctrl+B even if visible but not focused', async () => {
         const mockToggleBackgroundTask = vi.fn();
-        mockedUseGeminiStream.mockReturnValue({
+        mockeduseOnyxStream.mockReturnValue({
           ...DEFAULT_GEMINI_STREAM_MOCK,
           activePtyId: null,
           isBackgroundTaskVisible: true,
@@ -2400,7 +2400,7 @@ describe('AppContainer State Management', () => {
           backgroundTasks: new Map([[123, { pid: 123, status: 'running' }]]),
           toggleBackgroundTasks: mockToggleBackgroundTask,
         };
-        mockedUseGeminiStream.mockReturnValue(geminiStreamMock);
+        mockeduseOnyxStream.mockReturnValue(geminiStreamMock);
 
         await setupKeypressTest();
 
@@ -2497,7 +2497,7 @@ describe('AppContainer State Management', () => {
       rerender();
       expect(capturedUIState.shortcutsHelpVisible).toBe(true);
 
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: 'responding',
       });
@@ -3042,7 +3042,7 @@ describe('AppContainer State Management', () => {
   describe('onCancelSubmit Behavior', () => {
     let mockSetText: Mock;
 
-    // Helper to extract arguments from the useGeminiStream hook call
+    // Helper to extract arguments from the useOnyxStream hook call
     // This isolates the positional argument dependency to a single location
     const extractUseGeminiStreamArgs = (args: unknown[]) => ({
       onCancelSubmit: args[13] as (shouldRestorePrompt?: boolean) => void,
@@ -3060,7 +3060,7 @@ describe('AppContainer State Management', () => {
       const { unmount } = await act(async () => renderAppContainer());
 
       const { onCancelSubmit } = extractUseGeminiStreamArgs(
-        mockedUseGeminiStream.mock.lastCall!,
+        mockeduseOnyxStream.mock.lastCall!,
       );
 
       act(() => {
@@ -3091,7 +3091,7 @@ describe('AppContainer State Management', () => {
       const { unmount } = await act(async () => renderAppContainer());
 
       const { onCancelSubmit } = extractUseGeminiStreamArgs(
-        mockedUseGeminiStream.mock.lastCall!,
+        mockeduseOnyxStream.mock.lastCall!,
       );
 
       act(() => {
@@ -3117,7 +3117,7 @@ describe('AppContainer State Management', () => {
       expect(capturedInputState.userMessages).toContain('previous message');
 
       const { onCancelSubmit } = extractUseGeminiStreamArgs(
-        mockedUseGeminiStream.mock.lastCall!,
+        mockeduseOnyxStream.mock.lastCall!,
       );
 
       await act(async () => {
@@ -3548,7 +3548,7 @@ describe('AppContainer State Management', () => {
           mockConfig.getWorkspaceContext(),
           'addReadOnlyPath',
         );
-        const { submitQuery } = mockedUseGeminiStream();
+        const { submitQuery } = mockeduseOnyxStream();
 
         const { unmount } = await act(async () => renderAppContainer());
 
@@ -3579,7 +3579,7 @@ describe('AppContainer State Management', () => {
   describe('Plan Mode Availability', () => {
     it('should allow plan mode when enabled and idle', async () => {
       vi.spyOn(mockConfig, 'isPlanEnabled').mockReturnValue(true);
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         pendingHistoryItems: [],
       });
@@ -3593,7 +3593,7 @@ describe('AppContainer State Management', () => {
 
     it('should NOT allow plan mode when disabled in config', async () => {
       vi.spyOn(mockConfig, 'isPlanEnabled').mockReturnValue(false);
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         pendingHistoryItems: [],
       });
@@ -3607,7 +3607,7 @@ describe('AppContainer State Management', () => {
 
     it('should NOT allow plan mode when streaming', async () => {
       vi.spyOn(mockConfig, 'isPlanEnabled').mockReturnValue(true);
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: StreamingState.Responding,
         pendingHistoryItems: [],
@@ -3622,7 +3622,7 @@ describe('AppContainer State Management', () => {
 
     it('should NOT allow plan mode when a tool is awaiting confirmation', async () => {
       vi.spyOn(mockConfig, 'isPlanEnabled').mockReturnValue(true);
-      mockedUseGeminiStream.mockReturnValue({
+      mockeduseOnyxStream.mockReturnValue({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         streamingState: StreamingState.Idle,
         pendingHistoryItems: [
@@ -3661,7 +3661,7 @@ describe('AppContainer State Management', () => {
       mockedUseMessageQueue.mockImplementation(realUseMessageQueue);
 
       // Start compression by mocking pendingHistoryItems to include a pending compression
-      mockedUseGeminiStream.mockImplementation(() => ({
+      mockeduseOnyxStream.mockImplementation(() => ({
         ...DEFAULT_GEMINI_STREAM_MOCK,
         pendingHistoryItems: [
           {
@@ -3707,3 +3707,4 @@ describe('AppContainer State Management', () => {
     });
   });
 });
+

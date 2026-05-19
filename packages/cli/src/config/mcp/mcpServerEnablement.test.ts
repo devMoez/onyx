@@ -14,7 +14,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
     Storage: {
       // eslint-disable-next-line @typescript-eslint/no-misused-spread
       ...actual.Storage,
-      getGlobalGeminiDir: () => '/virtual-home/.gemini',
+      getGlobalGeminiDir: () => '/virtual-home/.onyx',
     },
   };
 });
@@ -186,3 +186,4 @@ describe('helper functions', () => {
     ).toBeTruthy();
   });
 });
+

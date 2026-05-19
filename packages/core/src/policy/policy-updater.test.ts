@@ -55,7 +55,7 @@ describe('createPolicyUpdater', () => {
     messageBus = new MessageBus(policyEngine);
     mockStorage = new Storage('/mock/project');
     vi.spyOn(mockStorage, 'getAutoSavedPolicyPath').mockReturnValue(
-      '/mock/user/.gemini/policies/auto-saved.toml',
+      '/mock/user/.onyx/policies/auto-saved.toml',
     );
   });
 
@@ -323,3 +323,4 @@ describe('ShellToolInvocation Policy Update', () => {
     );
   });
 });
+

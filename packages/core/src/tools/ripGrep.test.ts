@@ -116,14 +116,14 @@ function createMockConfig(
     getDebugMode: () => false,
     getFileFilteringOptions: () => ({
       respectGitIgnore: true,
-      respectGeminiIgnore: true,
+      respectonyxIgnore: true,
       customIgnoreFilePaths: [],
     }),
     getFileFilteringRespectGitIgnore(this: Config) {
       return this.getFileFilteringOptions().respectGitIgnore;
     },
-    getFileFilteringRespectGeminiIgnore(this: Config) {
-      return this.getFileFilteringOptions().respectGeminiIgnore;
+    getFileFilteringRespectonyxIgnore(this: Config) {
+      return this.getFileFilteringOptions().respectonyxIgnore;
     },
     storage: {
       getProjectTempDir: vi.fn().mockReturnValue('/tmp/project'),
@@ -557,13 +557,13 @@ describe('RipGrepTool', () => {
     }, 10000);
 
     it('should filter out files based on FileDiscoveryService even if ripgrep returns them', async () => {
-      // Create .geminiignore to ignore 'ignored.txt'
+      // Create .onyxIgnore to ignore 'ignored.txt'
       await fs.writeFile(
         path.join(tempRootDir, GEMINI_IGNORE_FILE_NAME),
         'ignored.txt',
       );
 
-      // Re-initialize tool so FileDiscoveryService loads the new .geminiignore
+      // Re-initialize tool so FileDiscoveryService loads the new .onyxIgnore
       const toolWithIgnore = new RipGrepTool(
         mockConfig,
         createMockMessageBus(),
@@ -1316,7 +1316,7 @@ describe('RipGrepTool', () => {
         'getFileFilteringOptions',
       ).mockReturnValue({
         respectGitIgnore: false,
-        respectGeminiIgnore: true,
+        respectonyxIgnore: true,
         customIgnoreFilePaths: [],
       });
       const gitIgnoreDisabledTool = new RipGrepTool(
@@ -1350,21 +1350,21 @@ describe('RipGrepTool', () => {
       );
     });
 
-    it('should add .geminiignore when enabled and patterns exist', async () => {
+    it('should add .onyxIgnore when enabled and patterns exist', async () => {
       const geminiIgnorePath = path.join(tempRootDir, GEMINI_IGNORE_FILE_NAME);
       await fs.writeFile(geminiIgnorePath, 'ignored.log');
 
-      const configWithGeminiIgnore = createMockConfig(tempRootDir);
+      const configWithonyxIgnore = createMockConfig(tempRootDir);
       vi.spyOn(
-        configWithGeminiIgnore,
+        configWithonyxIgnore,
         'getFileFilteringOptions',
       ).mockReturnValue({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectonyxIgnore: true,
         customIgnoreFilePaths: [],
       });
       const geminiIgnoreTool = new RipGrepTool(
-        configWithGeminiIgnore,
+        configWithonyxIgnore,
         createMockMessageBus(),
       );
 
@@ -1394,20 +1394,20 @@ describe('RipGrepTool', () => {
       );
     });
 
-    it('should skip .geminiignore when disabled', async () => {
+    it('should skip .onyxIgnore when disabled', async () => {
       const geminiIgnorePath = path.join(tempRootDir, GEMINI_IGNORE_FILE_NAME);
       await fs.writeFile(geminiIgnorePath, 'ignored.log');
-      const configWithoutGeminiIgnore = createMockConfig(tempRootDir);
+      const configWithoutonyxIgnore = createMockConfig(tempRootDir);
       vi.spyOn(
-        configWithoutGeminiIgnore,
+        configWithoutonyxIgnore,
         'getFileFilteringOptions',
       ).mockReturnValue({
         respectGitIgnore: true,
-        respectGeminiIgnore: false,
+        respectonyxIgnore: false,
         customIgnoreFilePaths: [],
       });
       const geminiIgnoreTool = new RipGrepTool(
-        configWithoutGeminiIgnore,
+        configWithoutonyxIgnore,
         createMockMessageBus(),
       );
 
@@ -1907,3 +1907,4 @@ describe('resolveRipgrepPath', () => {
     });
   });
 });
+

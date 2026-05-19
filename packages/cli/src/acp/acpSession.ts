@@ -27,7 +27,7 @@ import {
   isTextPart,
   GeminiEventType,
   type ToolCallRequestInfo,
-  type GeminiChat,
+  type onyxChat,
   type ToolResult,
   isWithinRoot,
   processSingleFileContent,
@@ -68,7 +68,7 @@ export class Session {
 
   constructor(
     private readonly id: string,
-    private readonly chat: GeminiChat,
+    private readonly chat: onyxChat,
     private readonly context: AgentLoopContext,
     private readonly connection: acp.AgentSideConnection,
     private readonly settings: LoadedSettings,
@@ -1393,3 +1393,4 @@ export class Session {
     }
   }
 }
+

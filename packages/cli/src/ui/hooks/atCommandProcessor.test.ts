@@ -84,10 +84,10 @@ describe('handleAtCommand', () => {
       getExcludeTools: vi.fn(),
       getFileService: () => new FileDiscoveryService(testRootDir),
       getFileFilteringRespectGitIgnore: () => true,
-      getFileFilteringRespectGeminiIgnore: () => true,
+      getFileFilteringRespectonyxIgnore: () => true,
       getFileFilteringOptions: () => ({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectonyxIgnore: true,
       }),
       getFileSystemService: () => new StandardFileSystemService(),
       getEnableRecursiveFileSearch: vi.fn(() => true),
@@ -744,7 +744,7 @@ describe('handleAtCommand', () => {
       );
     });
   });
-  it('should process non-ignored files when .geminiignore is present', async () => {
+  it('should process non-ignored files when .onyxIgnore is present', async () => {
     await createTestFile(
       path.join(testRootDir, GEMINI_IGNORE_FILE_NAME),
       'build/output.js',
@@ -1597,3 +1597,4 @@ describe('checkPermissions', () => {
     ]);
   });
 });
+

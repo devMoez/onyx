@@ -57,14 +57,14 @@ vi.mock('@onyx/core', async (importOriginal) => {
       vi.fn().mockImplementation((_cwd: string) => ({
         getGlobalSettingsPath: () => '/tmp/gemini/settings.json',
         getWorkspaceSettingsPath: () => '/tmp/gemini/workspace-settings.json',
-        getProjectTempDir: () => '/test/home/.gemini/tmp/mocked_hash',
+        getProjectTempDir: () => '/test/home/.onyx/tmp/mocked_hash',
       })),
       {
         getGlobalSettingsPath: () => '/tmp/gemini/settings.json',
         getGlobalGeminiDir: () => '/tmp/gemini',
       },
     ),
-    GEMINI_DIR: '.gemini',
+    GEMINI_DIR: '.onyx',
     getErrorMessage: (e: unknown) =>
       e instanceof Error ? e.message : String(e),
   };
@@ -475,3 +475,4 @@ describe('mcp list command', () => {
     expect(mockedCreateTransport).not.toHaveBeenCalled();
   });
 });
+

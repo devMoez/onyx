@@ -63,10 +63,10 @@ import {
   READ_FILE_TOOL_NAME,
 } from '../tools/tool-names.js';
 import {
-  GeminiChat,
+  onyxChat,
   StreamEventType,
   type StreamEvent,
-} from '../core/geminiChat.js';
+} from '../core/onyxChat.js';
 import {
   type FunctionCall,
   type Part,
@@ -138,11 +138,11 @@ vi.mock('../context/chatCompressionService.js', () => ({
   })),
 }));
 
-vi.mock('../core/geminiChat.js', () => ({
+vi.mock('../core/onyxChat.js', () => ({
   StreamEventType: {
     CHUNK: 'chunk',
   },
-  GeminiChat: vi.fn().mockImplementation(() => ({
+  onyxChat: vi.fn().mockImplementation(() => ({
     initialize: vi.fn(),
     sendMessageStream: mockSendMessageStream,
     getHistory: vi.fn((_curated?: boolean) => [...mockChatHistory]),
@@ -237,7 +237,7 @@ const mockedRunWithScopedAutoMemoryExtractionWriteAccess = vi.mocked(
   runWithScopedAutoMemoryExtractionWriteAccess,
 );
 
-const MockedGeminiChat = vi.mocked(GeminiChat);
+const MockedonyxChat = vi.mocked(onyxChat);
 const mockedGetDirectoryContextString = vi.mocked(getDirectoryContextString);
 const mockedPromptIdContext = vi.mocked(promptIdContext);
 const mockedLogAgentStart = vi.mocked(logAgentStart);
@@ -450,7 +450,7 @@ describe('LocalAgentExecutor', () => {
       info: { compressionStatus: CompressionStatus.NOOP },
     });
 
-    MockedGeminiChat.mockImplementation(
+    MockedonyxChat.mockImplementation(
       () =>
         ({
           initialize: vi.fn(),
@@ -463,7 +463,7 @@ describe('LocalAgentExecutor', () => {
           getChatRecordingService: vi.fn().mockReturnValue({
             saveSummary: mockSaveSummary,
           }),
-        }) as unknown as GeminiChat,
+        }) as unknown as onyxChat,
     );
 
     vi.useFakeTimers();
@@ -536,7 +536,7 @@ describe('LocalAgentExecutor', () => {
 
       await executor.run({ goal: 'test' }, signal);
 
-      const chatConstructorArgs = MockedGeminiChat.mock.calls[0];
+      const chatConstructorArgs = MockedonyxChat.mock.calls[0];
       const executionContext = chatConstructorArgs[0];
 
       expect(executionContext).toBeDefined();
@@ -612,7 +612,7 @@ describe('LocalAgentExecutor', () => {
       await executor.run({ goal: 'test' }, signal);
 
       const chatConstructorArgs =
-        MockedGeminiChat.mock.calls[MockedGeminiChat.mock.calls.length - 1];
+        MockedonyxChat.mock.calls[MockedonyxChat.mock.calls.length - 1];
       const executionContext = chatConstructorArgs[0];
 
       expect(executionContext.parentSessionId).toBe(parentSessionId);
@@ -658,7 +658,7 @@ describe('LocalAgentExecutor', () => {
       await executor.run({ goal: 'test' }, signal);
 
       const chatConstructorArgs =
-        MockedGeminiChat.mock.calls[MockedGeminiChat.mock.calls.length - 1];
+        MockedonyxChat.mock.calls[MockedonyxChat.mock.calls.length - 1];
       const executionContext = chatConstructorArgs[0];
 
       expect(executionContext.parentSessionId).toBe(rootSessionId);
@@ -751,7 +751,7 @@ describe('LocalAgentExecutor', () => {
       );
       await executor.run(inputs, signal);
 
-      const chatConstructorArgs = MockedGeminiChat.mock.calls[0];
+      const chatConstructorArgs = MockedonyxChat.mock.calls[0];
       const startHistory = chatConstructorArgs[3]; // history is the 4th arg
 
       expect(startHistory).toBeDefined();
@@ -1158,7 +1158,7 @@ describe('LocalAgentExecutor', () => {
       expect(mockSendMessageStream).toHaveBeenCalledTimes(2);
       expect(mockScheduleAgentTools).toHaveBeenCalledTimes(2);
 
-      const systemInstruction = MockedGeminiChat.mock.calls[0][1];
+      const systemInstruction = MockedonyxChat.mock.calls[0][1];
       expect(systemInstruction).toContain(
         `MUST call the \`${COMPLETE_TASK_TOOL_NAME}\` tool`,
       );
@@ -1171,7 +1171,7 @@ describe('LocalAgentExecutor', () => {
       const { modelConfigKey } = getMockMessageParams(0);
       expect(modelConfigKey.model).toBe(getModelConfigAlias(definition));
 
-      const chatConstructorArgs = MockedGeminiChat.mock.calls[0];
+      const chatConstructorArgs = MockedonyxChat.mock.calls[0];
       // tools are the 3rd argument (index 2), passed as [{ functionDeclarations: [...] }]
       const passedToolsArg = chatConstructorArgs[2] as Tool[];
       const sentTools = passedToolsArg[0].functionDeclarations;
@@ -1328,7 +1328,7 @@ describe('LocalAgentExecutor', () => {
       const { modelConfigKey } = getMockMessageParams(0);
       expect(modelConfigKey.model).toBe(getModelConfigAlias(definition));
 
-      const chatConstructorArgs = MockedGeminiChat.mock.calls[0];
+      const chatConstructorArgs = MockedonyxChat.mock.calls[0];
       const passedToolsArg = chatConstructorArgs[2] as Tool[];
       const sentTools = passedToolsArg[0].functionDeclarations;
       expect(sentTools).toBeDefined();
@@ -1378,7 +1378,7 @@ describe('LocalAgentExecutor', () => {
 
       await executor.run({ goal: 'Do plan' }, signal);
 
-      const systemInstruction = MockedGeminiChat.mock.calls[0][1];
+      const systemInstruction = MockedonyxChat.mock.calls[0][1];
       expect(systemInstruction).toContain('Execution Constraints');
       expect(systemInstruction).toContain(
         'You are currently operating in Plan Mode. Your write tools are globally restricted to only modifying plan (.md) files in the plans directory: /mock/plans/',
@@ -1936,10 +1936,10 @@ describe('LocalAgentExecutor', () => {
       expect(output.terminate_reason).toBe(AgentTerminateMode.GOAL);
     });
 
-    it('should throw and log if GeminiChat creation fails', async () => {
+    it('should throw and log if onyxChat creation fails', async () => {
       const definition = createTestDefinition();
       const initError = new Error('Chat creation failed');
-      MockedGeminiChat.mockImplementationOnce(() => {
+      MockedonyxChat.mockImplementationOnce(() => {
         throw initError;
       });
 
@@ -3846,10 +3846,10 @@ describe('LocalAgentExecutor', () => {
     };
 
     /**
-     * Helper to extract the functionDeclarations sent to GeminiChat.
+     * Helper to extract the functionDeclarations sent to onyxChat.
      */
     const getSentFunctionDeclarations = () => {
-      const chatCtorArgs = MockedGeminiChat.mock.calls[0];
+      const chatCtorArgs = MockedonyxChat.mock.calls[0];
       const toolsArg = chatCtorArgs[2] as Tool[];
       return toolsArg[0].functionDeclarations ?? [];
     };
@@ -4146,7 +4146,7 @@ describe('LocalAgentExecutor', () => {
 
         await executor.run({ goal: 'test' }, signal);
 
-        const chatConstructorArgs = MockedGeminiChat.mock.calls[0];
+        const chatConstructorArgs = MockedonyxChat.mock.calls[0];
         const systemInstruction = chatConstructorArgs[1] as string;
 
         expect(systemInstruction).toContain(mockMemory);
@@ -4230,3 +4230,4 @@ describe('LocalAgentExecutor', () => {
     });
   });
 });
+

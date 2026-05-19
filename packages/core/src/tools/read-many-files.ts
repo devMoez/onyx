@@ -83,7 +83,7 @@ export interface ReadManyFilesParams {
   useDefaultExcludes?: boolean;
 
   /**
-   * Whether to respect .gitignore and .geminiignore patterns (optional, defaults to true)
+   * Whether to respect .gitignore and .onyxIgnore patterns (optional, defaults to true)
    */
   file_filtering_options?: {
     respect_git_ignore?: boolean;
@@ -112,7 +112,7 @@ type FileProcessingResult =
 
 /**
  * Creates the default exclusion patterns including dynamic patterns.
- * This combines the shared patterns with dynamic patterns like GEMINI.md.
+ * This combines the shared patterns with dynamic patterns like onyx.md.
  * TODO(adh): Consider making this configurable or extendable through a command line argument.
  */
 function getDefaultExcludes(config?: Config): string[] {
@@ -238,10 +238,10 @@ ${finalExclusionPatternsForDescription
             this.params.file_filtering_options?.respect_git_ignore ??
             this.config.getFileFilteringOptions().respectGitIgnore ??
             DEFAULT_FILE_FILTERING_OPTIONS.respectGitIgnore,
-          respectGeminiIgnore:
+          respectonyxIgnore:
             this.params.file_filtering_options?.respect_gemini_ignore ??
-            this.config.getFileFilteringOptions().respectGeminiIgnore ??
-            DEFAULT_FILE_FILTERING_OPTIONS.respectGeminiIgnore,
+            this.config.getFileFilteringOptions().respectonyxIgnore ??
+            DEFAULT_FILE_FILTERING_OPTIONS.respectonyxIgnore,
         });
 
       for (const relativePath of filteredPaths) {
@@ -423,7 +423,7 @@ ${finalExclusionPatternsForDescription
 
     // Discover JIT subdirectory context for all unique directories of processed files.
     // Run sequentially so each call sees paths marked as loaded by the previous
-    // one, preventing shared parent GEMINI.md files from being injected twice.
+    // one, preventing shared parent onyx.md files from being injected twice.
     const uniqueDirs = new Set(
       Array.from(filesToConsider).map((f) => path.dirname(f)),
     );
@@ -551,3 +551,4 @@ export class ReadManyFilesTool extends BaseDeclarativeTool<
     return resolveToolDeclaration(READ_MANY_FILES_DEFINITION, modelId);
   }
 }
+

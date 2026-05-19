@@ -29,10 +29,10 @@ vi.mock('@onyx/core', async (importOriginal) => {
     homedir: () => '/mock/home/user',
     Storage: class extends actual.Storage {
       static override getGlobalSettingsPath = () =>
-        '/mock/home/user/.gemini/settings.json';
+        '/mock/home/user/.onyx/settings.json';
       override getWorkspaceSettingsPath = () =>
-        '/mock/workspace/.gemini/settings.json';
-      static override getGlobalGeminiDir = () => '/mock/home/user/.gemini';
+        '/mock/workspace/.onyx/settings.json';
+      static override getGlobalGeminiDir = () => '/mock/home/user/.onyx';
     },
   };
 });
@@ -160,3 +160,4 @@ describe('Settings Validation Warning', () => {
     }).toThrow();
   });
 });
+

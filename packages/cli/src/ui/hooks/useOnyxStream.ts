@@ -213,7 +213,7 @@ function calculateStreamingState(
  * Manages the Gemini stream, including user input, command processing,
  * API interaction, and tool call lifecycle.
  */
-export const useGeminiStream = (
+export const useOnyxStream = (
   geminiClient: GeminiClient,
   history: HistoryItem[],
   addItem: UseHistoryManagerReturn['addItem'],
@@ -453,7 +453,7 @@ export const useGeminiStream = (
       ) {
         // TODO(#22883): This lookahead logic is a tactical UI fix to prevent parallel agents
         // from tearing visually when they finish at slightly different times.
-        // Architecturally, `useGeminiStream` should not be responsible for stitching
+        // Architecturally, `useOnyxStream` should not be responsible for stitching
         // together semantic batches using timing/refs. `packages/core` should be
         // refactored to emit structured `ToolBatch` or `Turn` objects, and this layer
         // should simply render those semantic boundaries.
@@ -2156,3 +2156,4 @@ export const useGeminiStream = (
     retryStatus,
   };
 };
+

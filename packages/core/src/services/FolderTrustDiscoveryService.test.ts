@@ -109,7 +109,7 @@ describe('FolderTrustDiscoveryService', () => {
     );
   });
 
-  it('should handle missing .gemini directory', async () => {
+  it('should handle missing .onyx directory', async () => {
     const results = await FolderTrustDiscoveryService.discover(tempDir);
     expect(results.commands).toHaveLength(0);
     expect(results.skills).toHaveLength(0);
@@ -175,3 +175,4 @@ describe('FolderTrustDiscoveryService', () => {
     );
   });
 });
+

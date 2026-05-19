@@ -43,7 +43,7 @@ export interface LSToolParams {
   ignore?: string[];
 
   /**
-   * Whether to respect .gitignore and .geminiignore patterns (optional, defaults to true)
+   * Whether to respect .gitignore and .onyxIgnore patterns (optional, defaults to true)
    */
   file_filtering_options?: {
     respect_git_ignore?: boolean;
@@ -219,10 +219,10 @@ class LSToolInvocation extends BaseToolInvocation<LSToolParams, ToolResult> {
             this.params.file_filtering_options?.respect_git_ignore ??
             this.config.getFileFilteringOptions().respectGitIgnore ??
             DEFAULT_FILE_FILTERING_OPTIONS.respectGitIgnore,
-          respectGeminiIgnore:
+          respectonyxIgnore:
             this.params.file_filtering_options?.respect_gemini_ignore ??
-            this.config.getFileFilteringOptions().respectGeminiIgnore ??
-            DEFAULT_FILE_FILTERING_OPTIONS.respectGeminiIgnore,
+            this.config.getFileFilteringOptions().respectonyxIgnore ??
+            DEFAULT_FILE_FILTERING_OPTIONS.respectonyxIgnore,
         });
 
       const entries = [];
@@ -363,3 +363,4 @@ export class LSTool extends BaseDeclarativeTool<LSToolParams, ToolResult> {
     return resolveToolDeclaration(LS_DEFINITION, modelId);
   }
 }
+

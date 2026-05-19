@@ -264,7 +264,7 @@ describe('skillsCommand', () => {
           expect(requestConsent).toBeDefined();
           await requestConsent!(
             [{ name: 'test-skill', location: '/path' } as SkillDefinition],
-            '/workspace/.gemini/skills',
+            '/workspace/.onyx/skills',
           );
           return [{ name: 'test-skill', location: '/path' }];
         },
@@ -746,3 +746,4 @@ describe('skillsCommand', () => {
     });
   });
 });
+

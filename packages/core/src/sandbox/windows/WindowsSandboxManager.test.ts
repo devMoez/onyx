@@ -91,7 +91,7 @@ describe('WindowsSandboxManager', () => {
     }
   });
 
-  it('should prepare a GeminiSandbox.exe command', async () => {
+  it('should prepare a onyxSandbox.exe command', async () => {
     const req: SandboxRequest = {
       command: 'whoami',
       args: ['/groups'],
@@ -104,7 +104,7 @@ describe('WindowsSandboxManager', () => {
 
     const result = await manager.prepareCommand(req);
 
-    expect(result.program).toContain('GeminiSandbox.exe');
+    expect(result.program).toContain('onyxSandbox.exe');
     expect(result.args).toEqual([
       '0',
       testCwd,
@@ -257,7 +257,7 @@ describe('WindowsSandboxManager', () => {
     await manager.prepareCommand(req);
 
     expect(fs.existsSync(path.join(testCwd, '.gitignore'))).toBe(true);
-    expect(fs.existsSync(path.join(testCwd, '.geminiignore'))).toBe(true);
+    expect(fs.existsSync(path.join(testCwd, '.onyxIgnore'))).toBe(true);
     expect(fs.existsSync(path.join(testCwd, '.git'))).toBe(true);
     expect(fs.lstatSync(path.join(testCwd, '.git')).isDirectory()).toBe(true);
   });
@@ -557,3 +557,4 @@ describe('WindowsSandboxManager', () => {
     expect(fs.existsSync(path.dirname(forbiddenManifestPath))).toBe(false);
   });
 });
+

@@ -643,7 +643,7 @@ const SETTINGS_SCHEMA = {
         requiresRestart: false,
         default: false,
         description:
-          'Hide the context summary (GEMINI.md, MCP servers) above the input.',
+          'Hide the context summary (onyx.md, MCP servers) above the input.',
         showInDialog: true,
       },
       footer: {
@@ -1422,7 +1422,7 @@ const SETTINGS_SCHEMA = {
         requiresRestart: true,
         default: ['.git'] as string[],
         description:
-          'File or directory names that mark the boundary for GEMINI.md discovery. ' +
+          'File or directory names that mark the boundary for onyx.md discovery. ' +
           'The upward traversal stops at the first directory containing any of these markers. ' +
           'An empty array disables parent traversal.',
         showInDialog: false,
@@ -1449,7 +1449,7 @@ const SETTINGS_SCHEMA = {
         requiresRestart: false,
         default: false,
         description: oneLine`
-          Controls how /memory reload loads GEMINI.md files.
+          Controls how /memory reload loads onyx.md files.
           When true, include directories are scanned; when false, only the current directory is used.
         `,
         showInDialog: true,
@@ -1472,13 +1472,13 @@ const SETTINGS_SCHEMA = {
             description: 'Respect .gitignore files when searching.',
             showInDialog: true,
           },
-          respectGeminiIgnore: {
+          respectonyxIgnore: {
             type: 'boolean',
-            label: 'Respect .geminiignore',
+            label: 'Respect .onyxIgnore',
             category: 'Context',
             requiresRestart: true,
             default: true,
-            description: 'Respect .geminiignore files when searching.',
+            description: 'Respect .onyxIgnore files when searching.',
             showInDialog: true,
           },
           enableFileWatcher: {
@@ -1519,7 +1519,7 @@ const SETTINGS_SCHEMA = {
             requiresRestart: true,
             default: [] as string[],
             description:
-              'Additional ignore file paths to respect. These files take precedence over .geminiignore and .gitignore. Files earlier in the array take precedence over files later in the array, e.g. the first file takes precedence over the second one.',
+              'Additional ignore file paths to respect. These files take precedence over .onyxIgnore and .gitignore. Files earlier in the array take precedence over files later in the array, e.g. the first file takes precedence over the second one.',
             showInDialog: true,
             items: { type: 'string' },
             mergeStrategy: MergeStrategy.UNION,
@@ -2367,7 +2367,7 @@ const SETTINGS_SCHEMA = {
             requiresRestart: true,
             default: '',
             description:
-              'Custom path to the LiteRT-LM binary. Leave empty to use the default location (~/.gemini/bin/litert/).',
+              'Custom path to the LiteRT-LM binary. Leave empty to use the default location (~/.onyx/bin/litert/).',
             showInDialog: false,
           },
           classifier: {
@@ -3590,3 +3590,4 @@ type InferMergedSettings<T extends SettingsSchema> = {
 
 export type Settings = InferSettings<SettingsSchemaType>;
 export type MergedSettings = InferMergedSettings<SettingsSchemaType>;
+

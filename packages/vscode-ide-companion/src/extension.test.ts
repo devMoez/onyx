@@ -288,7 +288,7 @@ describe('activate', () => {
 
       expect(executeCommandMock).toHaveBeenCalledWith(
         'workbench.extensions.installExtension',
-        'Google.gemini-cli-vscode-ide-companion',
+        'Google.onyx-cli-vscode-ide-companion',
       );
     });
 
@@ -308,3 +308,4 @@ describe('activate', () => {
     });
   });
 });
+

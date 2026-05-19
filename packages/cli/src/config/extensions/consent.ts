@@ -189,7 +189,7 @@ async function extensionConsentString(
   }
   if (sanitizedConfig.contextFileName) {
     output.push(
-      `This extension will append info to your gemini.md context using ${sanitizedConfig.contextFileName}`,
+      `This extension will append info to your onyx.md context using ${sanitizedConfig.contextFileName}`,
     );
   }
   if (sanitizedConfig.excludeTools) {
@@ -277,3 +277,4 @@ export async function maybeRequestConsentOrFail(
     throw new Error(`Installation cancelled for "${extensionConfig.name}".`);
   }
 }
+

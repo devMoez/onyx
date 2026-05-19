@@ -12,7 +12,7 @@ import {
   type McpClient,
   MCPServerStatus,
 } from '@onyx/core';
-import { GeminiSpinner } from './GeminiSpinner.js';
+import { OnyxSpinner } from './OnyxSpinner.js';
 import { theme } from '../semantic-colors.js';
 
 export const ConfigInitDisplay = ({
@@ -68,8 +68,9 @@ export const ConfigInitDisplay = ({
   return (
     <Box marginTop={1}>
       <Text>
-        <GeminiSpinner /> <Text color={theme.text.primary}>{message}</Text>
+        <OnyxSpinner /> <Text color={theme.text.primary}>{message}</Text>
       </Text>
     </Box>
   );
 };
+

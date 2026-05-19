@@ -36,7 +36,7 @@ export const INFORMATIVE_TIPS = [
   'Expand your workspace with additional directories (/directory)…',
   'Control how /memory reload loads context files (/settings)…',
   'Toggle respect for .gitignore files in context (/settings)…',
-  'Toggle respect for .geminiignore files in context (/settings)…',
+  'Toggle respect for .onyxIgnore files in context (/settings)…',
   'Enable recursive file search for @-file completions (/settings)…',
   'Disable fuzzy search when searching for files (/settings)…',
   'Run tools in a secure sandbox environment (settings.json)…',
@@ -139,13 +139,13 @@ export const INFORMATIVE_TIPS = [
   'Update all or specific extensions with /extensions update',
   'Get help on commands with /help',
   'Manage IDE integration with /ide',
-  'Create a project-specific GEMINI.md file with /init',
+  'Create a project-specific onyx.md file with /init',
   'List configured MCP servers and tools with /mcp list',
   'Authenticate with an OAuth-enabled MCP server with /mcp auth',
   'Reload MCP servers with /mcp reload',
   'See the current instructional context with /memory show',
-  'Reload instructional context from GEMINI.md files with /memory reload',
-  'List the paths of the GEMINI.md files in use with /memory list',
+  'Reload instructional context from onyx.md files with /memory reload',
+  'List the paths of the onyx.md files in use with /memory list',
   'Choose your Gemini model with /model',
   'Display the privacy notice with /privacy',
   'Restore project files to a previous state with /restore',
@@ -162,3 +162,4 @@ export const INFORMATIVE_TIPS = [
   'Execute any shell command with !<command>',
   // Command tips end here
 ];
+

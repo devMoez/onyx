@@ -55,7 +55,7 @@ const agent = new GeminiCliAgent({
 
 Validation:
 
-- Static string instructions show up where GEMINI.md content normally would in
+- Static string instructions show up where onyx.md content normally would in
   model call
 - Dynamic instructions show up and contain dynamic content.
 
@@ -338,3 +338,4 @@ a `hooks` option to `GeminiCliAgentOptions`.
 
 IMPORTANT: Hook signatures should be strongly typed all the way through. You'll
 need to create a mapping of the string event name to the request/response types.
+

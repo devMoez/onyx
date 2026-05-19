@@ -70,7 +70,7 @@ describe('AgentRegistry Acknowledgement', () => {
     // We cannot easily spy on storage.getProjectAgentsDir if it's a property/getter unless we cast to any or it's a method
     // Assuming it's a method on Storage class
     vi.spyOn(config.storage, 'getProjectAgentsDir').mockReturnValue(
-      '/project/.gemini/agents',
+      '/project/.onyx/agents',
     );
     vi.spyOn(config, 'isAgentsEnabled').mockReturnValue(true);
 
@@ -78,7 +78,7 @@ describe('AgentRegistry Acknowledgement', () => {
 
     vi.mocked(tomlLoader.loadAgentsFromDirectory).mockImplementation(
       async (dir) => {
-        if (dir === '/project/.gemini/agents') {
+        if (dir === '/project/.onyx/agents') {
           return {
             agents: [MOCK_AGENT_WITH_HASH],
             errors: [],
@@ -118,7 +118,7 @@ describe('AgentRegistry Acknowledgement', () => {
 
     vi.mocked(tomlLoader.loadAgentsFromDirectory).mockImplementation(
       async (dir) => {
-        if (dir === '/project/.gemini/agents') {
+        if (dir === '/project/.onyx/agents') {
           return {
             agents: [MOCK_AGENT_WITH_HASH],
             errors: [],
@@ -141,7 +141,7 @@ describe('AgentRegistry Acknowledgement', () => {
     const agentNoHash = { ...MOCK_AGENT_WITH_HASH, metadata: undefined };
     vi.mocked(tomlLoader.loadAgentsFromDirectory).mockImplementation(
       async (dir) => {
-        if (dir === '/project/.gemini/agents') {
+        if (dir === '/project/.onyx/agents') {
           return {
             agents: [agentNoHash],
             errors: [],
@@ -167,3 +167,4 @@ describe('AgentRegistry Acknowledgement', () => {
     expect(registry.getDefinition('ProjectAgent')).toBeDefined();
   });
 });
+

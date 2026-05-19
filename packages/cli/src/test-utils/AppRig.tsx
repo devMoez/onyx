@@ -130,13 +130,13 @@ class MockExtensionManager extends ExtensionLoader {
   };
 }
 
-// Mock GeminiRespondingSpinner to disable animations (avoiding 'act()' warnings) without triggering screen reader mode.
-vi.mock('../ui/components/GeminiRespondingSpinner.js', async () => {
+// Mock OnyxRespondingSpinner to disable animations (avoiding 'act()' warnings) without triggering screen reader mode.
+vi.mock('../ui/components/OnyxRespondingSpinner.js', async () => {
   const React = await import('react');
   const { Text } = await import('ink');
   return {
-    GeminiSpinner: () => React.createElement(Text, null, '...'),
-    GeminiRespondingSpinner: ({
+    OnyxSpinner: () => React.createElement(Text, null, '...'),
+    OnyxRespondingSpinner: ({
       nonRespondingDisplay,
     }: {
       nonRespondingDisplay: string;
@@ -182,7 +182,7 @@ export class AppRig {
     activeRigs.set(this.sessionId, this);
 
     // Pre-create the persistent state file to bypass the terminal setup prompt
-    const geminiDir = path.join(this.testDir, '.gemini');
+    const geminiDir = path.join(this.testDir, '.onyx');
     if (!fs.existsSync(geminiDir)) {
       fs.mkdirSync(geminiDir, { recursive: true });
     }
@@ -264,7 +264,7 @@ export class AppRig {
   private createRigSettings(): LoadedSettings {
     return createMockSettings({
       user: {
-        path: path.join(this.testDir, '.gemini', 'user_settings.json'),
+        path: path.join(this.testDir, '.onyx', 'user_settings.json'),
         settings: {
           security: {
             auth: {
@@ -779,3 +779,4 @@ export class AppRig {
     }
   }
 }
+

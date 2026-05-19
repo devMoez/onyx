@@ -21,7 +21,7 @@ import {
   checkNextSpeaker,
   type NextSpeakerResponse,
 } from './nextSpeakerChecker.js';
-import { GeminiChat } from '../core/geminiChat.js';
+import { onyxChat } from '../core/onyxChat.js';
 
 // Mock fs module to prevent actual file system operations during tests
 const mockFileSystem = new Map<string, string>();
@@ -58,7 +58,7 @@ vi.mock('../core/baseLlmClient.js');
 vi.mock('../config/config.js');
 
 describe('checkNextSpeaker', () => {
-  let chatInstance: GeminiChat;
+  let chatInstance: onyxChat;
   let mockConfig: Config;
   let mockBaseLlmClient: BaseLlmClient;
   const abortSignal = new AbortController().signal;
@@ -96,8 +96,8 @@ describe('checkNextSpeaker', () => {
       mockConfig,
     );
 
-    // GeminiChat will receive the mocked instances via the mocked GoogleGenAI constructor
-    chatInstance = new GeminiChat(
+    // onyxChat will receive the mocked instances via the mocked GoogleGenAI constructor
+    chatInstance = new onyxChat(
       mockConfig,
       '', // empty system instruction
       [], // no tools
@@ -294,3 +294,4 @@ describe('checkNextSpeaker', () => {
     expect(generateJsonCall.promptId).toBe(promptId);
   });
 });
+

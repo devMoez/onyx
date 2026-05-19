@@ -50,7 +50,7 @@ describe('LSTool', () => {
       getFileService: () => new FileDiscoveryService(tempRootDir),
       getFileFilteringOptions: () => ({
         respectGitIgnore: true,
-        respectGeminiIgnore: true,
+        respectonyxIgnore: true,
       }),
       storage: mockStorage,
       isPathAllowed(this: Config, absolutePath: string): boolean {
@@ -199,7 +199,7 @@ describe('LSTool', () => {
       );
     });
 
-    it('should respect geminiignore patterns', async () => {
+    it('should respect onyxIgnore patterns', async () => {
       await fs.writeFile(path.join(tempRootDir, 'file1.txt'), 'content1');
       await fs.writeFile(path.join(tempRootDir, 'file2.log'), 'content1');
       await fs.writeFile(
@@ -403,3 +403,4 @@ describe('LSTool', () => {
     });
   });
 });
+

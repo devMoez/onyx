@@ -34,7 +34,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
     ...actual,
     Storage: {
       getGlobalSettingsPath: vi.fn().mockReturnValue('/mock/settings.json'),
-      getGlobalGeminiDir: vi.fn().mockReturnValue('/mock/.gemini'),
+      getGlobalGeminiDir: vi.fn().mockReturnValue('/mock/.onyx'),
     },
     debugLogger: {
       error: vi.fn(),
@@ -644,3 +644,4 @@ describe('github.ts', () => {
     });
   });
 });
+

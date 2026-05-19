@@ -26,9 +26,9 @@ import {
 } from '@onyx/core';
 import { Text } from 'ink';
 
-// Mock GeminiSpinner
-vi.mock('./GeminiSpinner.js', () => ({
-  GeminiSpinner: () => <Text>Spinner</Text>,
+// Mock OnyxSpinner
+vi.mock('./OnyxSpinner.js', () => ({
+  OnyxSpinner: () => <Text>Spinner</Text>,
 }));
 
 describe('ConfigInitDisplay', () => {
@@ -148,3 +148,4 @@ describe('ConfigInitDisplay', () => {
     });
   });
 });
+

@@ -197,7 +197,7 @@ export interface SandboxManager {
  */
 export const GOVERNANCE_FILES = [
   { path: '.gitignore', isDirectory: false },
-  { path: '.geminiignore', isDirectory: false },
+  { path: '.onyxIgnore', isDirectory: false },
   { path: '.git', isDirectory: true },
 ] as const;
 
@@ -452,3 +452,4 @@ export async function resolveSandboxPaths(
 }
 
 export { createSandboxManager } from './sandboxManagerFactory.js';
+

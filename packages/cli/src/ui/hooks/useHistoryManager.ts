@@ -115,7 +115,7 @@ export function useHistory({
           case 'user':
           case 'gemini':
           case 'gemini_content':
-            // Core conversation recording handled by GeminiChat.
+            // Core conversation recording handled by onyxChat.
             break;
           default:
             // Ignore the rest.
@@ -173,3 +173,4 @@ export function useHistory({
     [history, addItem, updateItem, clearItems, loadHistory],
   );
 }
+

@@ -12,7 +12,7 @@ interface GeminiPrivacyNoticeProps {
   onExit: () => void;
 }
 
-export const GeminiPrivacyNotice = ({ onExit }: GeminiPrivacyNoticeProps) => {
+export const OnyxPrivacyNotice = ({ onExit }: GeminiPrivacyNoticeProps) => {
   useKeypress(
     (key) => {
       if (key.name === 'escape') {
@@ -62,3 +62,4 @@ export const GeminiPrivacyNotice = ({ onExit }: GeminiPrivacyNoticeProps) => {
     </Box>
   );
 };
+

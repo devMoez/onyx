@@ -106,7 +106,7 @@ export async function loadConfig(
     // Git-aware file filtering settings
     fileFiltering: {
       respectGitIgnore: settings.fileFiltering?.respectGitIgnore,
-      respectGeminiIgnore: settings.fileFiltering?.respectGeminiIgnore,
+      respectonyxIgnore: settings.fileFiltering?.respectonyxIgnore,
       enableRecursiveFileSearch:
         settings.fileFiltering?.enableRecursiveFileSearch,
       customIgnoreFilePaths: [
@@ -299,3 +299,4 @@ async function refreshAuthentication(
     throw new Error(errorMessage);
   }
 }
+

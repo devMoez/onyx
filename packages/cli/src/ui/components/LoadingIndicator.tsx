@@ -10,7 +10,7 @@ import { Box, Text } from 'ink';
 import { theme } from '../semantic-colors.js';
 import { useStreamingContext } from '../contexts/StreamingContext.js';
 import { StreamingState } from '../types.js';
-import { GeminiRespondingSpinner } from './GeminiRespondingSpinner.js';
+import { OnyxRespondingSpinner } from './OnyxRespondingSpinner.js';
 import { formatDuration } from '../utils/formatters.js';
 import { useTerminalSize } from '../hooks/useTerminalSize.js';
 import { isNarrowWidth } from '../utils/isNarrowWidth.js';
@@ -92,7 +92,7 @@ export const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({
     return (
       <Box>
         <Box marginRight={1}>
-          <GeminiRespondingSpinner
+          <OnyxRespondingSpinner
             nonRespondingDisplay={
               spinnerIcon ??
               (streamingState === StreamingState.WaitingForConfirmation
@@ -136,7 +136,7 @@ export const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({
       >
         <Box>
           <Box marginRight={1}>
-            <GeminiRespondingSpinner
+            <OnyxRespondingSpinner
               nonRespondingDisplay={
                 spinnerIcon ??
                 (streamingState === StreamingState.WaitingForConfirmation
@@ -180,3 +180,4 @@ export const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({
     </Box>
   );
 };
+

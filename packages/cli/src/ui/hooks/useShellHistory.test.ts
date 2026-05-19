@@ -40,7 +40,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
   const path = await import('node:path');
   class Storage {
     static getGlobalSettingsPath(): string {
-      return '/test/home/.gemini/settings.json';
+      return '/test/home/.onyx/settings.json';
     }
     getProjectTempDir(): string {
       return path.join('/test/home/', actual.GEMINI_DIR, 'tmp', 'mocked_hash');
@@ -311,3 +311,4 @@ describe('useShellHistory', () => {
     unmount();
   });
 });
+

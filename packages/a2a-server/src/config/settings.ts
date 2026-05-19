@@ -44,7 +44,7 @@ export interface Settings {
   // Git-aware file filtering settings
   fileFiltering?: {
     respectGitIgnore?: boolean;
-    respectGeminiIgnore?: boolean;
+    respectonyxIgnore?: boolean;
     enableRecursiveFileSearch?: boolean;
     customIgnoreFilePaths?: string[];
   };
@@ -175,3 +175,4 @@ function resolveEnvVarsInObject<T>(obj: T): T {
 
   return obj;
 }
+

@@ -83,7 +83,7 @@ describe('loadIgnoreRules', () => {
     });
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: true,
-      respectGeminiIgnore: false,
+      respectonyxIgnore: false,
     });
     const ignore = loadIgnoreRules(service, []);
     const fileFilter = ignore.getFileFilter();
@@ -91,13 +91,13 @@ describe('loadIgnoreRules', () => {
     expect(fileFilter('test.txt')).toBe(false);
   });
 
-  it('should load rules from .geminiignore', async () => {
+  it('should load rules from .onyxIgnore', async () => {
     tmpDir = await createTmpDir({
       [GEMINI_IGNORE_FILE_NAME]: '*.log',
     });
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: false,
-      respectGeminiIgnore: true,
+      respectonyxIgnore: true,
     });
     const ignore = loadIgnoreRules(service, []);
     const fileFilter = ignore.getFileFilter();
@@ -105,7 +105,7 @@ describe('loadIgnoreRules', () => {
     expect(fileFilter('test.txt')).toBe(false);
   });
 
-  it('should combine rules from .gitignore and .geminiignore', async () => {
+  it('should combine rules from .gitignore and .onyxIgnore', async () => {
     tmpDir = await createTmpDir({
       '.git': {},
       '.gitignore': '*.log',
@@ -113,7 +113,7 @@ describe('loadIgnoreRules', () => {
     });
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: true,
-      respectGeminiIgnore: true,
+      respectonyxIgnore: true,
     });
     const ignore = loadIgnoreRules(service, []);
     const fileFilter = ignore.getFileFilter();
@@ -126,7 +126,7 @@ describe('loadIgnoreRules', () => {
     tmpDir = await createTmpDir({});
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: false,
-      respectGeminiIgnore: false,
+      respectonyxIgnore: false,
     });
     const ignore = loadIgnoreRules(service, ['logs/']);
     const dirFilter = ignore.getDirectoryFilter();
@@ -138,7 +138,7 @@ describe('loadIgnoreRules', () => {
     tmpDir = await createTmpDir({});
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: true,
-      respectGeminiIgnore: true,
+      respectonyxIgnore: true,
     });
     const ignore = loadIgnoreRules(service, []);
     const fileFilter = ignore.getFileFilter();
@@ -149,10 +149,11 @@ describe('loadIgnoreRules', () => {
     tmpDir = await createTmpDir({});
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: false,
-      respectGeminiIgnore: false,
+      respectonyxIgnore: false,
     });
     const ignore = loadIgnoreRules(service, []);
     const dirFilter = ignore.getDirectoryFilter();
     expect(dirFilter('.git/')).toBe(true);
   });
 });
+

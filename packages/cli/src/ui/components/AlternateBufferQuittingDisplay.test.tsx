@@ -37,8 +37,8 @@ vi.mock('@onyx/core', async (importOriginal) => {
   };
 });
 
-vi.mock('../GeminiRespondingSpinner.js', () => ({
-  GeminiRespondingSpinner: () => <Text>Spinner</Text>,
+vi.mock('../OnyxRespondingSpinner.js', () => ({
+  OnyxRespondingSpinner: () => <Text>Spinner</Text>,
 }));
 
 const mockHistory: HistoryItem[] = [
@@ -228,3 +228,4 @@ describe('AlternateBufferQuittingDisplay', () => {
     unmount();
   });
 });
+

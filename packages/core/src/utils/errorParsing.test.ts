@@ -12,7 +12,7 @@ import type { StructuredError } from '../core/turn.js';
 
 describe('parseAndFormatApiError', () => {
   const vertexMessage = 'request a quota increase through Vertex';
-  const geminiMessage = 'request a quota increase through AI Studio';
+  const OnyxMessage = 'request a quota increase through AI Studio';
 
   it('should format a valid API error JSON', () => {
     const errorMessage =
@@ -87,7 +87,7 @@ describe('parseAndFormatApiError', () => {
 
     const result = parseAndFormatApiError(errorMessage, AuthType.USE_GEMINI);
     expect(result).toContain('Gemini 2.5 Pro Preview');
-    expect(result).toContain(geminiMessage);
+    expect(result).toContain(OnyxMessage);
   });
 
   it('should format a StructuredError', () => {
@@ -115,3 +115,4 @@ describe('parseAndFormatApiError', () => {
     expect(parseAndFormatApiError(error)).toBe(expected);
   });
 });
+

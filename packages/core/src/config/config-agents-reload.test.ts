@@ -34,8 +34,8 @@ describe('Config Agents Reload Integration', () => {
     // Create a temporary directory for the test
     tmpDir = await createTmpDir({});
 
-    // Create the .gemini/agents directory structure
-    await fs.mkdir(path.join(tmpDir, '.gemini', 'agents'), { recursive: true });
+    // Create the .onyx/agents directory structure
+    await fs.mkdir(path.join(tmpDir, '.onyx', 'agents'), { recursive: true });
   });
 
   afterEach(async () => {
@@ -45,7 +45,7 @@ describe('Config Agents Reload Integration', () => {
 
   it('should unregister agents from the agent registry when they are disabled after being enabled', async () => {
     const agentName = 'test-agent';
-    const agentPath = path.join(tmpDir, '.gemini', 'agents', `${agentName}.md`);
+    const agentPath = path.join(tmpDir, '.onyx', 'agents', `${agentName}.md`);
 
     // Create agent definition file
     const agentContent = `---
@@ -106,7 +106,7 @@ Test System Prompt`;
 
   it('should not register agents in the agent registry when agents are disabled from the start', async () => {
     const agentName = 'test-agent-disabled';
-    const agentPath = path.join(tmpDir, '.gemini', 'agents', `${agentName}.md`);
+    const agentPath = path.join(tmpDir, '.onyx', 'agents', `${agentName}.md`);
 
     const agentContent = `---
 name: ${agentName}
@@ -148,7 +148,7 @@ Test System Prompt`;
 
   it('should register agents in the agent registry even when they are not in allowedTools', async () => {
     const agentName = 'test-agent-allowed';
-    const agentPath = path.join(tmpDir, '.gemini', 'agents', `${agentName}.md`);
+    const agentPath = path.join(tmpDir, '.onyx', 'agents', `${agentName}.md`);
 
     const agentContent = `---
 name: ${agentName}
@@ -190,7 +190,7 @@ Test System Prompt`;
 
   it('should register agents in the agent registry when they are enabled after being disabled', async () => {
     const agentName = 'test-agent-enable';
-    const agentPath = path.join(tmpDir, '.gemini', 'agents', `${agentName}.md`);
+    const agentPath = path.join(tmpDir, '.onyx', 'agents', `${agentName}.md`);
 
     const agentContent = `---
 name: ${agentName}
@@ -245,3 +245,4 @@ Test System Prompt`;
     );
   });
 });
+

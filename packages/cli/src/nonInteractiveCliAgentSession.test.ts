@@ -185,7 +185,7 @@ describe('runNonInteractive', () => {
       getSessionId: vi.fn().mockReturnValue('test-session-id'),
       getProjectRoot: vi.fn().mockReturnValue('/test/project'),
       storage: {
-        getProjectTempDir: vi.fn().mockReturnValue('/test/project/.gemini/tmp'),
+        getProjectTempDir: vi.fn().mockReturnValue('/test/project/.onyx/tmp'),
       },
       getIdeMode: vi.fn().mockReturnValue(false),
 
@@ -2688,3 +2688,4 @@ describe('runNonInteractive', () => {
     });
   });
 });
+

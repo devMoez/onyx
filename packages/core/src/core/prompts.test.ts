@@ -103,7 +103,7 @@ describe('Core System Prompt (prompts.ts)', () => {
           .mockReturnValue('/tmp/project-temp/memory'),
         getProjectTempTrackerDir: vi
           .fn()
-          .mockReturnValue('/mock/.gemini/tmp/session/tracker'),
+          .mockReturnValue('/mock/.onyx/tmp/session/tracker'),
       },
       isInteractive: vi.fn().mockReturnValue(true),
       isInteractiveShellEnabled: vi.fn().mockReturnValue(true),
@@ -343,7 +343,7 @@ describe('Core System Prompt (prompts.ts)', () => {
     const memory = 'This is custom user memory.\nBe extra polite.';
     const prompt = getCoreSystemPrompt(mockConfig, memory);
 
-    expect(prompt).toContain('# Contextual Instructions (GEMINI.md)');
+    expect(prompt).toContain('# Contextual Instructions (onyx.md)');
     expect(prompt).toContain('<loaded_context>');
     expect(prompt).toContain(memory);
     expect(prompt).toContain('You are Gemini CLI, an interactive CLI agent'); // Ensure base prompt follows
@@ -964,3 +964,4 @@ describe('resolvePathFromEnv helper function', () => {
     });
   });
 });
+

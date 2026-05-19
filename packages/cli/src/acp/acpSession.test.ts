@@ -19,7 +19,7 @@ import { Session } from './acpSession.js';
 import type * as acp from '@agentclientprotocol/sdk';
 import {
   ReadManyFilesTool,
-  type GeminiChat,
+  type onyxChat,
   type Config,
   type MessageBus,
   type GitService,
@@ -76,7 +76,7 @@ async function* createMockStream(
 }
 
 describe('Session', () => {
-  let mockChat: Mocked<GeminiChat>;
+  let mockChat: Mocked<onyxChat>;
   let mockConfig: Mocked<Config>;
   let mockConnection: Mocked<acp.AgentSideConnection>;
   let session: Session;
@@ -97,7 +97,7 @@ describe('Session', () => {
       addHistory: vi.fn(),
       recordCompletedToolCalls: vi.fn(),
       getHistory: vi.fn().mockReturnValue([]),
-    } as unknown as Mocked<GeminiChat>;
+    } as unknown as Mocked<onyxChat>;
     mockTool = {
       kind: 'read',
       build: vi.fn().mockReturnValue({
@@ -704,3 +704,4 @@ describe('Session', () => {
     );
   });
 });
+
