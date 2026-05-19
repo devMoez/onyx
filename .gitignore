@@ -68,3 +68,4 @@ temp_agents/
 
 # conductor extension and planning directories
 conductor/
+packages/core/src/sandbox/windows/GeminiSandbox.exe
