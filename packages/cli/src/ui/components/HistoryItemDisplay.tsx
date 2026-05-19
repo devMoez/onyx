@@ -15,7 +15,7 @@ import { InfoMessage } from './messages/InfoMessage.js';
 import { ErrorMessage } from './messages/ErrorMessage.js';
 import { ToolGroupMessage } from './messages/ToolGroupMessage.js';
 import { ToolGroupDisplay } from './messages/ToolGroupDisplay.js';
-import { GeminiMessageContent } from './messages/GeminiMessageContent.js';
+import { OnyxMessageContent } from './messages/OnyxMessageContent.js';
 import { CompressionMessage } from './messages/CompressionMessage.js';
 import { ExportSessionMessage } from './messages/ExportSessionMessage.js';
 import { WarningMessage } from './messages/WarningMessage.js';
