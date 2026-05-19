@@ -90,7 +90,7 @@ export const planCommand: SlashCommand = {
       coreEvents.emitFeedback('info', `Approved Plan: ${fileName}`);
 
       context.ui.addItem({
-        type: MessageType.onyx,
+        type: MessageType.ONYX,
         text: partToString(content.llmContent),
       });
       return;

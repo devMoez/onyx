@@ -177,6 +177,11 @@ export type HistoryItemGeminiContent = HistoryItemBase & {
   text: string;
 };
 
+export type HistoryItemOnyx = HistoryItemBase & {
+  type: 'onyx';
+  text: string;
+};
+
 export type HistoryItemInfo = HistoryItemBase & {
   type: 'info';
   text: string;
@@ -424,6 +429,7 @@ export type HistoryItemWithoutId =
   | HistoryItemUserShell
   | HistoryItemGemini
   | HistoryItemGeminiContent
+  | HistoryItemOnyx
   | HistoryItemInfo
   | HistoryItemError
   | HistoryItemWarning

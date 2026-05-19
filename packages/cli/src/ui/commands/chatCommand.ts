@@ -203,7 +203,7 @@ const resumeCheckpointCommand: SlashCommand = {
 
     const rolemap: { [key: string]: MessageType } = {
       user: MessageType.USER,
-      model: MessageType.onyx,
+      model: MessageType.ONYX,
     };
 
     const uiHistory: HistoryItemWithoutId[] = [];
@@ -220,7 +220,7 @@ const resumeCheckpointCommand: SlashCommand = {
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       uiHistory.push({
-        type: (item.role && rolemap[item.role]) || MessageType.onyx,
+        type: (item.role && rolemap[item.role]) || MessageType.ONYX,
         text,
       } as HistoryItemWithoutId);
     }

@@ -622,11 +622,11 @@ export function convertSessionToHistoryFormats(
           messageType = MessageType.WARNING;
           break;
         case 'gemini':
-          messageType = MessageType.onyx;
+          messageType = MessageType.ONYX;
           break;
         default:
           checkExhaustive(msg);
-          messageType = MessageType.onyx;
+          messageType = MessageType.ONYX;
           break;
       }
 
