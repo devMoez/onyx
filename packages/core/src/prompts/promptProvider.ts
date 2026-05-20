@@ -50,8 +50,9 @@ export class PromptProvider {
     interactiveOverride?: boolean,
     topicUpdateNarrationOverride?: boolean,
   ): string {
+    // Support both ONYX_SYSTEM_MD (new) and GEMINI_SYSTEM_MD (legacy) for backward compatibility
     const systemMdResolution = resolvePathFromEnv(
-      process.env['GEMINI_SYSTEM_MD'],
+      process.env['ONYX_SYSTEM_MD'] || process.env['GEMINI_SYSTEM_MD'],
     );
 
     const interactiveMode =

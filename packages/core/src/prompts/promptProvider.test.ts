@@ -42,6 +42,7 @@ describe('PromptProvider', () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
+    vi.stubEnv('ONYX_SYSTEM_MD', '');
     vi.stubEnv('GEMINI_SYSTEM_MD', '');
     vi.stubEnv('GEMINI_WRITE_SYSTEM_MD', '');
 
