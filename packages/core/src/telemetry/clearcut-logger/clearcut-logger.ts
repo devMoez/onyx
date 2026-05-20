@@ -337,13 +337,9 @@ export class ClearcutLogger {
     }
   }
 
-  static getInstance(config?: Config): ClearcutLogger | undefined {
-    if (config === undefined || !config?.getUsageStatisticsEnabled())
-      return undefined;
-    if (!ClearcutLogger.instance) {
-      ClearcutLogger.instance = new ClearcutLogger(config);
-    }
-    return ClearcutLogger.instance;
+  static getInstance(_config?: Config): ClearcutLogger | undefined {
+    // Onyx modification: Disable Clearcut logging to stop phoning home.
+    return undefined;
   }
 
   /** For testing purposes only. */

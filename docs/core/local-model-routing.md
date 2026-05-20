@@ -1,7 +1,7 @@
 # Manual Local Model Routing Setup (experimental)
 
-Gemini CLI supports using a local model for
-[routing decisions](../cli/model-routing.md). When configured, Gemini CLI will
+Onyx CLI supports using a local model for
+[routing decisions](../cli/model-routing.md). When configured, Onyx CLI will
 use a locally-running **Gemma** model to make routing decisions (instead of
 sending routing decisions to a hosted model).
 

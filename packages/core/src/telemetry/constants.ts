@@ -6,9 +6,9 @@
 
 export const SERVICE_NAME = 'gemini-cli';
 export const SERVICE_DESCRIPTION =
-  'Gemini CLI is an open-source AI agent that brings the power of Gemini directly into your terminal. It is designed to be a terminal-first, extensible, and powerful tool for developers, engineers, SREs, and beyond.';
+  'Onyx CLI is an open-source AI agent that brings the power of Gemini directly into your terminal. It is designed to be a terminal-first, extensible, and powerful tool for developers, engineers, SREs, and beyond.';
 
-// Gemini CLI specific semantic conventions
+// Onyx CLI specific semantic conventions
 // https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes
 export const GEN_AI_OPERATION_NAME = 'gen_ai.operation.name';
 export const GEN_AI_AGENT_NAME = 'gen_ai.agent.name';

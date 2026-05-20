@@ -41,8 +41,8 @@ import type { AgentLoopContext } from '../config/agent-loop-context.js';
 const URL_FETCH_TIMEOUT_MS = 10000;
 const MAX_CONTENT_LENGTH = 250000;
 const MAX_EXPERIMENTAL_FETCH_SIZE = 10 * 1024 * 1024; // 10MB
-const USER_AGENT =
-  'Mozilla/5.0 (compatible; Google-Gemini-CLI/1.0; +https://github.com/google-gemini/gemini-cli)';
+export const USER_AGENT =
+  'Mozilla/5.0 (compatible; Onyx-CLI/1.0; +https://github.com/onyx-cli/onyx-cli)';
 const TRUNCATION_WARNING = '\n\n... [Content truncated due to size limit] ...';
 
 // Rate limiting configuration

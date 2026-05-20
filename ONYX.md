@@ -110,6 +110,21 @@ Manager**. Every request follows the rigor of a professional software house:
   it can lead to test leakage and is less reliable. To "unset" a variable, use
   an empty string `vi.stubEnv('NAME', '')`.
 
+## Agent Orchestration (Ruflo)
+
+This workspace is integrated with [Ruflo](https://github.com/ruvnet/ruflo), an
+enterprise-grade agent orchestration platform. It is used to coordinate swarms
+of specialized agents, manage self-learning memory, and automate complex
+workflows.
+
+- **Location:** `.\ruflo-install\node_modules\.bin\ruflo`
+- **Daemon Status:** Background worker is active (manage with `ruflo daemon`).
+- **Memory:** Initialized with AgentDB (manage with `ruflo memory`).
+- **Swarm:** V3 hierarchical-mesh coordination is ready (manage with `ruflo swarm`).
+
+To use Ruflo in this workspace, run commands via the local binary:
+`.\ruflo-install\node_modules\.bin\ruflo <command>`
+
 ## Documentation
 
 - Always use the `docs-writer` skill when you are asked to write, edit, or

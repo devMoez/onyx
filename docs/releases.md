@@ -1,4 +1,4 @@
-# Gemini CLI releases
+# Onyx CLI releases
 
 <!-- prettier-ignore -->
 > [!IMPORTANT]

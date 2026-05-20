@@ -1,0 +1,140 @@
+{
+  "running": true,
+  "startedAt": "2026-05-20T07:21:02.944Z",
+  "workers": {
+    "map": {
+      "runCount": 21,
+      "successCount": 21,
+      "failureCount": 0,
+      "averageDurationMs": 22.428571428571427,
+      "isRunning": false,
+      "nextRun": "2026-05-20T12:36:46.319Z",
+      "lastStartedAt": "2026-05-20T12:21:46.295Z",
+      "lastRun": "2026-05-20T12:21:46.309Z"
+    },
+    "audit": {
+      "runCount": 30,
+      "successCount": 30,
+      "failureCount": 0,
+      "averageDurationMs": 5185.3,
+      "isRunning": true,
+      "nextRun": "2026-05-20T12:25:27.362Z",
+      "lastStartedAt": "2026-05-20T12:25:27.583Z",
+      "lastRun": "2026-05-20T12:15:27.359Z"
+    },
+    "optimize": {
+      "runCount": 20,
+      "successCount": 20,
+      "failureCount": 0,
+      "averageDurationMs": 4425.3,
+      "isRunning": true,
+      "nextRun": "2026-05-20T12:26:20.197Z",
+      "lastStartedAt": "2026-05-20T12:26:20.231Z",
+      "lastRun": "2026-05-20T12:11:20.191Z"
+    },
+    "consolidate": {
+      "runCount": 10,
+      "successCount": 10,
+      "failureCount": 0,
+      "averageDurationMs": 7.9,
+      "isRunning": false,
+      "nextRun": "2026-05-20T12:26:51.644Z",
+      "lastStartedAt": "2026-05-20T11:56:51.629Z",
+      "lastRun": "2026-05-20T11:56:51.638Z"
+    },
+    "testgaps": {
+      "runCount": 15,
+      "successCount": 15,
+      "failureCount": 0,
+      "averageDurationMs": 5441.466666666666,
+      "isRunning": false,
+      "nextRun": "2026-05-20T12:32:43.285Z",
+      "lastStartedAt": "2026-05-20T12:12:38.893Z",
+      "lastRun": "2026-05-20T12:12:43.280Z"
+    },
+    "predict": {
+      "runCount": 0,
+      "successCount": 0,
+      "failureCount": 0,
+      "averageDurationMs": 0,
+      "isRunning": false
+    },
+    "document": {
+      "runCount": 0,
+      "successCount": 0,
+      "failureCount": 0,
+      "averageDurationMs": 0,
+      "isRunning": false
+    }
+  },
+  "config": {
+    "autoStart": false,
+    "logDir": "C:\\Users\\moezf\\Desktop\\onyx-cli\\.claude-flow\\logs",
+    "stateFile": "C:\\Users\\moezf\\Desktop\\onyx-cli\\.claude-flow\\daemon-state.json",
+    "maxConcurrent": 2,
+    "workerTimeoutMs": 960000,
+    "resourceThresholds": {
+      "maxCpuLoad": 3.2,
+      "minFreeMemoryPercent": 10
+    },
+    "workers": [
+      {
+        "type": "map",
+        "intervalMs": 900000,
+        "offsetMs": 0,
+        "priority": "normal",
+        "description": "Codebase mapping",
+        "enabled": true
+      },
+      {
+        "type": "audit",
+        "intervalMs": 600000,
+        "offsetMs": 120000,
+        "priority": "critical",
+        "description": "Security analysis",
+        "enabled": true
+      },
+      {
+        "type": "optimize",
+        "intervalMs": 900000,
+        "offsetMs": 240000,
+        "priority": "high",
+        "description": "Performance optimization",
+        "enabled": true
+      },
+      {
+        "type": "consolidate",
+        "intervalMs": 1800000,
+        "offsetMs": 360000,
+        "priority": "low",
+        "description": "Memory consolidation",
+        "enabled": true
+      },
+      {
+        "type": "testgaps",
+        "intervalMs": 1200000,
+        "offsetMs": 480000,
+        "priority": "normal",
+        "description": "Test coverage analysis",
+        "enabled": true
+      },
+      {
+        "type": "predict",
+        "intervalMs": 600000,
+        "offsetMs": 0,
+        "priority": "low",
+        "description": "Predictive preloading",
+        "enabled": false
+      },
+      {
+        "type": "document",
+        "intervalMs": 3600000,
+        "offsetMs": 0,
+        "priority": "low",
+        "description": "Auto-documentation",
+        "enabled": false
+      }
+    ]
+  },
+  "savedAt": "2026-05-20T12:26:23.491Z"
+}

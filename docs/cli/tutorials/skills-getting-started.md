@@ -1,6 +1,6 @@
 # Get started with Agent Skills
 
-Agent Skills extend Gemini CLI with specialized expertise. In this tutorial,
+Agent Skills extend Onyx CLI with specialized expertise. In this tutorial,
 you'll learn how to create your first skill, bundle custom logic, and activate
 it during a session.
 
@@ -78,10 +78,10 @@ fetch(url, { method: 'HEAD' })
 
 ## Verify discovery
 
-Gemini CLI automatically discovers skills in the `.gemini/skills` directory (as
+Onyx CLI automatically discovers skills in the `.gemini/skills` directory (as
 well as the `.agents/skills` alias).
 
-To check if Gemini CLI found your new skill, use the `/skills list` command
+To check if Onyx CLI found your new skill, use the `/skills list` command
 within an interactive session:
 
 ```bash

@@ -11,7 +11,7 @@ import { initializeOutputListenersAndFlush } from '../onyx.js';
 export const hooksCommand: CommandModule = {
   command: 'hooks <command>',
   aliases: ['hook'],
-  describe: 'Manage Gemini CLI hooks.',
+  describe: 'Manage Onyx CLI hooks.',
   builder: (yargs) =>
     yargs
       .middleware((argv) => {

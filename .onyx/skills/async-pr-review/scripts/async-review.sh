@@ -25,8 +25,8 @@ if [[ -z "${base_dir}" ]]; then
   exit 1
 fi
 
-# Use the repository's local .gemini/tmp directory for ephemeral worktrees and logs
-pr_dir="${base_dir}/.gemini/tmp/async-reviews/pr-${pr_number}"
+# Use the repository's local .onyx/tmp directory for ephemeral worktrees and logs
+pr_dir="${base_dir}/.onyx/tmp/async-reviews/pr-${pr_number}"
 target_dir="${pr_dir}/worktree"
 log_dir="${pr_dir}/logs"
 

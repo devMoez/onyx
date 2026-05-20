@@ -1,11 +1,11 @@
-# Sandboxing in Gemini CLI
+# Sandboxing in Onyx CLI
 
-This document provides a guide to sandboxing in Gemini CLI, including
+This document provides a guide to sandboxing in Onyx CLI, including
 prerequisites, quickstart, and configuration.
 
 ## Prerequisites
 
-Before using sandboxing, you need to install and set up Gemini CLI:
+Before using sandboxing, you need to install and set up Onyx CLI:
 
 ```bash
 npm install -g @google/gemini-cli
@@ -119,7 +119,7 @@ files while remaining isolated from the rest of your system.
 
 **Quick setup:**
 
-To enable Docker sandboxing, run Gemini CLI with the sandbox flag and specify
+To enable Docker sandboxing, run Onyx CLI with the sandbox flag and specify
 Docker as the provider:
 
 ```bash
@@ -134,7 +134,7 @@ gemini -p "build the project"
 **Customizing the Sandbox Image:**
 
 If your project requires specific dependencies, you can specify a custom image
-name or have Gemini CLI build one for you automatically. You can use any Docker
+name or have Onyx CLI build one for you automatically. You can use any Docker
 or Podman image as your sandbox, provided it has standard shell utilities (like
 `bash`) available.
 
@@ -166,7 +166,7 @@ export GEMINI_SANDBOX_IMAGE="us-central1-docker.pkg.dev/my-project/my-repo/my-cu
 **Option B: Building a local custom image automatically**
 
 If you prefer to define your environment as code, you can provide a Dockerfile
-and Gemini CLI will build the image automatically.
+and Onyx CLI will build the image automatically.
 
 1.  Create a `.gemini/sandbox.Dockerfile` in your project root.
 2.  Ensure you have the `gh` CLI installed and authenticated (if you are using
@@ -208,7 +208,7 @@ strong security barrier between AI operations and the host OS.
 - Docker installed and running
 - gVisor/runsc runtime configured
 
-When you set `sandbox: "runsc"`, Gemini CLI runs
+When you set `sandbox: "runsc"`, Onyx CLI runs
 `docker run --runtime=runsc ...` to execute containers with gVisor isolation.
 runsc is not auto-detected; you must specify it explicitly (e.g.
 `GEMINI_SANDBOX=runsc` or `sandbox: "runsc"`).
@@ -230,7 +230,7 @@ such as Snapcraft and Rockcraft.
 
 - Linux only.
 - LXC/LXD must be installed (`snap install lxd` or `apt install lxd`).
-- A container must be created and running before starting Gemini CLI. Gemini
+- A container must be created and running before starting Onyx CLI. Gemini
   does **not** create the container automatically.
 
 **Quick setup**:
@@ -266,7 +266,7 @@ gemini -p "build the snap"
 ## Tool sandboxing
 
 Tool-level sandboxing provides granular isolation for individual tool executions
-(like `shell_exec` and `write_file`) instead of sandboxing the entire Gemini CLI
+(like `shell_exec` and `write_file`) instead of sandboxing the entire Onyx CLI
 process.
 
 This approach offers better integration with your local environment for non-tool
@@ -294,17 +294,17 @@ you can disable it by setting `security.toolSandboxing` to `false` in your
 
 ## Sandbox expansion
 
-Sandbox expansion is a dynamic permission system that lets Gemini CLI request
+Sandbox expansion is a dynamic permission system that lets Onyx CLI request
 additional permissions for a command when needed.
 
 When a sandboxed command fails due to permission restrictions (like restricted
 file paths or network access), or when a command is proactively identified as
-requiring extra permissions (like `npm install`), Gemini CLI will present you
+requiring extra permissions (like `npm install`), Onyx CLI will present you
 with a "Sandbox Expansion Request."
 
 ### How sandbox expansion works
 
-1.  **Detection**: Gemini CLI detects a sandbox denial or proactively identifies
+1.  **Detection**: Onyx CLI detects a sandbox denial or proactively identifies
     a command that requires extra permissions.
 2.  **Request**: A modal dialog is shown, explaining which additional
     permissions (e.g., specific directories or network access) are required.
@@ -335,7 +335,7 @@ export SANDBOX_MOUNTS="/path/on/host:/path/in/container:rw,/another/path:ro"
 
 ## Running inside a Docker container
 
-If you are running Gemini CLI itself from within an official or custom Docker
+If you are running Onyx CLI itself from within an official or custom Docker
 container and want to enable sandboxing, you must share the host's Docker socket
 and ensure your workspace paths align.
 
@@ -427,7 +427,7 @@ $env:SANDBOX_SET_UID_GID="false"  # Disable UID/GID mapping
 **Missing commands**
 
 - Add to a custom Dockerfile. Automatic `BUILD_SANDBOX` builds are only
-  available when running Gemini CLI from source; npm installs need a prebuilt
+  available when running Onyx CLI from source; npm installs need a prebuilt
   image instead.
 - Install via `sandbox.bashrc`.
 

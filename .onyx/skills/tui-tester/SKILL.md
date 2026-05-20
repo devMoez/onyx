@@ -41,14 +41,14 @@ agent-tui live start --open
 
 ### 4. Onyx CLI Specifics
 - **Build First**: Always run `npm run build` or `npm run build:all` before testing local changes.
-- **Bypass Trust**: Set `GEMINI_CLI_TRUST_WORKSPACE=true` to avoid focus-stealing modals.
+- **Bypass Trust**: Set `ONYX_CLI_TRUST_WORKSPACE=true` to avoid focus-stealing modals.
 - **Isolate Config**: Use `GEMINI_CLI_HOME` to prevent interference with your personal settings.
 
 ## Workflow Example
 
 ```bash
 # Start the CLI
-env GEMINI_CLI_TRUST_WORKSPACE=true agent-tui run node packages/cli/dist/index.js
+env ONYX_CLI_TRUST_WORKSPACE=true agent-tui run node packages/cli/dist/index.js
 
 # Wait for the prompt
 agent-tui wait "│" --assert

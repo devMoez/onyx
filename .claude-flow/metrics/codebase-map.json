@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-05-20T12:21:46.304Z",
+  "projectRoot": "C:\\Users\\moezf\\Desktop\\onyx-cli",
+  "structure": {
+    "hasPackageJson": true,
+    "hasTsConfig": true,
+    "hasClaudeConfig": true,
+    "hasClaudeFlow": true
+  },
+  "scannedAt": 1779279706305
+}

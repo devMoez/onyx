@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-05-20T12:11:20.188Z",
+  "mode": "headless",
+  "workerType": "optimize",
+  "model": "sonnet",
+  "durationMs": 4480,
+  "executionId": "optimize_1779279075708_exjt5v",
+  "success": false,
+  "findings": {
+    "sections": [],
+    "codeBlocks": []
+  },
+  "rawOutputPreview": "Not logged in · Please run /login\n",
+  "rawOutputLength": 34
+}

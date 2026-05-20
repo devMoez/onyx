@@ -1,7 +1,7 @@
-# Gemini CLI for the enterprise
+# Onyx CLI for the enterprise
 
 This document outlines configuration patterns and best practices for deploying
-and managing Gemini CLI in an enterprise environment. By leveraging system-level
+and managing Onyx CLI in an enterprise environment. By leveraging system-level
 settings, administrators can enforce security policies, manage tool access, and
 ensure a consistent experience for all users.
 
@@ -9,7 +9,7 @@ ensure a consistent experience for all users.
 > [!WARNING]
 > The patterns described in this document are intended to help
 > administrators create a more controlled and secure environment for using
-> Gemini CLI. However, they should not be considered a foolproof security
+> Onyx CLI. However, they should not be considered a foolproof security
 > boundary. A determined user with sufficient privileges on their local machine
 > may still be able to circumvent these configurations. These measures are
 > designed to prevent accidental misuse and enforce corporate policy in a
@@ -175,7 +175,7 @@ the enterprise settings are always loaded with the highest precedence.
 **Example wrapper script:**
 
 Administrators can create a script named `gemini` and place it in a directory
-that appears earlier in the user's `PATH` than the actual Gemini CLI binary (for
+that appears earlier in the user's `PATH` than the actual Onyx CLI binary (for
 example, `/usr/local/bin/gemini`).
 
 ```bash
@@ -195,13 +195,13 @@ if [ -z "$REAL_GEMINI_PATH" ]; then
   exit 1
 fi
 
-# Pass all arguments to the real Gemini CLI executable.
+# Pass all arguments to the real Onyx CLI executable.
 exec "$REAL_GEMINI_PATH" "$@"
 ```
 
 By deploying this script, the `GEMINI_CLI_SYSTEM_SETTINGS_PATH` is set within
 the script's environment, and the `exec` command replaces the script process
-with the actual Gemini CLI process, which inherits the environment variable.
+with the actual Onyx CLI process, which inherits the environment variable.
 This makes it significantly more difficult for a user to bypass the enforced
 settings.
 
@@ -217,10 +217,10 @@ Add-Content -Path $PROFILE -Value '$env:GEMINI_CLI_SYSTEM_SETTINGS_PATH="C:\Prog
 ## User isolation in shared environments
 
 In shared compute environments (like ML experiment runners or shared build
-servers), you can isolate Gemini CLI state by overriding the user's home
+servers), you can isolate Onyx CLI state by overriding the user's home
 directory.
 
-By default, Gemini CLI stores configuration and history in `~/.gemini`. You can
+By default, Onyx CLI stores configuration and history in `~/.gemini`. You can
 use the `GEMINI_CLI_HOME` environment variable to point to a unique directory
 for a specific user or job. The CLI will create a `.gemini` folder inside the
 specified path.
@@ -318,7 +318,7 @@ effectively.
 
 ### How MCP server configurations are merged
 
-Gemini CLI loads `settings.json` files from three levels: System, Workspace, and
+Onyx CLI loads `settings.json` files from three levels: System, Workspace, and
 User. When it comes to the `mcpServers` object, these configurations are
 **merged**:
 
@@ -480,7 +480,7 @@ an environment variable, but it can also be enforced for custom tools via the
 
 ## Telemetry and auditing
 
-For auditing and monitoring purposes, you can configure Gemini CLI to send
+For auditing and monitoring purposes, you can configure Onyx CLI to send
 telemetry data to a central location. This lets you track tool usage and other
 events. For more information, see the [telemetry documentation](./telemetry.md).
 
@@ -530,7 +530,7 @@ enforced one.
 
 For enterprises using Google Workspace, you can enforce that users only
 authenticate with their corporate Google accounts. This is a network-level
-control that is configured on a proxy server, not within Gemini CLI itself. It
+control that is configured on a proxy server, not within Onyx CLI itself. It
 works by intercepting authentication requests to Google and adding a special
 HTTP header.
 

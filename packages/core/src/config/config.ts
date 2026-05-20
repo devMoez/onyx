@@ -3425,19 +3425,11 @@ export class Config implements McpContext, AgentLoopContext {
   }
 
   async getBannerTextNoCapacityIssues(): Promise<string> {
-    await this.ensureExperimentsLoaded();
-    return (
-      this.experiments?.flags[ExperimentFlags.BANNER_TEXT_NO_CAPACITY_ISSUES]
-        ?.stringValue ?? ''
-    );
+    return '';
   }
 
   async getBannerTextCapacityIssues(): Promise<string> {
-    await this.ensureExperimentsLoaded();
-    return (
-      this.experiments?.flags[ExperimentFlags.BANNER_TEXT_CAPACITY_ISSUES]
-        ?.stringValue ?? ''
-    );
+    return '';
   }
 
   /**

@@ -78,7 +78,7 @@ describe('ask_user', () => {
       'packages/core/package.json': JSON.stringify({
         name: '@onyx/core',
       }),
-      'README.md': '# Gemini CLI',
+      'README.md': '# Onyx CLI',
     },
     prompt: `I want to completely rewrite the core package to support the upcoming V2 architecture, but I haven't decided what that looks like yet. We need to figure out the requirements first. Can you ask me some questions to help nail down the design?`,
     setup: async (rig) => {

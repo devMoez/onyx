@@ -1,6 +1,6 @@
-# Gemini CLI cheatsheet
+# Onyx CLI cheatsheet
 
-This page provides a reference for commonly used Gemini CLI commands, options,
+This page provides a reference for commonly used Onyx CLI commands, options,
 and parameters.
 
 ## CLI commands

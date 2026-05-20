@@ -1,6 +1,6 @@
-# Gemini CLI configuration
+# Onyx CLI configuration
 
-Gemini CLI offers several ways to configure its behavior, including environment
+Onyx CLI offers several ways to configure its behavior, including environment
 variables, command-line arguments, and settings files. This document outlines
 the different configuration methods and available settings.
 
@@ -22,7 +22,7 @@ overridden by higher numbers):
 
 ## Settings files
 
-Gemini CLI uses JSON settings files for persistent configuration. There are four
+Onyx CLI uses JSON settings files for persistent configuration. There are four
 locations for these files:
 
 <!-- prettier-ignore -->
@@ -43,11 +43,11 @@ locations for these files:
     user, project, or system override settings.
 - **User settings file:**
   - **Location:** `~/.gemini/settings.json` (where `~` is your home directory).
-  - **Scope:** Applies to all Gemini CLI sessions for the current user. User
+  - **Scope:** Applies to all Onyx CLI sessions for the current user. User
     settings override system defaults.
 - **Project settings file:**
   - **Location:** `.gemini/settings.json` within your project's root directory.
-  - **Scope:** Applies only when running Gemini CLI from that specific project.
+  - **Scope:** Applies only when running Onyx CLI from that specific project.
     Project settings override user settings and system defaults.
 - **System settings file:**
   - **Location:** `/etc/gemini-cli/settings.json` (Linux),
@@ -55,10 +55,10 @@ locations for these files:
     `/Library/Application Support/GeminiCli/settings.json` (macOS). The path can
     be overridden using the `GEMINI_CLI_SYSTEM_SETTINGS_PATH` environment
     variable.
-  - **Scope:** Applies to all Gemini CLI sessions on the system, for all users.
+  - **Scope:** Applies to all Onyx CLI sessions on the system, for all users.
     System settings act as overrides, taking precedence over all other settings
     files. May be useful for system administrators at enterprises to have
-    controls over users' Gemini CLI setups.
+    controls over users' Onyx CLI setups.
 
 **Note on environment variables in settings:** String values within your
 `settings.json` and `gemini-extension.json` files can reference environment
@@ -70,14 +70,14 @@ want to provide a fallback value, use `${MY_API_TOKEN:-default-token}`.
 Additionally, each extension can have its own `.env` file in its directory,
 which will be loaded automatically.
 
-**Note for Enterprise Users:** For guidance on deploying and managing Gemini CLI
+**Note for Enterprise Users:** For guidance on deploying and managing Onyx CLI
 in a corporate environment, see the
 [Enterprise Configuration](../cli/enterprise.md) documentation.
 
 ### The `.gemini` directory in your project
 
 In addition to a project settings file, a project's `.gemini` directory can
-contain other project-specific files related to Gemini CLI's operation, such as:
+contain other project-specific files related to Onyx CLI's operation, such as:
 
 - [Custom sandbox profiles](#sandboxing) (for example,
   `.gemini/sandbox-macos-custom.sb`, `.gemini/sandbox.Dockerfile`).
@@ -252,7 +252,7 @@ their corresponding top-level category object in your `settings.json` file.
   - **Values:** `"off"`, `"full"`
 
 - **`ui.showStatusInTitle`** (boolean):
-  - **Description:** Show Gemini CLI model thoughts in the terminal window title
+  - **Description:** Show Onyx CLI model thoughts in the terminal window title
     during the working phase
   - **Default:** `false`
 
@@ -262,7 +262,7 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `true`
 
 - **`ui.showHomeDirectoryWarning`** (boolean):
-  - **Description:** Show a warning when running Gemini CLI in the home
+  - **Description:** Show a warning when running Onyx CLI in the home
     directory.
   - **Default:** `true`
   - **Requires restart:** Yes
@@ -1923,7 +1923,7 @@ their corresponding top-level category object in your `settings.json` file.
   - **Requires restart:** Yes
 
 - **`experimental.gemmaModelRouter.autoStartServer`** (boolean):
-  - **Description:** Automatically start the LiteRT-LM server when Gemini CLI
+  - **Description:** Automatically start the LiteRT-LM server when Onyx CLI
     starts and the Gemma router is enabled.
   - **Default:** `false`
   - **Requires restart:** Yes
@@ -2154,7 +2154,7 @@ their corresponding top-level category object in your `settings.json` file.
 #### `mcpServers`
 
 Configures connections to one or more Model-Context Protocol (MCP) servers for
-discovering and using custom tools. Gemini CLI attempts to connect to each
+discovering and using custom tools. Onyx CLI attempts to connect to each
 configured MCP server to discover available tools. Every discovered tool is
 prepended with the `mcp_` prefix and its server alias to form a fully qualified
 name (FQN) (for example, `mcp_serverAlias_actualToolName`) to avoid conflicts.
@@ -2205,7 +2205,7 @@ must be provided. If multiple are specified, the order of precedence is
 
 #### `telemetry`
 
-Configures logging and metrics collection for Gemini CLI. For more information,
+Configures logging and metrics collection for Onyx CLI. For more information,
 see [Telemetry](../cli/telemetry.md).
 
 - **Properties:**
@@ -2340,7 +2340,7 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
   - Overrides the hardcoded default
   - Example: `export GEMINI_MODEL="gemini-3-flash-preview"` (Windows PowerShell:
     `$env:GEMINI_MODEL="gemini-3-flash-preview"`)
-- **`GEMINI_CLI_TRUST_WORKSPACE`**:
+- **`ONYX_CLI_TRUST_WORKSPACE`**:
   - If set to `"true"`, trusts the current workspace for the duration of the
     session, bypassing the folder trust check.
   - Useful for headless environments (for example, CI/CD pipelines).
@@ -2350,11 +2350,11 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
     of the default `~/.gemini/`.
 - **`GEMINI_CLI_IDE_PID`**:
   - Manually specifies the PID of the IDE process to use for integration. This
-    is useful when running Gemini CLI in a standalone terminal while still
+    is useful when running Onyx CLI in a standalone terminal while still
     wanting to associate it with a specific IDE instance.
   - Overrides the automatic IDE detection logic.
 - **`GEMINI_CLI_HOME`**:
-  - Specifies the root directory for Gemini CLI's user-level configuration and
+  - Specifies the root directory for Onyx CLI's user-level configuration and
     storage.
   - By default, this is the user's system home directory. The CLI will create a
     `.gemini` folder inside this directory.
@@ -2494,7 +2494,7 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
 
 ### Environment variable redaction
 
-To prevent accidental leakage of sensitive information, Gemini CLI automatically
+To prevent accidental leakage of sensitive information, Onyx CLI automatically
 redacts potential secrets from environment variables when executing tools (such
 as shell commands). This "best effort" redaction applies to variables inherited
 from the system or loaded from `.env` files.
@@ -2609,7 +2609,7 @@ for that specific session.
   - **Note:** For structured output and scripting, use the
     `--output-format json` or `--output-format stream-json` flag.
 - **`--prompt <your_prompt>`** (**`-p <your_prompt>`**):
-  - Used to pass a prompt directly to the command. This invokes Gemini CLI in a
+  - Used to pass a prompt directly to the command. This invokes Onyx CLI in a
     non-interactive mode.
 - **`--prompt-interactive <your_prompt>`** (**`-i <your_prompt>`**):
   - Starts an interactive session with the provided prompt as the initial input.
@@ -2736,11 +2736,11 @@ conventions and context.
 
 By understanding and utilizing these configuration layers and the hierarchical
 nature of context files, you can effectively manage the AI's memory and tailor
-Gemini CLI's responses to your specific needs and projects.
+Onyx CLI's responses to your specific needs and projects.
 
 ## Sandboxing
 
-Gemini CLI can execute potentially unsafe operations (like shell commands and
+Onyx CLI can execute potentially unsafe operations (like shell commands and
 file modifications) within a sandboxed environment to protect your system.
 
 Sandboxing is disabled by default, but you can enable it in a few ways:
@@ -2769,7 +2769,7 @@ FROM gemini-cli-sandbox
 ```
 
 When `.gemini/sandbox.Dockerfile` exists, you can use `BUILD_SANDBOX`
-environment variable when running Gemini CLI to automatically build the custom
+environment variable when running Onyx CLI to automatically build the custom
 sandbox image:
 
 ```bash
@@ -2777,12 +2777,12 @@ BUILD_SANDBOX=1 gemini -s
 ```
 
 Building a custom sandbox with `BUILD_SANDBOX` is only supported when running
-Gemini CLI from source. If you installed the CLI with npm, build the Docker
+Onyx CLI from source. If you installed the CLI with npm, build the Docker
 image separately and reference that image in your sandbox configuration.
 
 ## Usage statistics
 
-To help us improve Gemini CLI, we collect anonymized usage statistics. This data
+To help us improve Onyx CLI, we collect anonymized usage statistics. This data
 helps us understand how the CLI is used, identify common issues, and prioritize
 new features.
 

@@ -21,8 +21,8 @@ import {
   getSecureSanitizationConfig,
 } from './environmentSanitization.js';
 
-export const SHADOW_REPO_AUTHOR_NAME = 'Gemini CLI';
-export const SHADOW_REPO_AUTHOR_EMAIL = 'gemini-cli@google.com';
+export const SHADOW_REPO_AUTHOR_NAME = 'Onyx CLI';
+export const SHADOW_REPO_AUTHOR_EMAIL = 'onyx-cli@google.com';
 
 /**
  * Common configuration for the shadow Git repository used for checkpointing.

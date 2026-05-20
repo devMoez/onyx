@@ -9,7 +9,7 @@ import * as os from 'node:os';
 import * as crypto from 'node:crypto';
 import * as fs from 'node:fs';
 import {
-  GEMINI_DIR,
+  ONYX_DIR,
   homedir,
   GOOGLE_ACCOUNTS_FILENAME,
   isSubpath,
@@ -51,12 +51,12 @@ export class Storage {
     return !!this.projectIdentifier;
   }
 
-  static getGlobalGeminiDir(): string {
+  static getGlobalOnyxDir(): string {
     const homeDir = homedir();
     if (!homeDir) {
-      return path.join(os.tmpdir(), GEMINI_DIR);
+      return path.join(os.tmpdir(), ONYX_DIR);
     }
-    return path.join(homeDir, GEMINI_DIR);
+    return path.join(homeDir, ONYX_DIR);
   }
 
   static getGlobalAgentsDir(): string {
@@ -68,38 +68,38 @@ export class Storage {
   }
 
   static getMcpOAuthTokensPath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'mcp-oauth-tokens.json');
+    return path.join(Storage.getGlobalOnyxDir(), 'mcp-oauth-tokens.json');
   }
 
   static getA2AOAuthTokensPath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'a2a-oauth-tokens.json');
+    return path.join(Storage.getGlobalOnyxDir(), 'a2a-oauth-tokens.json');
   }
 
   static getGlobalSettingsPath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'settings.json');
+    return path.join(Storage.getGlobalOnyxDir(), 'settings.json');
   }
 
   static getInstallationIdPath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'installation_id');
+    return path.join(Storage.getGlobalOnyxDir(), 'installation_id');
   }
 
   static getGoogleAccountsPath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), GOOGLE_ACCOUNTS_FILENAME);
+    return path.join(Storage.getGlobalOnyxDir(), GOOGLE_ACCOUNTS_FILENAME);
   }
 
   static getTrustedFoldersPath(): string {
     if (process.env['GEMINI_CLI_TRUSTED_FOLDERS_PATH']) {
       return process.env['GEMINI_CLI_TRUSTED_FOLDERS_PATH'];
     }
-    return path.join(Storage.getGlobalGeminiDir(), TRUSTED_FOLDERS_FILENAME);
+    return path.join(Storage.getGlobalOnyxDir(), TRUSTED_FOLDERS_FILENAME);
   }
 
   static getUserCommandsDir(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'commands');
+    return path.join(Storage.getGlobalOnyxDir(), 'commands');
   }
 
   static getUserSkillsDir(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'skills');
+    return path.join(Storage.getGlobalOnyxDir(), 'skills');
   }
 
   static getUserAgentSkillsDir(): string {
@@ -107,27 +107,27 @@ export class Storage {
   }
 
   static getUserPoliciesDir(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'policies');
+    return path.join(Storage.getGlobalOnyxDir(), 'policies');
   }
 
   static getUserKeybindingsPath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'keybindings.json');
+    return path.join(Storage.getGlobalOnyxDir(), 'keybindings.json');
   }
 
   static getUserAgentsDir(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'agents');
+    return path.join(Storage.getGlobalOnyxDir(), 'agents');
   }
 
   static getAcknowledgedAgentsPath(): string {
     return path.join(
-      Storage.getGlobalGeminiDir(),
+      Storage.getGlobalOnyxDir(),
       'acknowledgments',
       'agents.json',
     );
   }
 
   static getPolicyIntegrityStoragePath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), 'policy_integrity.json');
+    return path.join(Storage.getGlobalOnyxDir(), 'policy_integrity.json');
   }
 
   private static getSystemConfigDir(): string {
@@ -159,8 +159,8 @@ export class Storage {
     return path.join(Storage.getGlobalTempDir(), BIN_DIR_NAME);
   }
 
-  getGeminiDir(): string {
-    return path.join(this.targetDir, GEMINI_DIR);
+  getOnyxDir(): string {
+    return path.join(this.targetDir, ONYX_DIR);
   }
 
   /**
@@ -185,7 +185,7 @@ export class Storage {
   }
 
   getWorkspacePoliciesDir(): string {
-    return path.join(this.getGeminiDir(), 'policies');
+    return path.join(this.getOnyxDir(), 'policies');
   }
 
   getWorkspaceAutoSavedPolicyPath(): string {
@@ -291,23 +291,23 @@ export class Storage {
   }
 
   getWorkspaceSettingsPath(): string {
-    return path.join(this.getGeminiDir(), 'settings.json');
+    return path.join(this.getOnyxDir(), 'settings.json');
   }
 
   getProjectCommandsDir(): string {
-    return path.join(this.getGeminiDir(), 'commands');
+    return path.join(this.getOnyxDir(), 'commands');
   }
 
   getProjectSkillsDir(): string {
-    return path.join(this.getGeminiDir(), 'skills');
-  }
-
-  getProjectAgentSkillsDir(): string {
-    return path.join(this.getAgentsDir(), 'skills');
+    return path.join(this.getOnyxDir(), 'skills');
   }
 
   getProjectAgentsDir(): string {
-    return path.join(this.getGeminiDir(), 'agents');
+    return path.join(this.getOnyxDir(), 'agents');
+  }
+
+  getExtensionsDir(): string {
+    return path.join(this.getOnyxDir(), 'extensions');
   }
 
   getProjectTempCheckpointsDir(): string {
