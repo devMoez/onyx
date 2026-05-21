@@ -1,8 +1,8 @@
 # Agent Client Protocol (ACP) Implementation
 
 This directory contains the implementation of the Agent Client Protocol (ACP)
-for the Gemini CLI. The ACP allows external clients (like IDE extensions) to
-communicate with the Gemini CLI agent over a structured JSON-RPC based protocol.
+for the Onyx CLI. The ACP allows external clients (like IDE extensions) to
+communicate with the Onyx CLI agent over a structured JSON-RPC based protocol.
 
 ## Directory Structure
 
@@ -13,7 +13,7 @@ consistency:
 - **[acpStdioTransport.ts](./acpStdioTransport.ts)**: Handles raw I/O. It sets
   up the Web streams for standard input/output and creates the
   `AgentSideConnection` using line-delimited JSON (ndjson).
-- **[acpRpcDispatcher.ts](./acpRpcDispatcher.ts)**: Contains the `GeminiAgent`
+- **[acpRpcDispatcher.ts](./acpRpcDispatcher.ts)**: Contains the `OnyxAgent`
   class. This is the main entry point for incoming JSON-RPC messages. It
   implements the protocol methods and delegates session-specific work to the
   manager and individual sessions.
@@ -50,22 +50,22 @@ To run specific tests, use Vitest with the workspace filter:
 
 ```bash
 # General pattern
-npm test -w @google/gemini-cli -- src/acp/<test-file-name>.ts
+npm test -w @google/onyx-cli -- src/acp/<test-file-name>.ts
 
 # Example
-npm test -w @google/gemini-cli -- src/acp/acpRpcDispatcher.test.ts
+npm test -w @google/onyx-cli -- src/acp/acpRpcDispatcher.test.ts
 ```
 
 Note: You may need to ensure your environment has Node available. If running in
 a restricted environment, try sourcing NVM first:
 
 ```bash
-source ~/.nvm/nvm.sh && nvm use default && npm test -w @google/gemini-cli -- src/acp/acpSession.test.ts
+source ~/.nvm/nvm.sh && nvm use default && npm test -w @google/onyx-cli -- src/acp/acpSession.test.ts
 ```
 
 ### Adding New Features
 
-- **New RPC Method**: Add the method to `GeminiAgent` in `acpRpcDispatcher.ts`
+- **New RPC Method**: Add the method to `OnyxAgent` in `acpRpcDispatcher.ts`
   and register it in the `AgentSideConnection` setup if necessary.
 - **Session State**: If a feature requires storing state across turns within a
   session, add it to the `Session` class in `acpSession.ts`.

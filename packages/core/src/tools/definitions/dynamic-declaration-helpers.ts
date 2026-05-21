@@ -28,7 +28,32 @@ import {
   TOPIC_PARAM_TITLE,
   TOPIC_PARAM_SUMMARY,
   TOPIC_PARAM_STRATEGIC_INTENT,
+  SYSTEM_CONTROLLER_TOOL_NAME,
 } from './base-declarations.js';
+
+/**
+ * Generates the system controller declaration.
+ */
+export function getSystemControllerDeclaration(): FunctionDeclaration {
+  return {
+    name: SYSTEM_CONTROLLER_TOOL_NAME,
+    description: 'Controls the system using mouse and keyboard actions. Only use this for tasks that require visual interaction with applications.',
+    parametersJsonSchema: {
+      type: 'object',
+      properties: {
+        action: {
+          type: 'string',
+          enum: ['click', 'type', 'move'],
+          description: 'The action to perform.',
+        },
+        x: { type: 'number', description: 'X coordinate.' },
+        y: { type: 'number', description: 'Y coordinate.' },
+        text: { type: 'string', description: 'Text to type.' },
+      },
+      required: ['action'],
+    },
+  };
+}
 
 /**
  * Generates the platform-specific description for the shell tool.

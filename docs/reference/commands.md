@@ -23,8 +23,8 @@ Slash commands provide meta-level control over the CLI itself.
       and remote agents.
     - **Usage:** `/agents list`
   - **`reload`** (alias: `refresh`):
-    - **Description:** Rescans agent directories (`~/.gemini/agents` and
-      `.gemini/agents`) and reloads the registry.
+    - **Description:** Rescans agent directories (`~/.onyx/agents` and
+      `.onyx/agents`) and reloads the registry.
     - **Usage:** `/agents reload`
   - **`enable`**:
     - **Description:** Enables a specific subagent.
@@ -47,7 +47,7 @@ Slash commands provide meta-level control over the CLI itself.
   filed within the GitHub repository for Onyx CLI. The string you enter after
   `/bug` will become the headline for the bug being filed. The default `/bug`
   behavior can be modified using the `advanced.bugCommand` setting in your
-  `.gemini/settings.json` files.
+  `.onyx/settings.json` files.
 
 ### `/chat`
 
@@ -83,8 +83,8 @@ Slash commands provide meta-level control over the CLI itself.
       `<tag>` for identifying the conversation state.
     - **Details on checkpoint location:** The default locations for saved chat
       checkpoints are:
-      - Linux/macOS: `~/.gemini/tmp/<project_hash>/`
-      - Windows: `C:\Users\<YourUsername>\.gemini\tmp\<project_hash>\`
+      - Linux/macOS: `~/.onyx/tmp/<project_hash>/`
+      - Windows: `C:\Users\<YourUsername>\.onyx\tmp\<project_hash>\`
       - **Behavior:** Chats are saved into a project-specific directory,
         determined by where you run the CLI. Consequently, saved chats are only
         accessible when working within that same project.
@@ -113,13 +113,13 @@ Slash commands provide meta-level control over the CLI itself.
 - **Sub-commands:**
   - **`list`**:
     - **Description:** List available custom command `.toml` files from all
-      sources (user-level `~/.gemini/commands/`, project-level
-      `<project>/.gemini/commands/`, and active extensions).
+      sources (user-level `~/.onyx/commands/`, project-level
+      `<project>/.onyx/commands/`, and active extensions).
     - **Usage:** `/commands list`
   - **`reload`**:
     - **Description:** Reload custom command definitions from all sources
-      (user-level `~/.gemini/commands/`, project-level
-      `<project>/.gemini/commands/`, MCP prompts, and extensions). Use this to
+      (user-level `~/.onyx/commands/`, project-level
+      `<project>/.onyx/commands/`, MCP prompts, and extensions). Use this to
       pick up new or modified `.toml` files without restarting the CLI.
     - **Usage:** `/commands reload`
 
@@ -229,9 +229,9 @@ Slash commands provide meta-level control over the CLI itself.
 
 ### `/init`
 
-- **Description:** To help users easily create a `GEMINI.md` file, this command
+- **Description:** To help users easily create a `ONYX.md` file, this command
   analyzes the current directory and generates a tailored context file, making
-  it simpler for them to provide project-specific instructions to the Gemini
+  it simpler for them to provide project-specific instructions to the Onyx
   agent.
 
 ### `/mcp`
@@ -263,22 +263,22 @@ Slash commands provide meta-level control over the CLI itself.
 ### `/memory`
 
 - **Description:** Manage the AI's instructional context (hierarchical memory
-  loaded from `GEMINI.md` files).
+  loaded from `ONYX.md` files).
 - **Sub-commands:**
   - **`list`**:
-    - **Description:** Lists the paths of the GEMINI.md files in use for
+    - **Description:** Lists the paths of the ONYX.md files in use for
       hierarchical memory.
   - **`refresh`**:
     - **Description:** Reload the hierarchical instructional memory from all
-      `GEMINI.md` files found in the configured locations (global,
+      `ONYX.md` files found in the configured locations (global,
       project/ancestors, and sub-directories). This command updates the model
-      with the latest `GEMINI.md` content.
+      with the latest `ONYX.md` content.
   - **`show`**:
     - **Description:** Display the full, concatenated content of the current
-      hierarchical memory that has been loaded from all `GEMINI.md` files. This
-      lets you inspect the instructional context being provided to the Gemini
+      hierarchical memory that has been loaded from all `ONYX.md` files. This
+      lets you inspect the instructional context being provided to the Onyx
       model.
-  - **Note:** For more details on how `GEMINI.md` files contribute to
+  - **Note:** For more details on how `ONYX.md` files contribute to
     hierarchical memory, see the
     [CLI Configuration documentation](./configuration.md).
 
@@ -396,7 +396,7 @@ Slash commands provide meta-level control over the CLI itself.
   settings.
 - **Details:** This command provides a user-friendly interface for changing
   settings that control the behavior and appearance of Onyx CLI. It is
-  equivalent to manually editing the `.gemini/settings.json` file, but with
+  equivalent to manually editing the `.onyx/settings.json` file, but with
   validation and guidance to prevent errors. See the
   [settings documentation](../cli/settings.md) for a full list of available
   settings.
@@ -413,7 +413,7 @@ Slash commands provide meta-level control over the CLI itself.
 ### `/setup-github`
 
 - **Description:** Set up GitHub Actions to triage issues and review PRs with
-  Gemini.
+  Onyx.
 
 ### `/skills`
 
@@ -454,7 +454,7 @@ Slash commands provide meta-level control over the CLI itself.
 
 ### `/theme`
 
-- **Description:** Open a dialog that lets you change the visual theme of Gemini
+- **Description:** Open a dialog that lets you change the visual theme of Onyx
   CLI.
 
 ### `/tools`
@@ -471,7 +471,7 @@ Slash commands provide meta-level control over the CLI itself.
 
 ### `/upgrade`
 
-- **Description:** Open the Gemini Code Assist upgrade page in your browser.
+- **Description:** Open the Onyx Code Assist upgrade page in your browser.
   This lets you upgrade your tier for higher usage limits.
 - **Note:** This command is only available when logged in with Google.
 
@@ -490,7 +490,7 @@ Slash commands provide meta-level control over the CLI itself.
     `b`, `e`; go to line start/end with `0`, `$`, `^`; go to specific lines with
     `G` (or `gg` for first line)
   - **Persistent setting:** Vim mode preference is saved to
-    `~/.gemini/settings.json` and restored between sessions
+    `~/.onyx/settings.json` and restored between sessions
   - **Repeat last command:** Use `.` to repeat the last editing operation
   - **Status indicator:** When enabled, shows `[NORMAL]` or `[INSERT]` in the
     footer
@@ -516,7 +516,7 @@ These shortcuts apply directly to the input prompt for text manipulation.
 ## At commands (`@`)
 
 At commands are used to include the content of files or directories as part of
-your prompt to Gemini. These commands include git-aware filtering.
+your prompt to Onyx. These commands include git-aware filtering.
 
 - **`@<path_to_file_or_directory>`**
   - **Description:** Inject the content of the specified file or files into your
@@ -533,7 +533,7 @@ your prompt to Gemini. These commands include git-aware filtering.
     - Spaces in paths should be escaped with a backslash (for example,
       `@My\ Documents/file.txt`).
     - The command uses the `read_many_files` tool internally. The content is
-      fetched and then inserted into your query before being sent to the Gemini
+      fetched and then inserted into your query before being sent to the Onyx
       model.
     - **Git-aware filtering:** By default, git-ignored files (like
       `node_modules/`, `dist/`, `.env`, `.git/`) are excluded. This behavior can
@@ -548,13 +548,13 @@ your prompt to Gemini. These commands include git-aware filtering.
 
 - **`@` (Lone at symbol)**
   - **Description:** If you type a lone `@` symbol without a path, the query is
-    passed as-is to the Gemini model. This might be useful if you are
+    passed as-is to the Onyx model. This might be useful if you are
     specifically talking _about_ the `@` symbol in your prompt.
 
 ### Error handling for `@` commands
 
 - If the path specified after `@` is not found or is invalid, an error message
-  will be displayed, and the query might not be sent to the Gemini model, or it
+  will be displayed, and the query might not be sent to the Onyx model, or it
   will be sent without the file content.
 - If the `read_many_files` tool encounters an error (for example, permission
   issues), this will also be reported.
@@ -581,13 +581,13 @@ Onyx CLI.
       - While in shell mode, text you type is interpreted directly as a shell
         command.
     - **Exiting shell mode:**
-      - When exited, the UI reverts to its standard appearance and normal Gemini
+      - When exited, the UI reverts to its standard appearance and normal Onyx
         CLI behavior resumes.
 
 - **Caution for all `!` usage:** Commands you execute in shell mode have the
   same permissions and impact as if you ran them directly in your terminal.
 
 - **Environment variable:** When a command is executed via `!` or in shell mode,
-  the `GEMINI_CLI=1` environment variable is set in the subprocess's
+  the `ONYX_CLI=1` environment variable is set in the subprocess's
   environment. This allows scripts or tools to detect if they are being run from
   within Onyx CLI.

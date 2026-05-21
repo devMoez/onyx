@@ -19,7 +19,7 @@ Evals require a standard API key. If your `.env` file has multiple keys or
 comments, use this precise extraction setup:
 
 ```bash
-export GEMINI_API_KEY=$(grep '^GEMINI_API_KEY=' .env | cut -d '=' -f2) && RUN_EVALS=1 npx vitest run --config evals/vitest.config.ts <file_name>
+export ONYX_API_KEY=$(grep '^ONYX_API_KEY=' .env | cut -d '=' -f2) && RUN_EVALS=1 npx vitest run --config evals/vitest.config.ts <file_name>
 ```
 
 ### 2. Commands
@@ -45,9 +45,9 @@ If a test fails, verify:
 
 - **Tool Trajectory Logs**:序列 of calls in `evals/logs/<test_name>.log`.
 - **Verbose Reasoning**: Capture raw buffer traces by setting
-  `GEMINI_DEBUG_LOG_FILE`:
+  `ONYX_DEBUG_LOG_FILE`:
   ```bash
-  export GEMINI_DEBUG_LOG_FILE="debug.log"
+  export ONYX_DEBUG_LOG_FILE="debug.log"
   ```
 
 ---
@@ -80,7 +80,7 @@ They run in **Evals: Nightly** workflows and do not block PR merges.
 If a nightly eval regresses, investigate via agent:
 
 ```bash
-gemini /fix-behavioral-eval [optional-run-uri]
+onyx /fix-behavioral-eval [optional-run-uri]
 ```
 
 ### 3. Promotion (`ALWAYS_PASSES`)
@@ -88,7 +88,7 @@ gemini /fix-behavioral-eval [optional-run-uri]
 Once a test scores 100% consistency over multiple nightly cycles:
 
 ```bash
-gemini /promote-behavioral-eval
+onyx /promote-behavioral-eval
 ```
 
 _Do not promote manually._ The command verifies trajectory logs before updating

@@ -7,12 +7,12 @@ exports[`AlternateBufferQuittingDisplay > renders with a tool awaiting confirmat
   ▗▟▀     ▜▙ ▝█▛ █▌▝ ▖▐█   ▐█ ▐█ ▐█ ▝██▌ █▌
  ▝▀        ▀▀▀▀▘▝▀▀▀▀▘▀▀▘  ▀▀▘▀▀▘▀▀▘ ▝▀▀▝▀▀
 
- Gemini CLI v0.10.0
+ Onyx CLI v0.10.0
 
 
 
 Tips for getting started:
-1. Create GEMINI.md files to customize your interactions
+1. Create ONYX.md files to customize your interactions
 2. /help for more information
 3. Ask coding questions, edit code or run commands
 4. Be specific for the best results
@@ -30,12 +30,12 @@ exports[`AlternateBufferQuittingDisplay > renders with active and pending tool m
   ▗▟▀     ▜▙ ▝█▛ █▌▝ ▖▐█   ▐█ ▐█ ▐█ ▝██▌ █▌
  ▝▀        ▀▀▀▀▘▝▀▀▀▀▘▀▀▘  ▀▀▘▀▀▘▀▀▘ ▝▀▀▝▀▀
 
- Gemini CLI v0.10.0
+ Onyx CLI v0.10.0
 
 
 
 Tips for getting started:
-1. Create GEMINI.md files to customize your interactions
+1. Create ONYX.md files to customize your interactions
 2. /help for more information
 3. Ask coding questions, edit code or run commands
 4. Be specific for the best results
@@ -61,12 +61,12 @@ exports[`AlternateBufferQuittingDisplay > renders with empty history and no pend
   ▗▟▀     ▜▙ ▝█▛ █▌▝ ▖▐█   ▐█ ▐█ ▐█ ▝██▌ █▌
  ▝▀        ▀▀▀▀▘▝▀▀▀▀▘▀▀▘  ▀▀▘▀▀▘▀▀▘ ▝▀▀▝▀▀
 
- Gemini CLI v0.10.0
+ Onyx CLI v0.10.0
 
 
 
 Tips for getting started:
-1. Create GEMINI.md files to customize your interactions
+1. Create ONYX.md files to customize your interactions
 2. /help for more information
 3. Ask coding questions, edit code or run commands
 4. Be specific for the best results
@@ -80,12 +80,12 @@ exports[`AlternateBufferQuittingDisplay > renders with history but no pending it
   ▗▟▀     ▜▙ ▝█▛ █▌▝ ▖▐█   ▐█ ▐█ ▐█ ▝██▌ █▌
  ▝▀        ▀▀▀▀▘▝▀▀▀▀▘▀▀▘  ▀▀▘▀▀▘▀▀▘ ▝▀▀▝▀▀
 
- Gemini CLI v0.10.0
+ Onyx CLI v0.10.0
 
 
 
 Tips for getting started:
-1. Create GEMINI.md files to customize your interactions
+1. Create ONYX.md files to customize your interactions
 2. /help for more information
 3. Ask coding questions, edit code or run commands
 4. Be specific for the best results
@@ -107,12 +107,12 @@ exports[`AlternateBufferQuittingDisplay > renders with pending items but no hist
   ▗▟▀     ▜▙ ▝█▛ █▌▝ ▖▐█   ▐█ ▐█ ▐█ ▝██▌ █▌
  ▝▀        ▀▀▀▀▘▝▀▀▀▀▘▀▀▘  ▀▀▘▀▀▘▀▀▘ ▝▀▀▝▀▀
 
- Gemini CLI v0.10.0
+ Onyx CLI v0.10.0
 
 
 
 Tips for getting started:
-1. Create GEMINI.md files to customize your interactions
+1. Create ONYX.md files to customize your interactions
 2. /help for more information
 3. Ask coding questions, edit code or run commands
 4. Be specific for the best results
@@ -123,24 +123,24 @@ Tips for getting started:
 "
 `;
 
-exports[`AlternateBufferQuittingDisplay > renders with user and gemini messages > with_user_gemini_messages 1`] = `
+exports[`AlternateBufferQuittingDisplay > renders with user and onyx messages > with_user_onyx_messages 1`] = `
 "
  ▝▜▄      ▗█▀▀▜▙▝█▛▀▀▌▜██▖▟██▘▜█▘▜██▖▝█▛▝█▛
    ▝▜▄    █▌     █▙▟  ▐█▝█▛▐█ ▐█ ▐█▝█▖█▌ █▌
   ▗▟▀     ▜▙ ▝█▛ █▌▝ ▖▐█   ▐█ ▐█ ▐█ ▝██▌ █▌
  ▝▀        ▀▀▀▀▘▝▀▀▀▀▘▀▀▘  ▀▀▘▀▀▘▀▀▘ ▝▀▀▝▀▀
 
- Gemini CLI v0.10.0
+ Onyx CLI v0.10.0
 
 
 
 Tips for getting started:
-1. Create GEMINI.md files to customize your interactions
+1. Create ONYX.md files to customize your interactions
 2. /help for more information
 3. Ask coding questions, edit code or run commands
 4. Be specific for the best results
 ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
- > Hello Gemini                                                                 
+ > Hello Onyx                                                                 
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ✦  Hello User!
 "

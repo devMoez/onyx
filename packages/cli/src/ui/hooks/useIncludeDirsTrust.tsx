@@ -40,9 +40,9 @@ async function finishAddingDirectories(
   }
 
   if (added.length > 0) {
-    const gemini = config.getGeminiClient();
-    if (gemini) {
-      await gemini.addDirectoryContext();
+    const onyx = config.getOnyxClient();
+    if (onyx) {
+      await onyx.addDirectoryContext();
     }
   }
 

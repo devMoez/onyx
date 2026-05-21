@@ -24,7 +24,7 @@ vi.mock('../utils/debugLogger.js', () => ({
 describe('TrustedHooksManager', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.mocked(Storage.getGlobalGeminiDir).mockReturnValue('/mock/home/.onyx');
+    vi.mocked(Storage.getGlobalOnyxDir).mockReturnValue('/mock/home/.onyx');
   });
 
   describe('initialization', () => {

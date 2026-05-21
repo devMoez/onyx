@@ -6,7 +6,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { coreEvents, type GeminiCLIExtension } from '@onyx/core';
+import { coreEvents, type OnyxCLIExtension } from '@onyx/core';
 import { ExtensionStorage } from './storage.js';
 import { z } from 'zod';
 
@@ -124,7 +124,7 @@ export class ExtensionEnablementManager {
       enabledExtensionNames?.map((name) => name.toLowerCase()) ?? [];
   }
 
-  validateExtensionOverrides(extensions: GeminiCLIExtension[]) {
+  validateExtensionOverrides(extensions: OnyxCLIExtension[]) {
     for (const name of this.enabledExtensionNamesOverride) {
       if (name === 'none') continue;
       if (

@@ -51,7 +51,7 @@ export interface PreambleOptions {
 
 export interface CoreMandatesOptions {
   interactive: boolean;
-  isGemini3: boolean;
+  isOnyx3: boolean;
   hasSkills: boolean;
   hasHierarchicalMemory: boolean;
   topicUpdateNarration?: boolean;
@@ -69,7 +69,7 @@ export interface PrimaryWorkflowsOptions {
 
 export interface OperationalGuidelinesOptions {
   interactive: boolean;
-  isGemini3: boolean;
+  isOnyx3: boolean;
   enableShellEfficiency: boolean;
   interactiveShellEnabled: boolean;
   topicUpdateNarration?: boolean;
@@ -191,7 +191,7 @@ export function renderCoreMandates(options?: CoreMandatesOptions): string {
 - **Do Not revert changes:** Do not revert changes to the codebase unless asked to do so by the user. Only revert changes made by you if they have resulted in an error or if the user has explicitly asked you to revert the changes.${mandateSkillGuidance(options.hasSkills)}${
     options.topicUpdateNarration
       ? mandateTopicUpdateModel()
-      : mandateExplainBeforeActing(options.isGemini3)
+      : mandateExplainBeforeActing(options.isOnyx3)
   }${mandateContinueWork(options.interactive)}
 `.trim();
 }
@@ -291,7 +291,7 @@ ${shellEfficiencyGuidelines(options.enableShellEfficiency)}
     options.topicUpdateNarration
       ? `
 - **No Chitchat:** Avoid conversational filler, preambles ("Okay, I will now..."), or postambles ("I have finished the changes...") unless they are part of the **Topic Model**.`
-      : toneAndStyleNoChitchat(options.isGemini3)
+      : toneAndStyleNoChitchat(options.isOnyx3)
   }
 - **Formatting:** Use GitHub-flavored Markdown. Responses will be rendered in monospace.
 - **Tools vs. Text:** Use tools for actions, text output *only* for communication. Do not add explanatory comments within tool calls or code blocks unless specifically part of the required code/command itself.
@@ -551,8 +551,8 @@ function mandateConflictResolution(hasHierarchicalMemory: boolean): string {
   return '\n- **Conflict Resolution:** Instructions are provided in hierarchical context tags: `<global_context>`, `<extension_context>`, and `<project_context>`. In case of contradictory instructions, follow this priority: `<project_context>` (highest) > `<extension_context>` > `<global_context>` (lowest).';
 }
 
-function mandateExplainBeforeActing(isGemini3: boolean): string {
-  if (!isGemini3) return '';
+function mandateExplainBeforeActing(isOnyx3: boolean): string {
+  if (!isOnyx3) return '';
   return `
 - **Explain Before Acting:** Never call tools in silence. You MUST provide a concise, one-sentence explanation of your intent or strategy immediately before executing tool calls. This is essential for transparency, especially when confirming a request or answering a question. Silence is only acceptable for repetitive, low-level discovery operations (e.g., sequential file reads) where narration would be noisy.`;
 }
@@ -674,8 +674,8 @@ IT IS CRITICAL TO FOLLOW THESE GUIDELINES TO AVOID EXCESSIVE TOKEN CONSUMPTION.
 - After the command runs, inspect the temp files (e.g. '<temp_dir>/out.log' and '<temp_dir>/err.log') ${inspectExample}. Remove the temp files when done.`;
 }
 
-function toneAndStyleNoChitchat(isGemini3: boolean): string {
-  return isGemini3
+function toneAndStyleNoChitchat(isOnyx3: boolean): string {
+  return isOnyx3
     ? `
 - **No Chitchat:** Avoid conversational filler, preambles ("Okay, I will now..."), or postambles ("I have finished the changes...") unless they serve to explain intent as required by the 'Explain Before Acting' mandate.`
     : `

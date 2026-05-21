@@ -40,3 +40,4 @@ describe('resume-repro', () => {
     expect(result).toContain('Session started');
   });
 });
+

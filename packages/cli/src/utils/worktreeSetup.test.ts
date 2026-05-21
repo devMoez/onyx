@@ -78,7 +78,7 @@ describe('setupWorktree', () => {
     expect(process.chdir).toHaveBeenCalledWith(
       '/mock/project/.onyx/worktrees/my-feature',
     );
-    expect(process.env['GEMINI_CLI_WORKTREE_HANDLED']).toBe('1');
+    expect(process.env['ONYX_CLI_WORKTREE_HANDLED']).toBe('1');
   });
 
   it('should generate a name if worktreeName is undefined', async () => {
@@ -93,8 +93,8 @@ describe('setupWorktree', () => {
     expect(mockService.setup).toHaveBeenCalledWith(undefined);
   });
 
-  it('should skip worktree creation if GEMINI_CLI_WORKTREE_HANDLED is set', async () => {
-    process.env['GEMINI_CLI_WORKTREE_HANDLED'] = '1';
+  it('should skip worktree creation if ONYX_CLI_WORKTREE_HANDLED is set', async () => {
+    process.env['ONYX_CLI_WORKTREE_HANDLED'] = '1';
 
     await setupWorktree('my-feature');
 

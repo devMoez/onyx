@@ -42,7 +42,7 @@ describe('initializer', () => {
   let mockConfig: {
     getToolRegistry: ReturnType<typeof vi.fn>;
     getIdeMode: ReturnType<typeof vi.fn>;
-    getGeminiMdFileCount: ReturnType<typeof vi.fn>;
+    getOnyxMdFileCount: ReturnType<typeof vi.fn>;
   };
   let mockSettings: LoadedSettings;
   let mockIdeClient: {
@@ -54,7 +54,7 @@ describe('initializer', () => {
     mockConfig = {
       getToolRegistry: vi.fn(),
       getIdeMode: vi.fn().mockReturnValue(false),
-      getGeminiMdFileCount: vi.fn().mockReturnValue(5),
+      getOnyxMdFileCount: vi.fn().mockReturnValue(5),
     };
     mockSettings = {
       merged: {
@@ -89,7 +89,7 @@ describe('initializer', () => {
       accountSuspensionInfo: null,
       themeError: null,
       shouldOpenAuthDialog: false,
-      geminiMdFileCount: 5,
+      onyxMdFileCount: 5,
     });
     expect(performInitialAuth).toHaveBeenCalledWith(mockConfig, 'oauth');
     expect(validateTheme).toHaveBeenCalledWith(mockSettings);
@@ -112,7 +112,7 @@ describe('initializer', () => {
       accountSuspensionInfo: null,
       themeError: null,
       shouldOpenAuthDialog: false,
-      geminiMdFileCount: 5,
+      onyxMdFileCount: 5,
     });
     expect(IdeClient.getInstance).toHaveBeenCalled();
     expect(mockIdeClient.connect).toHaveBeenCalled();

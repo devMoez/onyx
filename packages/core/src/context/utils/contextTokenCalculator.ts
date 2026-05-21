@@ -14,7 +14,7 @@ import type { NodeBehaviorRegistry } from '../graph/behaviorRegistry.js';
 
 /**
  * The flat token cost assigned to a single multi-modal asset (like an image tile)
- * by the Gemini API. We use this as a baseline heuristic for inlineData/fileData.
+ * by the Onyx API. We use this as a baseline heuristic for inlineData/fileData.
  */
 
 export interface ContextTokenCalculator {
@@ -231,7 +231,7 @@ export class StaticTokenCalculator implements AdvancedTokenCalculator {
   }
 
   /**
-   * Calculates the token cost for a single Gemini Content object.
+   * Calculates the token cost for a single Onyx Content object.
    */
   calculateContentTokens(content: Content): number {
     return (
@@ -240,7 +240,7 @@ export class StaticTokenCalculator implements AdvancedTokenCalculator {
   }
 
   /**
-   * Slower, precise estimation for a Gemini Content/Part graph.
+   * Slower, precise estimation for a Onyx Content/Part graph.
    * Deeply inspects the nested structure and uses the base tokenization math.
    */
   private readonly partTokenCache = new WeakMap<object, number>();

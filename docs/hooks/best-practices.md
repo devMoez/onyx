@@ -34,7 +34,7 @@ hooks that run frequently (like `BeforeTool` or `AfterModel`).
 const fs = require('fs');
 const path = require('path');
 
-const CACHE_FILE = '.gemini/hook-cache.json';
+const CACHE_FILE = '.onyx/hook-cache.json';
 
 function readCache() {
   try {
@@ -129,7 +129,7 @@ easiest way to debug complex logic.
 
 ```bash
 #!/usr/bin/env bash
-LOG_FILE=".gemini/hooks/debug.log"
+LOG_FILE=".onyx/hooks/debug.log"
 
 # Log with timestamp
 log() {
@@ -185,7 +185,7 @@ cat > test-input.json << 'EOF'
 EOF
 
 # Test the hook
-cat test-input.json | .gemini/hooks/my-hook.sh
+cat test-input.json | .onyx/hooks/my-hook.sh
 
 # Check exit code
 echo "Exit code: $?"
@@ -209,7 +209,7 @@ echo "Exit code: $?"
 "@ | Out-File -FilePath test-input.json -Encoding utf8
 
 # Test the hook
-Get-Content test-input.json | .\.gemini\hooks\my-hook.ps1
+Get-Content test-input.json | .\.onyx\hooks\my-hook.ps1
 
 # Check exit code
 Write-Host "Exit code: $LASTEXITCODE"
@@ -287,7 +287,7 @@ Begin with basic logging hooks before implementing complex logic:
 #!/usr/bin/env bash
 # Simple logging hook to understand input structure
 input=$(cat)
-echo "$input" >> .gemini/hook-inputs.log
+echo "$input" >> .onyx/hook-inputs.log
 # Always return valid JSON
 echo "{}"
 
@@ -311,7 +311,7 @@ and helps diagnose issues.
           {
             "name": "secret-scanner",
             "type": "command",
-            "command": "$GEMINI_PROJECT_DIR/.gemini/hooks/block-secrets.sh",
+            "command": "$ONYX_PROJECT_DIR/.onyx/hooks/block-secrets.sh",
             "description": "Scans code changes for API keys and secrets before writing"
           }
         ]
@@ -361,8 +361,8 @@ tool_name=$(echo "$input" | jq -r '.tool_name')
 Always make hook scripts executable on macOS/Linux:
 
 ```bash
-chmod +x .gemini/hooks/*.sh
-chmod +x .gemini/hooks/*.js
+chmod +x .onyx/hooks/*.sh
+chmod +x .onyx/hooks/*.js
 
 ```
 
@@ -375,8 +375,8 @@ you may need to ensure your execution policy allows them to run (for example,
 Commit hooks to share with your team:
 
 ```bash
-git add .gemini/hooks/
-git add .gemini/settings.json
+git add .onyx/hooks/
+git add .onyx/settings.json
 
 ```
 
@@ -384,13 +384,13 @@ git add .gemini/settings.json
 
 ```gitignore
 # Ignore hook cache and logs
-.gemini/hook-cache.json
-.gemini/hook-debug.log
-.gemini/memory/session-*.jsonl
+.onyx/hook-cache.json
+.onyx/hook-debug.log
+.onyx/memory/session-*.jsonl
 
 # Keep hook scripts
-!.gemini/hooks/*.sh
-!.gemini/hooks/*.js
+!.onyx/hooks/*.sh
+!.onyx/hooks/*.js
 
 ```
 
@@ -403,14 +403,14 @@ usage.
 
 | Hook Source                   | Description                                                                                                                       |
 | :---------------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
-| **System**                    | Configured by system administrators (for example, `/etc/gemini-cli/settings.json`, `/Library/...`). Assumed to be the **safest**. |
-| **User** (`~/.gemini/...`)    | Configured by you. You are responsible for ensuring they are safe.                                                                |
+| **System**                    | Configured by system administrators (for example, `/etc/onyx-cli/settings.json`, `/Library/...`). Assumed to be the **safest**. |
+| **User** (`~/.onyx/...`)    | Configured by you. You are responsible for ensuring they are safe.                                                                |
 | **Extensions**                | You explicitly approve and install these. Security depends on the extension source (integrity).                                   |
-| **Project** (`./.gemini/...`) | **Untrusted by default.** Safest in trusted internal repos; higher risk in third-party/public repos.                              |
+| **Project** (`./.onyx/...`) | **Untrusted by default.** Safest in trusted internal repos; higher risk in third-party/public repos.                              |
 
 #### Project Hook Security
 
-When you open a project with hooks defined in `.gemini/settings.json`:
+When you open a project with hooks defined in `.onyx/settings.json`:
 
 1. **Detection**: Onyx CLI detects the hooks.
 2. **Identification**: A unique identity is generated for each hook based on its
@@ -432,7 +432,7 @@ When you open a project with hooks defined in `.gemini/settings.json`:
 | Risk                         | Description                                                                                                                          |
 | :--------------------------- | :----------------------------------------------------------------------------------------------------------------------------------- |
 | **Arbitrary Code Execution** | Hooks run as your user. They can do anything you can do (delete files, install software).                                            |
-| **Data Exfiltration**        | A hook could read your input (prompts), output (code), or environment variables (`GEMINI_API_KEY`) and send them to a remote server. |
+| **Data Exfiltration**        | A hook could read your input (prompts), output (code), or environment variables (`ONYX_API_KEY`) and send them to a remote server. |
 | **Prompt Injection**         | Malicious content in a file or web page could trick an LLM into running a tool that triggers a hook in an unexpected way.            |
 
 ### Mitigation Strategies
@@ -507,8 +507,8 @@ echo "write_file|replace" | grep -E "write_.*|replace"
 has execution permissions:
 
 ```bash
-ls -la .gemini/hooks/my-hook.sh
-chmod +x .gemini/hooks/my-hook.sh
+ls -la .onyx/hooks/my-hook.sh
+chmod +x .onyx/hooks/my-hook.sh
 ```
 
 **Windows Note**: On Windows, ensure your execution policy allows running
@@ -518,10 +518,10 @@ scripts (for example, `Get-ExecutionPolicy`).
 
 ```bash
 # Check path expansion
-echo "$GEMINI_PROJECT_DIR/.gemini/hooks/my-hook.sh"
+echo "$ONYX_PROJECT_DIR/.onyx/hooks/my-hook.sh"
 
 # Verify file exists
-test -f "$GEMINI_PROJECT_DIR/.gemini/hooks/my-hook.sh" && echo "File exists"
+test -f "$ONYX_PROJECT_DIR/.onyx/hooks/my-hook.sh" && echo "File exists"
 ```
 
 ### Hook timing out
@@ -563,8 +563,8 @@ fi
 
 ```bash
 #!/usr/bin/env bash
-if [ -z "$GEMINI_PROJECT_DIR" ]; then
-  echo "GEMINI_PROJECT_DIR not set" >&2
+if [ -z "$ONYX_PROJECT_DIR" ]; then
+  echo "ONYX_PROJECT_DIR not set" >&2
   exit 1
 fi
 
@@ -573,7 +573,7 @@ fi
 **Debug available variables:**
 
 ```bash
-env > .gemini/hook-env.log
+env > .onyx/hook-env.log
 ```
 
 ## Authoring secure hooks

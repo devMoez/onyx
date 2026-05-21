@@ -72,7 +72,7 @@ describe('LocalLiteRtLmClient', () => {
 
     const client = new LocalLiteRtLmClient(mockConfig);
     await expect(client.generateJson([], 'test-instruction')).rejects.toThrow(
-      'Invalid response from Local Gemini API: No text found',
+      'Invalid response from Local Onyx API: No text found',
     );
   });
 

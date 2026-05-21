@@ -26,24 +26,24 @@ import { getUrlOpenCommand } from '../../ui/utils/commandUtils.js';
 import { debugLogger } from '@onyx/core';
 
 export const GITHUB_WORKFLOW_PATHS = [
-  'gemini-dispatch/gemini-dispatch.yml',
-  'gemini-assistant/gemini-invoke.yml',
-  'gemini-assistant/gemini-plan-execute.yml',
-  'issue-triage/gemini-triage.yml',
-  'issue-triage/gemini-scheduled-triage.yml',
-  'pr-review/gemini-review.yml',
+  'onyx-dispatch/onyx-dispatch.yml',
+  'onyx-assistant/onyx-invoke.yml',
+  'onyx-assistant/onyx-plan-execute.yml',
+  'issue-triage/onyx-triage.yml',
+  'issue-triage/onyx-scheduled-triage.yml',
+  'pr-review/onyx-review.yml',
 ];
 
 export const GITHUB_COMMANDS_PATHS = [
-  'gemini-assistant/gemini-invoke.toml',
-  'gemini-assistant/gemini-plan-execute.toml',
-  'issue-triage/gemini-scheduled-triage.toml',
-  'issue-triage/gemini-triage.toml',
-  'pr-review/gemini-review.toml',
+  'onyx-assistant/onyx-invoke.toml',
+  'onyx-assistant/onyx-plan-execute.toml',
+  'issue-triage/onyx-scheduled-triage.toml',
+  'issue-triage/onyx-triage.toml',
+  'pr-review/onyx-review.toml',
 ];
 
 const REPO_DOWNLOAD_URL =
-  'https://raw.githubusercontent.com/google-github-actions/run-gemini-cli';
+  'https://raw.githubusercontent.com/google-github-actions/run-onyx-cli';
 const SOURCE_DIR = 'examples/workflows';
 // Generate OS-specific commands to open the GitHub pages needed for setup.
 function getOpenUrlsCommands(readmeUrl: string): string[] {
@@ -65,7 +65,7 @@ function getOpenUrlsCommands(readmeUrl: string): string[] {
   return commands;
 }
 
-// Add Gemini CLI specific entries to .gitignore file
+// Add Onyx CLI specific entries to .gitignore file
 export async function updateGitignore(gitRepoRoot: string): Promise<void> {
   const gitignoreEntries = ['.onyx/', 'gha-creds-*.json'];
 
@@ -232,7 +232,7 @@ export const setupGithubCommand: SlashCommand = {
     // Get the latest release tag from GitHub
     const proxy = context?.services?.agentContext?.config.getProxy();
     const releaseTag = await getLatestGitHubRelease(proxy);
-    const readmeUrl = `https://github.com/google-github-actions/run-gemini-cli/blob/${releaseTag}/README.md#quick-start`;
+    const readmeUrl = `https://github.com/google-github-actions/run-onyx-cli/blob/${releaseTag}/README.md#quick-start`;
 
     // Create workflows directory
     const workflowsDir = path.join(gitRepoRoot, '.github', 'workflows');
@@ -270,7 +270,7 @@ export const setupGithubCommand: SlashCommand = {
       toolName: 'run_shell_command',
       toolArgs: {
         description:
-          'Setting up GitHub Actions to triage issues and review PRs with Gemini.',
+          'Setting up GitHub Actions to triage issues and review PRs with Onyx.',
         command,
       },
     };

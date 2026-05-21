@@ -508,7 +508,7 @@ const baseMockUiState = {
   isAuthenticating: false,
   terminalWidth: 100,
   terminalHeight: 40,
-  currentModel: 'gemini-pro',
+  currentModel: 'onyx-pro',
   terminalBackgroundColor: 'black' as const,
   cleanUiDetailsVisible: false,
   allowPlanMode: true,

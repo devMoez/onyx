@@ -153,12 +153,14 @@ export const ModelQuotaDisplay = ({
 
       if (!existing || remainingFraction < existing.remainingFraction) {
         const tierDisplayNames: Record<string, string> = {
-          pro: 'Pro',
-          flash: 'Flash',
-          'flash-lite': 'Flash Lite',
+          pro: 'Gemini Pro',
+          flash: 'Gemini Flash',
+          'flash-lite': 'Gemini Flash Lite',
+          auto: 'Auto',
+          custom: 'Custom',
         };
         const name = tier
-          ? (tierDisplayNames[tier] ?? tier)
+          ? (tierDisplayNames[tier] ?? (tier.charAt(0).toUpperCase() + tier.slice(1)))
           : getDisplayString(modelId, config);
 
         groupedByTier.set(groupKey, {

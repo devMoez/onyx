@@ -50,3 +50,4 @@ describe('web-fetch rate limiting', () => {
     expect(result).toContain('Rate limit exceeded');
   });
 });
+

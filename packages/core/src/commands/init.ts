@@ -6,8 +6,8 @@
 
 import type { CommandActionReturn } from './types.js';
 
-export function performInit(doesGeminiMdExist: boolean): CommandActionReturn {
-  if (doesGeminiMdExist) {
+export function performInit(doesOnyxMdExist: boolean): CommandActionReturn {
+  if (doesOnyxMdExist) {
     return {
       type: 'message',
       messageType: 'info',
@@ -19,7 +19,7 @@ export function performInit(doesGeminiMdExist: boolean): CommandActionReturn {
   return {
     type: 'submit_prompt',
     content: `
-You are an AI agent that brings the power of Gemini directly into the terminal. Your task is to analyze the current directory and generate a comprehensive onyx.md file to be used as instructional context for future interactions.
+You are an AI agent that brings the power of Onyx directly into the terminal. Your task is to analyze the current directory and generate a comprehensive onyx.md file to be used as instructional context for future interactions.
 
 **Analysis Process:**
 

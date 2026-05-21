@@ -60,9 +60,9 @@ describe('AcpSessionManager', () => {
       getFileSystemService: vi.fn(),
       setFileSystemService: vi.fn(),
       getContentGeneratorConfig: vi.fn(),
-      getActiveModel: vi.fn().mockReturnValue('gemini-pro'),
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
-      getGeminiClient: vi.fn().mockReturnValue({
+      getActiveModel: vi.fn().mockReturnValue('onyx-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
+      getOnyxClient: vi.fn().mockReturnValue({
         startChat: vi.fn().mockResolvedValue({}),
       }),
       getMessageBus: vi.fn().mockReturnValue({
@@ -72,7 +72,7 @@ describe('AcpSessionManager', () => {
       }),
       getApprovalMode: vi.fn().mockReturnValue('default'),
       isPlanEnabled: vi.fn().mockReturnValue(true),
-      getGemini31LaunchedSync: vi.fn().mockReturnValue(false),
+      getOnyx31LaunchedSync: vi.fn().mockReturnValue(false),
       getHasAccessToPreviewModel: vi.fn().mockReturnValue(false),
       getCheckpointingEnabled: vi.fn().mockReturnValue(false),
       getDisableAlwaysAllow: vi.fn().mockReturnValue(false),
@@ -148,7 +148,7 @@ describe('AcpSessionManager', () => {
     expect(response.sessionId).toBe('test-session-id');
     expect(loadCliConfig).toHaveBeenCalled();
     expect(mockConfig.initialize).toHaveBeenCalled();
-    expect(mockConfig.getGeminiClient).toHaveBeenCalled();
+    expect(mockConfig.getOnyxClient).toHaveBeenCalled();
 
     // Verify deferred call (sendAvailableCommands)
     await vi.runAllTimersAsync();
@@ -196,7 +196,7 @@ describe('AcpSessionManager', () => {
       apiKey: 'test-key',
     });
     mockConfig.getHasAccessToPreviewModel = vi.fn().mockReturnValue(true);
-    mockConfig.getGemini31LaunchedSync = vi.fn().mockReturnValue(true);
+    mockConfig.getOnyx31LaunchedSync = vi.fn().mockReturnValue(true);
 
     const response = await manager.newSession(
       {
@@ -216,13 +216,13 @@ describe('AcpSessionManager', () => {
     );
   });
 
-  it('should include gemini-3.1-flash-lite when useGemini31FlashLite is true', async () => {
+  it('should include onyx-3.1-flash-lite when useOnyx31FlashLite is true', async () => {
     mockConfig.getContentGeneratorConfig = vi.fn().mockReturnValue({
       apiKey: 'test-key',
     });
     mockConfig.getHasAccessToPreviewModel = vi.fn().mockReturnValue(true);
-    mockConfig.getGemini31LaunchedSync = vi.fn().mockReturnValue(true);
-    mockConfig.getGemini31FlashLiteLaunchedSync = vi.fn().mockReturnValue(true);
+    mockConfig.getOnyx31LaunchedSync = vi.fn().mockReturnValue(true);
+    mockConfig.getOnyx31FlashLiteLaunchedSync = vi.fn().mockReturnValue(true);
 
     const response = await manager.newSession(
       {
@@ -235,8 +235,8 @@ describe('AcpSessionManager', () => {
     expect(response.models?.availableModels).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          modelId: 'gemini-3.1-flash-lite-preview',
-          name: 'gemini-3.1-flash-lite-preview',
+          modelId: 'onyx-3.1-flash-lite-preview',
+          name: 'onyx-3.1-flash-lite-preview',
         }),
       ]),
     );
@@ -272,10 +272,10 @@ describe('AcpSessionManager', () => {
     });
   });
 
-  it('should fail session creation if Gemini API key is missing', async () => {
+  it('should fail session creation if Onyx API key is missing', async () => {
     (loadSettings as unknown as Mock).mockImplementation(() => ({
       merged: {
-        security: { auth: { selectedType: AuthType.USE_GEMINI } },
+        security: { auth: { selectedType: AuthType.USE_ONYX } },
         mcpServers: {},
       },
       setValue: vi.fn(),
@@ -293,7 +293,7 @@ describe('AcpSessionManager', () => {
         {},
       ),
     ).rejects.toMatchObject({
-      message: 'Gemini API key is missing or not configured.',
+      message: 'Onyx API key is missing or not configured.',
     });
   });
 

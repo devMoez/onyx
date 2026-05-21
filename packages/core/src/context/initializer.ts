@@ -82,7 +82,7 @@ export async function initializeContextManager(
   const projectTempDir = storage.getProjectTempDir();
 
   const tracer = new ContextTracer({
-    enabled: !!process.env['GEMINI_CONTEXT_TRACE_DIR'],
+    enabled: !!process.env['ONYX_CONTEXT_TRACE_DIR'],
     targetDir: projectTempDir,
     sessionId: lastPromptId,
   });
@@ -128,7 +128,7 @@ export async function initializeContextManager(
     behaviorRegistry,
     {
       calibrateTokenCalculation:
-        !!process.env['GEMINI_CONTEXT_CALIBRATE_TOKEN_CALCULATIONS'],
+        !!process.env['ONYX_CONTEXT_CALIBRATE_TOKEN_CALCULATIONS'],
     },
   );
 

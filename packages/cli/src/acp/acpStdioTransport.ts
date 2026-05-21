@@ -10,7 +10,7 @@ import * as acp from '@agentclientprotocol/sdk';
 import { Readable, Writable } from 'node:stream';
 import type { LoadedSettings } from '../config/settings.js';
 import type { CliArgs } from '../config/config.js';
-import { GeminiAgent } from './acpRpcDispatcher.js';
+import { OnyxAgent } from './acpRpcDispatcher.js';
 
 export async function runAcpClient(
   config: Config,
@@ -24,7 +24,7 @@ export async function runAcpClient(
 
   const stream = acp.ndJsonStream(stdout, stdin);
   const connection = new acp.AgentSideConnection(
-    (connection) => new GeminiAgent(config, settings, argv, connection),
+    (connection) => new OnyxAgent(config, settings, argv, connection),
     stream,
   );
 

@@ -5,7 +5,7 @@
  */
 
 import type { EventEmitter } from 'node:events';
-import type { Config, GeminiCLIExtension } from '../config/config.js';
+import type { Config, OnyxCLIExtension } from '../config/config.js';
 
 export abstract class ExtensionLoader {
   // Assigned in `start`.
@@ -26,7 +26,7 @@ export abstract class ExtensionLoader {
   /**
    * All currently known extensions, both active and inactive.
    */
-  abstract getExtensions(): GeminiCLIExtension[];
+  abstract getExtensions(): OnyxCLIExtension[];
 
   /**
    * Fully initializes all active extensions.
@@ -61,7 +61,7 @@ export abstract class ExtensionLoader {
    * go through `maybeStartExtension` which will only start the extension if
    * extension reloading is enabled and the `config` object is initialized.
    */
-  protected async startExtension(extension: GeminiCLIExtension) {
+  protected async startExtension(extension: OnyxCLIExtension) {
     if (!this.config) {
       throw new Error('Cannot call `startExtension` prior to calling `start`.');
     }
@@ -72,7 +72,7 @@ export abstract class ExtensionLoader {
     });
     try {
       await this.config.getMcpClientManager()!.startExtension(extension);
-      await this.maybeRefreshGeminiTools(extension);
+      await this.maybeRefreshOnyxTools(extension);
 
       // Register policy rules and checkers
       if (extension.rules || extension.checkers) {
@@ -113,7 +113,7 @@ export abstract class ExtensionLoader {
   private async maybeRefreshMemories(): Promise<void> {
     if (!this.config) {
       throw new Error(
-        'Cannot refresh gemini memories prior to calling `start`.',
+        'Cannot refresh onyx memories prior to calling `start`.',
       );
     }
     if (
@@ -125,7 +125,7 @@ export abstract class ExtensionLoader {
       // reload memory, this is somewhat expensive and also busts the context
       // cache, we want to only do it once.
       await this.config.getMemoryContextManager()?.refresh();
-      this.config.getGeminiClient().updateSystemInstruction();
+      this.config.getOnyxClient().updateSystemInstruction();
       await this.config.getHookSystem()?.initialize();
       await this.config.getAgentRegistry().reload();
       await this.config.reloadSkills();
@@ -133,16 +133,16 @@ export abstract class ExtensionLoader {
   }
 
   /**
-   * Refreshes the gemini tools list if it is initialized and the extension has
+   * Refreshes the onyx tools list if it is initialized and the extension has
    * any excludeTools settings.
    */
-  private async maybeRefreshGeminiTools(
-    extension: GeminiCLIExtension,
+  private async maybeRefreshOnyxTools(
+    extension: OnyxCLIExtension,
   ): Promise<void> {
     if (extension.excludeTools && extension.excludeTools.length > 0) {
-      const geminiClient = this.config?.geminiClient;
-      if (geminiClient?.isInitialized()) {
-        await geminiClient.setTools();
+      const onyxClient = this.config?.onyxClient;
+      if (onyxClient?.isInitialized()) {
+        await onyxClient.setTools();
       }
     }
   }
@@ -153,7 +153,7 @@ export abstract class ExtensionLoader {
    * program.
    */
   protected async maybeStartExtension(
-    extension: GeminiCLIExtension,
+    extension: OnyxCLIExtension,
   ): Promise<void> {
     if (this.config && this.config.getEnableExtensionReloading()) {
       await this.startExtension(extension);
@@ -169,7 +169,7 @@ export abstract class ExtensionLoader {
    * extension if extension reloading is enabled and the `config` object is
    * initialized.
    */
-  protected async stopExtension(extension: GeminiCLIExtension) {
+  protected async stopExtension(extension: OnyxCLIExtension) {
     if (!this.config) {
       throw new Error('Cannot call `stopExtension` prior to calling `start`.');
     }
@@ -181,7 +181,7 @@ export abstract class ExtensionLoader {
 
     try {
       await this.config.getMcpClientManager()!.stopExtension(extension);
-      await this.maybeRefreshGeminiTools(extension);
+      await this.maybeRefreshOnyxTools(extension);
 
       // Unregister policy rules and checkers
       if (extension.rules || extension.checkers) {
@@ -231,14 +231,14 @@ export abstract class ExtensionLoader {
    * features from the rest of the system.
    */
   protected async maybeStopExtension(
-    extension: GeminiCLIExtension,
+    extension: OnyxCLIExtension,
   ): Promise<void> {
     if (this.config && this.config.getEnableExtensionReloading()) {
       await this.stopExtension(extension);
     }
   }
 
-  async restartExtension(extension: GeminiCLIExtension): Promise<void> {
+  async restartExtension(extension: OnyxCLIExtension): Promise<void> {
     await this.stopExtension(extension);
     await this.startExtension(extension);
   }
@@ -261,13 +261,13 @@ export interface ExtensionsStoppingEvent {
 
 export class SimpleExtensionLoader extends ExtensionLoader {
   constructor(
-    protected readonly extensions: GeminiCLIExtension[],
+    protected readonly extensions: OnyxCLIExtension[],
     eventEmitter?: EventEmitter<ExtensionEvents>,
   ) {
     super(eventEmitter);
   }
 
-  getExtensions(): GeminiCLIExtension[] {
+  getExtensions(): OnyxCLIExtension[] {
     return this.extensions;
   }
 
@@ -275,7 +275,7 @@ export class SimpleExtensionLoader extends ExtensionLoader {
   /// `maybeStartExtension`.
   ///
   /// This is intended for dynamic loading of extensions after calling `start`.
-  async loadExtension(extension: GeminiCLIExtension) {
+  async loadExtension(extension: OnyxCLIExtension) {
     this.extensions.push(extension);
     await this.maybeStartExtension(extension);
   }
@@ -284,7 +284,7 @@ export class SimpleExtensionLoader extends ExtensionLoader {
   // `maybeStopExtension` if it was found.
   ///
   /// This is intended for dynamic unloading of extensions after calling `start`.
-  async unloadExtension(extension: GeminiCLIExtension) {
+  async unloadExtension(extension: OnyxCLIExtension) {
     const index = this.extensions.indexOf(extension);
     if (index === -1) return;
     this.extensions.splice(index, 1);

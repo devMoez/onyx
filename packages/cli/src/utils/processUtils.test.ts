@@ -71,19 +71,19 @@ describe('SEA handling utilities', () => {
 
   describe('isStandardSea', () => {
     it('returns false if argv[0] === argv[1]', () => {
-      process.argv = ['/bin/gemini', '/bin/gemini', 'my-command'];
+      process.argv = ['/bin/onyx', '/bin/onyx', 'my-command'];
       vi.stubEnv('IS_BINARY', 'true');
       expect(isStandardSea()).toBe(false);
     });
 
     it('returns true if IS_BINARY is true and argv[0] !== argv[1]', () => {
-      process.argv = ['/bin/gemini', 'my-command'];
+      process.argv = ['/bin/onyx', 'my-command'];
       vi.stubEnv('IS_BINARY', 'true');
       expect(isStandardSea()).toBe(true);
     });
 
     it('returns true if process.isSea() is true and argv[0] !== argv[1]', () => {
-      process.argv = ['/bin/gemini', 'my-command'];
+      process.argv = ['/bin/onyx', 'my-command'];
       (process as ProcessWithSea).isSea = () => true;
       expect(isStandardSea()).toBe(true);
     });
@@ -96,14 +96,14 @@ describe('SEA handling utilities', () => {
 
   describe('getScriptArgs', () => {
     it('slices from index 1 if isStandardSea is true', () => {
-      process.argv = ['/bin/gemini', 'my-command', '--flag'];
+      process.argv = ['/bin/onyx', 'my-command', '--flag'];
       vi.stubEnv('IS_BINARY', 'true');
       expect(getScriptArgs()).toEqual(['my-command', '--flag']);
     });
 
     it('slices from index 2 if isStandardSea is false (relaunch SEA or standard node)', () => {
       // Relaunch SEA
-      process.argv = ['/bin/gemini', '/bin/gemini', 'my-command', '--flag'];
+      process.argv = ['/bin/onyx', '/bin/onyx', 'my-command', '--flag'];
       vi.stubEnv('IS_BINARY', 'true');
       expect(getScriptArgs()).toEqual(['my-command', '--flag']);
 
@@ -126,7 +126,7 @@ describe('SEA handling utilities', () => {
     });
 
     it('returns true if argv[0] === argv[1]', () => {
-      process.argv = ['/bin/gemini', '/bin/gemini'];
+      process.argv = ['/bin/onyx', '/bin/onyx'];
       expect(isSeaEnvironment()).toBe(true);
     });
 
@@ -153,16 +153,16 @@ describe('SEA handling utilities', () => {
         '/path/to/script.js',
         'my-command',
       ]);
-      expect(config.env['GEMINI_CLI_NO_RELAUNCH']).toBe('true');
+      expect(config.env['ONYX_CLI_NO_RELAUNCH']).toBe('true');
       expect(config.env['NODE_OPTIONS']).toBeFalsy();
     });
 
     it('handles SEA binary mode with new nodeArgs', () => {
       vi.stubEnv('IS_BINARY', 'true');
       vi.stubEnv('NODE_OPTIONS', '--existing-flag');
-      process.argv = ['/bin/gemini', 'my-command'];
+      process.argv = ['/bin/onyx', 'my-command'];
       process.execArgv = ['--inspect']; // Should not be duplicated in NODE_OPTIONS
-      process.execPath = '/bin/gemini';
+      process.execPath = '/bin/onyx';
 
       const config = getSpawnConfig(
         ['--max-old-space-size=8192'],
@@ -170,13 +170,13 @@ describe('SEA handling utilities', () => {
       );
 
       expect(config.spawnArgs).toEqual([
-        '/bin/gemini', // explicitly uses execPath as placeholder
+        '/bin/onyx', // explicitly uses execPath as placeholder
         'my-command',
       ]);
       expect(config.env['NODE_OPTIONS']).toBe(
         '--existing-flag --max-old-space-size=8192',
       );
-      expect(config.env['GEMINI_CLI_NO_RELAUNCH']).toBe('true');
+      expect(config.env['ONYX_CLI_NO_RELAUNCH']).toBe('true');
     });
 
     it('throws error for complex nodeArgs in SEA mode', () => {

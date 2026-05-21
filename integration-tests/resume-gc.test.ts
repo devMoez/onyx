@@ -93,9 +93,9 @@ describe('Context Management Resume E2E', () => {
     const traceLog = path.join(traceDir, 'trace.log');
 
     const commonEnv = {
-      GEMINI_API_KEY: 'mock-key',
-      GEMINI_DEBUG_LOG_FILE: logFile,
-      GEMINI_CONTEXT_TRACE_DIR: traceDir,
+      ONYX_API_KEY: 'mock-key',
+      ONYX_DEBUG_LOG_FILE: logFile,
+      ONYX_CONTEXT_TRACE_DIR: traceDir,
     };
 
     // Provide a massive pool of responses to prevent exhaustion
@@ -147,3 +147,4 @@ describe('Context Management Resume E2E', () => {
     expect(traces).toContain('GC Triggered.');
   });
 });
+

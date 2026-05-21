@@ -108,7 +108,7 @@ interface MockMemoryConfig {
   };
   getTargetDir: () => string;
   getToolRegistry: () => unknown;
-  getGeminiClient: () => unknown;
+  getOnyxClient: () => unknown;
   getSkillManager: () => { getSkills: () => unknown[] };
   isAutoMemoryEnabled: () => boolean;
   modelConfigService: {
@@ -168,8 +168,8 @@ beforeEach(() => {
         const memoryDir = config.storage.getProjectMemoryTempDir();
         const inboxDir = path.join(memoryDir, '.inbox');
 
-        const homeDir = process.env['GEMINI_CLI_HOME'] ?? os.homedir();
-        const globalGeminiDir = path.join(homeDir, '.gemini');
+        const homeDir = process.env['ONYX_CLI_HOME'] ?? os.homedir();
+        const globalOnyxDir = path.join(homeDir, '.onyx');
 
         await fs.mkdir(path.join(inboxDir, 'private'), { recursive: true });
         await fs.mkdir(path.join(inboxDir, 'global'), { recursive: true });
@@ -188,7 +188,7 @@ beforeEach(() => {
           ].join('\n'),
         );
 
-        const globalTarget = path.join(globalGeminiDir, 'GEMINI.md');
+        const globalTarget = path.join(globalOnyxDir, 'ONYX.md');
         await fs.writeFile(
           path.join(inboxDir, 'global', 'reply-style.patch'),
           [
@@ -236,7 +236,7 @@ function autoMemoryEval(name: string, fn: () => Promise<void>): void {
 
 async function createFixture(): Promise<Fixture> {
   const rootDir = await fs.mkdtemp(
-    path.join(os.tmpdir(), 'gemini-auto-memory-eval-'),
+    path.join(os.tmpdir(), 'onyx-auto-memory-eval-'),
   );
   const homeDir = path.join(rootDir, 'home');
   const targetDir = path.join(rootDir, 'workspace');
@@ -247,7 +247,7 @@ async function createFixture(): Promise<Fixture> {
   await fs.mkdir(homeDir, { recursive: true });
   await fs.mkdir(targetDir, { recursive: true });
   await fs.mkdir(path.join(projectTempDir, 'chats'), { recursive: true });
-  vi.stubEnv('GEMINI_CLI_HOME', homeDir);
+  vi.stubEnv('ONYX_CLI_HOME', homeDir);
 
   const config: MockMemoryConfig = {
     storage: {
@@ -259,7 +259,7 @@ async function createFixture(): Promise<Fixture> {
     },
     getTargetDir: () => targetDir,
     getToolRegistry: () => ({}),
-    getGeminiClient: () => ({}),
+    getOnyxClient: () => ({}),
     getSkillManager: () => ({ getSkills: () => [] }),
     isAutoMemoryEnabled: () => true,
     modelConfigService: {
@@ -294,7 +294,7 @@ async function seedSession(
   const messages = Array.from({ length: 20 }, (_, index) => ({
     id: `m${index + 1}`,
     timestamp: oldTimestamp,
-    type: index % 2 === 0 ? 'user' : 'gemini',
+    type: index % 2 === 0 ? 'user' : 'onyx',
     content: [
       {
         text:
@@ -417,8 +417,8 @@ describe('Auto Memory inbox routing', () => {
       );
       const activeGlobalMemoryPath = path.join(
         fixture.homeDir,
-        '.gemini',
-        'GEMINI.md',
+        '.onyx',
+        'ONYX.md',
       );
       const run = await readRun(fixture);
 
@@ -445,3 +445,4 @@ describe('Auto Memory inbox routing', () => {
     },
   );
 });
+

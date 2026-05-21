@@ -22,8 +22,8 @@ describe('ContextTracer (Real FS & Mock ID Gen)', () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    vi.stubEnv('GEMINI_CONTEXT_TRACE_DIR', '');
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'gemini-tracer-test-'));
+    vi.stubEnv('ONYX_CONTEXT_TRACE_DIR', '');
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'onyx-tracer-test-'));
 
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-01-01T12:00:00Z'));

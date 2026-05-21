@@ -1,14 +1,14 @@
 # Logo Design Reference
 
 AI-powered logo design with 55+ styles, 30 color palettes, 25 industry guides.
-Uses Gemini Nano Banana models.
+Uses Onyx Nano Banana models.
 
 ## Scripts
 
 | Script                     | Purpose                                                   |
 | -------------------------- | --------------------------------------------------------- |
 | `scripts/logo/search.py`   | Search styles, colors, industries; generate design briefs |
-| `scripts/logo/generate.py` | Generate logos with Gemini Nano Banana                    |
+| `scripts/logo/generate.py` | Generate logos with Onyx Nano Banana                    |
 | `scripts/logo/core.py`     | BM25 search engine for logo data                          |
 
 ## Commands
@@ -89,6 +89,6 @@ Options: `--style`, `--industry`, `--prompt`
 ## Setup
 
 ```bash
-export GEMINI_API_KEY="your-key"
+export ONYX_API_KEY="your-key"
 pip install google-genai
 ```

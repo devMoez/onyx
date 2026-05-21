@@ -6,7 +6,7 @@
 
 import { type ReactElement } from 'react';
 
-import type { ExtensionLoader, GeminiCLIExtension } from '@onyx/core';
+import type { ExtensionLoader, OnyxCLIExtension } from '@onyx/core';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
 import { MessageType } from '../types.js';
 import {
@@ -88,7 +88,7 @@ const mockInstallExtension = vi.fn();
 const mockUninstallExtension = vi.fn();
 const mockGetExtensions = vi.fn();
 
-const inactiveExt: GeminiCLIExtension = {
+const inactiveExt: OnyxCLIExtension = {
   name: 'ext-one',
   id: 'ext-one-id',
   version: '1.0.0',
@@ -101,7 +101,7 @@ const inactiveExt: GeminiCLIExtension = {
     source: 'https://github.com/some/extension.git',
   },
 };
-const activeExt: GeminiCLIExtension = {
+const activeExt: OnyxCLIExtension = {
   name: 'ext-two',
   id: 'ext-two-id',
   version: '1.0.0',
@@ -114,7 +114,7 @@ const activeExt: GeminiCLIExtension = {
     source: 'https://github.com/some/extension.git',
   },
 };
-const allExt: GeminiCLIExtension = {
+const allExt: OnyxCLIExtension = {
   name: 'all-ext',
   id: 'all-ext-id',
   version: '1.0.0',
@@ -501,7 +501,7 @@ describe('extensionsCommand', () => {
 
       await exploreAction(mockContext, '');
 
-      const extensionsUrl = 'https://geminicli.com/extensions/';
+      const extensionsUrl = 'https://onyxcli.com/extensions/';
       expect(mockContext.ui.addItem).toHaveBeenCalledWith({
         type: MessageType.INFO,
         text: `Opening extensions page in your browser: ${extensionsUrl}`,
@@ -513,8 +513,8 @@ describe('extensionsCommand', () => {
     it('should only add an info message in a sandbox environment', async () => {
       // Simulate a sandbox environment
       vi.stubEnv('NODE_ENV', '');
-      vi.stubEnv('SANDBOX', 'gemini-sandbox');
-      const extensionsUrl = 'https://geminicli.com/extensions/';
+      vi.stubEnv('SANDBOX', 'onyx-sandbox');
+      const extensionsUrl = 'https://onyxcli.com/extensions/';
 
       await exploreAction(mockContext, '');
 
@@ -530,7 +530,7 @@ describe('extensionsCommand', () => {
     it('should add an info message and not call open in NODE_ENV test environment', async () => {
       vi.stubEnv('NODE_ENV', 'test');
       vi.stubEnv('SANDBOX', '');
-      const extensionsUrl = 'https://geminicli.com/extensions/';
+      const extensionsUrl = 'https://onyxcli.com/extensions/';
 
       await exploreAction(mockContext, '');
 
@@ -545,7 +545,7 @@ describe('extensionsCommand', () => {
 
     it('should handle errors when opening the browser', async () => {
       vi.stubEnv('NODE_ENV', '');
-      const extensionsUrl = 'https://geminicli.com/extensions/';
+      const extensionsUrl = 'https://onyxcli.com/extensions/';
       const errorMessage = 'Failed to open browser';
       vi.mocked(open).mockRejectedValue(new Error(errorMessage));
 
@@ -961,7 +961,7 @@ describe('extensionsCommand', () => {
         { name: 'ext1', isActive: true },
         { name: 'ext2', isActive: true },
         { name: 'ext3', isActive: false },
-      ] as GeminiCLIExtension[];
+      ] as OnyxCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
 
       await restartAction!(mockContext, '--all');
@@ -996,7 +996,7 @@ describe('extensionsCommand', () => {
     it('handles errors during skill or agent reload', async () => {
       const mockExtensions = [
         { name: 'ext1', isActive: true },
-      ] as GeminiCLIExtension[];
+      ] as OnyxCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
       mockReloadSkills.mockRejectedValue(new Error('Failed to reload skills'));
 
@@ -1017,7 +1017,7 @@ describe('extensionsCommand', () => {
         { name: 'ext1', isActive: false },
         { name: 'ext2', isActive: true },
         { name: 'ext3', isActive: true },
-      ] as GeminiCLIExtension[];
+      ] as OnyxCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
 
       await restartAction!(mockContext, 'ext1 ext3');
@@ -1059,7 +1059,7 @@ describe('extensionsCommand', () => {
     it('handles errors during extension reload', async () => {
       const mockExtensions = [
         { name: 'ext1', isActive: true },
-      ] as GeminiCLIExtension[];
+      ] as OnyxCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
       mockRestartExtension.mockRejectedValue(new Error('Failed to restart'));
 
@@ -1077,7 +1077,7 @@ describe('extensionsCommand', () => {
     it('shows a warning if an extension is not found', async () => {
       const mockExtensions = [
         { name: 'ext1', isActive: true },
-      ] as GeminiCLIExtension[];
+      ] as OnyxCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
 
       await restartAction!(mockContext, 'ext1 ext2');
@@ -1095,7 +1095,7 @@ describe('extensionsCommand', () => {
     it('does not reload any extensions if none are found', async () => {
       const mockExtensions = [
         { name: 'ext1', isActive: true },
-      ] as GeminiCLIExtension[];
+      ] as OnyxCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
 
       await restartAction!(mockContext, 'ext2 ext3');
@@ -1114,7 +1114,7 @@ describe('extensionsCommand', () => {
       const mockExtensions = [
         { name: 'ext1', isActive: true },
         { name: 'ext2', isActive: false },
-      ] as GeminiCLIExtension[];
+      ] as OnyxCLIExtension[];
       mockGetExtensions.mockReturnValue(mockExtensions);
 
       const suggestions = completeExtensions(mockContext, 'ext');

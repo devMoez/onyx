@@ -116,14 +116,14 @@ jobs:
         run: 'npm run build:binary'
 
       - name: 'Build Core Package'
-        run: 'npm run build -w @google/gemini-cli-core'
+        run: 'npm run build -w @google/onyx-cli-core'
 
       - name: 'Verify Output Exists'
         run: |
-          if [ -f "dist/${{ matrix.platform_name }}/gemini" ]; then
-            echo "Binary found at dist/${{ matrix.platform_name }}/gemini"
-          elif [ -f "dist/${{ matrix.platform_name }}/gemini.exe" ]; then
-            echo "Binary found at dist/${{ matrix.platform_name }}/gemini.exe"
+          if [ -f "dist/${{ matrix.platform_name }}/onyx" ]; then
+            echo "Binary found at dist/${{ matrix.platform_name }}/onyx"
+          elif [ -f "dist/${{ matrix.platform_name }}/onyx.exe" ]; then
+            echo "Binary found at dist/${{ matrix.platform_name }}/onyx.exe"
           else
             echo "Error: Binary not found in dist/${{ matrix.platform_name }}/"
             ls -R dist/
@@ -133,31 +133,31 @@ jobs:
       - name: 'Smoke Test Binary'
         run: |
           echo "Running binary smoke test..."
-          if [ -f "dist/${{ matrix.platform_name }}/gemini.exe" ]; then
-            "./dist/${{ matrix.platform_name }}/gemini.exe" --version
+          if [ -f "dist/${{ matrix.platform_name }}/onyx.exe" ]; then
+            "./dist/${{ matrix.platform_name }}/onyx.exe" --version
           else
-            "./dist/${{ matrix.platform_name }}/gemini" --version
+            "./dist/${{ matrix.platform_name }}/onyx" --version
           fi
 
       - name: 'Run Integration Tests'
         if: "github.event_name != 'pull_request'"
         env:
-          GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
+          ONYX_API_KEY: '${{ secrets.ONYX_API_KEY }}'
           ONYX_CLI_TRUST_WORKSPACE: true
         run: |
           echo "Running integration tests with binary..."
           if [[ "${{ matrix.os }}" == 'windows-latest' ]]; then
-            BINARY_PATH="$(cygpath -m "$(pwd)/dist/${{ matrix.platform_name }}/gemini.exe")"
+            BINARY_PATH="$(cygpath -m "$(pwd)/dist/${{ matrix.platform_name }}/onyx.exe")"
           else
-            BINARY_PATH="$(pwd)/dist/${{ matrix.platform_name }}/gemini"
+            BINARY_PATH="$(pwd)/dist/${{ matrix.platform_name }}/onyx"
           fi
           echo "Using binary at $BINARY_PATH"
-          export INTEGRATION_TEST_GEMINI_BINARY_PATH="$BINARY_PATH"
+          export INTEGRATION_TEST_ONYX_BINARY_PATH="$BINARY_PATH"
           npm run test:integration:sandbox:none -- --testTimeout=600000
 
       - name: 'Upload Artifact'
         uses: 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' # ratchet:actions/upload-artifact@v4
         with:
-          name: 'gemini-cli-${{ matrix.platform_name }}'
+          name: 'onyx-cli-${{ matrix.platform_name }}'
           path: 'dist/${{ matrix.platform_name }}/'
           retention-days: 5

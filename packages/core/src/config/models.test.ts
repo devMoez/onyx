@@ -8,8 +8,8 @@ import { describe, it, expect } from 'vitest';
 import {
   resolveModel,
   resolveClassifierModel,
-  isGemini3Model,
-  isGemini2Model,
+  isOnyx3Model,
+  isOnyx2Model,
   isCustomModel,
   supportsModernFeatures,
   isAutoModel,
@@ -66,23 +66,23 @@ describe('Dynamic Configuration Parity', () => {
 
   const flagCombos = [
     {
-      useGemini3_1: false,
-      useGemini3_1FlashLite: false,
+      useOnyx3_1: false,
+      useOnyx3_1FlashLite: false,
       useCustomToolModel: false,
     },
     {
-      useGemini3_1: true,
-      useGemini3_1FlashLite: false,
+      useOnyx3_1: true,
+      useOnyx3_1FlashLite: false,
       useCustomToolModel: false,
     },
     {
-      useGemini3_1: true,
-      useGemini3_1FlashLite: true,
+      useOnyx3_1: true,
+      useOnyx3_1FlashLite: true,
       useCustomToolModel: false,
     },
     {
-      useGemini3_1: true,
-      useGemini3_1FlashLite: true,
+      useOnyx3_1: true,
+      useOnyx3_1FlashLite: true,
       useCustomToolModel: true,
     },
   ];
@@ -104,16 +104,16 @@ describe('Dynamic Configuration Parity', () => {
 
           const legacy = resolveModel(
             model,
-            flags.useGemini3_1,
-            flags.useGemini3_1FlashLite,
+            flags.useOnyx3_1,
+            flags.useOnyx3_1FlashLite,
             flags.useCustomToolModel,
             hasAccess,
             mockLegacyConfig,
           );
           const dynamic = resolveModel(
             model,
-            flags.useGemini3_1,
-            flags.useGemini3_1FlashLite,
+            flags.useOnyx3_1,
+            flags.useOnyx3_1FlashLite,
             flags.useCustomToolModel,
             hasAccess,
             mockDynamicConfig,
@@ -151,8 +151,8 @@ describe('Dynamic Configuration Parity', () => {
             const legacy = resolveClassifierModel(
               anchor,
               tier,
-              flags.useGemini3_1,
-              flags.useGemini3_1FlashLite,
+              flags.useOnyx3_1,
+              flags.useOnyx3_1FlashLite,
               flags.useCustomToolModel,
               hasAccess,
               mockLegacyConfig,
@@ -160,8 +160,8 @@ describe('Dynamic Configuration Parity', () => {
             const dynamic = resolveClassifierModel(
               anchor,
               tier,
-              flags.useGemini3_1,
-              flags.useGemini3_1FlashLite,
+              flags.useOnyx3_1,
+              flags.useOnyx3_1FlashLite,
               flags.useCustomToolModel,
               hasAccess,
               mockDynamicConfig,
@@ -203,10 +203,10 @@ describe('Dynamic Configuration Parity', () => {
     }
   });
 
-  it('isGemini3Model should match legacy behavior', () => {
+  it('isOnyx3Model should match legacy behavior', () => {
     for (const model of modelsToTest) {
-      const legacy = isGemini3Model(model, legacyConfig);
-      const dynamic = isGemini3Model(model, dynamicConfig);
+      const legacy = isOnyx3Model(model, legacyConfig);
+      const dynamic = isOnyx3Model(model, dynamicConfig);
       expect(dynamic).toBe(legacy);
     }
   });
@@ -239,54 +239,54 @@ describe('isPreviewModel', () => {
 
   it('should return false for non-preview models', () => {
     expect(isPreviewModel(DEFAULT_GEMINI_MODEL)).toBe(false);
-    expect(isPreviewModel('gemini-1.5-pro')).toBe(false);
+    expect(isPreviewModel('onyx-1.5-pro')).toBe(false);
   });
 });
 
 describe('isProModel', () => {
   it('should return true for models containing "pro"', () => {
-    expect(isProModel('gemini-3-pro-preview')).toBe(true);
-    expect(isProModel('gemini-2.5-pro')).toBe(true);
+    expect(isProModel('onyx-3-pro-preview')).toBe(true);
+    expect(isProModel('onyx-2.5-pro')).toBe(true);
     expect(isProModel('pro')).toBe(true);
   });
 
   it('should return false for models without "pro"', () => {
-    expect(isProModel('gemini-3-flash-preview')).toBe(false);
-    expect(isProModel('gemini-2.5-flash')).toBe(false);
+    expect(isProModel('onyx-3-flash-preview')).toBe(false);
+    expect(isProModel('onyx-2.5-flash')).toBe(false);
     expect(isProModel('auto')).toBe(false);
   });
 });
 
 describe('isCustomModel', () => {
-  it('should return true for models not starting with gemini-', () => {
+  it('should return true for models not starting with onyx-', () => {
     expect(isCustomModel('testing')).toBe(true);
     expect(isCustomModel('gpt-4')).toBe(true);
     expect(isCustomModel('claude-3')).toBe(true);
   });
 
-  it('should return false for Gemini models', () => {
-    expect(isCustomModel('gemini-1.5-pro')).toBe(false);
-    expect(isCustomModel('gemini-2.0-flash')).toBe(false);
-    expect(isCustomModel('gemini-3-pro-preview')).toBe(false);
+  it('should return false for Onyx models', () => {
+    expect(isCustomModel('onyx-1.5-pro')).toBe(false);
+    expect(isCustomModel('onyx-2.0-flash')).toBe(false);
+    expect(isCustomModel('onyx-3-pro-preview')).toBe(false);
   });
 
-  it('should return false for aliases that resolve to Gemini models', () => {
+  it('should return false for aliases that resolve to Onyx models', () => {
     expect(isCustomModel(GEMINI_MODEL_ALIAS_AUTO)).toBe(false);
     expect(isCustomModel(GEMINI_MODEL_ALIAS_PRO)).toBe(false);
   });
 
   it('should not throw if the model is an array (e.g. from yargs)', () => {
     // @ts-expect-error - testing invalid runtime input
-    expect(() => isCustomModel(['gemini-2.0-flash', 'gpt-4'])).not.toThrow();
+    expect(() => isCustomModel(['onyx-2.0-flash', 'gpt-4'])).not.toThrow();
     // @ts-expect-error - testing invalid runtime input
-    expect(isCustomModel(['gemini-2.0-flash', 'gpt-4'])).toBe(true); // last one is custom
+    expect(isCustomModel(['onyx-2.0-flash', 'gpt-4'])).toBe(true); // last one is custom
   });
 });
 
 describe('supportsModernFeatures', () => {
-  it('should return true for Gemini 3 models', () => {
-    expect(supportsModernFeatures('gemini-3-pro-preview')).toBe(true);
-    expect(supportsModernFeatures('gemini-3-flash-preview')).toBe(true);
+  it('should return true for Onyx 3 models', () => {
+    expect(supportsModernFeatures('onyx-3-pro-preview')).toBe(true);
+    expect(supportsModernFeatures('onyx-3-flash-preview')).toBe(true);
   });
 
   it('should return true for custom models', () => {
@@ -294,12 +294,12 @@ describe('supportsModernFeatures', () => {
     expect(supportsModernFeatures('some-custom-model')).toBe(true);
   });
 
-  it('should return false for older Gemini models', () => {
-    expect(supportsModernFeatures('gemini-2.5-pro')).toBe(false);
-    expect(supportsModernFeatures('gemini-2.5-flash')).toBe(false);
-    expect(supportsModernFeatures('gemini-2.0-flash')).toBe(false);
-    expect(supportsModernFeatures('gemini-1.5-pro')).toBe(false);
-    expect(supportsModernFeatures('gemini-1.0-pro')).toBe(false);
+  it('should return false for older Onyx models', () => {
+    expect(supportsModernFeatures('onyx-2.5-pro')).toBe(false);
+    expect(supportsModernFeatures('onyx-2.5-flash')).toBe(false);
+    expect(supportsModernFeatures('onyx-2.0-flash')).toBe(false);
+    expect(supportsModernFeatures('onyx-1.5-pro')).toBe(false);
+    expect(supportsModernFeatures('onyx-1.0-pro')).toBe(false);
   });
 
   it('should return true for modern aliases', () => {
@@ -308,37 +308,37 @@ describe('supportsModernFeatures', () => {
   });
 });
 
-describe('isGemini3Model', () => {
-  it('should return true for gemini-3 models', () => {
-    expect(isGemini3Model('gemini-3-pro-preview')).toBe(true);
-    expect(isGemini3Model('gemini-3-flash-preview')).toBe(true);
+describe('isOnyx3Model', () => {
+  it('should return true for onyx-3 models', () => {
+    expect(isOnyx3Model('onyx-3-pro-preview')).toBe(true);
+    expect(isOnyx3Model('onyx-3-flash-preview')).toBe(true);
   });
 
-  it('should return true for aliases that resolve to Gemini 3', () => {
-    expect(isGemini3Model(GEMINI_MODEL_ALIAS_AUTO)).toBe(true);
-    expect(isGemini3Model(GEMINI_MODEL_ALIAS_PRO)).toBe(true);
-    expect(isGemini3Model(PREVIEW_GEMINI_MODEL_AUTO)).toBe(true);
+  it('should return true for aliases that resolve to Onyx 3', () => {
+    expect(isOnyx3Model(GEMINI_MODEL_ALIAS_AUTO)).toBe(true);
+    expect(isOnyx3Model(GEMINI_MODEL_ALIAS_PRO)).toBe(true);
+    expect(isOnyx3Model(PREVIEW_GEMINI_MODEL_AUTO)).toBe(true);
   });
 
-  it('should return false for Gemini 2 models', () => {
-    expect(isGemini3Model('gemini-2.5-pro')).toBe(false);
-    expect(isGemini3Model('gemini-2.5-flash')).toBe(false);
-    expect(isGemini3Model(DEFAULT_GEMINI_MODEL_AUTO)).toBe(false);
+  it('should return false for Onyx 2 models', () => {
+    expect(isOnyx3Model('onyx-2.5-pro')).toBe(false);
+    expect(isOnyx3Model('onyx-2.5-flash')).toBe(false);
+    expect(isOnyx3Model(DEFAULT_GEMINI_MODEL_AUTO)).toBe(false);
   });
 
   it('should return false for arbitrary strings', () => {
-    expect(isGemini3Model('gpt-4')).toBe(false);
+    expect(isOnyx3Model('gpt-4')).toBe(false);
   });
 });
 
 describe('getDisplayString', () => {
-  it('should return Auto (Gemini 3) for preview auto model', () => {
-    expect(getDisplayString(PREVIEW_GEMINI_MODEL_AUTO)).toBe('Auto (Gemini 3)');
+  it('should return Auto (Onyx 3) for preview auto model', () => {
+    expect(getDisplayString(PREVIEW_GEMINI_MODEL_AUTO)).toBe('Auto (Onyx 3)');
   });
 
-  it('should return Auto (Gemini 2.5) for default auto model', () => {
+  it('should return Auto (Onyx 2.5) for default auto model', () => {
     expect(getDisplayString(DEFAULT_GEMINI_MODEL_AUTO)).toBe(
-      'Auto (Gemini 2.5)',
+      'Auto (Onyx 2.5)',
     );
   });
 
@@ -377,13 +377,13 @@ describe('getDisplayString', () => {
 });
 
 describe('supportsMultimodalFunctionResponse', () => {
-  it('should return true for gemini-3 model', () => {
-    expect(supportsMultimodalFunctionResponse('gemini-3-pro')).toBe(true);
+  it('should return true for onyx-3 model', () => {
+    expect(supportsMultimodalFunctionResponse('onyx-3-pro')).toBe(true);
   });
 
-  it('should return false for gemini-2 models', () => {
-    expect(supportsMultimodalFunctionResponse('gemini-2.5-pro')).toBe(false);
-    expect(supportsMultimodalFunctionResponse('gemini-2.5-flash')).toBe(false);
+  it('should return false for onyx-2 models', () => {
+    expect(supportsMultimodalFunctionResponse('onyx-2.5-pro')).toBe(false);
+    expect(supportsMultimodalFunctionResponse('onyx-2.5-flash')).toBe(false);
   });
 
   it('should return false for other models', () => {
@@ -394,22 +394,22 @@ describe('supportsMultimodalFunctionResponse', () => {
 
 describe('resolveModel', () => {
   describe('delegation logic', () => {
-    it('should return the Preview Pro model when auto-gemini-3 is requested', () => {
+    it('should return the Preview Pro model when auto-onyx-3 is requested', () => {
       const model = resolveModel(PREVIEW_GEMINI_MODEL_AUTO);
       expect(model).toBe(PREVIEW_GEMINI_MODEL);
     });
 
-    it('should return Gemini 3.1 Pro when auto-gemini-3 is requested and useGemini3_1 is true', () => {
+    it('should return Onyx 3.1 Pro when auto-onyx-3 is requested and useOnyx3_1 is true', () => {
       const model = resolveModel(PREVIEW_GEMINI_MODEL_AUTO, true);
       expect(model).toBe(PREVIEW_GEMINI_3_1_MODEL);
     });
 
-    it('should return Gemini 3.1 Pro Custom Tools when auto-gemini-3 is requested, useGemini3_1 is true, and useCustomToolModel is true', () => {
+    it('should return Onyx 3.1 Pro Custom Tools when auto-onyx-3 is requested, useOnyx3_1 is true, and useCustomToolModel is true', () => {
       const model = resolveModel(PREVIEW_GEMINI_MODEL_AUTO, true, false, true);
       expect(model).toBe(PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL);
     });
 
-    it('should return the Default Pro model when auto-gemini-2.5 is requested', () => {
+    it('should return the Default Pro model when auto-onyx-2.5 is requested', () => {
       const model = resolveModel(DEFAULT_GEMINI_MODEL_AUTO);
       expect(model).toBe(DEFAULT_GEMINI_MODEL);
     });
@@ -419,7 +419,7 @@ describe('resolveModel', () => {
       expect(model).toBe(DEFAULT_GEMINI_FLASH_LITE_MODEL);
     });
 
-    it('should return the Preview Flash-Lite model when flash-lite is requested and useGemini3_1FlashLite is true', () => {
+    it('should return the Preview Flash-Lite model when flash-lite is requested and useOnyx3_1FlashLite is true', () => {
       const model = resolveModel(GEMINI_MODEL_ALIAS_FLASH_LITE, false, true);
       expect(model).toBe(PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL);
     });
@@ -475,19 +475,19 @@ describe('resolveModel', () => {
       ).toBe(DEFAULT_GEMINI_FLASH_LITE_MODEL);
     });
 
-    it('should return default model when access to preview is false and auto-gemini-3 is requested', () => {
+    it('should return default model when access to preview is false and auto-onyx-3 is requested', () => {
       expect(
         resolveModel(PREVIEW_GEMINI_MODEL_AUTO, false, false, false, false),
       ).toBe(DEFAULT_GEMINI_MODEL);
     });
 
-    it('should return default model when access to preview is false and Gemini 3.1 is requested', () => {
+    it('should return default model when access to preview is false and Onyx 3.1 is requested', () => {
       expect(
         resolveModel(PREVIEW_GEMINI_MODEL_AUTO, true, false, false, false),
       ).toBe(DEFAULT_GEMINI_MODEL);
     });
 
-    it('should still return default model when access to preview is false and auto-gemini-2.5 is requested', () => {
+    it('should still return default model when access to preview is false and auto-onyx-2.5 is requested', () => {
       expect(
         resolveModel(DEFAULT_GEMINI_MODEL_AUTO, false, false, false, false),
       ).toBe(DEFAULT_GEMINI_MODEL);
@@ -495,29 +495,29 @@ describe('resolveModel', () => {
   });
 });
 
-describe('isGemini2Model', () => {
-  it('should return true for gemini-2.5-pro', () => {
-    expect(isGemini2Model('gemini-2.5-pro')).toBe(true);
+describe('isOnyx2Model', () => {
+  it('should return true for onyx-2.5-pro', () => {
+    expect(isOnyx2Model('onyx-2.5-pro')).toBe(true);
   });
 
-  it('should return true for gemini-2.5-flash', () => {
-    expect(isGemini2Model('gemini-2.5-flash')).toBe(true);
+  it('should return true for onyx-2.5-flash', () => {
+    expect(isOnyx2Model('onyx-2.5-flash')).toBe(true);
   });
 
-  it('should return true for gemini-2.0-flash', () => {
-    expect(isGemini2Model('gemini-2.0-flash')).toBe(true);
+  it('should return true for onyx-2.0-flash', () => {
+    expect(isOnyx2Model('onyx-2.0-flash')).toBe(true);
   });
 
-  it('should return false for gemini-1.5-pro', () => {
-    expect(isGemini2Model('gemini-1.5-pro')).toBe(false);
+  it('should return false for onyx-1.5-pro', () => {
+    expect(isOnyx2Model('onyx-1.5-pro')).toBe(false);
   });
 
-  it('should return false for gemini-3-pro', () => {
-    expect(isGemini2Model('gemini-3-pro')).toBe(false);
+  it('should return false for onyx-3-pro', () => {
+    expect(isOnyx2Model('onyx-3-pro')).toBe(false);
   });
 
   it('should return false for arbitrary strings', () => {
-    expect(isGemini2Model('gpt-4')).toBe(false);
+    expect(isOnyx2Model('gpt-4')).toBe(false);
   });
 });
 
@@ -526,11 +526,11 @@ describe('isAutoModel', () => {
     expect(isAutoModel(GEMINI_MODEL_ALIAS_AUTO)).toBe(true);
   });
 
-  it('should return true for "auto-gemini-3"', () => {
+  it('should return true for "auto-onyx-3"', () => {
     expect(isAutoModel(PREVIEW_GEMINI_MODEL_AUTO)).toBe(true);
   });
 
-  it('should return true for "auto-gemini-2.5"', () => {
+  it('should return true for "auto-onyx-2.5"', () => {
     expect(isAutoModel(DEFAULT_GEMINI_MODEL_AUTO)).toBe(true);
   });
 
@@ -566,7 +566,7 @@ describe('resolveClassifierModel', () => {
     ).toBe(PREVIEW_GEMINI_MODEL);
   });
 
-  it('should return Gemini 3.1 Pro when alias is pro and useGemini3_1 is true', () => {
+  it('should return Onyx 3.1 Pro when alias is pro and useOnyx3_1 is true', () => {
     expect(
       resolveClassifierModel(
         PREVIEW_GEMINI_MODEL_AUTO,
@@ -576,7 +576,7 @@ describe('resolveClassifierModel', () => {
     ).toBe(PREVIEW_GEMINI_3_1_MODEL);
   });
 
-  it('should return Gemini 3.1 Pro Custom Tools when alias is pro, useGemini3_1 is true, and useCustomToolModel is true', () => {
+  it('should return Onyx 3.1 Pro Custom Tools when alias is pro, useOnyx3_1 is true, and useCustomToolModel is true', () => {
     expect(
       resolveClassifierModel(
         PREVIEW_GEMINI_MODEL_AUTO,
@@ -590,7 +590,7 @@ describe('resolveClassifierModel', () => {
 });
 
 describe('isActiveModel', () => {
-  it('should return true for valid models when useGemini3_1 is false', () => {
+  it('should return true for valid models when useOnyx3_1 is false', () => {
     expect(isActiveModel(DEFAULT_GEMINI_MODEL)).toBe(true);
     expect(isActiveModel(PREVIEW_GEMINI_MODEL)).toBe(true);
     expect(isActiveModel(DEFAULT_GEMINI_FLASH_MODEL)).toBe(true);
@@ -607,7 +607,7 @@ describe('isActiveModel', () => {
     ).toBe(true);
   });
 
-  it('should return false for Gemini 3.1 models when Gemini 3.1 is not launched', () => {
+  it('should return false for Onyx 3.1 models when Onyx 3.1 is not launched', () => {
     expect(isActiveModel(PREVIEW_GEMINI_3_1_MODEL)).toBe(false);
     expect(isActiveModel(PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL)).toBe(false);
   });
@@ -617,15 +617,15 @@ describe('isActiveModel', () => {
     expect(isActiveModel(GEMINI_MODEL_ALIAS_AUTO)).toBe(false);
   });
 
-  it('should return false for PREVIEW_GEMINI_MODEL when useGemini3_1 is true', () => {
+  it('should return false for PREVIEW_GEMINI_MODEL when useOnyx3_1 is true', () => {
     expect(isActiveModel(PREVIEW_GEMINI_MODEL, true)).toBe(false);
   });
 
-  it('should return true for other valid models when useGemini3_1 is true', () => {
+  it('should return true for other valid models when useOnyx3_1 is true', () => {
     expect(isActiveModel(DEFAULT_GEMINI_MODEL, true)).toBe(true);
   });
 
-  it('should return true for PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL only when useGemini3_1FlashLite is true', () => {
+  it('should return true for PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL only when useOnyx3_1FlashLite is true', () => {
     expect(
       isActiveModel(PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL, false, true),
     ).toBe(true);
@@ -637,7 +637,7 @@ describe('isActiveModel', () => {
     ).toBe(false);
   });
 
-  it('should correctly filter Gemini 3.1 models based on useCustomToolModel when useGemini3_1 is true', () => {
+  it('should correctly filter Onyx 3.1 models based on useCustomToolModel when useOnyx3_1 is true', () => {
     // When custom tools are preferred, standard 3.1 should be inactive
     expect(isActiveModel(PREVIEW_GEMINI_3_1_MODEL, true, false, true)).toBe(
       false,
@@ -655,7 +655,7 @@ describe('isActiveModel', () => {
     ).toBe(false);
   });
 
-  it('should return false for Gemini 3.1 models when useGemini3_1 and useGemini3_1FlashLite are false', () => {
+  it('should return false for Onyx 3.1 models when useOnyx3_1 and useOnyx3_1FlashLite are false', () => {
     expect(isActiveModel(PREVIEW_GEMINI_3_1_MODEL, false, false, true)).toBe(
       false,
     );
@@ -674,7 +674,7 @@ describe('isActiveModel', () => {
   });
 });
 
-describe('Gemini 3.1 Config Resolution', () => {
+describe('Onyx 3.1 Config Resolution', () => {
   it('PREVIEW_GEMINI_3_1_MODEL should resolve to chat-base-3 config (including thinkingLevel)', () => {
     const resolved = modelConfigService.getResolvedConfig({
       model: PREVIEW_GEMINI_3_1_MODEL,
@@ -707,21 +707,21 @@ describe('Gemini 3.1 Config Resolution', () => {
 });
 
 describe('getAutoModelDescription', () => {
-  it('should return Gemini 2.5 description when hasAccessToPreview is false', () => {
+  it('should return Onyx 2.5 description when hasAccessToPreview is false', () => {
     const desc = getAutoModelDescription(false, false);
-    expect(desc).toContain('gemini-2.5-pro');
-    expect(desc).toContain('gemini-2.5-flash');
+    expect(desc).toContain('onyx-2.5-pro');
+    expect(desc).toContain('onyx-2.5-flash');
   });
 
-  it('should return Gemini 3.0 description when hasAccessToPreview is true', () => {
+  it('should return Onyx 3.0 description when hasAccessToPreview is true', () => {
     const desc = getAutoModelDescription(true, false);
-    expect(desc).toContain('gemini-3-pro');
-    expect(desc).toContain('gemini-3-flash');
+    expect(desc).toContain('onyx-3-pro');
+    expect(desc).toContain('onyx-3-flash');
   });
 
-  it('should return Gemini 3.1 description when hasAccessToPreview and useGemini3_1 are true', () => {
+  it('should return Onyx 3.1 description when hasAccessToPreview and useOnyx3_1 are true', () => {
     const desc = getAutoModelDescription(true, true);
-    expect(desc).toContain('gemini-3.1-pro');
-    expect(desc).toContain('gemini-3-flash');
+    expect(desc).toContain('onyx-3.1-pro');
+    expect(desc).toContain('onyx-3-flash');
   });
 });

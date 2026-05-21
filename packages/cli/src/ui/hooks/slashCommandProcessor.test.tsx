@@ -20,7 +20,7 @@ import {
   MCPDiscoveryState,
   makeFakeConfig,
   coreEvents,
-  type GeminiClient,
+  type OnyxClient,
 } from '@onyx/core';
 
 const {
@@ -578,8 +578,8 @@ describe('useSlashCommandProcessor', () => {
       const mockClient = {
         setHistory: vi.fn(),
         stripThoughtsFromHistory: vi.fn(),
-      } as unknown as GeminiClient;
-      vi.spyOn(mockConfig, 'getGeminiClient').mockReturnValue(mockClient);
+      } as unknown as OnyxClient;
+      vi.spyOn(mockConfig, 'getOnyxClient').mockReturnValue(mockClient);
 
       const command = createTestCommand({
         name: 'load',
@@ -655,8 +655,8 @@ describe('useSlashCommandProcessor', () => {
         getChatRecordingService: vi.fn().mockReturnValue({
           deleteCurrentSessionAsync: mockDeleteCurrentSessionAsync,
         }),
-      } as unknown as GeminiClient;
-      vi.spyOn(mockConfig, 'getGeminiClient').mockReturnValue(mockClient);
+      } as unknown as OnyxClient;
+      vi.spyOn(mockConfig, 'getOnyxClient').mockReturnValue(mockClient);
 
       const quitAction = vi.fn().mockResolvedValue({
         type: 'quit',
@@ -689,8 +689,8 @@ describe('useSlashCommandProcessor', () => {
         getChatRecordingService: vi.fn().mockReturnValue({
           deleteCurrentSessionAsync: mockDeleteCurrentSessionAsync,
         }),
-      } as unknown as GeminiClient;
-      vi.spyOn(mockConfig, 'getGeminiClient').mockReturnValue(mockClient);
+      } as unknown as OnyxClient;
+      vi.spyOn(mockConfig, 'getOnyxClient').mockReturnValue(mockClient);
 
       const quitAction = vi.fn().mockResolvedValue({
         type: 'quit',
@@ -721,8 +721,8 @@ describe('useSlashCommandProcessor', () => {
             .fn()
             .mockRejectedValue(new Error('Deletion failed')),
         }),
-      } as unknown as GeminiClient;
-      vi.spyOn(mockConfig, 'getGeminiClient').mockReturnValue(mockClient);
+      } as unknown as OnyxClient;
+      vi.spyOn(mockConfig, 'getOnyxClient').mockReturnValue(mockClient);
 
       const quitAction = vi.fn().mockResolvedValue({
         type: 'quit',

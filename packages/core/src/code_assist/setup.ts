@@ -8,7 +8,7 @@ import {
   UserTierId,
   IneligibleTierReasonCode,
   type ClientMetadata,
-  type GeminiUserTier,
+  type OnyxUserTier,
   type IneligibleTier,
   type LoadCodeAssistResponse,
   type OnboardUserRequest,
@@ -30,7 +30,7 @@ import {
 export class ProjectIdRequiredError extends Error {
   constructor() {
     super(
-      'This account requires setting the GOOGLE_CLOUD_PROJECT or GOOGLE_CLOUD_PROJECT_ID env var. See https://goo.gle/gemini-cli-auth-docs#workspace-gca',
+      'This account requires setting the GOOGLE_CLOUD_PROJECT or GOOGLE_CLOUD_PROJECT_ID env var. See https://goo.gle/onyx-cli-auth-docs#workspace-gca',
     );
     this.name = 'ProjectIdRequiredError';
   }
@@ -71,7 +71,7 @@ export interface UserData {
   projectId: string;
   userTier: UserTierId;
   userTierName?: string;
-  paidTier?: GeminiUserTier;
+  paidTier?: OnyxUserTier;
   hasOnboardedPreviously?: boolean;
 }
 
@@ -167,7 +167,7 @@ async function _doSetupUser(
   const coreClientMetadata: ClientMetadata = {
     ideType: 'IDE_UNSPECIFIED',
     platform: 'PLATFORM_UNSPECIFIED',
-    pluginType: 'GEMINI',
+    pluginType: 'CLOUD_CODE',
   };
 
   const validationHandler = config.getValidationHandler();
@@ -311,7 +311,7 @@ function throwIneligibleOrProjectIdError(res: LoadCodeAssistResponse): never {
   throw new ProjectIdRequiredError();
 }
 
-function getOnboardTier(res: LoadCodeAssistResponse): GeminiUserTier {
+function getOnboardTier(res: LoadCodeAssistResponse): OnyxUserTier {
   for (const tier of res.allowedTiers || []) {
     if (tier.isDefault) {
       return tier;

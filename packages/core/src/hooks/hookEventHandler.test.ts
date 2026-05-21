@@ -65,7 +65,7 @@ describe('HookEventHandler', () => {
   beforeEach(() => {
     vi.resetAllMocks();
 
-    const mockGeminiClient = {
+    const mockOnyxClient = {
       getChatRecordingService: vi.fn().mockReturnValue({
         getConversationFilePath: vi
           .fn()
@@ -77,8 +77,8 @@ describe('HookEventHandler', () => {
       get config() {
         return this;
       },
-      geminiClient: mockGeminiClient,
-      getGeminiClient: vi.fn().mockReturnValue(mockGeminiClient),
+      onyxClient: mockOnyxClient,
+      getOnyxClient: vi.fn().mockReturnValue(mockOnyxClient),
       getSessionId: vi.fn().mockReturnValue('test-session'),
       getWorkingDir: vi.fn().mockReturnValue('/test/project'),
     } as unknown as Config;
@@ -759,7 +759,7 @@ describe('HookEventHandler', () => {
       );
 
       const llmRequest = {
-        model: 'gemini-pro',
+        model: 'onyx-pro',
         config: { temperature: 0.7 },
         contents: [{ role: 'user', parts: [{ text: 'Hello' }] }],
       };
@@ -771,7 +771,7 @@ describe('HookEventHandler', () => {
         HookEventName.BeforeModel,
         expect.objectContaining({
           llm_request: expect.objectContaining({
-            model: 'gemini-pro',
+            model: 'onyx-pro',
             messages: expect.arrayContaining([
               expect.objectContaining({
                 role: 'user',

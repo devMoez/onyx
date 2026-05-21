@@ -73,7 +73,7 @@ describe('loadConfig', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.stubEnv('GEMINI_API_KEY', 'test-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-key');
   });
 
   afterEach(() => {
@@ -364,8 +364,8 @@ describe('loadConfig', () => {
     });
 
     describe('YOLO mode', () => {
-      it('should enable YOLO mode and add policy rule when GEMINI_YOLO_MODE is true', async () => {
-        vi.stubEnv('GEMINI_YOLO_MODE', 'true');
+      it('should enable YOLO mode and add policy rule when ONYX_YOLO_MODE is true', async () => {
+        vi.stubEnv('ONYX_YOLO_MODE', 'true');
         await loadConfig(mockSettings, mockExtensionLoader, taskId);
         expect(Config).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -384,8 +384,8 @@ describe('loadConfig', () => {
         );
       });
 
-      it('should use default approval mode and empty rules when GEMINI_YOLO_MODE is not true', async () => {
-        vi.stubEnv('GEMINI_YOLO_MODE', 'false');
+      it('should use default approval mode and empty rules when ONYX_YOLO_MODE is not true', async () => {
+        vi.stubEnv('ONYX_YOLO_MODE', 'false');
         await loadConfig(mockSettings, mockExtensionLoader, taskId);
         expect(Config).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -416,7 +416,7 @@ describe('loadConfig', () => {
 
       beforeEach(() => {
         vi.stubEnv('USE_CCPA', 'true');
-        vi.stubEnv('GEMINI_API_KEY', '');
+        vi.stubEnv('ONYX_API_KEY', '');
       });
 
       afterEach(() => {

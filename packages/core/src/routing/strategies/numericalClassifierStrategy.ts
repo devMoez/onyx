@@ -12,7 +12,7 @@ import type {
   RoutingDecision,
   RoutingStrategy,
 } from '../routingStrategy.js';
-import { resolveClassifierModel, isGemini3Model } from '../../config/models.js';
+import { resolveClassifierModel, isOnyx3Model } from '../../config/models.js';
 import { createUserContent, Type } from '@google/genai';
 import type { Config } from '../../config/config.js';
 import {
@@ -114,7 +114,7 @@ export class NumericalClassifierStrategy implements RoutingStrategy {
         return null;
       }
 
-      if (!isGemini3Model(model, config)) {
+      if (!isOnyx3Model(model, config)) {
         return null;
       }
 
@@ -167,18 +167,18 @@ export class NumericalClassifierStrategy implements RoutingStrategy {
 
       const { threshold, groupLabel, modelAlias } =
         await this.getRoutingDecision(score, config);
-      const [useGemini3_1, useGemini3_1FlashLite, useCustomToolModel] =
+      const [useOnyx3_1, useOnyx3_1FlashLite, useCustomToolModel] =
         await Promise.all([
-          config.getGemini31Launched(),
-          config.getGemini31FlashLiteLaunched(),
+          config.getOnyx31Launched(),
+          config.getOnyx31FlashLiteLaunched(),
           config.getUseCustomToolModel(),
         ]);
       const selectedModel = normalizeModelId(
         resolveClassifierModel(
           normalizeModelId(model),
           modelAlias,
-          useGemini3_1,
-          useGemini3_1FlashLite,
+          useOnyx3_1,
+          useOnyx3_1FlashLite,
           useCustomToolModel,
           config.getHasAccessToPreviewModel?.() ?? true,
           config,

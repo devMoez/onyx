@@ -111,22 +111,22 @@ describe('findCompressSplitPoint', () => {
 
 describe('modelStringToModelConfigAlias', () => {
   it('should return the default model for unexpected aliases', () => {
-    expect(modelStringToModelConfigAlias('gemini-flash-flash')).toBe(
+    expect(modelStringToModelConfigAlias('onyx-flash-flash')).toBe(
       'chat-compression-default',
     );
   });
 
   it('should handle valid names', () => {
-    expect(modelStringToModelConfigAlias('gemini-3-pro-preview')).toBe(
+    expect(modelStringToModelConfigAlias('onyx-3-pro-preview')).toBe(
       'chat-compression-3-pro',
     );
-    expect(modelStringToModelConfigAlias('gemini-2.5-pro')).toBe(
+    expect(modelStringToModelConfigAlias('onyx-2.5-pro')).toBe(
       'chat-compression-2.5-pro',
     );
-    expect(modelStringToModelConfigAlias('gemini-2.5-flash')).toBe(
+    expect(modelStringToModelConfigAlias('onyx-2.5-flash')).toBe(
       'chat-compression-2.5-flash',
     );
-    expect(modelStringToModelConfigAlias('gemini-2.5-flash-lite')).toBe(
+    expect(modelStringToModelConfigAlias('onyx-2.5-flash-lite')).toBe(
       'chat-compression-2.5-flash-lite',
     );
   });
@@ -137,7 +137,7 @@ describe('ChatCompressionService', () => {
   let mockChat: onyxChat;
   let mockConfig: Config;
   let testTempDir: string;
-  const mockModel = 'gemini-2.5-pro';
+  const mockModel = 'onyx-2.5-pro';
   const mockPromptId = 'test-prompt-id';
 
   beforeEach(() => {
@@ -363,7 +363,7 @@ describe('ChatCompressionService', () => {
     const planPath = '/custom/plan/path.md';
     vi.mocked(mockConfig.getApprovedPlanPath).mockReturnValue(planPath);
     vi.mocked(mockConfig.getActiveModel).mockReturnValue(
-      'gemini-3.1-pro-preview',
+      'onyx-3.1-pro-preview',
     );
 
     const history: Content[] = [

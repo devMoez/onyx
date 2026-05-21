@@ -12,16 +12,16 @@ export const DEFAULT_CONTEXT_FILENAME = 'onyx.md';
 export const PROJECT_MEMORY_INDEX_FILENAME = 'MEMORY.md';
 
 // This variable will hold the currently configured filenames for onyx.md context files.
-// It defaults to DEFAULT_CONTEXT_FILENAME but can be extended by setGeminiMdFilename.
-let currentGeminiMdFilename: string | string[] = DEFAULT_CONTEXT_FILENAME;
+// It defaults to DEFAULT_CONTEXT_FILENAME but can be extended by setOnyxMdFilename.
+let currentOnyxMdFilename: string | string[] = DEFAULT_CONTEXT_FILENAME;
 
 /**
  * Adds one or more filenames to the current context filenames.
  * Ensures uniqueness and maintains order.
  */
-export function setGeminiMdFilename(newFilename: string | string[]): void {
+export function setOnyxMdFilename(newFilename: string | string[]): void {
   const filenames = Array.isArray(newFilename) ? newFilename : [newFilename];
-  const current = getAllGeminiMdFilenames();
+  const current = getAllOnyxMdFilenames();
   const next = new Set<string>();
 
   for (const filename of filenames) {
@@ -42,9 +42,9 @@ export function setGeminiMdFilename(newFilename: string | string[]): void {
 
   const result = Array.from(next);
   if (result.length > 1) {
-    currentGeminiMdFilename = result;
+    currentOnyxMdFilename = result;
   } else if (result.length === 1) {
-    currentGeminiMdFilename = result[0];
+    currentOnyxMdFilename = result[0];
   }
 }
 
@@ -52,7 +52,7 @@ export function setGeminiMdFilename(newFilename: string | string[]): void {
  * Resets the context filenames to the provided value, or the default if none provided.
  * This replaces all current filenames.
  */
-export function resetGeminiMdFilename(
+export function resetOnyxMdFilename(
   filename: string | string[] = DEFAULT_CONTEXT_FILENAME,
 ): void {
   const filenames = Array.isArray(filename) ? filename : [filename];
@@ -65,30 +65,30 @@ export function resetGeminiMdFilename(
   );
 
   if (cleaned.length === 0) {
-    currentGeminiMdFilename = DEFAULT_CONTEXT_FILENAME;
+    currentOnyxMdFilename = DEFAULT_CONTEXT_FILENAME;
   } else if (cleaned.length === 1) {
-    currentGeminiMdFilename = cleaned[0];
+    currentOnyxMdFilename = cleaned[0];
   } else {
-    currentGeminiMdFilename = cleaned;
+    currentOnyxMdFilename = cleaned;
   }
 }
 
-export function getCurrentGeminiMdFilename(): string {
-  if (Array.isArray(currentGeminiMdFilename)) {
-    return currentGeminiMdFilename[0];
+export function getCurrentOnyxMdFilename(): string {
+  if (Array.isArray(currentOnyxMdFilename)) {
+    return currentOnyxMdFilename[0];
   }
-  return currentGeminiMdFilename;
+  return currentOnyxMdFilename;
 }
 
-export function getAllGeminiMdFilenames(): string[] {
-  if (Array.isArray(currentGeminiMdFilename)) {
-    return currentGeminiMdFilename;
+export function getAllOnyxMdFilenames(): string[] {
+  if (Array.isArray(currentOnyxMdFilename)) {
+    return currentOnyxMdFilename;
   }
-  return [currentGeminiMdFilename];
+  return [currentOnyxMdFilename];
 }
 
 export function getGlobalMemoryFilePath(): string {
-  return path.join(Storage.getGlobalGeminiDir(), getCurrentGeminiMdFilename());
+  return path.join(Storage.getGlobalOnyxDir(), getCurrentOnyxMdFilename());
 }
 
 export function getProjectMemoryIndexFilePath(storage: Storage): string {

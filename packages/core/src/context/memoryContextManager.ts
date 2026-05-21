@@ -11,9 +11,9 @@ import {
   getUserProjectMemoryPaths,
   getExtensionMemoryPaths,
   getEnvironmentMemoryPaths,
-  readGeminiMdFiles,
+  readOnyxMdFiles,
   categorizeAndConcatenate,
-  type GeminiFileContent,
+  type OnyxFileContent,
   deduplicatePathsByFileIdentity,
 } from '../utils/memoryDiscovery.js';
 import type { Config } from '../config/config.js';
@@ -83,7 +83,7 @@ export class MemoryContextManager {
     const { paths: allPaths, identityMap: pathIdentityMap } =
       await deduplicatePathsByFileIdentity(allPathsStringDeduped);
 
-    const allContents = await readGeminiMdFiles(
+    const allContents = await readOnyxMdFiles(
       allPaths,
       this.config.getImportFormat(),
       this.config.getMemoryBoundaryMarkers(),
@@ -112,7 +112,7 @@ export class MemoryContextManager {
       project: string[];
       userProjectMemory: string[];
     },
-    contentsMap: Map<string, GeminiFileContent>,
+    contentsMap: Map<string, OnyxFileContent>,
   ) {
     const hierarchicalMemory = categorizeAndConcatenate(paths, contentsMap);
 

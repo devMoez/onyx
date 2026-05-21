@@ -18,7 +18,7 @@ import {
   isProModel,
   isOverageEligibleModel,
   getDisplayString,
-  type GeminiUserTier,
+  type OnyxUserTier,
 } from '@onyx/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { type UseHistoryManagerReturn } from './useHistoryManager.js';
@@ -38,7 +38,7 @@ interface UseQuotaAndFallbackArgs {
   config: Config;
   historyManager: UseHistoryManagerReturn;
   userTier: UserTierId | undefined;
-  paidTier: GeminiUserTier | null | undefined;
+  paidTier: OnyxUserTier | null | undefined;
   settings: LoadedSettings;
   setModelSwitchedFromQuotaError: (value: boolean) => void;
   onShowAuthSelection: () => void;

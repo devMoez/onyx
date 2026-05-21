@@ -33,7 +33,7 @@ export const PLATFORM_BINARY_SHA256: Record<string, string> = {
 };
 
 export function getLiteRtBinDir(): string {
-  return path.join(Storage.getGlobalGeminiDir(), 'bin', 'litert');
+  return path.join(Storage.getGlobalOnyxDir(), 'bin', 'litert');
 }
 
 export function getPidFilePath(): string {

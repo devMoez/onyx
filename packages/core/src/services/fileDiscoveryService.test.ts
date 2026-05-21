@@ -9,7 +9,7 @@ import * as fs from 'node:fs/promises';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import { FileDiscoveryService } from './fileDiscoveryService.js';
-import { GEMINI_IGNORE_FILE_NAME } from '../config/constants.js';
+import { ONYX_IGNORE_FILE_NAME } from '../config/constants.js';
 
 describe('FileDiscoveryService', () => {
   let testRootDir: string;
@@ -55,7 +55,7 @@ describe('FileDiscoveryService', () => {
     });
 
     it('should load .onyxIgnore patterns even when not in a git repo', async () => {
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, 'secrets.txt');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, 'secrets.txt');
       const service = new FileDiscoveryService(projectRoot);
 
       expect(service.shouldIgnoreFile('secrets.txt')).toBe(true);
@@ -114,10 +114,10 @@ describe('FileDiscoveryService', () => {
     beforeEach(async () => {
       await fs.mkdir(path.join(projectRoot, '.git'));
       await createTestFile('.gitignore', 'node_modules/\n.git/\ndist');
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, 'logs/');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, 'logs/');
     });
 
-    it('should filter out git-ignored and gemini-ignored files by default', () => {
+    it('should filter out git-ignored and onyx-ignored files by default', () => {
       const files = [
         'src/index.ts',
         'node_modules/package/index.js',
@@ -188,7 +188,7 @@ describe('FileDiscoveryService', () => {
     beforeEach(async () => {
       await fs.mkdir(path.join(projectRoot, '.git'));
       await createTestFile('.gitignore', 'node_modules/');
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, '*.log');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, '*.log');
     });
 
     it('should return filtered paths and correct ignored count', () => {
@@ -225,7 +225,7 @@ describe('FileDiscoveryService', () => {
     beforeEach(async () => {
       await fs.mkdir(path.join(projectRoot, '.git'));
       await createTestFile('.gitignore', 'node_modules/');
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, '*.log');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, '*.log');
     });
 
     it('should return true for git-ignored files', () => {
@@ -253,7 +253,7 @@ describe('FileDiscoveryService', () => {
       ).toBe(false);
     });
 
-    it('should return true for gemini-ignored files', () => {
+    it('should return true for onyx-ignored files', () => {
       const service = new FileDiscoveryService(projectRoot);
 
       expect(
@@ -261,7 +261,7 @@ describe('FileDiscoveryService', () => {
       ).toBe(true);
     });
 
-    it('should return false for non-gemini-ignored files', () => {
+    it('should return false for non-onyx-ignored files', () => {
       const service = new FileDiscoveryService(projectRoot);
 
       expect(
@@ -308,7 +308,7 @@ describe('FileDiscoveryService', () => {
 
     it('should un-ignore a file in .onyxIgnore that is ignored in .gitignore', async () => {
       await createTestFile('.gitignore', '*.txt');
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, '!important.txt');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, '!important.txt');
 
       const service = new FileDiscoveryService(projectRoot);
       const files = ['file.txt', 'important.txt'].map((f) =>
@@ -321,7 +321,7 @@ describe('FileDiscoveryService', () => {
 
     it('should un-ignore a directory in .onyxIgnore that is ignored in .gitignore', async () => {
       await createTestFile('.gitignore', 'logs/');
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, '!logs/');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, '!logs/');
 
       const service = new FileDiscoveryService(projectRoot);
       const files = ['logs/app.log', 'other/app.log'].map((f) =>
@@ -334,7 +334,7 @@ describe('FileDiscoveryService', () => {
 
     it('should extend ignore rules in .onyxIgnore', async () => {
       await createTestFile('.gitignore', '*.log');
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, 'temp/');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, 'temp/');
 
       const service = new FileDiscoveryService(projectRoot);
       const files = ['app.log', 'temp/file.txt'].map((f) =>
@@ -347,7 +347,7 @@ describe('FileDiscoveryService', () => {
 
     it('should use .gitignore rules if respectonyxIgnore is false', async () => {
       await createTestFile('.gitignore', '*.txt');
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, '!important.txt');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, '!important.txt');
 
       const service = new FileDiscoveryService(projectRoot);
       const files = ['file.txt', 'important.txt'].map((f) =>
@@ -364,7 +364,7 @@ describe('FileDiscoveryService', () => {
 
     it('should use .onyxIgnore rules if respectGitIgnore is false', async () => {
       await createTestFile('.gitignore', '*.txt');
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, '!important.txt\ntemp/');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, '!important.txt\ntemp/');
 
       const service = new FileDiscoveryService(projectRoot);
       const files = ['file.txt', 'important.txt', 'temp/file.js'].map((f) =>
@@ -405,7 +405,7 @@ describe('FileDiscoveryService', () => {
     it('should prioritize custom ignore patterns over .onyxIgnore patterns in git repo', async () => {
       await fs.mkdir(path.join(projectRoot, '.git'));
       await createTestFile('.gitignore', 'node_modules/');
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, '*.log');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, '*.log');
 
       const customIgnoreName = '.customignore';
       // .onyxIgnore ignores *.log, custom un-ignores debug.log
@@ -425,7 +425,7 @@ describe('FileDiscoveryService', () => {
 
     it('should prioritize custom ignore patterns over .onyxIgnore patterns in non-git repo', async () => {
       // No .git directory created
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, 'secret.txt');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, 'secret.txt');
 
       const customIgnoreName = '.customignore';
       // .onyxIgnore ignores secret.txt, custom un-ignores it
@@ -446,14 +446,14 @@ describe('FileDiscoveryService', () => {
     beforeEach(async () => {
       await fs.mkdir(path.join(projectRoot, '.git'));
       await createTestFile('.gitignore', '*.log');
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, '*.tmp');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, '*.tmp');
       await createTestFile('.customignore', '*.secret');
     });
 
     it('should return .onyxIgnore path by default', () => {
       const service = new FileDiscoveryService(projectRoot);
       const paths = service.getIgnoreFilePaths();
-      expect(paths).toEqual([path.join(projectRoot, GEMINI_IGNORE_FILE_NAME)]);
+      expect(paths).toEqual([path.join(projectRoot, ONYX_IGNORE_FILE_NAME)]);
     });
 
     it('should not return .onyxIgnore path if respectonyxIgnore is false', () => {
@@ -469,14 +469,14 @@ describe('FileDiscoveryService', () => {
         customIgnoreFilePaths: ['.customignore'],
       });
       const paths = service.getIgnoreFilePaths();
-      expect(paths).toContain(path.join(projectRoot, GEMINI_IGNORE_FILE_NAME));
+      expect(paths).toContain(path.join(projectRoot, ONYX_IGNORE_FILE_NAME));
       expect(paths).toContain(path.join(projectRoot, '.customignore'));
     });
 
     it('should return all ignore paths including .gitignore', () => {
       const service = new FileDiscoveryService(projectRoot);
       const paths = service.getAllIgnoreFilePaths();
-      expect(paths).toContain(path.join(projectRoot, GEMINI_IGNORE_FILE_NAME));
+      expect(paths).toContain(path.join(projectRoot, ONYX_IGNORE_FILE_NAME));
       expect(paths).toContain(path.join(projectRoot, '.gitignore'));
     });
 
@@ -485,7 +485,7 @@ describe('FileDiscoveryService', () => {
         respectGitIgnore: false,
       });
       const paths = service.getAllIgnoreFilePaths();
-      expect(paths).toContain(path.join(projectRoot, GEMINI_IGNORE_FILE_NAME));
+      expect(paths).toContain(path.join(projectRoot, ONYX_IGNORE_FILE_NAME));
       expect(paths).not.toContain(path.join(projectRoot, '.gitignore'));
     });
 
@@ -494,7 +494,7 @@ describe('FileDiscoveryService', () => {
       const service = new FileDiscoveryService(projectRoot);
       const paths = service.getAllIgnoreFilePaths();
       expect(paths).not.toContain(path.join(projectRoot, '.gitignore'));
-      expect(paths).toContain(path.join(projectRoot, GEMINI_IGNORE_FILE_NAME));
+      expect(paths).toContain(path.join(projectRoot, ONYX_IGNORE_FILE_NAME));
     });
 
     it('should ensure .gitignore is the first file in the list', () => {
@@ -562,7 +562,7 @@ describe('FileDiscoveryService', () => {
       await createTestFile('ignored-file.txt');
       await createTestFile('keep.log');
       await createTestFile('src/index.ts');
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, 'secrets/');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, 'secrets/');
       await createTestFile('secrets/passwords.txt');
 
       const service = new FileDiscoveryService(projectRoot);
@@ -615,20 +615,20 @@ describe('FileDiscoveryService', () => {
 
     it('should respect FilterFilesOptions when provided', async () => {
       await createTestFile('.gitignore', 'ignored-by-git.txt');
-      await createTestFile(GEMINI_IGNORE_FILE_NAME, 'ignored-by-gemini.txt');
+      await createTestFile(ONYX_IGNORE_FILE_NAME, 'ignored-by-onyx.txt');
       await createTestFile('ignored-by-git.txt');
-      await createTestFile('ignored-by-gemini.txt');
+      await createTestFile('ignored-by-onyx.txt');
 
       const service = new FileDiscoveryService(projectRoot);
 
-      const onlyGemini = await service.getIgnoredPaths({
+      const onlyOnyx = await service.getIgnoredPaths({
         respectGitIgnore: false,
         respectonyxIgnore: true,
       });
-      expect(onlyGemini).toContain(
-        path.join(projectRoot, 'ignored-by-gemini.txt'),
+      expect(onlyOnyx).toContain(
+        path.join(projectRoot, 'ignored-by-onyx.txt'),
       );
-      expect(onlyGemini).not.toContain(
+      expect(onlyOnyx).not.toContain(
         path.join(projectRoot, 'ignored-by-git.txt'),
       );
 
@@ -638,7 +638,7 @@ describe('FileDiscoveryService', () => {
       });
       expect(onlyGit).toContain(path.join(projectRoot, 'ignored-by-git.txt'));
       expect(onlyGit).not.toContain(
-        path.join(projectRoot, 'ignored-by-gemini.txt'),
+        path.join(projectRoot, 'ignored-by-onyx.txt'),
       );
     });
   });

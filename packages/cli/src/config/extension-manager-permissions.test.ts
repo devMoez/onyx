@@ -16,7 +16,7 @@ describe('copyExtension permissions', () => {
   let destDir: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-permission-test-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'onyx-permission-test-'));
     sourceDir = path.join(tempDir, 'source');
     destDir = path.join(tempDir, 'dest');
     fs.mkdirSync(sourceDir);

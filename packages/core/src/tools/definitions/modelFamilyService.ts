@@ -8,14 +8,14 @@
  * Single source of truth for mapping model IDs to tool families.
  */
 
-import { isGemini3Model } from '../../config/models.js';
+import { isOnyx3Model } from '../../config/models.js';
 import { type ToolFamily } from './types.js';
 
 /**
  * Resolves the ToolFamily for a given model ID.
  * Defaults to 'default-legacy' if the model is not recognized or not provided.
  *
- * @param modelId The model identifier (e.g., 'gemini-2.5-pro', 'gemini-3-flash-preview')
+ * @param modelId The model identifier (e.g., 'onyx-2.5-pro', 'onyx-3-flash-preview')
  * @returns The resolved ToolFamily
  */
 export function getToolFamily(modelId?: string): ToolFamily {
@@ -23,9 +23,9 @@ export function getToolFamily(modelId?: string): ToolFamily {
     return 'default-legacy';
   }
 
-  // Explicit mapping for Gemini 3 family
-  if (isGemini3Model(modelId)) {
-    return 'gemini-3';
+  // Explicit mapping for Onyx 3 family
+  if (isOnyx3Model(modelId)) {
+    return 'onyx-3';
   }
 
   // Fallback for all other models

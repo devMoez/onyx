@@ -16,7 +16,7 @@ import {
 import { theme } from '../semantic-colors.js';
 import { OnyxSpinner } from './OnyxSpinner.js';
 
-interface GeminiRespondingSpinnerProps {
+interface OnyxRespondingSpinnerProps {
   /**
    * Optional string to display when not in Responding state.
    * If not provided and not Responding, renders null.
@@ -32,7 +32,7 @@ interface GeminiRespondingSpinnerProps {
 }
 
 export const OnyxRespondingSpinner: React.FC<
-  GeminiRespondingSpinnerProps
+  OnyxRespondingSpinnerProps
 > = ({
   nonRespondingDisplay,
   spinnerType = 'dots',
@@ -43,7 +43,7 @@ export const OnyxRespondingSpinner: React.FC<
   const isScreenReaderEnabled = useIsScreenReaderEnabled();
 
   // If a hook is active, we want to show the hook icon (nonRespondingDisplay)
-  // to be consistent, instead of the rainbow spinner which means "Gemini is talking".
+  // to be consistent, instead of the rainbow spinner which means "Onyx is talking".
   if (streamingState === StreamingState.Responding && !isHookActive) {
     return (
       <OnyxSpinner

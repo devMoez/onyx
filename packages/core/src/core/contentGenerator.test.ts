@@ -32,7 +32,7 @@ vi.mock('./apiKeyCredentialStorage.js', () => ({
 vi.mock('./fakeContentGenerator.js');
 
 const mockConfig = {
-  getModel: vi.fn().mockReturnValue('gemini-pro'),
+  getModel: vi.fn().mockReturnValue('onyx-pro'),
   getProxy: vi.fn().mockReturnValue(undefined),
   getUsageStatisticsEnabled: vi.fn().mockReturnValue(true),
   getClientName: vi.fn().mockReturnValue(undefined),
@@ -40,7 +40,7 @@ const mockConfig = {
 
 describe('getAuthTypeFromEnv', () => {
   beforeEach(() => {
-    vi.stubEnv('GEMINI_API_KEY', '');
+    vi.stubEnv('ONYX_API_KEY', '');
   });
 
   afterEach(() => {
@@ -57,14 +57,14 @@ describe('getAuthTypeFromEnv', () => {
     expect(getAuthTypeFromEnv()).toBe(AuthType.USE_VERTEX_AI);
   });
 
-  it('should detect GATEWAY when GOOGLE_GEMINI_BASE_URL is present', () => {
-    vi.stubEnv('GOOGLE_GEMINI_BASE_URL', 'https://gateway.example.com');
+  it('should detect GATEWAY when GOOGLE_ONYX_BASE_URL is present', () => {
+    vi.stubEnv('GOOGLE_ONYX_BASE_URL', 'https://gateway.example.com');
     expect(getAuthTypeFromEnv()).toBe(AuthType.GATEWAY);
   });
 
-  it('should detect USE_GEMINI when GEMINI_API_KEY is present', () => {
-    vi.stubEnv('GEMINI_API_KEY', 'fake-key');
-    expect(getAuthTypeFromEnv()).toBe(AuthType.USE_GEMINI);
+  it('should detect USE_ONYX when ONYX_API_KEY is present', () => {
+    vi.stubEnv('ONYX_API_KEY', 'fake-key');
+    expect(getAuthTypeFromEnv()).toBe(AuthType.USE_ONYX);
   });
 
   it('should detect COMPUTE_ADC when CLOUD_SHELL is true', () => {
@@ -100,7 +100,7 @@ describe('createContentGenerator', () => {
     } as unknown as Config;
     const generator = await createContentGenerator(
       {
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
       },
       mockConfigWithFake,
     );
@@ -122,7 +122,7 @@ describe('createContentGenerator', () => {
     } as unknown as Config;
     const generator = await createContentGenerator(
       {
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
       },
       mockConfigWithRecordResponses,
     );
@@ -165,7 +165,7 @@ describe('createContentGenerator', () => {
 
   it('should create a GoogleGenAI content generator', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => true,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -176,7 +176,7 @@ describe('createContentGenerator', () => {
     vi.stubEnv('TERM_PROGRAM', 'iTerm.app');
     vi.stubEnv('VSCODE_PID', '');
     vi.stubEnv('GITHUB_SHA', '');
-    vi.stubEnv('GEMINI_CLI_SURFACE', '');
+    vi.stubEnv('ONYX_CLI_SURFACE', '');
 
     const mockGenerator = {
       models: {},
@@ -185,7 +185,7 @@ describe('createContentGenerator', () => {
     const generator = await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
       },
       mockConfig,
     );
@@ -195,7 +195,7 @@ describe('createContentGenerator', () => {
       httpOptions: expect.objectContaining({
         headers: expect.objectContaining({
           'User-Agent': expect.stringMatching(
-            /GeminiCLI\/1\.2\.3\/gemini-pro \(.*; .*; terminal\)/,
+            /OnyxCLI\/1\.2\.3\/onyx-pro \(.*; .*; terminal\)/,
           ),
         }),
       }),
@@ -207,7 +207,7 @@ describe('createContentGenerator', () => {
 
   it('should use standard User-Agent for a2a-server running outside VS Code', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => true,
       getClientName: vi.fn().mockReturnValue('a2a-server'),
@@ -218,14 +218,14 @@ describe('createContentGenerator', () => {
     vi.stubEnv('TERM_PROGRAM', 'iTerm.app');
     vi.stubEnv('VSCODE_PID', '');
     vi.stubEnv('GITHUB_SHA', '');
-    vi.stubEnv('GEMINI_CLI_SURFACE', '');
+    vi.stubEnv('ONYX_CLI_SURFACE', '');
 
     const mockGenerator = {
       models: {},
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
     await createContentGenerator(
-      { apiKey: 'test-api-key', authType: AuthType.USE_GEMINI },
+      { apiKey: 'test-api-key', authType: AuthType.USE_ONYX },
       mockConfig,
       undefined,
     );
@@ -235,7 +235,7 @@ describe('createContentGenerator', () => {
         httpOptions: expect.objectContaining({
           headers: expect.objectContaining({
             'User-Agent': expect.stringMatching(
-              /GeminiCLI-a2a-server\/1\.2\.3\/gemini-pro \(.*; .*; terminal\)/,
+              /OnyxCLI-a2a-server\/1\.2\.3\/onyx-pro \(.*; .*; terminal\)/,
             ),
           }),
         }),
@@ -245,7 +245,7 @@ describe('createContentGenerator', () => {
 
   it('should include unified User-Agent for a2a-server (VS Code Agent Mode)', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => true,
       getClientName: vi.fn().mockReturnValue('a2a-server'),
@@ -263,7 +263,7 @@ describe('createContentGenerator', () => {
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
     await createContentGenerator(
-      { apiKey: 'test-api-key', authType: AuthType.USE_GEMINI },
+      { apiKey: 'test-api-key', authType: AuthType.USE_ONYX },
       mockConfig,
       undefined,
     );
@@ -273,7 +273,7 @@ describe('createContentGenerator', () => {
         httpOptions: expect.objectContaining({
           headers: expect.objectContaining({
             'User-Agent': expect.stringMatching(
-              /CloudCodeVSCode\/1\.2\.3 \(aidev_client; os_type=.*; os_version=.*; arch=.*; host_path=VSCode\/1\.85\.0; proxy_client=geminicli\)/,
+              /CloudCodeVSCode\/1\.2\.3 \(aidev_client; os_type=.*; os_version=.*; arch=.*; host_path=VSCode\/1\.85\.0; proxy_client=onyxcli\)/,
             ),
           }),
         }),
@@ -283,7 +283,7 @@ describe('createContentGenerator', () => {
 
   it('should include clientName prefix in User-Agent when specified (non-VSCode)', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => true,
       getClientName: vi.fn().mockReturnValue('my-client'),
@@ -294,14 +294,14 @@ describe('createContentGenerator', () => {
     vi.stubEnv('TERM_PROGRAM', 'iTerm.app');
     vi.stubEnv('VSCODE_PID', '');
     vi.stubEnv('GITHUB_SHA', '');
-    vi.stubEnv('GEMINI_CLI_SURFACE', '');
+    vi.stubEnv('ONYX_CLI_SURFACE', '');
 
     const mockGenerator = {
       models: {},
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
     await createContentGenerator(
-      { apiKey: 'test-api-key', authType: AuthType.USE_GEMINI },
+      { apiKey: 'test-api-key', authType: AuthType.USE_ONYX },
       mockConfig,
       undefined,
     );
@@ -311,7 +311,7 @@ describe('createContentGenerator', () => {
         httpOptions: expect.objectContaining({
           headers: expect.objectContaining({
             'User-Agent': expect.stringMatching(
-              /GeminiCLI-my-client\/1\.2\.3\/gemini-pro \(.*; .*; terminal\)/,
+              /OnyxCLI-my-client\/1\.2\.3\/onyx-pro \(.*; .*; terminal\)/,
             ),
           }),
         }),
@@ -321,20 +321,20 @@ describe('createContentGenerator', () => {
 
   it('should allow custom headers to override User-Agent', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => true,
       getClientName: vi.fn().mockReturnValue(undefined),
     } as unknown as Config;
 
-    vi.stubEnv('GEMINI_CLI_CUSTOM_HEADERS', 'User-Agent:MyCustomUA');
+    vi.stubEnv('ONYX_CLI_CUSTOM_HEADERS', 'User-Agent:MyCustomUA');
 
     const mockGenerator = {
       models: {},
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
     await createContentGenerator(
-      { apiKey: 'test-api-key', authType: AuthType.USE_GEMINI },
+      { apiKey: 'test-api-key', authType: AuthType.USE_ONYX },
       mockConfig,
       undefined,
     );
@@ -350,13 +350,13 @@ describe('createContentGenerator', () => {
     );
   });
 
-  it('should include custom headers from GEMINI_CLI_CUSTOM_HEADERS for Code Assist requests', async () => {
+  it('should include custom headers from ONYX_CLI_CUSTOM_HEADERS for Code Assist requests', async () => {
     const mockGenerator = {} as unknown as ContentGenerator;
     vi.mocked(createCodeAssistContentGenerator).mockResolvedValue(
       mockGenerator as never,
     );
     vi.stubEnv(
-      'GEMINI_CLI_CUSTOM_HEADERS',
+      'ONYX_CLI_CUSTOM_HEADERS',
       'X-Test-Header: test-value, Another-Header: another value',
     );
 
@@ -381,9 +381,9 @@ describe('createContentGenerator', () => {
     );
   });
 
-  it('should include custom headers from GEMINI_CLI_CUSTOM_HEADERS for GoogleGenAI requests without inferring auth mechanism', async () => {
+  it('should include custom headers from ONYX_CLI_CUSTOM_HEADERS for GoogleGenAI requests without inferring auth mechanism', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -394,14 +394,14 @@ describe('createContentGenerator', () => {
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
     vi.stubEnv(
-      'GEMINI_CLI_CUSTOM_HEADERS',
+      'ONYX_CLI_CUSTOM_HEADERS',
       'X-Test-Header: test, Another: value',
     );
 
     await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
       },
       mockConfig,
     );
@@ -430,7 +430,7 @@ describe('createContentGenerator', () => {
 
   it('should include Vertex AI routing headers for Vertex AI requests', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -468,7 +468,7 @@ describe('createContentGenerator', () => {
 
   it('should inject HttpsProxyAgent into googleAuthOptions when proxy URL uses https://', async () => {
     const mockConfigWithProxy = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue('https://proxy.example.com:8080'),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -504,7 +504,7 @@ describe('createContentGenerator', () => {
 
   it('should still use HttpsProxyAgent for HTTPS destinations even when proxy URL uses http://', async () => {
     const mockConfigWithProxy = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue('http://proxy.example.com:8080'),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -540,7 +540,7 @@ describe('createContentGenerator', () => {
 
   it('should inject HttpProxyAgent when destination baseUrl uses http://', async () => {
     const mockConfigWithProxy = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue('http://proxy.example.com:8080'),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -578,7 +578,7 @@ describe('createContentGenerator', () => {
 
   it('should trim whitespace from proxy URL before instantiating agent', async () => {
     const mockConfigWithProxy = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue('  https://proxy.example.com:8080  '),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -634,9 +634,9 @@ describe('createContentGenerator', () => {
     expect(callArg).not.toHaveProperty('googleAuthOptions');
   });
 
-  it('should pass api key as Authorization Header when GEMINI_API_KEY_AUTH_MECHANISM is set to bearer', async () => {
+  it('should pass api key as Authorization Header when ONYX_API_KEY_AUTH_MECHANISM is set to bearer', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -646,12 +646,12 @@ describe('createContentGenerator', () => {
       models: {},
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
-    vi.stubEnv('GEMINI_API_KEY_AUTH_MECHANISM', 'bearer');
+    vi.stubEnv('ONYX_API_KEY_AUTH_MECHANISM', 'bearer');
 
     await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
       },
       mockConfig,
     );
@@ -668,9 +668,9 @@ describe('createContentGenerator', () => {
     });
   });
 
-  it('should not pass api key as Authorization Header when GEMINI_API_KEY_AUTH_MECHANISM is not set (default behavior)', async () => {
+  it('should not pass api key as Authorization Header when ONYX_API_KEY_AUTH_MECHANISM is not set (default behavior)', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -680,12 +680,12 @@ describe('createContentGenerator', () => {
       models: {},
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
-    // GEMINI_API_KEY_AUTH_MECHANISM is not stubbed, so it will be undefined, triggering default 'x-goog-api-key'
+    // ONYX_API_KEY_AUTH_MECHANISM is not stubbed, so it will be undefined, triggering default 'x-goog-api-key'
 
     await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
       },
       mockConfig,
     );
@@ -713,7 +713,7 @@ describe('createContentGenerator', () => {
 
   it('should create a GoogleGenAI content generator with client install id logging disabled', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
     } as unknown as Config;
@@ -724,7 +724,7 @@ describe('createContentGenerator', () => {
     const generator = await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
       },
       mockConfig,
     );
@@ -744,7 +744,7 @@ describe('createContentGenerator', () => {
 
   it('should pass apiVersion to GoogleGenAI when GOOGLE_GENAI_API_VERSION is set', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -759,7 +759,7 @@ describe('createContentGenerator', () => {
     await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
       },
       mockConfig,
     );
@@ -778,7 +778,7 @@ describe('createContentGenerator', () => {
 
   it('should not include apiVersion when GOOGLE_GENAI_API_VERSION is not set', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -792,7 +792,7 @@ describe('createContentGenerator', () => {
     await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
       },
       mockConfig,
     );
@@ -816,7 +816,7 @@ describe('createContentGenerator', () => {
 
   it('should not include apiVersion when GOOGLE_GENAI_API_VERSION is an empty string', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -831,7 +831,7 @@ describe('createContentGenerator', () => {
     await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
       },
       mockConfig,
     );
@@ -855,7 +855,7 @@ describe('createContentGenerator', () => {
 
   it('should pass apiVersion for Vertex AI when GOOGLE_GENAI_API_VERSION is set', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -888,9 +888,9 @@ describe('createContentGenerator', () => {
     });
   });
 
-  it('should pass baseUrl to GoogleGenAI when GOOGLE_GEMINI_BASE_URL is set', async () => {
+  it('should pass baseUrl to GoogleGenAI when GOOGLE_ONYX_BASE_URL is set', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -900,12 +900,12 @@ describe('createContentGenerator', () => {
       models: {},
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
-    vi.stubEnv('GOOGLE_GEMINI_BASE_URL', 'https://gemini.test.local');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('GOOGLE_ONYX_BASE_URL', 'https://onyx.test.local');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
 
     const config = await createContentGeneratorConfig(
       mockConfig,
-      AuthType.USE_GEMINI,
+      AuthType.USE_ONYX,
     );
     await createContentGenerator(config, mockConfig);
 
@@ -914,7 +914,7 @@ describe('createContentGenerator', () => {
         apiKey: 'test-api-key',
         vertexai: false,
         httpOptions: expect.objectContaining({
-          baseUrl: 'https://gemini.test.local',
+          baseUrl: 'https://onyx.test.local',
         }),
       }),
     );
@@ -922,7 +922,7 @@ describe('createContentGenerator', () => {
 
   it('should pass baseUrl to GoogleGenAI when GOOGLE_VERTEX_BASE_URL is set', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -955,7 +955,7 @@ describe('createContentGenerator', () => {
 
   it('should prefer GOOGLE_VERTEX_BASE_URL when authType is USE_VERTEX_AI without inferred vertex credentials', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -965,7 +965,7 @@ describe('createContentGenerator', () => {
       models: {},
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
-    vi.stubEnv('GOOGLE_GEMINI_BASE_URL', 'https://gemini.test.local');
+    vi.stubEnv('GOOGLE_ONYX_BASE_URL', 'https://onyx.test.local');
     vi.stubEnv('GOOGLE_VERTEX_BASE_URL', 'https://vertex.test.local');
 
     await createContentGenerator(
@@ -986,9 +986,9 @@ describe('createContentGenerator', () => {
     );
   });
 
-  it('should prefer an explicit baseUrl over GOOGLE_GEMINI_BASE_URL', async () => {
+  it('should prefer an explicit baseUrl over GOOGLE_ONYX_BASE_URL', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -998,12 +998,12 @@ describe('createContentGenerator', () => {
       models: {},
     } as unknown as GoogleGenAI;
     vi.mocked(GoogleGenAI).mockImplementation(() => mockGenerator as never);
-    vi.stubEnv('GOOGLE_GEMINI_BASE_URL', 'https://env.test.local');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('GOOGLE_ONYX_BASE_URL', 'https://env.test.local');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
 
     const config = await createContentGeneratorConfig(
       mockConfig,
-      AuthType.USE_GEMINI,
+      AuthType.USE_ONYX,
       undefined,
       'https://explicit.test.local',
     );
@@ -1020,7 +1020,7 @@ describe('createContentGenerator', () => {
 
   it('should allow localhost baseUrl overrides over http', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -1034,7 +1034,7 @@ describe('createContentGenerator', () => {
     await createContentGenerator(
       {
         apiKey: 'test-api-key',
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
         baseUrl: 'http://127.0.0.1:8080',
       },
       mockConfig,
@@ -1054,7 +1054,7 @@ describe('createContentGenerator', () => {
       createContentGenerator(
         {
           apiKey: 'test-api-key',
-          authType: AuthType.USE_GEMINI,
+          authType: AuthType.USE_ONYX,
           baseUrl: 'not-a-url',
         },
         mockConfig,
@@ -1064,7 +1064,7 @@ describe('createContentGenerator', () => {
 
   it('should set empty x-goog-api-key header for GATEWAY auth when apiKey is empty string', async () => {
     const mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getProxy: vi.fn().mockReturnValue(undefined),
       getUsageStatisticsEnabled: () => false,
       getClientName: vi.fn().mockReturnValue(undefined),
@@ -1099,7 +1099,7 @@ describe('createContentGenerator', () => {
 
 describe('createContentGeneratorConfig', () => {
   const mockConfig = {
-    getModel: vi.fn().mockReturnValue('gemini-pro'),
+    getModel: vi.fn().mockReturnValue('onyx-pro'),
     setModel: vi.fn(),
     flashFallbackHandler: vi.fn(),
     getProxy: vi.fn(),
@@ -1116,32 +1116,32 @@ describe('createContentGeneratorConfig', () => {
     vi.unstubAllEnvs();
   });
 
-  it('should configure for Gemini using GEMINI_API_KEY when set', async () => {
-    vi.stubEnv('GEMINI_API_KEY', 'env-gemini-key');
+  it('should configure for Onyx using ONYX_API_KEY when set', async () => {
+    vi.stubEnv('ONYX_API_KEY', 'env-onyx-key');
     const config = await createContentGeneratorConfig(
       mockConfig,
-      AuthType.USE_GEMINI,
+      AuthType.USE_ONYX,
     );
-    expect(config.apiKey).toBe('env-gemini-key');
+    expect(config.apiKey).toBe('env-onyx-key');
     expect(config.vertexai).toBe(false);
   });
 
-  it('should not configure for Gemini if GEMINI_API_KEY is empty', async () => {
-    vi.stubEnv('GEMINI_API_KEY', '');
+  it('should not configure for Onyx if ONYX_API_KEY is empty', async () => {
+    vi.stubEnv('ONYX_API_KEY', '');
     const config = await createContentGeneratorConfig(
       mockConfig,
-      AuthType.USE_GEMINI,
+      AuthType.USE_ONYX,
     );
     expect(config.apiKey).toBeUndefined();
     expect(config.vertexai).toBeUndefined();
   });
 
-  it('should not configure for Gemini if GEMINI_API_KEY is not set and storage is empty', async () => {
-    vi.stubEnv('GEMINI_API_KEY', '');
+  it('should not configure for Onyx if ONYX_API_KEY is not set and storage is empty', async () => {
+    vi.stubEnv('ONYX_API_KEY', '');
     vi.mocked(loadApiKey).mockResolvedValue(null);
     const config = await createContentGeneratorConfig(
       mockConfig,
-      AuthType.USE_GEMINI,
+      AuthType.USE_ONYX,
     );
     expect(config.apiKey).toBeUndefined();
     expect(config.vertexai).toBeUndefined();
@@ -1209,8 +1209,8 @@ describe('createContentGeneratorConfig', () => {
     expect(config.vertexai).toBe(false);
   });
 
-  it('should configure for GATEWAY using GEMINI_API_KEY from environment if set', async () => {
-    vi.stubEnv('GEMINI_API_KEY', 'env-gateway-key');
+  it('should configure for GATEWAY using ONYX_API_KEY from environment if set', async () => {
+    vi.stubEnv('ONYX_API_KEY', 'env-gateway-key');
     const config = await createContentGeneratorConfig(
       mockConfig,
       AuthType.GATEWAY,
@@ -1220,7 +1220,7 @@ describe('createContentGeneratorConfig', () => {
   });
 
   it('should configure for GATEWAY using empty string if no apiKey is provided', async () => {
-    vi.stubEnv('GEMINI_API_KEY', '');
+    vi.stubEnv('ONYX_API_KEY', '');
     const config = await createContentGeneratorConfig(
       mockConfig,
       AuthType.GATEWAY,

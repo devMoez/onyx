@@ -26,8 +26,8 @@ concurrency:
 jobs:
   deflake_e2e_linux:
     name: 'E2E Test (Linux) - ${{ matrix.sandbox }}'
-    runs-on: 'gemini-cli-ubuntu-16-core'
-    if: "github.repository == 'google-gemini/gemini-cli'"
+    runs-on: 'onyx-cli-ubuntu-16-core'
+    if: "github.repository == 'google-onyx/onyx-cli'"
     strategy:
       fail-fast: false
       matrix:
@@ -62,7 +62,7 @@ jobs:
 
       - name: 'Run E2E tests'
         env:
-          GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
+          ONYX_API_KEY: '${{ secrets.ONYX_API_KEY }}'
           ONYX_CLI_TRUST_WORKSPACE: true
           IS_DOCKER: "${{ matrix.sandbox == 'sandbox:docker' }}"
           KEEP_OUTPUT: 'true'
@@ -80,7 +80,7 @@ jobs:
   deflake_e2e_mac:
     name: 'E2E Test (macOS)'
     runs-on: 'macos-latest-large'
-    if: "github.repository == 'google-gemini/gemini-cli'"
+    if: "github.repository == 'google-onyx/onyx-cli'"
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955' # ratchet:actions/checkout@v5
@@ -107,7 +107,7 @@ jobs:
       - name: 'Run E2E tests (non-Windows)'
         if: "runner.os != 'Windows'"
         env:
-          GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
+          ONYX_API_KEY: '${{ secrets.ONYX_API_KEY }}'
           ONYX_CLI_TRUST_WORKSPACE: true
           KEEP_OUTPUT: 'true'
           RUNS: '${{ github.event.inputs.runs }}'
@@ -119,8 +119,8 @@ jobs:
 
   deflake_e2e_windows:
     name: 'Slow E2E - Win'
-    runs-on: 'gemini-cli-windows-16-core'
-    if: "github.repository == 'google-gemini/gemini-cli'"
+    runs-on: 'onyx-cli-windows-16-core'
+    if: "github.repository == 'google-onyx/onyx-cli'"
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955' # ratchet:actions/checkout@v5
@@ -163,7 +163,7 @@ jobs:
 
       - name: 'Run E2E tests'
         env:
-          GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
+          ONYX_API_KEY: '${{ secrets.ONYX_API_KEY }}'
           ONYX_CLI_TRUST_WORKSPACE: true
           KEEP_OUTPUT: 'true'
           SANDBOX: 'sandbox:none'

@@ -18,7 +18,7 @@ import {
   debugLogger,
   ApprovalMode,
   type MCPServerConfig,
-  type GeminiCLIExtension,
+  type OnyxCLIExtension,
   Storage,
 } from '@onyx/core';
 import { loadCliConfig, parseArguments, type CliArgs } from './config.js';
@@ -132,7 +132,7 @@ vi.mock('@onyx/core', async () => {
     ),
     getAdminErrorMessage: vi.fn(
       (_feature) =>
-        `YOLO mode is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-gemini-cli`,
+        `YOLO mode is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-onyx-cli`,
     ),
     isHeadlessMode: vi.fn((opts) => {
       if (process.env['VITEST'] === 'true') {
@@ -162,12 +162,12 @@ vi.mock('./extension-manager.js', () => {
 
 // Global setup to ensure clean environment for all tests in this file
 const originalArgv = process.argv;
-const originalGeminiModel = process.env['GEMINI_MODEL'];
+const originalOnyxModel = process.env['ONYX_MODEL'];
 const originalStdoutIsTTY = process.stdout.isTTY;
 const originalStdinIsTTY = process.stdin.isTTY;
 
 beforeEach(() => {
-  delete process.env['GEMINI_MODEL'];
+  delete process.env['ONYX_MODEL'];
   // Restore ExtensionManager mocks by re-assigning them
   ExtensionManager.prototype.getExtensions = vi.fn().mockReturnValue([]);
   ExtensionManager.prototype.loadExtensions = vi
@@ -189,10 +189,10 @@ beforeEach(() => {
 
 afterEach(() => {
   process.argv = originalArgv;
-  if (originalGeminiModel !== undefined) {
-    process.env['GEMINI_MODEL'] = originalGeminiModel;
+  if (originalOnyxModel !== undefined) {
+    process.env['ONYX_MODEL'] = originalOnyxModel;
   } else {
-    delete process.env['GEMINI_MODEL'];
+    delete process.env['ONYX_MODEL'];
   }
   Object.defineProperty(process.stdout, 'isTTY', {
     value: originalStdoutIsTTY,
@@ -410,8 +410,8 @@ describe('parseArguments', () => {
       {
         description:
           'should convert positional query argument to prompt by default',
-        argv: ['node', 'script.js', 'Hi Gemini'],
-        expectedQuery: 'Hi Gemini',
+        argv: ['node', 'script.js', 'Hi Onyx'],
+        expectedQuery: 'Hi Onyx',
         expectedModel: undefined,
         debug: false,
       },
@@ -432,10 +432,10 @@ describe('parseArguments', () => {
           '@path',
           './file.md',
           '--model',
-          'gemini-2.5-pro',
+          'onyx-2.5-pro',
         ],
         expectedQuery: '@path ./file.md',
-        expectedModel: 'gemini-2.5-pro',
+        expectedModel: 'onyx-2.5-pro',
         debug: false,
       },
       {
@@ -771,7 +771,7 @@ describe('loadCliConfig', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
 
@@ -785,7 +785,7 @@ describe('loadCliConfig', () => {
       const argv = {
         query: undefined,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        model: ['gemini-1.5-pro', 'gemini-2.0-flash'] as any,
+        model: ['onyx-1.5-pro', 'onyx-2.0-flash'] as any,
         sandbox: undefined,
         debug: false,
         prompt: undefined,
@@ -824,7 +824,7 @@ describe('loadCliConfig', () => {
         },
       );
 
-      expect(config.getModel()).toBe('gemini-2.0-flash');
+      expect(config.getModel()).toBe('onyx-2.0-flash');
     });
 
     it('should handle non-string model flags by coercing to string', async () => {
@@ -951,9 +951,9 @@ describe('loadCliConfig', () => {
     });
   });
 
-  it('should add IDE workspace folders from GEMINI_CLI_IDE_WORKSPACE_PATH to include directories', async () => {
+  it('should add IDE workspace folders from ONYX_CLI_IDE_WORKSPACE_PATH to include directories', async () => {
     vi.stubEnv(
-      'GEMINI_CLI_IDE_WORKSPACE_PATH',
+      'ONYX_CLI_IDE_WORKSPACE_PATH',
       ['/project/folderA', '/project/folderB'].join(path.delimiter),
     );
     process.argv = ['node', 'script.js'];
@@ -965,7 +965,7 @@ describe('loadCliConfig', () => {
     expect(dirs).toContain('/project/folderB');
   });
 
-  it('should skip inaccessible workspace folders from GEMINI_CLI_IDE_WORKSPACE_PATH', async () => {
+  it('should skip inaccessible workspace folders from ONYX_CLI_IDE_WORKSPACE_PATH', async () => {
     vi.spyOn(ServerConfig, 'resolveToRealPath').mockImplementation((p) => {
       if (p.toString().includes('restricted')) {
         const err = new Error('EACCES: permission denied');
@@ -975,7 +975,7 @@ describe('loadCliConfig', () => {
       return p.toString();
     });
     vi.stubEnv(
-      'GEMINI_CLI_IDE_WORKSPACE_PATH',
+      'ONYX_CLI_IDE_WORKSPACE_PATH',
       ['/project/folderA', '/nonexistent/restricted/folder'].join(
         path.delimiter,
       ),
@@ -1443,7 +1443,7 @@ describe('Approval mode tool exclusion logic', () => {
     });
 
     await expect(loadCliConfig(settings, 'test-session', argv)).rejects.toThrow(
-      'YOLO mode is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-gemini-cli',
+      'YOLO mode is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-onyx-cli',
     );
   });
 
@@ -1495,7 +1495,7 @@ describe('loadCliConfig with allowed-mcp-server-names', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
 
@@ -1649,7 +1649,7 @@ describe('loadCliConfig with admin.mcp.config', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
 
@@ -1868,17 +1868,17 @@ describe('loadCliConfig model selection', () => {
     const config = await loadCliConfig(
       createTestMergedSettings({
         model: {
-          name: 'gemini-2.5-pro',
+          name: 'onyx-2.5-pro',
         },
       }),
       'test-session',
       argv,
     );
 
-    expect(config.getModel()).toBe('gemini-2.5-pro');
+    expect(config.getModel()).toBe('onyx-2.5-pro');
   });
 
-  it('uses the default gemini model if nothing is set', async () => {
+  it('uses the default onyx model if nothing is set', async () => {
     process.argv = ['node', 'script.js']; // No model set.
     const argv = await parseArguments(createTestMergedSettings());
     const config = await loadCliConfig(
@@ -1893,23 +1893,23 @@ describe('loadCliConfig model selection', () => {
   });
 
   it('always prefers model from argv', async () => {
-    process.argv = ['node', 'script.js', '--model', 'gemini-2.5-flash-preview'];
+    process.argv = ['node', 'script.js', '--model', 'onyx-2.5-flash-preview'];
     const argv = await parseArguments(createTestMergedSettings());
     const config = await loadCliConfig(
       createTestMergedSettings({
         model: {
-          name: 'gemini-2.5-pro',
+          name: 'onyx-2.5-pro',
         },
       }),
       'test-session',
       argv,
     );
 
-    expect(config.getModel()).toBe('gemini-2.5-flash-preview');
+    expect(config.getModel()).toBe('onyx-2.5-flash-preview');
   });
 
   it('selects the model from argv if provided', async () => {
-    process.argv = ['node', 'script.js', '--model', 'gemini-2.5-flash-preview'];
+    process.argv = ['node', 'script.js', '--model', 'onyx-2.5-flash-preview'];
     const argv = await parseArguments(createTestMergedSettings());
     const config = await loadCliConfig(
       createTestMergedSettings({
@@ -1919,7 +1919,7 @@ describe('loadCliConfig model selection', () => {
       argv,
     );
 
-    expect(config.getModel()).toBe('gemini-2.5-flash-preview');
+    expect(config.getModel()).toBe('onyx-2.5-flash-preview');
   });
 
   it('selects the default auto model if provided via auto alias', async () => {
@@ -1944,13 +1944,13 @@ describe('loadCliConfig folderTrust', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
 
     originalVitest = process.env['VITEST'];
-    originalIntegrationTest = process.env['GEMINI_CLI_INTEGRATION_TEST'];
+    originalIntegrationTest = process.env['ONYX_CLI_INTEGRATION_TEST'];
     delete process.env['VITEST'];
-    delete process.env['GEMINI_CLI_INTEGRATION_TEST'];
+    delete process.env['ONYX_CLI_INTEGRATION_TEST'];
   });
 
   afterEach(() => {
@@ -1958,7 +1958,7 @@ describe('loadCliConfig folderTrust', () => {
       process.env['VITEST'] = originalVitest;
     }
     if (originalIntegrationTest !== undefined) {
-      process.env['GEMINI_CLI_INTEGRATION_TEST'] = originalIntegrationTest;
+      process.env['ONYX_CLI_INTEGRATION_TEST'] = originalIntegrationTest;
     }
 
     vi.unstubAllEnvs();
@@ -2008,7 +2008,7 @@ describe('loadCliConfig with includeDirectories', () => {
     vi.mocked(os.homedir).mockReturnValue(
       path.resolve(path.sep, 'mock', 'home', 'user'),
     );
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(process, 'cwd').mockReturnValue(
       path.resolve(path.sep, 'home', 'user', 'project'),
     );
@@ -2062,7 +2062,7 @@ describe('loadCliConfig compressionThreshold', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
 
@@ -2096,7 +2096,7 @@ describe('loadCliConfig useRipgrep', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
 
@@ -2134,7 +2134,7 @@ describe('loadCliConfig directWebFetch', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
 
@@ -2168,7 +2168,7 @@ describe('loadCliConfig context management', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
 
@@ -2206,7 +2206,7 @@ describe('screenReader configuration', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
 
@@ -2260,7 +2260,7 @@ describe('loadCliConfig tool exclusions', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     process.stdin.isTTY = true;
     vi.mocked(isWorkspaceTrusted).mockReturnValue({
       isTrusted: true,
@@ -2454,7 +2454,7 @@ describe('loadCliConfig interactive', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     process.stdin.isTTY = true;
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
@@ -2515,7 +2515,7 @@ describe('loadCliConfig interactive', () => {
 
   it('should be interactive if positional prompt words are provided with other flags', async () => {
     process.stdin.isTTY = true;
-    process.argv = ['node', 'script.js', '--model', 'gemini-2.5-pro', 'Hello'];
+    process.argv = ['node', 'script.js', '--model', 'onyx-2.5-pro', 'Hello'];
     const argv = await parseArguments(createTestMergedSettings());
     const config = await loadCliConfig(
       createTestMergedSettings(),
@@ -2531,7 +2531,7 @@ describe('loadCliConfig interactive', () => {
       'node',
       'script.js',
       '--model',
-      'gemini-2.5-pro',
+      'onyx-2.5-pro',
       '--yolo',
       'Hello world',
     ];
@@ -2582,7 +2582,7 @@ describe('loadCliConfig interactive', () => {
       'node',
       'script.js',
       '--model',
-      'gemini-2.5-pro',
+      'onyx-2.5-pro',
       'write',
       'a',
       'function',
@@ -2599,7 +2599,7 @@ describe('loadCliConfig interactive', () => {
     expect(config.isInteractive()).toBe(true);
     expect(argv.query).toBe('write a function to sort array');
     expect(argv.promptInteractive).toBe('write a function to sort array');
-    expect(argv.model).toBe('gemini-2.5-pro');
+    expect(argv.model).toBe('onyx-2.5-pro');
   });
 
   it('should handle empty positional arguments', async () => {
@@ -2642,7 +2642,7 @@ describe('loadCliConfig interactive', () => {
 
   it('should be interactive if no positional prompt words are provided with flags', async () => {
     process.stdin.isTTY = true;
-    process.argv = ['node', 'script.js', '--model', 'gemini-2.5-pro'];
+    process.argv = ['node', 'script.js', '--model', 'onyx-2.5-pro'];
     const argv = await parseArguments(createTestMergedSettings());
     const config = await loadCliConfig(
       createTestMergedSettings(),
@@ -2659,7 +2659,7 @@ describe('loadCliConfig approval mode', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     process.argv = ['node', 'script.js']; // Reset argv for each test
     vi.mocked(isWorkspaceTrusted).mockReturnValue({
       isTrusted: true,
@@ -2949,7 +2949,7 @@ describe('loadCliConfig gemmaModelRouter', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
 
@@ -3029,7 +3029,7 @@ describe('loadCliConfig fileFiltering', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     process.argv = ['node', 'script.js']; // Reset argv for each test
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
@@ -3263,8 +3263,8 @@ describe('Telemetry configuration via environment variables', () => {
     vi.resetAllMocks();
   });
 
-  it('should prioritize GEMINI_TELEMETRY_ENABLED over settings', async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_ENABLED', 'true');
+  it('should prioritize ONYX_TELEMETRY_ENABLED over settings', async () => {
+    vi.stubEnv('ONYX_TELEMETRY_ENABLED', 'true');
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const settings = createTestMergedSettings({
@@ -3274,8 +3274,8 @@ describe('Telemetry configuration via environment variables', () => {
     expect(config.getTelemetryEnabled()).toBe(true);
   });
 
-  it('should prioritize GEMINI_TELEMETRY_TARGET over settings', async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_TARGET', 'gcp');
+  it('should prioritize ONYX_TELEMETRY_TARGET over settings', async () => {
+    vi.stubEnv('ONYX_TELEMETRY_TARGET', 'gcp');
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const settings = createTestMergedSettings({
@@ -3285,8 +3285,8 @@ describe('Telemetry configuration via environment variables', () => {
     expect(config.getTelemetryTarget()).toBe('gcp');
   });
 
-  it('should throw when GEMINI_TELEMETRY_TARGET is invalid', async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_TARGET', 'bogus');
+  it('should throw when ONYX_TELEMETRY_TARGET is invalid', async () => {
+    vi.stubEnv('ONYX_TELEMETRY_TARGET', 'bogus');
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const settings = createTestMergedSettings({
@@ -3298,20 +3298,20 @@ describe('Telemetry configuration via environment variables', () => {
     vi.unstubAllEnvs();
   });
 
-  it('should prioritize GEMINI_TELEMETRY_OTLP_ENDPOINT over settings and default env var', async () => {
+  it('should prioritize ONYX_TELEMETRY_OTLP_ENDPOINT over settings and default env var', async () => {
     vi.stubEnv('OTEL_EXPORTER_OTLP_ENDPOINT', 'http://default.env.com');
-    vi.stubEnv('GEMINI_TELEMETRY_OTLP_ENDPOINT', 'http://gemini.env.com');
+    vi.stubEnv('ONYX_TELEMETRY_OTLP_ENDPOINT', 'http://onyx.env.com');
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const settings = createTestMergedSettings({
       telemetry: { otlpEndpoint: 'http://settings.com' },
     });
     const config = await loadCliConfig(settings, 'test-session', argv);
-    expect(config.getTelemetryOtlpEndpoint()).toBe('http://gemini.env.com');
+    expect(config.getTelemetryOtlpEndpoint()).toBe('http://onyx.env.com');
   });
 
-  it('should prioritize GEMINI_TELEMETRY_OTLP_PROTOCOL over settings', async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_OTLP_PROTOCOL', 'http');
+  it('should prioritize ONYX_TELEMETRY_OTLP_PROTOCOL over settings', async () => {
+    vi.stubEnv('ONYX_TELEMETRY_OTLP_PROTOCOL', 'http');
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const settings = createTestMergedSettings({
@@ -3321,8 +3321,8 @@ describe('Telemetry configuration via environment variables', () => {
     expect(config.getTelemetryOtlpProtocol()).toBe('http');
   });
 
-  it('should prioritize GEMINI_TELEMETRY_LOG_PROMPTS over settings', async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_LOG_PROMPTS', 'false');
+  it('should prioritize ONYX_TELEMETRY_LOG_PROMPTS over settings', async () => {
+    vi.stubEnv('ONYX_TELEMETRY_LOG_PROMPTS', 'false');
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const settings = createTestMergedSettings({
@@ -3332,19 +3332,19 @@ describe('Telemetry configuration via environment variables', () => {
     expect(config.getTelemetryLogPromptsEnabled()).toBe(false);
   });
 
-  it('should prioritize GEMINI_TELEMETRY_OUTFILE over settings', async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_OUTFILE', '/gemini/env/telemetry.log');
+  it('should prioritize ONYX_TELEMETRY_OUTFILE over settings', async () => {
+    vi.stubEnv('ONYX_TELEMETRY_OUTFILE', '/onyx/env/telemetry.log');
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const settings = createTestMergedSettings({
       telemetry: { outfile: '/settings/telemetry.log' },
     });
     const config = await loadCliConfig(settings, 'test-session', argv);
-    expect(config.getTelemetryOutfile()).toBe('/gemini/env/telemetry.log');
+    expect(config.getTelemetryOutfile()).toBe('/onyx/env/telemetry.log');
   });
 
-  it('should prioritize GEMINI_TELEMETRY_USE_COLLECTOR over settings', async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_USE_COLLECTOR', 'true');
+  it('should prioritize ONYX_TELEMETRY_USE_COLLECTOR over settings', async () => {
+    vi.stubEnv('ONYX_TELEMETRY_USE_COLLECTOR', 'true');
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const settings = createTestMergedSettings({
@@ -3354,8 +3354,8 @@ describe('Telemetry configuration via environment variables', () => {
     expect(config.getTelemetryUseCollector()).toBe(true);
   });
 
-  it('should use settings value when GEMINI_TELEMETRY_ENABLED is not set', async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_ENABLED', undefined);
+  it('should use settings value when ONYX_TELEMETRY_ENABLED is not set', async () => {
+    vi.stubEnv('ONYX_TELEMETRY_ENABLED', undefined);
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const settings = createTestMergedSettings({ telemetry: { enabled: true } });
@@ -3363,8 +3363,8 @@ describe('Telemetry configuration via environment variables', () => {
     expect(config.getTelemetryEnabled()).toBe(true);
   });
 
-  it('should use settings value when GEMINI_TELEMETRY_TARGET is not set', async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_TARGET', undefined);
+  it('should use settings value when ONYX_TELEMETRY_TARGET is not set', async () => {
+    vi.stubEnv('ONYX_TELEMETRY_TARGET', undefined);
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const settings = createTestMergedSettings({
@@ -3374,8 +3374,8 @@ describe('Telemetry configuration via environment variables', () => {
     expect(config.getTelemetryTarget()).toBe('local');
   });
 
-  it("should treat GEMINI_TELEMETRY_ENABLED='1' as true", async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_ENABLED', '1');
+  it("should treat ONYX_TELEMETRY_ENABLED='1' as true", async () => {
+    vi.stubEnv('ONYX_TELEMETRY_ENABLED', '1');
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const config = await loadCliConfig(
@@ -3386,8 +3386,8 @@ describe('Telemetry configuration via environment variables', () => {
     expect(config.getTelemetryEnabled()).toBe(true);
   });
 
-  it("should treat GEMINI_TELEMETRY_ENABLED='0' as false", async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_ENABLED', '0');
+  it("should treat ONYX_TELEMETRY_ENABLED='0' as false", async () => {
+    vi.stubEnv('ONYX_TELEMETRY_ENABLED', '0');
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const config = await loadCliConfig(
@@ -3398,8 +3398,8 @@ describe('Telemetry configuration via environment variables', () => {
     expect(config.getTelemetryEnabled()).toBe(false);
   });
 
-  it("should treat GEMINI_TELEMETRY_LOG_PROMPTS='1' as true", async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_LOG_PROMPTS', '1');
+  it("should treat ONYX_TELEMETRY_LOG_PROMPTS='1' as true", async () => {
+    vi.stubEnv('ONYX_TELEMETRY_LOG_PROMPTS', '1');
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const config = await loadCliConfig(
@@ -3410,8 +3410,8 @@ describe('Telemetry configuration via environment variables', () => {
     expect(config.getTelemetryLogPromptsEnabled()).toBe(true);
   });
 
-  it("should treat GEMINI_TELEMETRY_LOG_PROMPTS='false' as false", async () => {
-    vi.stubEnv('GEMINI_TELEMETRY_LOG_PROMPTS', 'false');
+  it("should treat ONYX_TELEMETRY_LOG_PROMPTS='false' as false", async () => {
+    vi.stubEnv('ONYX_TELEMETRY_LOG_PROMPTS', 'false');
     process.argv = ['node', 'script.js'];
     const argv = await parseArguments(createTestMergedSettings());
     const config = await loadCliConfig(
@@ -3474,7 +3474,7 @@ describe('Policy Engine Integration in loadCliConfig', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
 
@@ -3557,7 +3557,7 @@ describe('loadCliConfig disableYoloMode', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
     vi.mocked(isWorkspaceTrusted).mockReturnValue({
       isTrusted: true,
@@ -3587,7 +3587,7 @@ describe('loadCliConfig disableYoloMode', () => {
       security: { disableYoloMode: true },
     });
     await expect(loadCliConfig(settings, 'test-session', argv)).rejects.toThrow(
-      'YOLO mode is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-gemini-cli',
+      'YOLO mode is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-onyx-cli',
     );
   });
 });
@@ -3596,7 +3596,7 @@ describe('loadCliConfig secureModeEnabled', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
     vi.mocked(isWorkspaceTrusted).mockReturnValue({
       isTrusted: true,
@@ -3619,7 +3619,7 @@ describe('loadCliConfig secureModeEnabled', () => {
     });
 
     await expect(loadCliConfig(settings, 'test-session', argv)).rejects.toThrow(
-      'YOLO mode is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-gemini-cli',
+      'YOLO mode is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-onyx-cli',
     );
   });
 
@@ -3633,7 +3633,7 @@ describe('loadCliConfig secureModeEnabled', () => {
     });
 
     await expect(loadCliConfig(settings, 'test-session', argv)).rejects.toThrow(
-      'YOLO mode is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-gemini-cli',
+      'YOLO mode is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-onyx-cli',
     );
   });
 
@@ -3654,7 +3654,7 @@ describe('loadCliConfig mcpEnabled', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
 
@@ -3743,7 +3743,7 @@ describe('loadCliConfig mcpEnabled', () => {
           name: 'ext-plan',
           isActive: true,
           plan: { directory: 'ext-plans-dir' },
-        } as unknown as GeminiCLIExtension,
+        } as unknown as OnyxCLIExtension,
       ]);
 
       const config = await loadCliConfig(settings, 'test-session', argv);
@@ -3767,7 +3767,7 @@ describe('loadCliConfig mcpEnabled', () => {
           name: 'ext-plan',
           isActive: true,
           plan: { directory: 'ext-plans-dir' },
-        } as unknown as GeminiCLIExtension,
+        } as unknown as OnyxCLIExtension,
       ]);
 
       const config = await loadCliConfig(settings, 'test-session', argv);
@@ -3789,7 +3789,7 @@ describe('loadCliConfig mcpEnabled', () => {
           name: 'ext-plan',
           isActive: false,
           plan: { directory: 'ext-plans-dir-inactive' },
-        } as unknown as GeminiCLIExtension,
+        } as unknown as OnyxCLIExtension,
       ]);
 
       const config = await loadCliConfig(settings, 'test-session', argv);
@@ -3832,7 +3832,7 @@ describe('loadCliConfig acpMode and clientName', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.mocked(os.homedir).mockReturnValue('/mock/home/user');
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
     vi.spyOn(ExtensionManager.prototype, 'getExtensions').mockReturnValue([]);
   });
 

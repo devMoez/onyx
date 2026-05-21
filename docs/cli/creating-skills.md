@@ -15,7 +15,7 @@ Simply ask Onyx CLI to create a skill for you:
 > "Create a new skill called 'code-reviewer' that analyzes local files for
 > common errors and style violations."
 
-Gemini will then:
+Onyx will then:
 
 1.  Generate a new directory for your skill (for example, `my-new-skill/`).
 2.  Create a `SKILL.md` file with the necessary YAML frontmatter (`name` and
@@ -23,7 +23,7 @@ Gemini will then:
 3.  Create the standard resource directories: `scripts/`, `references/`, and
     `assets/`.
 
-Once created, you can find your new skill in `.gemini/skills/code-reviewer/`.
+Once created, you can find your new skill in `.onyx/skills/code-reviewer/`.
 
 ## Manual creation
 
@@ -38,19 +38,19 @@ scripts.
 **macOS/Linux**
 
 ```bash
-mkdir -p .gemini/skills/code-reviewer/scripts
+mkdir -p .onyx/skills/code-reviewer/scripts
 ```
 
 **Windows (PowerShell)**
 
 ```powershell
-New-Item -ItemType Directory -Force -Path ".gemini\skills\code-reviewer\scripts"
+New-Item -ItemType Directory -Force -Path ".onyx\skills\code-reviewer\scripts"
 ```
 
 ### 2. Define the skill (`SKILL.md`)
 
 The `SKILL.md` file defines the skill's purpose and instructions for the agent.
-Create a file at `.gemini/skills/code-reviewer/SKILL.md`.
+Create a file at `.onyx/skills/code-reviewer/SKILL.md`.
 
 ```markdown
 ---
@@ -76,10 +76,10 @@ skill is active, you MUST:
 ### 3. Add the tool logic
 
 Skills can bundle resources like scripts to perform deterministic tasks. Create
-a file at `.gemini/skills/code-reviewer/scripts/review.js`.
+a file at `.onyx/skills/code-reviewer/scripts/review.js`.
 
 ```javascript
-// .gemini/skills/code-reviewer/scripts/review.js
+// .onyx/skills/code-reviewer/scripts/review.js
 const file = process.argv[2];
 
 if (!file) {
@@ -96,14 +96,14 @@ setTimeout(() => {
 
 ### 4. Test the skill
 
-Onyx CLI automatically discovers skills in the `.gemini/skills` directory.
+Onyx CLI automatically discovers skills in the `.onyx/skills` directory.
 
 1.  Start a new session and ask a question that triggers the skill's
     description: "Can you review index.js"
-2.  Gemini identifies the request matches the `code-reviewer` description and
+2.  Onyx identifies the request matches the `code-reviewer` description and
     asks for permission to activate it.
-3.  Once you approve, Gemini executes the bundled script:
-    `node .gemini/skills/code-reviewer/scripts/review.js index.js`
+3.  Once you approve, Onyx executes the bundled script:
+    `node .onyx/skills/code-reviewer/scripts/review.js index.js`
 
 To determine whether your skill has been correctly loaded, run the command:
 
@@ -115,12 +115,12 @@ To determine whether your skill has been correctly loaded, run the command:
 
 You can share your skills in several ways depending on your target audience.
 
-- **Workspace skills**: Commit your skill to a `.gemini/skills/` directory in
+- **Workspace skills**: Commit your skill to a `.onyx/skills/` directory in
   your project repository.
 - **Extensions**: Bundle your skill within a
   [Onyx CLI extension](../extensions/writing-extensions.md).
 - **Git repositories**: Share the skill directory as a standalone Git repo and
-  install it using `gemini skills install <url>`.
+  install it using `onyx skills install <url>`.
 
 ---
 
@@ -152,7 +152,7 @@ The `SKILL.md` file uses YAML frontmatter for metadata.
 
 - **`name`**: A unique identifier for the skill. This should match the directory
   name.
-- **`description`**: **CRITICAL.** This is how Gemini decides when to use the
+- **`description`**: **CRITICAL.** This is how Onyx decides when to use the
   skill. Be specific about the tasks it handles and the keywords that should
   trigger it.
 
@@ -163,12 +163,12 @@ of precedence (lowest to highest):
 
 1.  **Built-in Skills**: Included with Onyx CLI (pre-approved).
 2.  **Extension Skills**: Bundled within [extensions](../extensions/).
-3.  **User Skills**: `~/.gemini/skills/` or the `~/.agents/skills/` alias.
-4.  **Workspace Skills**: `.gemini/skills/` or the `.agents/skills/` alias.
+3.  **User Skills**: `~/.onyx/skills/` or the `~/.agents/skills/` alias.
+4.  **Workspace Skills**: `.onyx/skills/` or the `.agents/skills/` alias.
 
 ### Discovery aliases
 
-You can use `.agents/skills` as an alternative to `.gemini/skills`. This alias
+You can use `.agents/skills` as an alternative to `.onyx/skills`. This alias
 is compatible with other AI agent tools following the
 [Agent Skills](https://agentskills.io) standard.
 
@@ -194,7 +194,7 @@ If you are developing a skill in a separate directory, you can link it to your
 user skills directory for testing:
 
 ```bash
-gemini skills link .
+onyx skills link .
 ```
 
 ## Next steps

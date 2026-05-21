@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { GeminiCliSession } from './session.js';
-import type { GeminiCliAgent } from './agent.js';
-import type { GeminiCliAgentOptions } from './types.js';
+import { OnyxCliSession } from './session.js';
+import type { OnyxCliAgent } from './agent.js';
+import type { OnyxCliAgentOptions } from './types.js';
 
 // Mutable mock client so individual tests can override sendMessageStream
 const mockClient = {
@@ -30,7 +30,7 @@ const mockConfig = {
     unregisterTool: vi.fn(),
   }),
   getMessageBus: vi.fn().mockReturnValue({}),
-  getGeminiClient: vi.fn().mockReturnValue(mockClient),
+  getOnyxClient: vi.fn().mockReturnValue(mockClient),
   getSessionId: vi.fn().mockReturnValue('mock-session-id'),
   getWorkingDir: vi.fn().mockReturnValue('/tmp'),
   setUserMemory: vi.fn(),
@@ -55,9 +55,9 @@ vi.mock('@onyx/core', async (importOriginal) => {
   };
 });
 
-const mockAgent = {} as unknown as GeminiCliAgent;
+const mockAgent = {} as unknown as OnyxCliAgent;
 
-const baseOptions: GeminiCliAgentOptions = {
+const baseOptions: OnyxCliAgentOptions = {
   instructions: 'You are a helpful assistant.',
 };
 
@@ -68,27 +68,27 @@ beforeEach(() => {
   mockScheduleAgentTools.mockResolvedValue([]);
 });
 
-describe('GeminiCliSession constructor', () => {
+describe('OnyxCliSession constructor', () => {
   it('accepts string instructions', () => {
     expect(
-      () => new GeminiCliSession(baseOptions, 'session-1', mockAgent),
+      () => new OnyxCliSession(baseOptions, 'session-1', mockAgent),
     ).not.toThrow();
   });
 
   it('accepts function instructions', () => {
-    const options: GeminiCliAgentOptions = {
+    const options: OnyxCliAgentOptions = {
       instructions: async () => 'dynamic instructions',
     };
     expect(
-      () => new GeminiCliSession(options, 'session-2', mockAgent),
+      () => new OnyxCliSession(options, 'session-2', mockAgent),
     ).not.toThrow();
   });
 
   it('throws when instructions is an object (not string or function)', () => {
     const options = {
       instructions: { invalid: true },
-    } as unknown as GeminiCliAgentOptions;
-    expect(() => new GeminiCliSession(options, 'session-3', mockAgent)).toThrow(
+    } as unknown as OnyxCliAgentOptions;
+    expect(() => new OnyxCliSession(options, 'session-3', mockAgent)).toThrow(
       'Instructions must be a string or a function.',
     );
   });
@@ -96,8 +96,8 @@ describe('GeminiCliSession constructor', () => {
   it('throws when instructions is a number', () => {
     const options = {
       instructions: 42,
-    } as unknown as GeminiCliAgentOptions;
-    expect(() => new GeminiCliSession(options, 'session-4', mockAgent)).toThrow(
+    } as unknown as OnyxCliAgentOptions;
+    expect(() => new OnyxCliSession(options, 'session-4', mockAgent)).toThrow(
       'Instructions must be a string or a function.',
     );
   });
@@ -105,16 +105,16 @@ describe('GeminiCliSession constructor', () => {
   it('throws when instructions is an array', () => {
     const options = {
       instructions: ['step1', 'step2'],
-    } as unknown as GeminiCliAgentOptions;
-    expect(() => new GeminiCliSession(options, 'session-5', mockAgent)).toThrow(
+    } as unknown as OnyxCliAgentOptions;
+    expect(() => new OnyxCliSession(options, 'session-5', mockAgent)).toThrow(
       'Instructions must be a string or a function.',
     );
   });
 });
 
-describe('GeminiCliSession id getter', () => {
+describe('OnyxCliSession id getter', () => {
   it('returns the sessionId passed to the constructor', () => {
-    const session = new GeminiCliSession(
+    const session = new OnyxCliSession(
       baseOptions,
       'my-session-id',
       mockAgent,
@@ -123,15 +123,15 @@ describe('GeminiCliSession id getter', () => {
   });
 
   it('returns different ids for different sessions', () => {
-    const s1 = new GeminiCliSession(baseOptions, 'session-a', mockAgent);
-    const s2 = new GeminiCliSession(baseOptions, 'session-b', mockAgent);
+    const s1 = new OnyxCliSession(baseOptions, 'session-a', mockAgent);
+    const s2 = new OnyxCliSession(baseOptions, 'session-b', mockAgent);
     expect(s1.id).not.toBe(s2.id);
   });
 });
 
-describe('GeminiCliSession initialize()', () => {
+describe('OnyxCliSession initialize()', () => {
   it('initializes successfully with string instructions', async () => {
-    const session = new GeminiCliSession(
+    const session = new OnyxCliSession(
       baseOptions,
       'session-init-1',
       mockAgent,
@@ -140,7 +140,7 @@ describe('GeminiCliSession initialize()', () => {
   });
 
   it('is idempotent — calling initialize() twice does not throw', async () => {
-    const session = new GeminiCliSession(
+    const session = new OnyxCliSession(
       baseOptions,
       'session-init-2',
       mockAgent,
@@ -150,40 +150,40 @@ describe('GeminiCliSession initialize()', () => {
   });
 
   it('initializes with empty tools array', async () => {
-    const options: GeminiCliAgentOptions = { ...baseOptions, tools: [] };
-    const session = new GeminiCliSession(options, 'session-init-3', mockAgent);
+    const options: OnyxCliAgentOptions = { ...baseOptions, tools: [] };
+    const session = new OnyxCliSession(options, 'session-init-3', mockAgent);
     await expect(session.initialize()).resolves.toBeUndefined();
   });
 
   it('initializes with empty skills array', async () => {
-    const options: GeminiCliAgentOptions = { ...baseOptions, skills: [] };
-    const session = new GeminiCliSession(options, 'session-init-4', mockAgent);
+    const options: OnyxCliAgentOptions = { ...baseOptions, skills: [] };
+    const session = new OnyxCliSession(options, 'session-init-4', mockAgent);
     await expect(session.initialize()).resolves.toBeUndefined();
   });
 
   it('initializes with custom model', async () => {
-    const options: GeminiCliAgentOptions = {
+    const options: OnyxCliAgentOptions = {
       ...baseOptions,
-      model: 'gemini-2.0-flash',
+      model: 'onyx-2.0-flash',
     };
-    const session = new GeminiCliSession(options, 'session-init-5', mockAgent);
+    const session = new OnyxCliSession(options, 'session-init-5', mockAgent);
     await expect(session.initialize()).resolves.toBeUndefined();
   });
 
   it('initializes with custom cwd', async () => {
-    const options: GeminiCliAgentOptions = {
+    const options: OnyxCliAgentOptions = {
       ...baseOptions,
       cwd: '/custom/working/dir',
     };
-    const session = new GeminiCliSession(options, 'session-init-6', mockAgent);
+    const session = new OnyxCliSession(options, 'session-init-6', mockAgent);
     await expect(session.initialize()).resolves.toBeUndefined();
   });
 });
 
-// TODO(#24999): Mock uses getGeminiClient() method but session.ts expects geminiClient property.
-describe.skip('GeminiCliSession sendStream()', () => {
+// TODO(#24999): Mock uses getOnyxClient() method but session.ts expects onyxClient property.
+describe.skip('OnyxCliSession sendStream()', () => {
   it('auto-initializes if not yet initialized', async () => {
-    const session = new GeminiCliSession(
+    const session = new OnyxCliSession(
       baseOptions,
       'session-stream-1',
       mockAgent,
@@ -196,7 +196,7 @@ describe.skip('GeminiCliSession sendStream()', () => {
   });
 
   it('completes cleanly when model returns no tool calls', async () => {
-    const session = new GeminiCliSession(
+    const session = new OnyxCliSession(
       baseOptions,
       'session-stream-2',
       mockAgent,
@@ -210,7 +210,7 @@ describe.skip('GeminiCliSession sendStream()', () => {
   });
 
   it('accepts an AbortSignal without throwing', async () => {
-    const session = new GeminiCliSession(
+    const session = new OnyxCliSession(
       baseOptions,
       'session-stream-3',
       mockAgent,
@@ -224,7 +224,7 @@ describe.skip('GeminiCliSession sendStream()', () => {
   });
 
   it('executes tool call loop and sends function response back to model', async () => {
-    const { GeminiEventType } = await import('@onyx/core');
+    const { OnyxEventType } = await import('@onyx/core');
 
     // First call: yield a ToolCallRequest, then end
     // Second call: empty stream (model is done after tool result)
@@ -234,7 +234,7 @@ describe.skip('GeminiCliSession sendStream()', () => {
       if (callCount === 1) {
         return (async function* () {
           yield {
-            type: GeminiEventType.ToolCallRequest,
+            type: OnyxEventType.ToolCallRequest,
             value: {
               callId: 'call-1',
               name: 'testTool',
@@ -261,7 +261,7 @@ describe.skip('GeminiCliSession sendStream()', () => {
       },
     ]);
 
-    const session = new GeminiCliSession(
+    const session = new OnyxCliSession(
       baseOptions,
       'session-stream-4',
       mockAgent,
@@ -273,7 +273,7 @@ describe.skip('GeminiCliSession sendStream()', () => {
 
     // The ToolCallRequest event should have been yielded to the caller
     expect(events).toHaveLength(1);
-    expect(events[0].type).toBe(GeminiEventType.ToolCallRequest);
+    expect(events[0].type).toBe(OnyxEventType.ToolCallRequest);
 
     // scheduleAgentTools should have been called with the tool call
     expect(mockScheduleAgentTools).toHaveBeenCalledOnce();
@@ -286,11 +286,11 @@ describe.skip('GeminiCliSession sendStream()', () => {
     const dynamicInstructions = vi
       .fn()
       .mockResolvedValue('updated instructions');
-    const options: GeminiCliAgentOptions = {
+    const options: OnyxCliAgentOptions = {
       instructions: dynamicInstructions,
     };
 
-    const session = new GeminiCliSession(
+    const session = new OnyxCliSession(
       options,
       'session-stream-5',
       mockAgent,
@@ -317,7 +317,7 @@ describe.skip('GeminiCliSession sendStream()', () => {
   });
 
   it('does not call setUserMemory when instructions is a string', async () => {
-    const session = new GeminiCliSession(
+    const session = new OnyxCliSession(
       baseOptions,
       'session-stream-6',
       mockAgent,

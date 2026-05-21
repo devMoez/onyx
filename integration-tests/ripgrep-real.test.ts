@@ -36,14 +36,14 @@ class MockConfig {
     return true;
   }
 
-  getFileFilteringRespectGeminiIgnore() {
+  getFileFilteringRespectOnyxIgnore() {
     return true;
   }
 
   getFileFilteringOptions() {
     return {
       respectGitIgnore: true,
-      respectGeminiIgnore: true,
+      respectOnyxIgnore: true,
       customIgnoreFilePaths: [],
     };
   }
@@ -148,3 +148,4 @@ describe('ripgrep-real-direct', () => {
     expect(result.llmContent).toContain('L4- line4');
   });
 });
+

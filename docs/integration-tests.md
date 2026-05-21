@@ -65,7 +65,7 @@ To regenerate these golden files, set the REGENERATE_MODEL_GOLDENS environment
 variable to "true" when running the tests, for example:
 
 **WARNING**: If running locally you should review these updated responses for
-any information about yourself or your system that gemini may have included in
+any information about yourself or your system that onyx may have included in
 these responses.
 
 ```bash
@@ -234,7 +234,7 @@ The verbose output is formatted to clearly identify the source of the logs:
 
 ```
 --- TEST: <log dir>:<test-name> ---
-... output from the gemini command ...
+... output from the onyx command ...
 --- END TEST: <log dir>:<test-name> ---
 ```
 

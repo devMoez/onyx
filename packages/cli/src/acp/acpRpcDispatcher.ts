@@ -18,7 +18,7 @@ import { getAcpErrorMessage } from './acpErrors.js';
 import { AcpSessionManager, type AuthDetails } from './acpSessionManager.js';
 import { hasMeta } from './acpUtils.js';
 
-export class GeminiAgent {
+export class OnyxAgent {
   private apiKey: string | undefined;
   private baseUrl: string | undefined;
   private customHeaders: Record<string, string> | undefined;
@@ -51,9 +51,9 @@ export class GeminiAgent {
         description: 'Log in with your Google account',
       },
       {
-        id: AuthType.USE_GEMINI,
-        name: 'Gemini API key',
-        description: 'Use an API key with Gemini Developer API',
+        id: AuthType.USE_ONYX,
+        name: 'Onyx API key',
+        description: 'Use an API key with Onyx Developer API',
         _meta: {
           'api-key': {
             provider: 'google',
@@ -84,7 +84,7 @@ export class GeminiAgent {
       protocolVersion: acp.PROTOCOL_VERSION,
       authMethods,
       agentInfo: {
-        name: 'gemini-cli',
+        name: 'onyx-cli',
         title: 'Onyx CLI',
         version,
       },

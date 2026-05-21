@@ -11,7 +11,7 @@ import * as cache from './crawlCache.js';
 import { crawl } from './crawler.js';
 import { createTmpDir, cleanupTmpDir } from '@onyx/test-utils';
 import { loadIgnoreRules, type Ignore } from './ignore.js';
-import { GEMINI_IGNORE_FILE_NAME } from '../../config/constants.js';
+import { ONYX_IGNORE_FILE_NAME } from '../../config/constants.js';
 import { FileDiscoveryService } from '../../services/fileDiscoveryService.js';
 
 describe('crawler', () => {
@@ -25,7 +25,7 @@ describe('crawler', () => {
 
   it('should use .onyxIgnore rules', async () => {
     tmpDir = await createTmpDir({
-      [GEMINI_IGNORE_FILE_NAME]: 'dist/',
+      [ONYX_IGNORE_FILE_NAME]: 'dist/',
       dist: ['ignored.js'],
       src: ['not-ignored.js'],
     });
@@ -48,7 +48,7 @@ describe('crawler', () => {
       expect.arrayContaining([
         '.',
         'src/',
-        GEMINI_IGNORE_FILE_NAME,
+        ONYX_IGNORE_FILE_NAME,
         'src/not-ignored.js',
       ]),
     );
@@ -58,9 +58,9 @@ describe('crawler', () => {
     tmpDir = await createTmpDir({
       '.git': {},
       '.gitignore': 'dist/',
-      [GEMINI_IGNORE_FILE_NAME]: 'build/',
+      [ONYX_IGNORE_FILE_NAME]: 'build/',
       dist: ['ignored-by-git.js'],
-      build: ['ignored-by-gemini.js'],
+      build: ['ignored-by-onyx.js'],
       src: ['not-ignored.js'],
     });
 
@@ -82,7 +82,7 @@ describe('crawler', () => {
       expect.arrayContaining([
         '.',
         'src/',
-        GEMINI_IGNORE_FILE_NAME,
+        ONYX_IGNORE_FILE_NAME,
         '.gitignore',
         'src/not-ignored.js',
       ]),

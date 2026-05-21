@@ -22,7 +22,7 @@ export const clearCommand: SlashCommand = {
   kind: CommandKind.BUILT_IN,
   autoExecute: true,
   action: async (context, _args) => {
-    const geminiClient = context.services.agentContext?.geminiClient;
+    const onyxClient = context.services.agentContext?.onyxClient;
     const config = context.services.agentContext?.config;
 
     // Fire SessionEnd hook before clearing
@@ -43,7 +43,7 @@ export const clearCommand: SlashCommand = {
       config.resetNewSessionState(newSessionId);
     }
 
-    if (geminiClient) {
+    if (onyxClient) {
       context.ui.setDebugMessage('Clearing terminal and resetting chat.');
 
       // Close persistent browser sessions before resetting chat
@@ -51,7 +51,7 @@ export const clearCommand: SlashCommand = {
 
       // If resetChat fails, the exception will propagate and halt the command,
       // which is the correct behavior to signal a failure to the user.
-      await geminiClient.resetChat();
+      await onyxClient.resetChat();
     } else {
       context.ui.setDebugMessage('Clearing terminal.');
     }

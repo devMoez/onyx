@@ -226,7 +226,7 @@ describe('useLoadingIndicator', () => {
 
   it('should reflect retry status in currentLoadingPhrase when provided', async () => {
     const retryStatus = {
-      model: 'gemini-pro',
+      model: 'onyx-pro',
       attempt: 2,
       maxAttempts: 3,
       delayMs: 1000,
@@ -243,7 +243,7 @@ describe('useLoadingIndicator', () => {
 
   it('should not show retry status phrase when idle', async () => {
     const retryStatus = {
-      model: 'gemini-pro',
+      model: 'onyx-pro',
       attempt: 2,
       maxAttempts: 3,
       delayMs: 1000,
@@ -259,7 +259,7 @@ describe('useLoadingIndicator', () => {
 
   it('should hide low-verbosity retry status for early retry attempts', async () => {
     const retryStatus = {
-      model: 'gemini-pro',
+      model: 'onyx-pro',
       attempt: 1,
       maxAttempts: 5,
       delayMs: 1000,
@@ -280,7 +280,7 @@ describe('useLoadingIndicator', () => {
 
   it('should show a generic retry phrase in low error verbosity mode for later retries', async () => {
     const retryStatus = {
-      model: 'gemini-pro',
+      model: 'onyx-pro',
       attempt: 2,
       maxAttempts: 5,
       delayMs: 1000,

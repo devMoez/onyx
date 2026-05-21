@@ -34,7 +34,7 @@ import {
 import { convert } from 'html-to-text';
 
 const mockGenerateContent = vi.fn();
-const mockGetGeminiClient = vi.fn(() => ({
+const mockGetOnyxClient = vi.fn(() => ({
   generateContent: mockGenerateContent,
 }));
 
@@ -276,12 +276,12 @@ describe('WebFetchTool', () => {
       getApprovalMode: vi.fn(),
       setApprovalMode: vi.fn(),
       getProxy: vi.fn(),
-      getGeminiClient: mockGetGeminiClient,
+      getOnyxClient: mockGetOnyxClient,
       get config() {
         return this;
       },
-      get geminiClient() {
-        return mockGetGeminiClient();
+      get onyxClient() {
+        return mockGetOnyxClient();
       },
       getRetryFetchErrors: vi.fn().mockReturnValue(false),
       getMaxAttempts: vi.fn().mockReturnValue(3),
@@ -711,7 +711,7 @@ describe('WebFetchTool', () => {
       const tool = new WebFetchTool(mockConfig, bus);
       const params = {
         prompt:
-          'fetch https://github.com/google/gemini-react/blob/main/README.md',
+          'fetch https://github.com/google/onyx-react/blob/main/README.md',
       };
       const invocation = tool.build(params);
       const confirmationDetails = await invocation.shouldConfirmExecute(
@@ -722,9 +722,9 @@ describe('WebFetchTool', () => {
         type: 'info',
         title: 'Confirm Web Fetch',
         prompt:
-          'fetch https://github.com/google/gemini-react/blob/main/README.md',
+          'fetch https://github.com/google/onyx-react/blob/main/README.md',
         urls: [
-          'https://raw.githubusercontent.com/google/gemini-react/main/README.md',
+          'https://raw.githubusercontent.com/google/onyx-react/main/README.md',
         ],
         onConfirm: expect.any(Function),
       });

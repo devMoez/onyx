@@ -199,7 +199,7 @@ describe('conseca-logger', () => {
       expect.anything(),
       [
         {
-          gemini_cli_key: EventMetadataKey.CONSECA_ERROR,
+          onyx_cli_key: EventMetadataKey.CONSECA_ERROR,
           value: 'some error',
         },
       ],
@@ -283,11 +283,11 @@ describe('conseca-logger', () => {
       expect.anything(),
       [
         {
-          gemini_cli_key: EventMetadataKey.CONSECA_VERDICT_RESULT,
+          onyx_cli_key: EventMetadataKey.CONSECA_VERDICT_RESULT,
           value: '"allow"',
         },
         {
-          gemini_cli_key: EventMetadataKey.CONSECA_ERROR,
+          onyx_cli_key: EventMetadataKey.CONSECA_ERROR,
           value: 'some error',
         },
       ],

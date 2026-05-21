@@ -1,30 +1,30 @@
 #!/bin/bash
 # -----------------------------------------------------------------------------
-# Gemini API Replay Script
+# Onyx API Replay Script
 # -----------------------------------------------------------------------------
 # Purpose:
-#   This script is used to replay a Gemini API request using a raw JSON payload.
+#   This script is used to replay a Onyx API request using a raw JSON payload.
 #   It is particularly useful for debugging the exact requests made by the
-#   Gemini CLI.
+#   Onyx CLI.
 #
 # Prerequisites:
-#   1. Export your Gemini API key:
-#      export GEMINI_API_KEY="your_api_key_here"
+#   1. Export your Onyx API key:
+#      export ONYX_API_KEY="your_api_key_here"
 #
-#   2. Generate a request payload from the Gemini CLI:
+#   2. Generate a request payload from the Onyx CLI:
 #      Inside the CLI, run the `/chat debug` command. This will save the most
 #      recent API request to a file named `gcli-request-<timestamp>.json`.
 #
 # Usage:
-#   ./scripts/send_gemini_request.sh --payload <path_to_json> --model <model_id> [--stream]
+#   ./scripts/send_onyx_request.sh --payload <path_to_json> --model <model_id> [--stream]
 #
 # Options:
 #   --payload <file>  Path to the JSON request payload.
-#   --model <id>      The Gemini model ID (e.g., gemini-3-flash-preview).
+#   --model <id>      The Onyx model ID (e.g., onyx-3-flash-preview).
 #   --stream          (Optional) Use the streaming API endpoint. Defaults to non-streaming.
 #
 # Example:
-#   ./scripts/send_gemini_request.sh --payload gcli-request.json --model gemini-3-flash-preview
+#   ./scripts/send_onyx_request.sh --payload gcli-request.json --model onyx-3-flash-preview
 # -----------------------------------------------------------------------------
 
 set -e -E
@@ -41,7 +41,7 @@ fi
 # Function to print usage
 usage() {
     echo "Usage: $0 --payload <path_to_json_file> --model <model_id> [--stream]"
-    echo "Ensure GEMINI_API_KEY environment variable is set."
+    echo "Ensure ONYX_API_KEY environment variable is set."
     exit 1
 }
 
@@ -64,8 +64,8 @@ if [[ -z "${PAYLOAD_FILE}" ]] || [[ -z "${MODEL_ID}" ]]; then
     usage
 fi
 
-if [[ -z "${GEMINI_API_KEY}" ]]; then
-    echo "Error: GEMINI_API_KEY environment variable is not set."
+if [[ -z "${ONYX_API_KEY}" ]]; then
+    echo "Error: ONYX_API_KEY environment variable is not set."
     exit 1
 fi
 
@@ -92,13 +92,13 @@ if [[ "${STREAM_MODE}" = false ]] && command -v jq &> /dev/null; then
     # Invoke curl separately to avoid masking its return value
     output=$(curl -s -X POST \
       -H "Content-Type: application/json" \
-      "https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:${GENERATE_CONTENT_API}?key=${GEMINI_API_KEY}" \
+      "https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:${GENERATE_CONTENT_API}?key=${ONYX_API_KEY}" \
       -d "@${PAYLOAD_FILE}")
     echo "${output}" | jq .
 else
     curl -X POST \
       -H "Content-Type: application/json" \
-      "https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:${GENERATE_CONTENT_API}?key=${GEMINI_API_KEY}" \
+      "https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:${GENERATE_CONTENT_API}?key=${ONYX_API_KEY}" \
       -d "@${PAYLOAD_FILE}"
 fi
 

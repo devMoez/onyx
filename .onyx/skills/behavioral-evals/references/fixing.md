@@ -10,12 +10,12 @@ evaluation.
 1.  **Fetch Nightly Results**: Use the `gh` CLI to inspect the latest run from
     `evals-nightly.yml` if applicable.
     - _Example view URL_:
-      `https://github.com/google-gemini/gemini-cli/actions/workflows/evals-nightly.yml`
+      `https://github.com/google-onyx/onyx-cli/actions/workflows/evals-nightly.yml`
 2.  **Isolate**: DO NOT push changes or start remote runs. Confine investigation
     to the local workspace.
 3.  **Read Logs**:
     - Eval logs live in `evals/logs/<test_name>.log`.
-    - Enable verbose debugging via `export GEMINI_DEBUG_LOG_FILE="debug.log"`.
+    - Enable verbose debugging via `export ONYX_DEBUG_LOG_FILE="debug.log"`.
 4.  **Diagnose**: Audit tool logs and telemetry. Note if due to setup/assert.
     - **Tip**: Proactively add custom logging/diagnostics to check hypotheses.
 
@@ -60,7 +60,7 @@ evaluation.
       - **Verification**: As part of simplification, you MUST identify and run
         any behavioral eval tests that might be affected by the changes to
         ensure no regressions are introduced.
-    - Test fixes should not "cheat" by changing a test's `GEMINI.md` file or by
+    - Test fixes should not "cheat" by changing a test's `ONYX.md` file or by
       updating the test's prompt to instruct it to not repro the bug.
     - **Warning**: Prompts have multiple configurations; ensure your fix targets
       the correct config for the model in question.
@@ -83,9 +83,9 @@ evaluation.
     triggering heavy test runs.
 3.  **Stability Limit**: Run the test **3 times** locally on key models (can use
     scripts to run in parallel for speed):
-    - **Gemini 3.0**
-    - **Gemini 3 Flash**
-    - **Gemini 2.5 Pro**
+    - **Onyx 3.0**
+    - **Onyx 3 Flash**
+    - **Onyx 2.5 Pro**
 4.  **Flakiness Rule**: If it passes 2/3 times, it may be inherent noise
     difficult to improve without a structural split.
 

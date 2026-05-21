@@ -543,7 +543,7 @@ describe('loadKeyMatchers integration', () => {
 
   beforeEach(async () => {
     tempDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), 'gemini-keymatchers-test-'),
+      path.join(os.tmpdir(), 'onyx-keymatchers-test-'),
     );
     tempFilePath = path.join(tempDir, 'keybindings.json');
     vi.spyOn(Storage, 'getUserKeybindingsPath').mockReturnValue(tempFilePath);

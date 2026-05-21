@@ -25,7 +25,7 @@ vi.mock('fs', async (importOriginal) => {
 describe('initCommand', () => {
   let mockContext: CommandContext;
   const targetDir = '/test/dir';
-  const geminiMdPath = path.join(targetDir, 'onyx.md');
+  const onyxMdPath = path.join(targetDir, 'onyx.md');
 
   beforeEach(() => {
     // Create a fresh mock context for each test
@@ -74,7 +74,7 @@ describe('initCommand', () => {
     )) as SubmitPromptActionReturn;
 
     // Assert: Check that writeFileSync was called correctly
-    expect(fs.writeFileSync).toHaveBeenCalledWith(geminiMdPath, '', 'utf8');
+    expect(fs.writeFileSync).toHaveBeenCalledWith(onyxMdPath, '', 'utf8');
 
     // Assert: Check that an informational message was added to the UI
     expect(mockContext.ui.addItem).toHaveBeenCalledWith(
@@ -88,7 +88,7 @@ describe('initCommand', () => {
     // Assert: Check that the correct prompt is submitted
     expect(result.type).toBe('submit_prompt');
     expect(result.content).toContain(
-      'You are an AI agent that brings the power of Gemini',
+      'You are an AI agent that brings the power of Onyx',
     );
   });
 

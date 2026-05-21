@@ -11,8 +11,8 @@ import * as path from 'node:path';
 import { debugLogger, spawnAsync, escapePath, Storage } from '@onyx/core';
 
 /**
- * Supported image file extensions based on Gemini API.
- * See: https://ai.google.dev/gemini-api/docs/image-understanding
+ * Supported image file extensions based on Onyx API.
+ * See: https://ai.google.dev/onyx-api/docs/image-understanding
  */
 export const IMAGE_EXTENSIONS = [
   '.png',

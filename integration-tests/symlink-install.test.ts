@@ -16,7 +16,7 @@ import {
   unlinkSync,
 } from 'node:fs';
 import { join, dirname } from 'node:path';
-import { GEMINI_DIR } from '@onyx/core';
+import { ONYX_DIR } from '@onyx/core';
 import * as pty from '@lydell/node-pty';
 import { fileURLToPath } from 'node:url';
 
@@ -58,7 +58,7 @@ describe.skipIf(skipFlaky)(
 
       const realExtPath = join(rig.testDir!, 'real-extension');
       mkdirSync(realExtPath);
-      writeFileSync(join(realExtPath, 'gemini-extension.json'), extension);
+      writeFileSync(join(realExtPath, 'onyx-extension.json'), extension);
 
       const maliciousExtPath = join(
         os.tmpdir(),
@@ -66,7 +66,7 @@ describe.skipIf(skipFlaky)(
       );
       mkdirSync(maliciousExtPath);
       writeFileSync(
-        join(maliciousExtPath, 'gemini-extension.json'),
+        join(maliciousExtPath, 'onyx-extension.json'),
         otherExtension,
       );
 
@@ -82,9 +82,9 @@ describe.skipIf(skipFlaky)(
           cwd: rig.testDir!,
           env: {
             ...process.env,
-            GEMINI_CLI_HOME: rig.homeDir!,
-            GEMINI_CLI_INTEGRATION_TEST: 'true',
-            GEMINI_PTY_INFO: 'node-pty',
+            ONYX_CLI_HOME: rig.homeDir!,
+            ONYX_CLI_INTEGRATION_TEST: 'true',
+            ONYX_PTY_INFO: 'node-pty',
           },
         });
         return new InteractiveRun(ptyProcess);
@@ -104,7 +104,7 @@ describe.skipIf(skipFlaky)(
       // 2. Verify trustedFolders.json contains the REAL path, not the symlink path
       const trustedFoldersPath = join(
         rig.homeDir!,
-        GEMINI_DIR,
+        ONYX_DIR,
         'trustedFolders.json',
       );
       // Wait for file to be written
@@ -137,3 +137,4 @@ describe.skipIf(skipFlaky)(
     }, 60000);
   },
 );
+

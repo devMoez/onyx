@@ -33,9 +33,9 @@ describe('API Resilience E2E', () => {
 
     // Run the CLI with a simple prompt.
     // The fake responses will provide a stream with a metadata-only chunk in the middle.
-    // We use gemini-3-pro-preview to minimize internal service calls.
+    // We use onyx-3-pro-preview to minimize internal service calls.
     const result = await rig.run({
-      args: ['hi', '--model', 'gemini-3-pro-preview'],
+      args: ['hi', '--model', 'onyx-3-pro-preview'],
     });
 
     // Verify the output contains text from the normal chunks.
@@ -48,3 +48,4 @@ describe('API Resilience E2E', () => {
     expect(hasUserPromptEvent).toBe(true);
   });
 });
+

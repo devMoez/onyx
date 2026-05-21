@@ -21,7 +21,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
     ...actual,
     openBrowserSecurely: vi.fn(),
     shouldLaunchBrowser: vi.fn().mockReturnValue(true),
-    UPGRADE_URL_PAGE: 'https://goo.gle/set-up-gemini-code-assist',
+    UPGRADE_URL_PAGE: 'https://goo.gle/set-up-onyx-code-assist',
   };
 });
 
@@ -47,7 +47,7 @@ describe('upgradeCommand', () => {
   it('should have the correct name and description', () => {
     expect(upgradeCommand.name).toBe('upgrade');
     expect(upgradeCommand.description).toBe(
-      'Upgrade your Gemini Code Assist tier for higher limits',
+      'Upgrade your Onyx Code Assist tier for higher limits',
     );
   });
 
@@ -65,7 +65,7 @@ describe('upgradeCommand', () => {
     vi.mocked(
       mockContext.services.agentContext!.config.getContentGeneratorConfig,
     ).mockReturnValue({
-      authType: AuthType.USE_GEMINI,
+      authType: AuthType.USE_ONYX,
     });
 
     if (!upgradeCommand.action) {

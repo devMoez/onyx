@@ -118,7 +118,7 @@ each tool.
 
 | Tool                                             | Kind    | Description                                                                          |
 | :----------------------------------------------- | :------ | :----------------------------------------------------------------------------------- |
-| [`activate_skill`](../tools/activate-skill.md)   | `Other` | Loads specialized procedural expertise from the `.gemini/skills` directory.          |
+| [`activate_skill`](../tools/activate-skill.md)   | `Other` | Loads specialized procedural expertise from the `.onyx/skills` directory.          |
 | [`get_internal_docs`](../tools/internal-docs.md) | `Think` | Accesses Onyx CLI's own documentation for accurate answers about its capabilities. |
 
 ### Planning
@@ -163,7 +163,7 @@ representation of each tool's arguments.
 | Tool                     | JSON argument keys                                                                                                                                                                                   |
 | :----------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `run_shell_command`      | `command`, `description`, `dir_path`, `is_background`                                                                                                                                                |
-| `glob`                   | `pattern`, `dir_path`, `case_sensitive`, `respect_git_ignore`, `respect_gemini_ignore`                                                                                                               |
+| `glob`                   | `pattern`, `dir_path`, `case_sensitive`, `respect_git_ignore`, `respect_onyx_ignore`                                                                                                               |
 | `grep_search`            | `pattern`, `dir_path`, `include_pattern`, `exclude_pattern`, `names_only`, `case_sensitive`, `fixed_strings`, `context`, `after`, `before`, `no_ignore`, `max_matches_per_file`, `total_max_matches` |
 | `list_directory`         | `dir_path`, `ignore`, `file_filtering_options`                                                                                                                                                       |
 | `read_file`              | `file_path`, `start_line`, `end_line`                                                                                                                                                                |

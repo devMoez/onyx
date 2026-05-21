@@ -47,9 +47,9 @@ describe('ExtensionManager hydration', () => {
     vi.spyOn(coreEvents, 'emitFeedback');
     vi.spyOn(debugLogger, 'debug').mockImplementation(() => {});
 
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-test-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'onyx-test-'));
     mockHomedir.mockReturnValue(tempDir);
-    vi.stubEnv('GEMINI_CLI_HOME', tempDir);
+    vi.stubEnv('ONYX_CLI_HOME', tempDir);
 
     // Create the extensions directory that ExtensionManager expects
     extensionsDir = path.join(tempDir, '.onyx', EXTENSIONS_DIRECTORY_NAME);
@@ -162,7 +162,7 @@ System using model: \${MODEL_NAME}
     await extensionManager.loadExtensions();
 
     extensionManager.setRequestSetting(async (setting) => {
-      if (setting.envVar === 'MODEL_NAME') return 'gemini-pro';
+      if (setting.envVar === 'MODEL_NAME') return 'onyx-pro';
       return '';
     });
 
@@ -175,7 +175,7 @@ System using model: \${MODEL_NAME}
     const agent = extension.agents![0];
     if (agent.kind === 'local') {
       expect(agent.promptConfig.systemPrompt).toContain(
-        'System using model: gemini-pro',
+        'System using model: onyx-pro',
       );
     } else {
       throw new Error('Expected local agent');

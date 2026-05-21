@@ -5,13 +5,13 @@
  */
 
 /**
- * @fileoverview LegacyAgentSession backed by the existing Gemini client +
+ * @fileoverview LegacyAgentSession backed by the existing Onyx client +
  * scheduler loop, adapted to the merged AgentProtocol / AgentSession surface.
  */
 
-import { GeminiEventType } from '../core/turn.js';
+import { OnyxEventType } from '../core/turn.js';
 import type { Part } from '@google/genai';
-import type { GeminiClient } from '../core/client.js';
+import type { OnyxClient } from '../core/client.js';
 import type { Config } from '../config/config.js';
 import type { ToolCallRequestInfo } from '../scheduler/types.js';
 import { Scheduler } from '../scheduler/scheduler.js';
@@ -21,8 +21,8 @@ import { debugLogger } from '../utils/debugLogger.js';
 import type { EditorType } from '../utils/editor.js';
 import {
   buildToolResponseData,
-  contentPartsToGeminiParts,
-  geminiPartsToContentParts,
+  contentPartsToOnyxParts,
+  onyxPartsToContentParts,
 } from './content-utils.js';
 import { populateToolDisplay } from './tool-display-utils.js';
 import { AgentSession } from './agent-session.js';
@@ -47,7 +47,7 @@ function isAbortLikeError(err: unknown): boolean {
 
 export interface LegacyAgentSessionDeps {
   config: Config;
-  client?: GeminiClient;
+  client?: OnyxClient;
   scheduler?: Scheduler;
   promptId?: string;
   streamId?: string;
@@ -65,7 +65,7 @@ export class LegacyAgentProtocol implements AgentProtocol {
   private _abortController = new AbortController();
   private _nextStreamIdOverride?: string;
 
-  private readonly _client: GeminiClient;
+  private readonly _client: OnyxClient;
   private readonly _scheduler: Scheduler;
   private readonly _config: Config;
   private readonly _promptId: string;
@@ -74,7 +74,7 @@ export class LegacyAgentProtocol implements AgentProtocol {
     this._translationState = createTranslationState(deps.streamId);
     this._nextStreamIdOverride = deps.streamId;
     this._config = deps.config;
-    this._client = deps.client ?? deps.config.getGeminiClient();
+    this._client = deps.client ?? deps.config.getOnyxClient();
     this._promptId = deps.promptId ?? deps.config.promptId ?? '';
     if (deps.scheduler) {
       this._scheduler = deps.scheduler;
@@ -124,7 +124,7 @@ export class LegacyAgentProtocol implements AgentProtocol {
 
     this._beginNewStream();
     const streamId = this._translationState.streamId;
-    const parts = contentPartsToGeminiParts(message.content);
+    const parts = contentPartsToOnyxParts(message.content);
     const userMessage = this._makeUserMessageEvent(
       message.content,
       message.displayContent,
@@ -207,27 +207,27 @@ export class LegacyAgentProtocol implements AgentProtocol {
           return;
         }
 
-        if (event.type === GeminiEventType.ToolCallRequest) {
+        if (event.type === OnyxEventType.ToolCallRequest) {
           toolCallRequests.push(event.value);
         }
 
         this._emit(translateEvent(event, this._translationState));
 
         switch (event.type) {
-          case GeminiEventType.Error:
-          case GeminiEventType.InvalidStream:
-          case GeminiEventType.ContextWindowWillOverflow:
+          case OnyxEventType.Error:
+          case OnyxEventType.InvalidStream:
+          case OnyxEventType.ContextWindowWillOverflow:
             this._finishStream('failed');
             return;
-          case GeminiEventType.Finished:
+          case OnyxEventType.Finished:
             if (toolCallRequests.length === 0) {
               this._finishStream(mapFinishReason(event.value.reason));
               return;
             }
             break;
-          case GeminiEventType.AgentExecutionStopped:
-          case GeminiEventType.UserCancelled:
-          case GeminiEventType.MaxSessionTurns:
+          case OnyxEventType.AgentExecutionStopped:
+          case OnyxEventType.UserCancelled:
+          case OnyxEventType.MaxSessionTurns:
             this._clearActiveStream();
             return;
           default:
@@ -261,7 +261,7 @@ export class LegacyAgentProtocol implements AgentProtocol {
         const request = tc.request;
         const content: ContentPart[] = response.error
           ? [{ type: 'text', text: response.error.message }]
-          : geminiPartsToContentParts(response.responseParts);
+          : onyxPartsToContentParts(response.responseParts);
         const display = populateToolDisplay({
           name: request.name,
           invocation: 'invocation' in tc ? tc.invocation : undefined,

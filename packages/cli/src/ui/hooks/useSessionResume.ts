@@ -16,7 +16,7 @@ interface UseSessionResumeParams {
   config: Config;
   historyManager: UseHistoryManagerReturn;
   refreshStatic: () => void;
-  isGeminiClientInitialized: boolean;
+  isOnyxClientInitialized: boolean;
   setQuittingMessages: (messages: null) => void;
   resumedSessionData?: ResumedSessionData;
   isAuthenticating: boolean;
@@ -31,7 +31,7 @@ export function useSessionResume({
   config,
   historyManager,
   refreshStatic,
-  isGeminiClientInitialized,
+  isOnyxClientInitialized,
   setQuittingMessages,
   resumedSessionData,
   isAuthenticating,
@@ -56,7 +56,7 @@ export function useSessionResume({
       resumedData: ResumedSessionData,
     ) => {
       // Wait for the client.
-      if (!isGeminiClientInitialized) {
+      if (!isOnyxClientInitialized) {
         return;
       }
 
@@ -81,8 +81,8 @@ export function useSessionResume({
           workspaceContext.addDirectories(resumedData.conversation.directories);
         }
 
-        // Give the history to the Gemini client.
-        await config.getGeminiClient()?.resumeChat(clientHistory, resumedData);
+        // Give the history to the Onyx client.
+        await config.getOnyxClient()?.resumeChat(clientHistory, resumedData);
       } catch (error) {
         coreEvents.emitFeedback(
           'error',
@@ -93,7 +93,7 @@ export function useSessionResume({
         setIsResuming(false);
       }
     },
-    [config, isGeminiClientInitialized, setQuittingMessages],
+    [config, isOnyxClientInitialized, setQuittingMessages],
   );
 
   // Handle interactive resume from the command line (-r/--resume without -p/--prompt-interactive).
@@ -103,7 +103,7 @@ export function useSessionResume({
     if (
       resumedSessionData &&
       !isAuthenticating &&
-      isGeminiClientInitialized &&
+      isOnyxClientInitialized &&
       !hasLoadedResumedSession.current
     ) {
       hasLoadedResumedSession.current = true;
@@ -119,7 +119,7 @@ export function useSessionResume({
   }, [
     resumedSessionData,
     isAuthenticating,
-    isGeminiClientInitialized,
+    isOnyxClientInitialized,
     loadHistoryForResume,
   ]);
 

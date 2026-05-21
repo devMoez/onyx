@@ -27,7 +27,7 @@ The best way to trigger task planning is to explicitly ask for it.
 **Prompt:**
 `I want to migrate this project from JavaScript to TypeScript. Please make a plan first.`
 
-Gemini will analyze your codebase and use the `write_todos` tool to generate a
+Onyx will analyze your codebase and use the `write_todos` tool to generate a
 structured list.
 
 **Example Plan:**

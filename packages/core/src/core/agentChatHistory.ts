@@ -7,7 +7,7 @@
 import type { Content } from '@google/genai';
 
 /**
- * A durable wrapper for Gemini Content that carries a stable ID.
+ * A durable wrapper for Onyx Content that carries a stable ID.
  * This ID is preserved across all transformations and is used as the anchor
  * for context graph node identity.
  */
@@ -78,7 +78,7 @@ export class AgentChatHistory {
   }
 
   /**
-   * Returns a copy of the raw Gemini Content[] for API consumption.
+   * Returns a copy of the raw Onyx Content[] for API consumption.
    */
   getContents(): Content[] {
     return this.history.map((h) => h.content);

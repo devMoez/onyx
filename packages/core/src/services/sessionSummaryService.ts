@@ -42,7 +42,7 @@ export interface GenerateSummaryOptions {
 
 /**
  * Service for generating AI summaries of chat sessions.
- * Uses Gemini Flash Lite to create concise, user-intent-focused summaries.
+ * Uses Onyx Flash Lite to create concise, user-intent-focused summaries.
  */
 export class SessionSummaryService {
   constructor(private readonly baseLlmClient: BaseLlmClient) {}
@@ -61,10 +61,10 @@ export class SessionSummaryService {
     } = options;
 
     try {
-      // Filter to user/gemini messages only (exclude system messages)
+      // Filter to user/onyx messages only (exclude system messages)
       const filteredMessages = messages.filter((msg) => {
         // Skip system messages (info, error, warning)
-        if (msg.type !== 'user' && msg.type !== 'gemini') {
+        if (msg.type !== 'user' && msg.type !== 'onyx') {
           return false;
         }
         const content = partListUnionToString(msg.content);

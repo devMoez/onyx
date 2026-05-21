@@ -21,7 +21,7 @@ import type { IndividualToolCallDisplay } from '../../types.js';
 
 describe('ToolGroupMessage Regression Tests', () => {
   const baseMockConfig = makeFakeConfig({
-    model: 'gemini-pro',
+    model: 'onyx-pro',
     targetDir: os.tmpdir(),
   });
   const fullVerbositySettings = createMockSettings({

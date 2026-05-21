@@ -5,7 +5,7 @@
  */
 
 import {
-  GeminiEventType,
+  OnyxEventType,
   ApprovalMode,
   type Config,
   type ToolCallConfirmationDetails,
@@ -92,13 +92,13 @@ vi.mock('../config/config.js', async () => {
   };
 });
 
-// Mock the GeminiClient to avoid actual API calls
+// Mock the OnyxClient to avoid actual API calls
 const sendMessageStreamSpy = vi.fn();
 vi.mock('@onyx/core', async () => {
   const actual = await vi.importActual('@onyx/core');
   return {
     ...actual,
-    GeminiClient: vi.fn().mockImplementation(() => ({
+    OnyxClient: vi.fn().mockImplementation(() => ({
       sendMessageStream: sendMessageStreamSpy,
       getUserTier: vi.fn().mockReturnValue('free'),
       initialize: vi.fn(),
@@ -175,7 +175,7 @@ describe('E2E Tests', () => {
     sendMessageStreamSpy.mockImplementationOnce(async function* () {
       yield* [
         {
-          type: GeminiEventType.ToolCallRequest,
+          type: OnyxEventType.ToolCallRequest,
           value: {
             callId: 'test-call-id',
             name: 'test-tool',
@@ -259,7 +259,7 @@ describe('E2E Tests', () => {
     sendMessageStreamSpy.mockImplementationOnce(async function* () {
       yield* [
         {
-          type: GeminiEventType.ToolCallRequest,
+          type: OnyxEventType.ToolCallRequest,
           value: {
             callId: 'test-call-id-1',
             name: 'test-tool-1',
@@ -267,7 +267,7 @@ describe('E2E Tests', () => {
           },
         },
         {
-          type: GeminiEventType.ToolCallRequest,
+          type: OnyxEventType.ToolCallRequest,
           value: {
             callId: 'test-call-id-2',
             name: 'test-tool-2',
@@ -426,7 +426,7 @@ describe('E2E Tests', () => {
     sendMessageStreamSpy.mockImplementationOnce(async function* () {
       yield* [
         {
-          type: GeminiEventType.ToolCallRequest,
+          type: OnyxEventType.ToolCallRequest,
           value: {
             callId: 'test-call-id-1',
             name: 'test-tool-1',
@@ -434,7 +434,7 @@ describe('E2E Tests', () => {
           },
         },
         {
-          type: GeminiEventType.ToolCallRequest,
+          type: OnyxEventType.ToolCallRequest,
           value: {
             callId: 'test-call-id-2',
             name: 'test-tool-2',
@@ -568,7 +568,7 @@ describe('E2E Tests', () => {
     sendMessageStreamSpy.mockImplementationOnce(async function* () {
       yield* [
         {
-          type: GeminiEventType.ToolCallRequest,
+          type: OnyxEventType.ToolCallRequest,
           value: {
             callId: 'test-call-id-no-approval',
             name: 'test-tool-no-approval',
@@ -710,7 +710,7 @@ describe('E2E Tests', () => {
     sendMessageStreamSpy.mockImplementationOnce(async function* () {
       yield* [
         {
-          type: GeminiEventType.ToolCallRequest,
+          type: OnyxEventType.ToolCallRequest,
           value: {
             callId: 'test-call-id-yolo',
             name: 'test-tool-yolo',

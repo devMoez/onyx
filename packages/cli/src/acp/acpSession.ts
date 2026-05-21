@@ -25,7 +25,7 @@ import {
   getErrorMessage,
   type FilterFilesOptions,
   isTextPart,
-  GeminiEventType,
+  OnyxEventType,
   type ToolCallRequestInfo,
   type onyxChat,
   type ToolResult,
@@ -152,7 +152,7 @@ export class Session {
             content: { type: 'text', text: contentString },
           });
         }
-      } else if (msg.type === 'gemini') {
+      } else if (msg.type === 'onyx') {
         // Thoughts
         if (msg.thoughts) {
           for (const thought of msg.thoughts) {
@@ -306,7 +306,7 @@ export class Session {
       let turnOutputTokens = 0;
 
       try {
-        const responseStream = this.context.geminiClient.sendMessageStream(
+        const responseStream = this.context.onyxClient.sendMessageStream(
           currentParts,
           pendingSend.signal,
           promptId,
@@ -318,7 +318,7 @@ export class Session {
           }
 
           switch (event.type) {
-            case GeminiEventType.Content: {
+            case OnyxEventType.Content: {
               const content: acp.ContentBlock = {
                 type: 'text',
                 text: event.value,
@@ -331,7 +331,7 @@ export class Session {
               break;
             }
 
-            case GeminiEventType.Thought: {
+            case OnyxEventType.Thought: {
               const thoughtText = `**${event.value.subject}**\n${event.value.description}`;
               await this.sendUpdate({
                 sessionUpdate: 'agent_thought_chunk',
@@ -340,11 +340,11 @@ export class Session {
               break;
             }
 
-            case GeminiEventType.ToolCallRequest:
+            case OnyxEventType.ToolCallRequest:
               toolCallRequests.push(event.value);
               break;
 
-            case GeminiEventType.Finished: {
+            case OnyxEventType.Finished: {
               const usage = event.value.usageMetadata;
               if (usage) {
                 turnInputTokens = usage.promptTokenCount ?? turnInputTokens;
@@ -354,23 +354,23 @@ export class Session {
               break;
             }
 
-            case GeminiEventType.ModelInfo:
+            case OnyxEventType.ModelInfo:
               turnModelId = event.value;
               break;
 
-            case GeminiEventType.MaxSessionTurns:
+            case OnyxEventType.MaxSessionTurns:
               stopReason = 'max_turn_requests';
               break;
 
-            case GeminiEventType.LoopDetected:
+            case OnyxEventType.LoopDetected:
               stopReason = 'max_turn_requests';
               break;
 
-            case GeminiEventType.ContextWindowWillOverflow:
+            case OnyxEventType.ContextWindowWillOverflow:
               stopReason = 'max_tokens';
               break;
 
-            case GeminiEventType.Error: {
+            case OnyxEventType.Error: {
               const parseResult = StructuredErrorSchema.safeParse(
                 event.value.error,
               );

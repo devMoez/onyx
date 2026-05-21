@@ -31,3 +31,4 @@ describe('telemetry', () => {
     expect(cliCommandCountMetric).not.toBeNull();
   });
 });
+

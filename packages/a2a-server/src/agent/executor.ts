@@ -13,7 +13,7 @@ import type {
   ExecutionEventBus,
 } from '@a2a-js/sdk/server';
 import {
-  GeminiEventType,
+  OnyxEventType,
   SimpleExtensionLoader,
   type ToolCallRequestInfo,
   type Config,
@@ -127,7 +127,7 @@ export class CoderAgentExecutor implements AgentExecutor {
       agentSettings.autoExecute,
     );
     runtimeTask.taskState = persistedState._taskState;
-    await runtimeTask.geminiClient.initialize();
+    await runtimeTask.onyxClient.initialize();
 
     const wrapper = new TaskWrapper(runtimeTask, agentSettings);
     this.tasks.set(sdkTask.id, wrapper);
@@ -153,7 +153,7 @@ export class CoderAgentExecutor implements AgentExecutor {
       eventBus,
       agentSettings.autoExecute,
     );
-    await runtimeTask.geminiClient.initialize();
+    await runtimeTask.onyxClient.initialize();
 
     const wrapper = new TaskWrapper(runtimeTask, agentSettings);
     this.tasks.set(taskId, wrapper);
@@ -509,7 +509,7 @@ export class CoderAgentExecutor implements AgentExecutor {
             );
             throw new Error('Execution aborted');
           }
-          if (event.type === GeminiEventType.ToolCallRequest) {
+          if (event.type === OnyxEventType.ToolCallRequest) {
             toolCallRequests.push(event.value);
             continue;
           }

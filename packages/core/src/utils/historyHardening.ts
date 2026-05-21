@@ -25,7 +25,7 @@ const DEFAULT_SENTINELS = {
 };
 
 /**
- * Hardens a chat history to ensure it strictly adheres to Gemini API invariants.
+ * Hardens a chat history to ensure it strictly adheres to Onyx API invariants.
  * This is a defensive post-processing pass that patches violations using
  * sentinel messages rather than failing.
  *

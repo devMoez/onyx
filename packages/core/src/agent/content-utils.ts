@@ -9,11 +9,11 @@ import type { ContentPart } from './types.js';
 import { debugLogger } from '../utils/debugLogger.js';
 
 /**
- * Converts Gemini API Part objects to framework-agnostic ContentPart objects.
+ * Converts Onyx API Part objects to framework-agnostic ContentPart objects.
  * Handles text, thought, inlineData, fileData parts and serializes unknown
  * part types to text to avoid silent data loss.
  */
-export function geminiPartsToContentParts(parts: Part[]): ContentPart[] {
+export function onyxPartsToContentParts(parts: Part[]): ContentPart[] {
   const result: ContentPart[] = [];
   for (const part of parts) {
     if ('text' in part && part.text !== undefined) {
@@ -57,9 +57,9 @@ export function geminiPartsToContentParts(parts: Part[]): ContentPart[] {
 }
 
 /**
- * Converts framework-agnostic ContentPart objects to Gemini API Part objects.
+ * Converts framework-agnostic ContentPart objects to Onyx API Part objects.
  */
-export function contentPartsToGeminiParts(content: ContentPart[]): Part[] {
+export function contentPartsToOnyxParts(content: ContentPart[]): Part[] {
   const result: Part[] = [];
   for (const part of content) {
     switch (part.type) {

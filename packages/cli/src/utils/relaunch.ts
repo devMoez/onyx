@@ -37,7 +37,7 @@ export async function relaunchAppInChildProcess(
   additionalScriptArgs: string[],
   remoteAdminSettings?: AdminControlsSettings,
 ) {
-  if (process.env['GEMINI_CLI_NO_RELAUNCH']) {
+  if (process.env['ONYX_CLI_NO_RELAUNCH']) {
     return;
   }
 

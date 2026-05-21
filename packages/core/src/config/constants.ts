@@ -34,11 +34,11 @@ export const DEFAULT_FILE_FILTERING_OPTIONS: FileFilteringOptions = {
 };
 
 // Generic exclusion file name
-export const GEMINI_IGNORE_FILE_NAME = '.onyxIgnore';
+export const ONYX_IGNORE_FILE_NAME = '.onyxIgnore';
 
 // Extension integrity constants
 export const INTEGRITY_FILENAME = 'extension_integrity.json';
 export const INTEGRITY_KEY_FILENAME = 'integrity.key';
-export const KEYCHAIN_SERVICE_NAME = 'gemini-cli-extension-integrity';
+export const KEYCHAIN_SERVICE_NAME = 'onyx-cli-extension-integrity';
 export const SECRET_KEY_ACCOUNT = 'secret-key';
 

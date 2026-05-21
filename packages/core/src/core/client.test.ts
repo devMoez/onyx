@@ -15,7 +15,7 @@ import {
 } from 'vitest';
 
 import type { Content, GenerateContentResponse, Part } from '@google/genai';
-import { GeminiClient } from './client.js';
+import { OnyxClient } from './client.js';
 import {
   AuthType,
   type ContentGenerator,
@@ -26,10 +26,10 @@ import type { Config } from '../config/config.js';
 import type { AgentLoopContext } from '../config/agent-loop-context.js';
 import {
   CompressionStatus,
-  GeminiEventType,
+  OnyxEventType,
   Turn,
   type ChatCompressionInfo,
-  type ServerGeminiStreamEvent,
+  type ServerOnyxStreamEvent,
 } from './turn.js';
 import { getCoreSystemPrompt } from './prompts.js';
 import { DEFAULT_GEMINI_MODEL_AUTO } from '../config/models.js';
@@ -162,10 +162,10 @@ async function fromAsync<T>(promise: AsyncGenerator<T>): Promise<readonly T[]> {
   return results;
 }
 
-describe('Gemini Client (client.ts)', () => {
+describe('Onyx Client (client.ts)', () => {
   let mockContentGenerator: ContentGenerator;
   let mockConfig: Config;
-  let client: GeminiClient;
+  let client: OnyxClient;
   let mockGenerateContentFn: Mock;
   let mockRouterService: { route: Mock };
   beforeEach(async () => {
@@ -193,7 +193,7 @@ describe('Gemini Client (client.ts)', () => {
       countTokens: vi.fn().mockResolvedValue({ totalTokens: 100 }),
     } as unknown as ContentGenerator;
 
-    // Because the GeminiClient constructor kicks off an async process (startChat)
+    // Because the OnyxClient constructor kicks off an async process (startChat)
     // that depends on a fully-formed Config object, we need to mock the
     // entire implementation of Config for these tests.
     const mockToolRegistry = {
@@ -204,7 +204,7 @@ describe('Gemini Client (client.ts)', () => {
     const contentGeneratorConfig: ContentGeneratorConfig = {
       apiKey: 'test-key',
       vertexai: false,
-      authType: AuthType.USE_GEMINI,
+      authType: AuthType.USE_ONYX,
     };
     mockConfig = {
       getRequestTimeoutMs: vi.fn().mockReturnValue(undefined),
@@ -246,7 +246,7 @@ describe('Gemini Client (client.ts)', () => {
       getWorkspaceContext: vi.fn().mockReturnValue({
         getDirectories: vi.fn().mockReturnValue(['/test/dir']),
       }),
-      getGeminiClient: vi.fn(),
+      getOnyxClient: vi.fn(),
       getRetryFetchErrors: vi.fn().mockReturnValue(true),
       getMaxAttempts: vi.fn().mockReturnValue(3),
       getModelRouterService: vi
@@ -308,10 +308,10 @@ describe('Gemini Client (client.ts)', () => {
     (mockConfig as unknown as { config: Config; promptId: string }).promptId =
       'test-prompt-id';
 
-    client = new GeminiClient(mockConfig as unknown as AgentLoopContext);
+    client = new OnyxClient(mockConfig as unknown as AgentLoopContext);
     await client.initialize();
-    vi.mocked(mockConfig.getGeminiClient).mockReturnValue(client);
-    (mockConfig as unknown as { geminiClient: GeminiClient }).geminiClient =
+    vi.mocked(mockConfig.getOnyxClient).mockReturnValue(client);
+    (mockConfig as unknown as { onyxClient: OnyxClient }).onyxClient =
       client;
 
     vi.mocked(uiTelemetryService.setLastPromptTokenCount).mockClear();
@@ -419,7 +419,7 @@ describe('Gemini Client (client.ts)', () => {
 
       // The first message should be the environment context
       expect(history[0].role).toBe('user');
-      expect(history[0].parts?.[0]?.text).toContain('This is the Gemini CLI');
+      expect(history[0].parts?.[0]?.text).toContain('This is the Onyx CLI');
       expect(history[0].parts?.[0]?.text).toContain(
         "The project's temporary directory is:",
       );
@@ -781,7 +781,7 @@ describe('Gemini Client (client.ts)', () => {
 
       // Assert
       expect(events).toContainEqual({
-        type: GeminiEventType.ChatCompressed,
+        type: OnyxEventType.ChatCompressed,
         value: compressionInfo,
       });
     });
@@ -809,7 +809,7 @@ describe('Gemini Client (client.ts)', () => {
       // Assert
       expect(events).not.toContainEqual(
         expect.objectContaining({
-          type: GeminiEventType.ModelInfo,
+          type: OnyxEventType.ModelInfo,
         }),
       );
     });
@@ -828,7 +828,7 @@ describe('Gemini Client (client.ts)', () => {
       );
       const events = await fromAsync(stream);
 
-      expect(events).toEqual([{ type: GeminiEventType.UserCancelled }]);
+      expect(events).toEqual([{ type: OnyxEventType.UserCancelled }]);
     });
 
     it.each([
@@ -867,7 +867,7 @@ describe('Gemini Client (client.ts)', () => {
 
         // Assert
         expect(events).not.toContainEqual({
-          type: GeminiEventType.ChatCompressed,
+          type: OnyxEventType.ChatCompressed,
           value: expect.anything(),
         });
       },
@@ -1249,7 +1249,7 @@ ${JSON.stringify(
         'prompt-id-1',
       );
 
-      const events: ServerGeminiStreamEvent[] = [];
+      const events: ServerOnyxStreamEvent[] = [];
       let finalResult: Turn | undefined;
 
       while (true) {
@@ -1262,7 +1262,7 @@ ${JSON.stringify(
       }
 
       // Assert
-      expect(events).toContainEqual({ type: GeminiEventType.LoopDetected });
+      expect(events).toContainEqual({ type: OnyxEventType.LoopDetected });
       expect(finalResult).toBeInstanceOf(Turn);
     });
 
@@ -1419,7 +1419,7 @@ ${JSON.stringify(
         events.push(event);
       }
 
-      expect(events).toEqual([{ type: GeminiEventType.MaxSessionTurns }]);
+      expect(events).toEqual([{ type: OnyxEventType.MaxSessionTurns }]);
       expect(mockTurnRunFn).toHaveBeenCalledTimes(MAX_SESSION_TURNS);
     });
 
@@ -1538,7 +1538,7 @@ ${JSON.stringify(
 
       // Assert
       expect(events).toContainEqual({
-        type: GeminiEventType.ContextWindowWillOverflow,
+        type: OnyxEventType.ContextWindowWillOverflow,
         value: {
           estimatedRequestTokenCount,
           remainingTokenCount,
@@ -1550,7 +1550,7 @@ ${JSON.stringify(
 
     it("should use the sticky model's token limit for the overflow check", async () => {
       // Arrange
-      const STICKY_MODEL = 'gemini-1.5-flash';
+      const STICKY_MODEL = 'onyx-1.5-flash';
       const STICKY_MODEL_LIMIT = 1000;
       const CONFIG_MODEL_LIMIT = 2000;
 
@@ -1598,7 +1598,7 @@ ${JSON.stringify(
       // Assert
       // Should overflow based on the sticky model's limit
       expect(events).toContainEqual({
-        type: GeminiEventType.ContextWindowWillOverflow,
+        type: OnyxEventType.ContextWindowWillOverflow,
         value: {
           estimatedRequestTokenCount,
           remainingTokenCount,
@@ -1680,14 +1680,14 @@ ${JSON.stringify(
       // 1. Should NOT contain overflow warning
       expect(events).not.toContainEqual(
         expect.objectContaining({
-          type: GeminiEventType.ContextWindowWillOverflow,
+          type: OnyxEventType.ContextWindowWillOverflow,
         }),
       );
 
       // 2. Should contain compression event
       expect(events).toContainEqual(
         expect.objectContaining({
-          type: GeminiEventType.ChatCompressed,
+          type: OnyxEventType.ChatCompressed,
         }),
       );
 
@@ -1760,7 +1760,7 @@ ${JSON.stringify(
       // 2. Should yield overflow warning because 10000 > 1000 limit.
       expect(events).toContainEqual(
         expect.objectContaining({
-          type: GeminiEventType.ContextWindowWillOverflow,
+          type: OnyxEventType.ContextWindowWillOverflow,
           value: expect.objectContaining({
             estimatedRequestTokenCount: expect.any(Number),
             remainingTokenCount: expect.any(Number),
@@ -1822,7 +1822,7 @@ ${JSON.stringify(
       // Should NOT contain overflow warning
       expect(events).not.toContainEqual(
         expect.objectContaining({
-          type: GeminiEventType.ContextWindowWillOverflow,
+          type: OnyxEventType.ContextWindowWillOverflow,
         }),
       );
 
@@ -1983,8 +1983,8 @@ ${JSON.stringify(
           model: 'fallback-model',
           reason: 'test',
         });
-        vi.mocked(mockConfig.getModel).mockReturnValue('gemini-2.5-flash');
-        coreEvents.emitModelChanged('gemini-2.5-flash');
+        vi.mocked(mockConfig.getModel).mockReturnValue('onyx-2.5-flash');
+        coreEvents.emitModelChanged('onyx-2.5-flash');
 
         stream = client.sendMessageStream(
           [{ text: 'Continue' }],
@@ -2063,7 +2063,7 @@ ${JSON.stringify(
     it('should propagate InvalidStream events without injecting "Please continue." or recursing', async () => {
       // Arrange: a single turn that yields an InvalidStream event.
       const mockStream = (async function* () {
-        yield { type: GeminiEventType.InvalidStream };
+        yield { type: OnyxEventType.InvalidStream };
       })();
 
       mockTurnRunFn.mockReturnValueOnce(mockStream);
@@ -2088,8 +2088,8 @@ ${JSON.stringify(
       // turn ends. No "System: Please continue." is injected and turn.run is
       // not called a second time.
       expect(events).toEqual([
-        { type: GeminiEventType.ModelInfo, value: 'default-routed-model' },
-        { type: GeminiEventType.InvalidStream },
+        { type: OnyxEventType.ModelInfo, value: 'default-routed-model' },
+        { type: OnyxEventType.InvalidStream },
       ]);
       expect(mockTurnRunFn).toHaveBeenCalledTimes(1);
     });
@@ -2825,7 +2825,7 @@ ${JSON.stringify(
 
       const mockStream = (async function* () {
         yield {
-          type: GeminiEventType.Error,
+          type: OnyxEventType.Error,
           value: { error: { message: 'test error' } },
         };
       })();
@@ -2861,9 +2861,9 @@ ${JSON.stringify(
       const mockCheckNextSpeaker = vi.mocked(checkNextSpeaker);
 
       const mockStream = (async function* () {
-        yield { type: GeminiEventType.Content, value: 'some content' };
+        yield { type: OnyxEventType.Content, value: 'some content' };
         yield {
-          type: GeminiEventType.Error,
+          type: OnyxEventType.Error,
           value: { error: { message: 'test error' } },
         };
       })();
@@ -2917,8 +2917,8 @@ ${JSON.stringify(
 
         mockTurnRunFn.mockImplementation(() =>
           (async function* () {
-            yield { type: GeminiEventType.Content, value: 'First event' };
-            yield { type: GeminiEventType.Content, value: 'Second event' };
+            yield { type: OnyxEventType.Content, value: 'First event' };
+            yield { type: OnyxEventType.Content, value: 'Second event' };
           })(),
         );
 
@@ -2967,8 +2967,8 @@ ${JSON.stringify(
 
         mockTurnRunFn.mockImplementation(() =>
           (async function* () {
-            yield { type: GeminiEventType.Content, value: 'Event' };
-            yield { type: GeminiEventType.Content, value: 'Event' };
+            yield { type: OnyxEventType.Content, value: 'Event' };
+            yield { type: OnyxEventType.Content, value: 'Event' };
           })(),
         );
 
@@ -2985,7 +2985,7 @@ ${JSON.stringify(
         }
 
         // Assert
-        expect(events).toContainEqual({ type: GeminiEventType.LoopDetected });
+        expect(events).toContainEqual({ type: OnyxEventType.LoopDetected });
         expect(sendMessageStreamSpy).toHaveBeenCalledTimes(2); // One original, one recovery
       });
 
@@ -3003,7 +3003,7 @@ ${JSON.stringify(
 
         mockTurnRunFn.mockImplementation(() =>
           (async function* () {
-            yield { type: GeminiEventType.Content, value: 'Event' };
+            yield { type: OnyxEventType.Content, value: 'Event' };
           })(),
         );
 
@@ -3023,7 +3023,7 @@ ${JSON.stringify(
         // Assert
         // Should NOT trigger recovery because boundedTurns would reach 0
         expect(events).toContainEqual({
-          type: GeminiEventType.MaxSessionTurns,
+          type: OnyxEventType.MaxSessionTurns,
         });
         expect(sendMessageStreamSpy).toHaveBeenCalledTimes(1);
       });
@@ -3041,8 +3041,8 @@ ${JSON.stringify(
 
         mockTurnRunFn.mockImplementation(() =>
           (async function* () {
-            yield { type: GeminiEventType.Content, value: 'Event' };
-            yield { type: GeminiEventType.Content, value: 'Event 2' };
+            yield { type: OnyxEventType.Content, value: 'Event' };
+            yield { type: OnyxEventType.Content, value: 'Event 2' };
           })(),
         );
 
@@ -3061,7 +3061,7 @@ ${JSON.stringify(
         // Assert
         // Strike 1 should trigger recovery call but NOT emit LoopDetected event
         expect(events).not.toContainEqual({
-          type: GeminiEventType.LoopDetected,
+          type: OnyxEventType.LoopDetected,
         });
         expect(sendMessageStreamSpy).toHaveBeenCalledTimes(2);
       });
@@ -3090,8 +3090,8 @@ ${JSON.stringify(
 
         mockTurnRunFn.mockImplementation(() =>
           (async function* () {
-            yield { type: GeminiEventType.Content, value: 'Event' };
-            yield { type: GeminiEventType.Content, value: 'Event 2' };
+            yield { type: OnyxEventType.Content, value: 'Event' };
+            yield { type: OnyxEventType.Content, value: 'Event 2' };
           })(),
         );
 
@@ -3108,7 +3108,7 @@ ${JSON.stringify(
         }
 
         // Assert
-        expect(events).toContainEqual({ type: GeminiEventType.LoopDetected });
+        expect(events).toContainEqual({ type: OnyxEventType.LoopDetected });
         expect(sendMessageStreamSpy).toHaveBeenCalledTimes(2);
       });
 
@@ -3122,7 +3122,7 @@ ${JSON.stringify(
         });
         mockTurnRunFn.mockImplementation(() =>
           (async function* () {
-            yield { type: GeminiEventType.Content, value: 'Event' };
+            yield { type: OnyxEventType.Content, value: 'Event' };
           })(),
         );
 
@@ -3216,7 +3216,7 @@ ${JSON.stringify(
           this: MockTurnContext,
         ) {
           this.getResponseText.mockReturnValue('Hook Response');
-          yield { type: GeminiEventType.Content, value: 'Hook Response' };
+          yield { type: OnyxEventType.Content, value: 'Hook Response' };
         });
 
         const stream = client.sendMessageStream(request, signal, promptId);
@@ -3253,7 +3253,7 @@ ${JSON.stringify(
           callCount++;
           const response = `Response ${callCount}`;
           this.getResponseText.mockReturnValue(response);
-          yield { type: GeminiEventType.Content, value: response };
+          yield { type: OnyxEventType.Content, value: response };
         });
 
         const stream = client.sendMessageStream(request, signal, promptId);
@@ -3291,7 +3291,7 @@ ${JSON.stringify(
           this: MockTurnContext,
         ) {
           this.getResponseText.mockReturnValue('Ok');
-          yield { type: GeminiEventType.Content, value: 'Ok' };
+          yield { type: OnyxEventType.Content, value: 'Ok' };
         });
 
         const stream = client.sendMessageStream(request, signal, promptId);
@@ -3310,7 +3310,7 @@ ${JSON.stringify(
           this: MockTurnContext,
         ) {
           this.getResponseText.mockReturnValue('Ok');
-          yield { type: GeminiEventType.Content, value: 'Ok' };
+          yield { type: OnyxEventType.Content, value: 'Ok' };
         });
 
         client['hookStateMap'].set('old-id', {
@@ -3356,7 +3356,7 @@ ${JSON.stringify(
         const events = await fromAsync(stream);
 
         expect(events).toContainEqual({
-          type: GeminiEventType.AgentExecutionStopped,
+          type: OnyxEventType.AgentExecutionStopped,
           value: { reason: 'Stopped by hook' },
         });
         expect(mockChat.addHistory).toHaveBeenCalledWith({
@@ -3391,7 +3391,7 @@ ${JSON.stringify(
         const events = await fromAsync(stream);
 
         expect(events).toContainEqual({
-          type: GeminiEventType.AgentExecutionBlocked,
+          type: OnyxEventType.AgentExecutionBlocked,
           value: {
             reason: 'Blocked by hook',
           },
@@ -3409,7 +3409,7 @@ ${JSON.stringify(
         });
 
         mockTurnRunFn.mockImplementation(async function* () {
-          yield { type: GeminiEventType.Content, value: 'Hello' };
+          yield { type: OnyxEventType.Content, value: 'Hello' };
         });
 
         const stream = client.sendMessageStream(
@@ -3421,7 +3421,7 @@ ${JSON.stringify(
 
         expect(events).toContainEqual(
           expect.objectContaining({
-            type: GeminiEventType.AgentExecutionStopped,
+            type: OnyxEventType.AgentExecutionStopped,
             value: expect.objectContaining({ reason: 'Stopped after agent' }),
           }),
         );
@@ -3446,7 +3446,7 @@ ${JSON.stringify(
           });
 
         mockTurnRunFn.mockImplementation(async function* () {
-          yield { type: GeminiEventType.Content, value: 'Response' };
+          yield { type: OnyxEventType.Content, value: 'Response' };
         });
 
         const stream = client.sendMessageStream(
@@ -3458,7 +3458,7 @@ ${JSON.stringify(
 
         expect(events).toContainEqual(
           expect.objectContaining({
-            type: GeminiEventType.AgentExecutionBlocked,
+            type: OnyxEventType.AgentExecutionBlocked,
             value: expect.objectContaining({ reason: 'Please explain' }),
           }),
         );
@@ -3509,7 +3509,7 @@ ${JSON.stringify(
           });
 
         mockTurnRunFn.mockImplementation(async function* () {
-          yield { type: GeminiEventType.Content, value: 'Response' };
+          yield { type: OnyxEventType.Content, value: 'Response' };
         });
 
         const stream = client.sendMessageStream(
@@ -3520,7 +3520,7 @@ ${JSON.stringify(
         const events = await fromAsync(stream);
 
         expect(events).toContainEqual({
-          type: GeminiEventType.AgentExecutionBlocked,
+          type: OnyxEventType.AgentExecutionBlocked,
           value: {
             reason: 'Blocked and clearing context',
             systemMessage: undefined,

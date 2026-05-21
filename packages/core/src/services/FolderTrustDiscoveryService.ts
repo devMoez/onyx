@@ -7,7 +7,7 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import stripJsonComments from 'strip-json-comments';
-import { GEMINI_DIR } from '../utils/paths.js';
+import { ONYX_DIR } from '../utils/paths.js';
 import { debugLogger } from '../utils/debugLogger.js';
 import { isNodeError } from '../utils/errors.js';
 
@@ -44,26 +44,26 @@ export class FolderTrustDiscoveryService {
       discoveryErrors: [],
     };
 
-    const geminiDir = path.join(workspaceDir, GEMINI_DIR);
-    if (!(await this.exists(geminiDir))) {
+    const onyxDir = path.join(workspaceDir, ONYX_DIR);
+    if (!(await this.exists(onyxDir))) {
       return results;
     }
 
     await Promise.all([
-      this.discoverCommands(geminiDir, results),
-      this.discoverSkills(geminiDir, results),
-      this.discoverAgents(geminiDir, results),
-      this.discoverSettings(geminiDir, results),
+      this.discoverCommands(onyxDir, results),
+      this.discoverSkills(onyxDir, results),
+      this.discoverAgents(onyxDir, results),
+      this.discoverSettings(onyxDir, results),
     ]);
 
     return results;
   }
 
   private static async discoverCommands(
-    geminiDir: string,
+    onyxDir: string,
     results: FolderDiscoveryResults,
   ) {
-    const commandsDir = path.join(geminiDir, 'commands');
+    const commandsDir = path.join(onyxDir, 'commands');
     if (await this.exists(commandsDir)) {
       try {
         const files = await fs.readdir(commandsDir, { recursive: true });
@@ -79,10 +79,10 @@ export class FolderTrustDiscoveryService {
   }
 
   private static async discoverSkills(
-    geminiDir: string,
+    onyxDir: string,
     results: FolderDiscoveryResults,
   ) {
-    const skillsDir = path.join(geminiDir, 'skills');
+    const skillsDir = path.join(onyxDir, 'skills');
     if (await this.exists(skillsDir)) {
       try {
         const entries = await fs.readdir(skillsDir, { withFileTypes: true });
@@ -103,10 +103,10 @@ export class FolderTrustDiscoveryService {
   }
 
   private static async discoverAgents(
-    geminiDir: string,
+    onyxDir: string,
     results: FolderDiscoveryResults,
   ) {
-    const agentsDir = path.join(geminiDir, 'agents');
+    const agentsDir = path.join(onyxDir, 'agents');
     if (await this.exists(agentsDir)) {
       try {
         const entries = await fs.readdir(agentsDir, { withFileTypes: true });
@@ -131,10 +131,10 @@ export class FolderTrustDiscoveryService {
   }
 
   private static async discoverSettings(
-    geminiDir: string,
+    onyxDir: string,
     results: FolderDiscoveryResults,
   ) {
-    const settingsPath = path.join(geminiDir, 'settings.json');
+    const settingsPath = path.join(onyxDir, 'settings.json');
     if (!(await this.exists(settingsPath))) return;
 
     try {

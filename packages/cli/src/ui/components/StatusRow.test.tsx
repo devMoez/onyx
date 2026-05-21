@@ -35,7 +35,7 @@ describe('<StatusRow />', () => {
     showApprovalModeIndicator: ApprovalMode.DEFAULT,
     allowPlanMode: false,
     renderMarkdown: true,
-    currentModel: 'gemini-3',
+    currentModel: 'onyx-3',
   };
 
   it('renders status and tip correctly when they both fit', async () => {

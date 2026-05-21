@@ -6,7 +6,7 @@
 
 import * as path from 'node:path';
 import { type VariableSchema, VARIABLE_SCHEMA } from './variableSchema.js';
-import { GEMINI_DIR } from '@onyx/core';
+import { ONYX_DIR } from '@onyx/core';
 
 /**
  * Represents a set of keys that will be considered invalid while unmarshalling
@@ -18,8 +18,8 @@ const UNMARSHALL_KEY_IGNORE_LIST: Set<string> = new Set<string>([
   'prototype',
 ]);
 
-export const EXTENSIONS_DIRECTORY_NAME = path.join(GEMINI_DIR, 'extensions');
-export const EXTENSIONS_CONFIG_FILENAME = 'gemini-extension.json';
+export const EXTENSIONS_DIRECTORY_NAME = path.join(ONYX_DIR, 'extensions');
+export const EXTENSIONS_CONFIG_FILENAME = 'onyx-extension.json';
 export const INSTALL_METADATA_FILENAME = '.onyx-extension-install.json';
 export const EXTENSION_SETTINGS_FILENAME = '.env';
 

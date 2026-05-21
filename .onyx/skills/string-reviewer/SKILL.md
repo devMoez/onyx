@@ -23,7 +23,7 @@ The system prioritizes deterministic clarity over conversational fluff. We
 provide telemetry, not etiquette, ensuring the user retains absolute agency..
 
 1. **Deterministic clarity:** Distinguish between certain system/service states
-   (Cloud Billing, IAM, the System) and probabilistic AI analysis (Gemini).
+   (Cloud Billing, IAM, the System) and probabilistic AI analysis (Onyx).
 2. **System transparency:** Replace "Loading..." with active technical telemetry
    (e.g., Tracing stack traces...). Keep status updates under 5 words.
 3. **Front-loaded actionability:** Always use the [Goal] + [Action] pattern.
@@ -39,11 +39,11 @@ Use this checklist to audit UI strings and AI responses.
 
 ### Identity and voice
 - **Eliminate the "I":** Remove all first-person pronouns (I, me, my, mine).
-- **Subject attribution:** Refer to the AI as Gemini and the infrastructure as
+- **Subject attribution:** Refer to the AI as Onyx and the infrastructure as
   the - system or the CLI.
-- **Active voice:** Ensure the subject (Gemini or the system) is clearly
+- **Active voice:** Ensure the subject (Onyx or the system) is clearly
   performing the action.
-- **Ownership rule:** Use the system for execution (doing) and Gemini for
+- **Ownership rule:** Use the system for execution (doing) and Onyx for
   analysis (thinking)
 
 ### Structural scannability
@@ -72,7 +72,7 @@ Use this checklist to audit UI strings and AI responses.
 - **Human-first:** Provide a human-readable explanation before machine error
   codes (e.g., 404, 500).
 -  **Suggested prompts:** Offer specific text for the user to copy/click like
-   “Ask Gemini: 'Explain this port error.'”
+   “Ask Onyx: 'Explain this port error.'”
 
 ### Use consistent terminology
 

@@ -27,12 +27,12 @@ default to interactive mode, unless the input or output is piped or redirected.
 Run a single command:
 
 ```bash
-gemini -p "Write a poem about TypeScript"
+onyx -p "Write a poem about TypeScript"
 ```
 
 ## How to pipe input to Onyx CLI
 
-Feed data into Gemini using the standard Unix pipe `|`. Gemini reads the
+Feed data into Onyx using the standard Unix pipe `|`. Onyx reads the
 standard input (stdin) as context and answers your question using standard
 output.
 
@@ -41,24 +41,24 @@ Pipe a file:
 **macOS/Linux**
 
 ```bash
-cat error.log | gemini -p "Explain why this failed"
+cat error.log | onyx -p "Explain why this failed"
 ```
 
 **Windows (PowerShell)**
 
 ```powershell
-Get-Content error.log | gemini -p "Explain why this failed"
+Get-Content error.log | onyx -p "Explain why this failed"
 ```
 
 Pipe a command:
 
 ```bash
-git diff | gemini -p "Write a commit message for these changes"
+git diff | onyx -p "Write a commit message for these changes"
 ```
 
 ## Use Onyx CLI output in scripts
 
-Because Gemini prints to stdout, you can chain it with other tools or save the
+Because Onyx prints to stdout, you can chain it with other tools or save the
 results to a file.
 
 ### Scenario: Bulk documentation generator
@@ -79,7 +79,7 @@ one.
       echo "Generating docs for $file..."
 
       # Ask Onyx CLI to generate the documentation and print it to stdout
-      gemini -p "Generate a Markdown documentation summary for @$file. Print the
+      onyx -p "Generate a Markdown documentation summary for @$file. Print the
       result to standard output." > "${file%.py}.md"
     done
     ```
@@ -93,7 +93,7 @@ one.
 
       $newName = $_.Name -replace '\.py$', '.md'
       # Ask Onyx CLI to generate the documentation and print it to stdout
-      gemini -p "Generate a Markdown documentation summary for @$($_.Name). Print the result to standard output." | Out-File -FilePath $newName -Encoding utf8
+      onyx -p "Generate a Markdown documentation summary for @$($_.Name). Print the result to standard output." | Out-File -FilePath $newName -Encoding utf8
     }
     ```
 
@@ -138,7 +138,7 @@ like `jq`. To get pure JSON data from the model, combine the
     fi
 
     # Extract data
-    gemini --output-format json "Return a raw JSON object with keys 'version' and 'deps' from @package.json" | jq -r '.response' > data.json
+    onyx --output-format json "Return a raw JSON object with keys 'version' and 'deps' from @package.json" | jq -r '.response' > data.json
     ```
 
     **Windows PowerShell (`generate_json.ps1`)**
@@ -151,7 +151,7 @@ like `jq`. To get pure JSON data from the model, combine the
     }
 
     # Extract data (requires jq installed, or you can use ConvertFrom-Json)
-    $output = gemini --output-format json "Return a raw JSON object with keys 'version' and 'deps' from @package.json" | ConvertFrom-Json
+    $output = onyx --output-format json "Return a raw JSON object with keys 'version' and 'deps' from @package.json" | ConvertFrom-Json
     $output.response | Out-File -FilePath data.json -Encoding utf8
     ```
 
@@ -213,9 +213,9 @@ wrapper that writes the message for you.
         return 1
       fi
 
-      # Ask Gemini to write the message
+      # Ask Onyx to write the message
       echo "Generating commit message..."
-      msg=$(echo "$diff" | gemini -p "Write a concise Conventional Commit message for this diff. Output ONLY the message.")
+      msg=$(echo "$diff" | onyx -p "Write a concise Conventional Commit message for this diff. Output ONLY the message.")
 
       # Commit with the generated message
       git commit -m "$msg"
@@ -250,9 +250,9 @@ wrapper that writes the message for you.
         return
       }
 
-      # Ask Gemini to write the message
+      # Ask Onyx to write the message
       Write-Host "Generating commit message..."
-      $msg = $diff | gemini -p "Write a concise Conventional Commit message for this diff. Output ONLY the message."
+      $msg = $diff | onyx -p "Write a concise Conventional Commit message for this diff. Output ONLY the message."
 
       # Commit with the generated message
       git commit -m "$msg"

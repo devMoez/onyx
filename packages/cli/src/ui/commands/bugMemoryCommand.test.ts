@@ -68,7 +68,7 @@ describe('bugMemoryCommand', () => {
   });
 
   it('captures a heap snapshot and reports the file path', async () => {
-    const tempDir = path.join('/tmp', 'gemini-test');
+    const tempDir = path.join('/tmp', 'onyx-test');
     const context = makeContextWithTempDir(tempDir);
     vi.mocked(captureHeapSnapshot).mockResolvedValueOnce(undefined);
 
@@ -91,7 +91,7 @@ describe('bugMemoryCommand', () => {
   });
 
   it('surfaces an error if capture fails', async () => {
-    const context = makeContextWithTempDir('/tmp/gemini-test');
+    const context = makeContextWithTempDir('/tmp/onyx-test');
     vi.mocked(captureHeapSnapshot).mockRejectedValueOnce(
       new Error('inspector disconnected'),
     );

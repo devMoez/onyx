@@ -6,7 +6,7 @@
 
 import {
   type CompressionStatus,
-  type GeminiCLIExtension,
+  type OnyxCLIExtension,
   type MCPServerConfig,
   type ThoughtSummary,
   type SerializableConfirmationDetails,
@@ -54,7 +54,7 @@ export enum StreamingState {
 }
 
 // Copied from server/src/core/turn.ts for CLI usage
-export enum GeminiEventType {
+export enum OnyxEventType {
   Content = 'content',
   ToolCallRequest = 'tool_call_request',
   // Add other event types if the UI hook needs to handle them
@@ -159,7 +159,7 @@ export interface ExportSessionProps {
 export const emptyIcon = '  ';
 
 export interface HistoryItemBase {
-  text?: string; // Text content for user/gemini/info/error messages
+  text?: string; // Text content for user/onyx/info/error messages
 }
 
 export type HistoryItemUser = HistoryItemBase & {
@@ -167,18 +167,13 @@ export type HistoryItemUser = HistoryItemBase & {
   text: string;
 };
 
-export type HistoryItemGemini = HistoryItemBase & {
-  type: 'gemini';
-  text: string;
-};
-
-export type HistoryItemGeminiContent = HistoryItemBase & {
-  type: 'gemini_content';
-  text: string;
-};
-
 export type HistoryItemOnyx = HistoryItemBase & {
   type: 'onyx';
+  text: string;
+};
+
+export type HistoryItemOnyxContent = HistoryItemBase & {
+  type: 'onyx_content';
   text: string;
 };
 
@@ -301,7 +296,7 @@ export type HistoryItemExportSession = HistoryItemBase & {
 
 export type HistoryItemExtensionsList = HistoryItemBase & {
   type: 'extensions_list';
-  extensions: GeminiCLIExtension[];
+  extensions: OnyxCLIExtension[];
 };
 
 export interface ChatDetail {
@@ -427,9 +422,8 @@ export type HistoryItemMcpStatus = HistoryItemBase & {
 export type HistoryItemWithoutId =
   | HistoryItemUser
   | HistoryItemUserShell
-  | HistoryItemGemini
-  | HistoryItemGeminiContent
   | HistoryItemOnyx
+  | HistoryItemOnyxContent
   | HistoryItemInfo
   | HistoryItemError
   | HistoryItemWarning
@@ -469,7 +463,6 @@ export enum MessageType {
   MODEL_STATS = 'model_stats',
   TOOL_STATS = 'tool_stats',
   QUIT = 'quit',
-  GEMINI = 'gemini',
   ONYX = 'onyx',
   COMPRESSION = 'compression',
   EXPORT_SESSION = 'export_session',
@@ -544,7 +537,7 @@ export interface ConsoleMessageItem {
 
 /**
  * Result type for a slash command that should immediately result in a prompt
- * being submitted to the Gemini model.
+ * being submitted to the Onyx model.
  */
 export interface SubmitPromptResult {
   type: 'submit_prompt';
@@ -587,4 +580,3 @@ export interface ActiveHook {
   index?: number;
   total?: number;
 }
-

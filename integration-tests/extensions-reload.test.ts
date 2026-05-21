@@ -44,7 +44,7 @@ describe('extension reloading', () => {
         experimental: { extensionReloading: true },
       },
     });
-    const testServerPath = join(rig.testDir!, 'gemini-extension.json');
+    const testServerPath = join(rig.testDir!, 'onyx-extension.json');
     writeFileSync(testServerPath, safeJsonStringify(extension, 2));
     // defensive cleanup from previous tests.
     try {
@@ -149,3 +149,4 @@ describe('extension reloading', () => {
     await rig.runCommand(['extensions', 'uninstall', 'test-extension']);
   });
 });
+

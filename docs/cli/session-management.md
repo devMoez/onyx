@@ -35,7 +35,7 @@ sessions.
 - **Resume latest:**
 
   ```bash
-  gemini --resume
+  onyx --resume
   ```
 
   This immediately loads the most recent session.
@@ -44,12 +44,12 @@ sessions.
   [Listing sessions](#listing-sessions)), then use the index number:
 
   ```bash
-  gemini --resume 1
+  onyx --resume 1
   ```
 
 - **Resume by ID:** You can also provide the full session UUID:
   ```bash
-  gemini --resume a1b2c3d4-e5f6-7890-abcd-ef1234567890
+  onyx --resume a1b2c3d4-e5f6-7890-abcd-ef1234567890
   ```
 
 ### From the interactive interface
@@ -99,7 +99,7 @@ Compatibility aliases:
 ## Parallel sessions with Git worktrees
 
 When working on multiple tasks at once, you can use
-[Git worktrees](./git-worktrees.md) to give each Gemini session its own copy of
+[Git worktrees](./git-worktrees.md) to give each Onyx session its own copy of
 the codebase. This prevents changes in one session from colliding with another.
 
 ## Managing sessions
@@ -113,7 +113,7 @@ To see a list of all available sessions for the current project from the command
 line, use the `--list-sessions` flag:
 
 ```bash
-gemini --list-sessions
+onyx --list-sessions
 ```
 
 Output example:
@@ -134,7 +134,7 @@ history.
 **From the command line:** Use the `--delete-session` flag with an index or ID:
 
 ```bash
-gemini --delete-session 2
+onyx --delete-session 2
 ```
 
 **From the Session Browser:**

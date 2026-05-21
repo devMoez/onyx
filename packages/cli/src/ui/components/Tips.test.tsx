@@ -15,7 +15,7 @@ describe('Tips', () => {
     { fileCount: 5, description: 'renders fewer tips when onyx.md exists' },
   ])('$description', async ({ fileCount }) => {
     const config = {
-      getGeminiMdFileCount: vi.fn().mockReturnValue(fileCount),
+      getOnyxMdFileCount: vi.fn().mockReturnValue(fileCount),
     } as unknown as Config;
 
     const { lastFrame, unmount } = await render(<Tips config={config} />);

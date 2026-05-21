@@ -24,8 +24,8 @@ import {
   type MessageBus,
   type GitService,
   InvalidStreamError,
-  GeminiEventType,
-  type ServerGeminiStreamEvent,
+  OnyxEventType,
+  type ServerOnyxStreamEvent,
 } from '@onyx/core';
 import type { LoadedSettings } from '../config/settings.js';
 import { type Part, FinishReason } from '@google/genai';
@@ -57,14 +57,14 @@ vi.mock(
 );
 
 async function* createMockStream(
-  items: readonly ServerGeminiStreamEvent[],
-): AsyncGenerator<ServerGeminiStreamEvent> {
+  items: readonly ServerOnyxStreamEvent[],
+): AsyncGenerator<ServerOnyxStreamEvent> {
   for (const item of items) {
     yield item;
   }
 
   yield {
-    type: GeminiEventType.Finished,
+    type: OnyxEventType.Finished,
     value: {
       reason: FinishReason.STOP,
       usageMetadata: {
@@ -88,7 +88,7 @@ describe('Session', () => {
       request: Part[],
       signal: AbortSignal,
       promptId: string,
-    ) => AsyncGenerator<ServerGeminiStreamEvent>
+    ) => AsyncGenerator<ServerOnyxStreamEvent>
   >;
 
   beforeEach(() => {
@@ -117,8 +117,8 @@ describe('Session', () => {
     } as unknown as Mocked<MessageBus>;
     mockSendMessageStream = vi.fn();
     mockConfig = {
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
-      getActiveModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
+      getActiveModel: vi.fn().mockReturnValue('onyx-pro'),
       getModelRouterService: vi.fn().mockReturnValue({
         route: vi.fn().mockResolvedValue({ model: 'resolved-model' }),
       }),
@@ -144,7 +144,7 @@ describe('Session', () => {
       waitForMcpInit: vi.fn(),
       getDisableAlwaysAllow: vi.fn().mockReturnValue(false),
       getMaxSessionTurns: vi.fn().mockReturnValue(-1),
-      geminiClient: {
+      onyxClient: {
         sendMessageStream: mockSendMessageStream,
         getChat: vi.fn().mockReturnValue(mockChat),
       },
@@ -200,7 +200,7 @@ describe('Session', () => {
   it('should await MCP initialization before processing a prompt', async () => {
     const stream = createMockStream([
       {
-        type: GeminiEventType.Content,
+        type: OnyxEventType.Content,
         value: 'Hi',
       },
     ]);
@@ -217,7 +217,7 @@ describe('Session', () => {
   it('should handle prompt with text response', async () => {
     const stream = createMockStream([
       {
-        type: GeminiEventType.Content,
+        type: OnyxEventType.Content,
         value: 'Hello',
       },
     ]);
@@ -239,10 +239,10 @@ describe('Session', () => {
     expect(result).toMatchObject({ stopReason: 'end_turn' });
   });
 
-  it('should pass current session information directly onto geminiClient.sendMessageStream', async () => {
+  it('should pass current session information directly onto onyxClient.sendMessageStream', async () => {
     const stream = createMockStream([
       {
-        type: GeminiEventType.Content,
+        type: OnyxEventType.Content,
         value: 'Hello',
       },
     ]);
@@ -264,7 +264,7 @@ describe('Session', () => {
     const error = new InvalidStreamError('Empty response', 'NO_RESPONSE_TEXT');
     mockSendMessageStream.mockImplementation(() => {
       async function* errorGen(): AsyncGenerator<
-        ServerGeminiStreamEvent,
+        ServerOnyxStreamEvent,
         void,
         unknown
       > {
@@ -289,7 +289,7 @@ describe('Session', () => {
     );
     mockSendMessageStream.mockImplementation(() => {
       async function* errorGen(): AsyncGenerator<
-        ServerGeminiStreamEvent,
+        ServerOnyxStreamEvent,
         void,
         unknown
       > {
@@ -331,7 +331,7 @@ describe('Session', () => {
   it('should handle tool calls', async () => {
     const stream1 = createMockStream([
       {
-        type: GeminiEventType.ToolCallRequest,
+        type: OnyxEventType.ToolCallRequest,
         value: {
           callId: 'call-1',
           name: 'test_tool',
@@ -343,7 +343,7 @@ describe('Session', () => {
     ]);
     const stream2 = createMockStream([
       {
-        type: GeminiEventType.Content,
+        type: OnyxEventType.Content,
         value: 'Result',
       },
     ]);
@@ -382,7 +382,7 @@ describe('Session', () => {
 
     const stream1 = createMockStream([
       {
-        type: GeminiEventType.ToolCallRequest,
+        type: OnyxEventType.ToolCallRequest,
         value: {
           callId: 'call-1',
           name: 'test_tool',
@@ -394,7 +394,7 @@ describe('Session', () => {
     ]);
     const stream2 = createMockStream([
       {
-        type: GeminiEventType.Content,
+        type: OnyxEventType.Content,
         value: '',
       },
     ]);
@@ -420,7 +420,7 @@ describe('Session', () => {
 
     const stream = createMockStream([
       {
-        type: GeminiEventType.Content,
+        type: OnyxEventType.Content,
         value: '',
       },
     ]);
@@ -459,7 +459,7 @@ describe('Session', () => {
 
     mockSendMessageStream.mockImplementation(() => {
       async function* errorGen(): AsyncGenerator<
-        ServerGeminiStreamEvent,
+        ServerOnyxStreamEvent,
         void,
         unknown
       > {
@@ -485,7 +485,7 @@ describe('Session', () => {
 
     const stream1 = createMockStream([
       {
-        type: GeminiEventType.ToolCallRequest,
+        type: OnyxEventType.ToolCallRequest,
         value: {
           callId: 'call-1',
           name: 'unknown_tool',
@@ -497,7 +497,7 @@ describe('Session', () => {
     ]);
     const stream2 = createMockStream([
       {
-        type: GeminiEventType.Content,
+        type: OnyxEventType.Content,
         value: '',
       },
     ]);
@@ -514,10 +514,10 @@ describe('Session', () => {
     expect(mockSendMessageStream).toHaveBeenCalledTimes(2);
   });
 
-  it('should handle GeminiEventType.LoopDetected', async () => {
+  it('should handle OnyxEventType.LoopDetected', async () => {
     const stream = createMockStream([
       {
-        type: GeminiEventType.LoopDetected,
+        type: OnyxEventType.LoopDetected,
       },
     ]);
     mockSendMessageStream.mockReturnValue(stream);
@@ -530,10 +530,10 @@ describe('Session', () => {
     expect(result.stopReason).toBe('max_turn_requests');
   });
 
-  it('should handle GeminiEventType.ContextWindowWillOverflow', async () => {
+  it('should handle OnyxEventType.ContextWindowWillOverflow', async () => {
     const stream = createMockStream([
       {
-        type: GeminiEventType.ContextWindowWillOverflow,
+        type: OnyxEventType.ContextWindowWillOverflow,
         value: { estimatedRequestTokenCount: 1000, remainingTokenCount: 200 },
       },
     ]);
@@ -547,10 +547,10 @@ describe('Session', () => {
     expect(result.stopReason).toBe('max_tokens');
   });
 
-  it('should handle GeminiEventType.MaxSessionTurns', async () => {
+  it('should handle OnyxEventType.MaxSessionTurns', async () => {
     const stream = createMockStream([
       {
-        type: GeminiEventType.MaxSessionTurns,
+        type: OnyxEventType.MaxSessionTurns,
       },
     ]);
     mockSendMessageStream.mockReturnValue(stream);
@@ -603,7 +603,7 @@ describe('Session', () => {
 
     const stream1 = createMockStream([
       {
-        type: GeminiEventType.ToolCallRequest,
+        type: OnyxEventType.ToolCallRequest,
         value: {
           callId: 'call-1',
           name: 'test_tool',
@@ -615,7 +615,7 @@ describe('Session', () => {
     ]);
     const stream2 = createMockStream([
       {
-        type: GeminiEventType.Content,
+        type: OnyxEventType.Content,
         value: '',
       },
     ]);
@@ -663,7 +663,7 @@ describe('Session', () => {
 
     const stream1 = createMockStream([
       {
-        type: GeminiEventType.ToolCallRequest,
+        type: OnyxEventType.ToolCallRequest,
         value: {
           callId: 'call-1',
           name: 'test_tool',
@@ -675,7 +675,7 @@ describe('Session', () => {
     ]);
     const stream2 = createMockStream([
       {
-        type: GeminiEventType.Content,
+        type: OnyxEventType.Content,
         value: '',
       },
     ]);

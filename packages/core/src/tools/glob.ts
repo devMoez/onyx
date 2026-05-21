@@ -92,7 +92,7 @@ export interface GlobToolParams {
   /**
    * Whether to respect .onyxIgnore patterns (optional, defaults to true)
    */
-  respect_gemini_ignore?: boolean;
+  respect_onyx_ignore?: boolean;
 }
 
 class GlobToolInvocation extends BaseToolInvocation<
@@ -200,7 +200,7 @@ class GlobToolInvocation extends BaseToolInvocation<
             this.config.getFileFilteringOptions().respectGitIgnore ??
             DEFAULT_FILE_FILTERING_OPTIONS.respectGitIgnore,
           respectonyxIgnore:
-            this.params?.respect_gemini_ignore ??
+            this.params?.respect_onyx_ignore ??
             this.config.getFileFilteringOptions().respectonyxIgnore ??
             DEFAULT_FILE_FILTERING_OPTIONS.respectonyxIgnore,
         });

@@ -49,13 +49,13 @@ export class ApprovalModeStrategy implements RoutingStrategy {
     const approvedPlanPath = config.getApprovedPlanPath();
 
     const [
-      useGemini3_1,
-      useGemini3_1FlashLite,
+      useOnyx3_1,
+      useOnyx3_1FlashLite,
       useCustomToolModel,
       hasAccessToPreview,
     ] = await Promise.all([
-      config.getGemini31Launched(),
-      config.getGemini31FlashLiteLaunched(),
+      config.getOnyx31Launched(),
+      config.getOnyx31FlashLiteLaunched(),
       config.getUseCustomToolModel(),
       config.getHasAccessToPreviewModel(),
     ]);
@@ -65,8 +65,8 @@ export class ApprovalModeStrategy implements RoutingStrategy {
       const proModel = resolveClassifierModel(
         model,
         GEMINI_MODEL_ALIAS_PRO,
-        useGemini3_1,
-        useGemini3_1FlashLite,
+        useOnyx3_1,
+        useOnyx3_1FlashLite,
         useCustomToolModel,
         hasAccessToPreview,
         config,
@@ -84,8 +84,8 @@ export class ApprovalModeStrategy implements RoutingStrategy {
       const flashModel = resolveClassifierModel(
         model,
         GEMINI_MODEL_ALIAS_FLASH,
-        useGemini3_1,
-        useGemini3_1FlashLite,
+        useOnyx3_1,
+        useOnyx3_1FlashLite,
         useCustomToolModel,
         hasAccessToPreview,
         config,

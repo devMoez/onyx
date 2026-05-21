@@ -21,7 +21,7 @@ import { isCloudShell } from '../ide/detect-ide.js';
 import type { Config } from '../config/config.js';
 import { loadApiKey } from './apiKeyCredentialStorage.js';
 
-import type { UserTierId, GeminiUserTier } from '../code_assist/types.js';
+import type { UserTierId, OnyxUserTier } from '../code_assist/types.js';
 import { LoggingContentGenerator } from './loggingContentGenerator.js';
 import { InstallationManager } from '../utils/installationManager.js';
 import { FakeContentGenerator } from './fakeContentGenerator.js';
@@ -55,12 +55,12 @@ export interface ContentGenerator {
 
   userTierName?: string;
 
-  paidTier?: GeminiUserTier;
+  paidTier?: OnyxUserTier;
 }
 
 export enum AuthType {
   LOGIN_WITH_GOOGLE = 'oauth-personal',
-  USE_GEMINI = 'gemini-api-key',
+  USE_ONYX = 'onyx-api-key',
   USE_VERTEX_AI = 'vertex-ai',
   LEGACY_CLOUD_SHELL = 'cloud-shell',
   COMPUTE_ADC = 'compute-default-credentials',
@@ -73,7 +73,7 @@ export enum AuthType {
  * Checks in order:
  * 1. GOOGLE_GENAI_USE_GCA=true -> LOGIN_WITH_GOOGLE
  * 2. GOOGLE_GENAI_USE_VERTEXAI=true -> USE_VERTEX_AI
- * 3. GEMINI_API_KEY -> USE_GEMINI
+ * 3. ONYX_API_KEY -> USE_ONYX
  */
 export function getAuthTypeFromEnv(): AuthType | undefined {
   if (process.env['GOOGLE_GENAI_USE_GCA'] === 'true') {
@@ -82,15 +82,15 @@ export function getAuthTypeFromEnv(): AuthType | undefined {
   if (process.env['GOOGLE_GENAI_USE_VERTEXAI'] === 'true') {
     return AuthType.USE_VERTEX_AI;
   }
-  if (process.env['GOOGLE_GEMINI_BASE_URL']) {
+  if (process.env['GOOGLE_ONYX_BASE_URL']) {
     return AuthType.GATEWAY;
   }
-  if (process.env['GEMINI_API_KEY']) {
-    return AuthType.USE_GEMINI;
+  if (process.env['ONYX_API_KEY']) {
+    return AuthType.USE_ONYX;
   }
   if (
     process.env['CLOUD_SHELL'] === 'true' ||
-    process.env['GEMINI_CLI_USE_COMPUTE_ADC'] === 'true'
+    process.env['ONYX_CLI_USE_COMPUTE_ADC'] === 'true'
   ) {
     return AuthType.COMPUTE_ADC;
   }
@@ -153,9 +153,9 @@ export async function createContentGeneratorConfig(
     return contentGeneratorConfig;
   }
 
-  const geminiApiKey =
+  const onyxApiKey =
     apiKey ||
-    process.env['GEMINI_API_KEY'] ||
+    process.env['ONYX_API_KEY'] ||
     (await loadApiKey()) ||
     undefined;
   const googleApiKey = process.env['GOOGLE_API_KEY'] || undefined;
@@ -165,8 +165,8 @@ export async function createContentGeneratorConfig(
     undefined;
   const googleCloudLocation = process.env['GOOGLE_CLOUD_LOCATION'] || undefined;
 
-  if (authType === AuthType.USE_GEMINI && geminiApiKey) {
-    contentGeneratorConfig.apiKey = geminiApiKey;
+  if (authType === AuthType.USE_ONYX && onyxApiKey) {
+    contentGeneratorConfig.apiKey = onyxApiKey;
     contentGeneratorConfig.vertexai = false;
 
     return contentGeneratorConfig;
@@ -184,7 +184,7 @@ export async function createContentGeneratorConfig(
 
   if (authType === AuthType.GATEWAY) {
     contentGeneratorConfig.apiKey =
-      apiKey || process.env['GEMINI_API_KEY'] || '';
+      apiKey || process.env['ONYX_API_KEY'] || '';
     contentGeneratorConfig.vertexai = false;
 
     return contentGeneratorConfig;
@@ -215,18 +215,18 @@ export async function createContentGenerator(
     const version = await getVersion();
     const model = resolveModel(
       gcConfig.getModel(),
-      config.authType === AuthType.USE_GEMINI ||
+      config.authType === AuthType.USE_ONYX ||
         config.authType === AuthType.USE_VERTEX_AI ||
-        ((await gcConfig.getGemini31Launched?.()) ?? false),
-      config.authType === AuthType.USE_GEMINI ||
+        ((await gcConfig.getOnyx31Launched?.()) ?? false),
+      config.authType === AuthType.USE_ONYX ||
         config.authType === AuthType.USE_VERTEX_AI ||
-        ((await gcConfig.getGemini31FlashLiteLaunched?.()) ?? false),
+        ((await gcConfig.getOnyx31FlashLiteLaunched?.()) ?? false),
       false,
       gcConfig.getHasAccessToPreviewModel?.() ?? true,
       gcConfig,
     );
     const customHeadersEnv =
-      process.env['GEMINI_CLI_CUSTOM_HEADERS'] || undefined;
+      process.env['ONYX_CLI_CUSTOM_HEADERS'] || undefined;
     const clientName = gcConfig.getClientName();
     const surface = determineSurface();
 
@@ -252,17 +252,17 @@ export async function createContentGenerator(
         hostPath += ` > CloudShell/${cloudShellVersion}`;
       }
 
-      userAgent = `CloudCodeVSCode/${version} (aidev_client; os_type=${osType}; os_version=${osVersion}; arch=${arch}; host_path=${hostPath}; proxy_client=geminicli)`;
+      userAgent = `CloudCodeVSCode/${version} (aidev_client; os_type=${osType}; os_version=${osVersion}; arch=${arch}; host_path=${hostPath}; proxy_client=onyxcli)`;
     } else {
       const userAgentPrefix = clientName
-        ? `GeminiCLI-${clientName}`
-        : 'GeminiCLI';
+        ? `OnyxCLI-${clientName}`
+        : 'OnyxCLI';
       userAgent = `${userAgentPrefix}/${version}/${model} (${process.platform}; ${process.arch}; ${surface})`;
     }
 
     const customHeadersMap = parseCustomHeaders(customHeadersEnv);
     const apiKeyAuthMechanism =
-      process.env['GEMINI_API_KEY_AUTH_MECHANISM'] || 'x-goog-api-key';
+      process.env['ONYX_API_KEY_AUTH_MECHANISM'] || 'x-goog-api-key';
     const apiVersionEnv = process.env['GOOGLE_GENAI_API_VERSION'];
 
     const baseHeaders: Record<string, string> = {
@@ -272,7 +272,7 @@ export async function createContentGenerator(
 
     if (
       apiKeyAuthMechanism === 'bearer' &&
-      (config.authType === AuthType.USE_GEMINI ||
+      (config.authType === AuthType.USE_ONYX ||
         config.authType === AuthType.USE_VERTEX_AI) &&
       config.apiKey
     ) {
@@ -295,7 +295,7 @@ export async function createContentGenerator(
     }
 
     if (
-      config.authType === AuthType.USE_GEMINI ||
+      config.authType === AuthType.USE_ONYX ||
       config.authType === AuthType.USE_VERTEX_AI ||
       config.authType === AuthType.GATEWAY
     ) {
@@ -323,7 +323,7 @@ export async function createContentGenerator(
         const installationId = installationManager.getInstallationId();
         headers = {
           ...headers,
-          'x-gemini-api-privileged-user-id': `${installationId}`,
+          'x-onyx-api-privileged-user-id': `${installationId}`,
         };
       }
       if (config.authType === AuthType.GATEWAY && config.apiKey === '') {
@@ -334,7 +334,7 @@ export async function createContentGenerator(
         const envBaseUrl =
           config.authType === AuthType.USE_VERTEX_AI
             ? process.env['GOOGLE_VERTEX_BASE_URL']
-            : process.env['GOOGLE_GEMINI_BASE_URL'];
+            : process.env['GOOGLE_ONYX_BASE_URL'];
         if (envBaseUrl) {
           validateBaseUrl(envBaseUrl);
           baseUrl = envBaseUrl;

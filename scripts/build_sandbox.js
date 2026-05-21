@@ -81,7 +81,7 @@ const dockerFile = argv.f;
 
 if (!image.length) {
   console.warn(
-    'No default image tag specified in gemini-cli/packages/cli/package.json',
+    'No default image tag specified in onyx-cli/packages/cli/package.json',
   );
 }
 
@@ -132,7 +132,7 @@ function buildImage(imageName, dockerfile) {
     if (isWindows) {
       // PowerShell doesn't support <() process substitution.
       // Create a temporary auth file that we will clean up after.
-      tempAuthFile = join(os.tmpdir(), `gemini-auth-${Date.now()}.json`);
+      tempAuthFile = join(os.tmpdir(), `onyx-auth-${Date.now()}.json`);
       writeFileSync(tempAuthFile, '{}');
       buildCommandArgs = `--authfile="${tempAuthFile}"`;
     } else {
@@ -146,7 +146,7 @@ function buildImage(imageName, dockerfile) {
   ).version;
 
   const imageTag =
-    process.env.GEMINI_SANDBOX_IMAGE_TAG || imageName.split(':')[1];
+    process.env.ONYX_SANDBOX_IMAGE_TAG || imageName.split(':')[1];
   const finalImageName = `${imageName.split(':')[0]}:${imageTag}`;
 
   try {

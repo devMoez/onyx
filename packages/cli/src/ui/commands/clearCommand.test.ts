@@ -21,7 +21,7 @@ vi.mock('@onyx/core', async () => {
   };
 });
 
-import { uiTelemetryService, type GeminiClient } from '@onyx/core';
+import { uiTelemetryService, type OnyxClient } from '@onyx/core';
 
 describe('clearCommand', () => {
   let mockContext: CommandContext;
@@ -49,12 +49,12 @@ describe('clearCommand', () => {
               clear: mockHintClear,
             },
           },
-          geminiClient: {
+          onyxClient: {
             resetChat: mockResetChat,
             getChat: () => ({
               getChatRecordingService: mockGetChatRecordingService,
             }),
-          } as unknown as GeminiClient,
+          } as unknown as OnyxClient,
         },
       },
     });

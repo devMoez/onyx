@@ -7,7 +7,7 @@ capabilities with others. They are designed to be easily installable and
 shareable.
 
 To see what's possible, browse the
-[Onyx CLI extension gallery](https://geminicli.com/extensions/browse/).
+[Onyx CLI extension gallery](https://onyxcli.com/extensions/browse/).
 
 ## Choose your path
 
@@ -42,11 +42,11 @@ and their status:
 /extensions list
 ```
 
-You can also manage extensions from your terminal using the `gemini extensions`
+You can also manage extensions from your terminal using the `onyx extensions`
 command group:
 
 ```bash
-gemini extensions list
+onyx extensions list
 ```
 
 ## Installation
@@ -54,7 +54,7 @@ gemini extensions list
 Install an extension by providing its GitHub repository URL. For example:
 
 ```bash
-gemini extensions install https://github.com/gemini-cli-extensions/workspace
+onyx extensions install https://github.com/onyx-cli-extensions/workspace
 ```
 
 For more advanced installation options, see the

@@ -41,24 +41,24 @@ You want to run tests and fix any failures.
 
 **Workflow:**
 
-1.  Gemini calls `run_shell_command('npm test')`.
+1.  Onyx calls `run_shell_command('npm test')`.
 2.  You see a confirmation prompt: `Allow command 'npm test'? [y/N]`.
 3.  You press `y`.
-4.  The tests run. If they fail, Gemini reads the error output.
-5.  Gemini uses `read_file` to inspect the failing test.
-6.  Gemini uses `replace` to fix the bug.
-7.  Gemini runs `npm test` again to verify the fix.
+4.  The tests run. If they fail, Onyx reads the error output.
+5.  Onyx uses `read_file` to inspect the failing test.
+6.  Onyx uses `replace` to fix the bug.
+7.  Onyx runs `npm test` again to verify the fix.
 
-This loop lets Gemini work autonomously.
+This loop lets Onyx work autonomously.
 
 ## How to manage background processes
 
-You can ask Gemini to start long-running tasks, like development servers or file
+You can ask Onyx to start long-running tasks, like development servers or file
 watchers.
 
 **Prompt:** `Start the React dev server in the background.`
 
-Gemini will run the command (for example, `npm run dev`) and detach it.
+Onyx will run the command (for example, `npm run dev`) and detach it.
 
 ### Scenario: Viewing active shells
 
@@ -96,7 +96,7 @@ projects, we strongly recommend enabling Sandboxing. This runs all shell
 commands inside a secure Docker container.
 
 **Enable sandboxing:** Use the `--sandbox` flag when starting the CLI:
-`gemini --sandbox`.
+`onyx --sandbox`.
 
 ## Next steps
 

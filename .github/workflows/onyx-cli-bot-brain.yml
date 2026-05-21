@@ -37,11 +37,11 @@ jobs:
     name: 'Brain (Reasoning Layer)'
     runs-on: 'ubuntu-latest'
     if: |
-      github.repository == 'google-gemini/gemini-cli' && (
+      github.repository == 'google-onyx/onyx-cli' && (
         github.event_name == 'schedule' ||
         (github.event_name == 'workflow_dispatch' && github.event.inputs.run_interactive != 'true') ||
         (github.event_name == 'workflow_dispatch' && github.event.inputs.run_interactive == 'true') ||
-        (github.event_name == 'issue_comment' && github.event.comment.user.login != 'gemini-cli[bot]' && contains(github.event.comment.body, '@gemini-cli') && contains(fromJSON('["COLLABORATOR", "MEMBER", "OWNER"]'), github.event.comment.author_association))
+        (github.event_name == 'issue_comment' && github.event.comment.user.login != 'onyx-cli[bot]' && contains(github.event.comment.body, '@onyx-cli') && contains(fromJSON('["COLLABORATOR", "MEMBER", "OWNER"]'), github.event.comment.author_association))
       )
     # The reasoning phase is strictly readonly.
     permissions:
@@ -105,9 +105,9 @@ jobs:
             gh run download "$LAST_RUN_ID" -n brain-data -D .temp_brain_data || echo "brain-data not found"
 
             # Restore only persistent memory files
-            cp .temp_brain_data/tools/gemini-cli-bot/lessons-learned.md tools/gemini-cli-bot/lessons-learned.md 2>/dev/null || true
-            mkdir -p tools/gemini-cli-bot/history/
-            cp .temp_brain_data/tools/gemini-cli-bot/history/*.csv tools/gemini-cli-bot/history/ 2>/dev/null || true
+            cp .temp_brain_data/tools/onyx-cli-bot/lessons-learned.md tools/onyx-cli-bot/lessons-learned.md 2>/dev/null || true
+            mkdir -p tools/onyx-cli-bot/history/
+            cp .temp_brain_data/tools/onyx-cli-bot/history/*.csv tools/onyx-cli-bot/history/ 2>/dev/null || true
             rm -rf .temp_brain_data
           else
             echo "No previous successful run found."
@@ -116,21 +116,21 @@ jobs:
       - name: 'Collect Current Metrics'
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-        run: 'npx tsx tools/gemini-cli-bot/metrics/index.ts'
+        run: 'npx tsx tools/onyx-cli-bot/metrics/index.ts'
 
       - name: 'Run Brain Phases'
         env:
-          GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
+          ONYX_API_KEY: '${{ secrets.ONYX_API_KEY }}'
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-          GEMINI_MODEL: 'gemini-3-flash-preview'
-          GEMINI_CLI_HOME: 'tools/gemini-cli-bot'
+          ONYX_MODEL: 'onyx-3-flash-preview'
+          ONYX_CLI_HOME: 'tools/onyx-cli-bot'
           ENABLE_PRS: "${{ github.event.inputs.enable_prs || 'false' }}"
           TRIGGER_ISSUE_NUMBER: '${{ github.event.issue.number || github.event.inputs.issue_number }}'
           TRIGGER_COMMENT_ID: '${{ github.event.comment.id || github.event.inputs.comment_id }}'
         run: |
-          PROMPT_PATH="tools/gemini-cli-bot/brain/scheduled.md"
+          PROMPT_PATH="tools/onyx-cli-bot/brain/scheduled.md"
           if [ "${{ github.event_name }}" = "issue_comment" ] || [ "${{ github.event.inputs.run_interactive }}" = "true" ]; then
-            PROMPT_PATH="tools/gemini-cli-bot/brain/interactive.md"
+            PROMPT_PATH="tools/onyx-cli-bot/brain/interactive.md"
             export ENABLE_PRS="true"
           fi
 
@@ -160,7 +160,7 @@ jobs:
           echo "" >> trigger_context.md
 
           cat trigger_context.md "$PROMPT_PATH" > combined_prompt.md
-          node bundle/gemini.js --policy tools/gemini-cli-bot/ci-policy.toml --prompt="$(cat combined_prompt.md)"
+          node bundle/onyx.js --policy tools/onyx-cli-bot/ci-policy.toml --prompt="$(cat combined_prompt.md)"
 
           if [ -n "$TRIGGER_ISSUE_NUMBER" ] && [ ! -s "issue-comment.md" ] && [ ! -s "pr-comment.md" ]; then
             echo "Agent failed to respond. Generating fallback error message."
@@ -172,16 +172,16 @@ jobs:
       - name: 'Run Critique Phase'
         if: "${{ github.event.inputs.enable_prs == 'true' || github.event_name == 'issue_comment' || github.event.inputs.run_interactive == 'true' }}"
         env:
-          GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
+          ONYX_API_KEY: '${{ secrets.ONYX_API_KEY }}'
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-          GEMINI_MODEL: 'gemini-3-flash-preview'
-          GEMINI_CLI_HOME: 'tools/gemini-cli-bot'
+          ONYX_MODEL: 'onyx-3-flash-preview'
+          ONYX_CLI_HOME: 'tools/onyx-cli-bot'
         run: |
           if git diff --staged --quiet; then
              echo "No changes staged. Skipping critique."
              echo "[APPROVED]" > critique_result.txt
           else
-             node bundle/gemini.js --policy tools/gemini-cli-bot/ci-policy.toml --prompt="$(cat tools/gemini-cli-bot/.gemini/skills/critique/SKILL.md)" 2>&1 | tee critique_output.log
+             node bundle/onyx.js --policy tools/onyx-cli-bot/ci-policy.toml --prompt="$(cat tools/onyx-cli-bot/.onyx/skills/critique/SKILL.md)" 2>&1 | tee critique_output.log
 
              if [ "${PIPESTATUS[0]}" -eq 0 ] && grep -q "\[APPROVED\]" critique_output.log && ! grep -q "\[REJECTED\]" critique_output.log; then
                echo "[APPROVED]" > critique_result.txt
@@ -207,8 +207,8 @@ jobs:
         with:
           name: 'brain-data'
           path: |
-            tools/gemini-cli-bot/lessons-learned.md
-            tools/gemini-cli-bot/history/*.csv
+            tools/onyx-cli-bot/lessons-learned.md
+            tools/onyx-cli-bot/history/*.csv
             bot-changes.patch
             pr-description.md
             branch-name.txt
@@ -221,7 +221,7 @@ jobs:
     name: 'Publish Artifacts (Archive Layer)'
     needs: 'reasoning'
     runs-on: 'ubuntu-latest'
-    if: "github.repository == 'google-gemini/gemini-cli'"
+    if: "github.repository == 'google-onyx/onyx-cli'"
     # The publish phase is for archiving artifacts and optionally creating PRs.
     permissions:
       contents: 'write'
@@ -273,11 +273,11 @@ jobs:
         if: "${{ github.event.inputs.enable_prs == 'true' || github.event_name == 'issue_comment' || github.event.inputs.run_interactive == 'true' }}"
         env:
           GH_TOKEN: '${{ steps.generate_token.outputs.token }}'
-          FALLBACK_PAT: '${{ secrets.GEMINI_CLI_ROBOT_GITHUB_PAT }}'
+          FALLBACK_PAT: '${{ secrets.ONYX_CLI_ROBOT_GITHUB_PAT }}'
         run: |
           if [ -s "${{ runner.temp }}/brain-data/bot-changes.patch" ]; then
-            git config user.name "gemini-cli[bot]"
-            git config user.email "gemini-cli[bot]@users.noreply.github.com"
+            git config user.name "onyx-cli[bot]"
+            git config user.email "onyx-cli[bot]@users.noreply.github.com"
             git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
 
             BRANCH_NAME="bot/productivity-updates-$(date +'%Y%m%d%H%M%S')-${{ github.run_id }}"
@@ -297,10 +297,10 @@ jobs:
             if [ -s "${{ runner.temp }}/brain-data/pr-description.md" ]; then
               git commit -F "${{ runner.temp }}/brain-data/pr-description.md"
             else
-              git commit -m "🤖 Gemini Bot Productivity Optimizations"
+              git commit -m "🤖 Onyx Bot Productivity Optimizations"
             fi
 
-            PR_TITLE="🤖 Gemini Bot Productivity Optimizations"
+            PR_TITLE="🤖 Onyx Bot Productivity Optimizations"
             if [ -s "${{ runner.temp }}/brain-data/pr-description.md" ]; then
               PR_TITLE=$(head -n 1 "${{ runner.temp }}/brain-data/pr-description.md")
             fi
@@ -314,7 +314,7 @@ jobs:
 
             if ! gh pr view "$BRANCH_NAME" > /dev/null 2>&1; then
               gh pr create --draft --title "$PR_TITLE" --body-file "${{ runner.temp }}/brain-data/pr-description.md" --head "$BRANCH_NAME" --base main || \
-              gh pr create --draft --title "🤖 Gemini Bot Productivity Optimizations" --body "Automated changes generated by Onyx CLI Bot." --head "$BRANCH_NAME" --base main
+              gh pr create --draft --title "🤖 Onyx Bot Productivity Optimizations" --body "Automated changes generated by Onyx CLI Bot." --head "$BRANCH_NAME" --base main
             else
               PR_STATE=$(gh pr view "$BRANCH_NAME" --json state --jq .state)
               if [ "$PR_STATE" = "CLOSED" ]; then
@@ -322,7 +322,7 @@ jobs:
                 git checkout -b "$NEW_BRANCH_NAME"
                 git push origin "$NEW_BRANCH_NAME" --force
                 gh pr create --draft --title "$PR_TITLE" --body-file "${{ runner.temp }}/brain-data/pr-description.md" --head "$NEW_BRANCH_NAME" --base main || \
-                gh pr create --draft --title "🤖 Gemini Bot Productivity Optimizations" --body "Automated changes generated by Onyx CLI Bot." --head "$NEW_BRANCH_NAME" --base main
+                gh pr create --draft --title "🤖 Onyx Bot Productivity Optimizations" --body "Automated changes generated by Onyx CLI Bot." --head "$NEW_BRANCH_NAME" --base main
               fi
             fi
           fi
@@ -342,7 +342,7 @@ jobs:
           if [ -s "${{ runner.temp }}/brain-data/pr-comment.md" ] && [ -f "${{ runner.temp }}/brain-data/pr-number.txt" ]; then
             PR_NUM=$(cat "${{ runner.temp }}/brain-data/pr-number.txt")
 
-            # Using GitHub App, so author check is no longer valid against gemini-cli-robot
+            # Using GitHub App, so author check is no longer valid against onyx-cli-robot
             # Skipping author validation here to let the app post.
 
             # Use REST API (gh api) for consistency and robot identity

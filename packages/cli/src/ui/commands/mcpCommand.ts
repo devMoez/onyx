@@ -139,9 +139,9 @@ const authCommand: SlashCommand = {
         await mcpClientManager.restartServer(serverName);
       }
       // Update the client with the new tools
-      const geminiClient = context.services.agentContext?.geminiClient;
-      if (geminiClient?.isInitialized()) {
-        await geminiClient.setTools();
+      const onyxClient = context.services.agentContext?.onyxClient;
+      if (onyxClient?.isInitialized()) {
+        await onyxClient.setTools();
       }
 
       // Reload the slash commands to reflect the changes.
@@ -380,9 +380,9 @@ const reloadCommand: SlashCommand = {
     await mcpClientManager.restart();
 
     // Update the client with the new tools
-    const geminiClient = agentContext.geminiClient;
-    if (geminiClient?.isInitialized()) {
-      await geminiClient.setTools();
+    const onyxClient = agentContext.onyxClient;
+    if (onyxClient?.isInitialized()) {
+      await onyxClient.setTools();
     }
 
     // Reload the slash commands to reflect the changes.
@@ -486,8 +486,8 @@ async function handleEnableDisable(
     );
     await mcpClientManager.restart();
   }
-  if (agentContext.geminiClient?.isInitialized())
-    await agentContext.geminiClient.setTools();
+  if (agentContext.onyxClient?.isInitialized())
+    await agentContext.onyxClient.setTools();
   context.ui.reloadCommands();
 
   return { type: 'message', messageType: 'info', content: msg };

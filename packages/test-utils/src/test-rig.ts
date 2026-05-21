@@ -11,8 +11,8 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { env } from 'node:process';
 import { setTimeout as sleep } from 'node:timers/promises';
-import { PREVIEW_GEMINI_FLASH_MODEL, GEMINI_DIR } from '@onyx/core';
-export { GEMINI_DIR };
+import { PREVIEW_GEMINI_FLASH_MODEL, ONYX_DIR } from '@onyx/core';
+export { ONYX_DIR };
 import * as pty from '@lydell/node-pty';
 import stripAnsi from 'strip-ansi';
 import * as os from 'node:os';
@@ -24,7 +24,7 @@ const BUNDLE_PATH = join(__dirname, '..', '..', '..', 'bundle/onyx.js');
 // Get timeout based on environment
 export function getDefaultTimeout() {
   if (env['CI']) return 60000; // 1 minute in CI
-  if (env['GEMINI_SANDBOX']) return 30000; // 30s in containers
+  if (env['ONYX_SANDBOX']) return 30000; // 30s in containers
   return 15000; // 15s locally
 }
 
@@ -379,7 +379,7 @@ export class TestRig {
     this.testName = testName;
     const sanitizedName = sanitizeTestName(testName);
     const testFileDir =
-      env['INTEGRATION_TEST_FILE_DIR'] || join(os.tmpdir(), 'gemini-cli-tests');
+      env['INTEGRATION_TEST_FILE_DIR'] || join(os.tmpdir(), 'onyx-cli-tests');
     this.testDir = join(testFileDir, sanitizedName);
     this.homeDir = join(testFileDir, sanitizedName + '-home');
 
@@ -438,11 +438,11 @@ export class TestRig {
   }
 
   private _createSettingsFile(overrideSettings?: Record<string, unknown>) {
-    const projectGeminiDir = join(this.testDir!, GEMINI_DIR);
-    mkdirSync(projectGeminiDir, { recursive: true });
+    const projectOnyxDir = join(this.testDir!, ONYX_DIR);
+    mkdirSync(projectOnyxDir, { recursive: true });
 
-    const userGeminiDir = join(this.homeDir!, GEMINI_DIR);
-    mkdirSync(userGeminiDir, { recursive: true });
+    const userOnyxDir = join(this.homeDir!, ONYX_DIR);
+    mkdirSync(userOnyxDir, { recursive: true });
 
     // In sandbox mode, use an absolute path for telemetry inside the container
     // The container mounts the test directory at the same path as the host
@@ -463,7 +463,7 @@ export class TestRig {
         },
         security: {
           auth: {
-            selectedType: 'gemini-api-key',
+            selectedType: 'onyx-api-key',
           },
           folderTrust: {
             enabled: false,
@@ -472,7 +472,7 @@ export class TestRig {
         ui: {
           useAlternateBuffer: true,
         },
-        ...(env['GEMINI_TEST_TYPE'] === 'integration'
+        ...(env['ONYX_TEST_TYPE'] === 'integration'
           ? {
               model: {
                 name: PREVIEW_GEMINI_FLASH_MODEL,
@@ -480,26 +480,26 @@ export class TestRig {
             }
           : {}),
         sandbox:
-          env['GEMINI_SANDBOX'] !== 'false' ? env['GEMINI_SANDBOX'] : false,
+          env['ONYX_SANDBOX'] !== 'false' ? env['ONYX_SANDBOX'] : false,
         // Don't show the IDE connection dialog when running from VsCode
         ide: { enabled: false, hasSeenNudge: true },
       },
       overrideSettings ?? {},
     );
     writeFileSync(
-      join(projectGeminiDir, 'settings.json'),
+      join(projectOnyxDir, 'settings.json'),
       JSON.stringify(settings, null, 2),
     );
     writeFileSync(
-      join(userGeminiDir, 'settings.json'),
+      join(userOnyxDir, 'settings.json'),
       JSON.stringify(settings, null, 2),
     );
   }
 
   private _createStateFile(overrideState?: Record<string, unknown>) {
     if (!this.homeDir) throw new Error('TestRig homeDir is not initialized');
-    const userGeminiDir = join(this.homeDir, GEMINI_DIR);
-    mkdirSync(userGeminiDir, { recursive: true });
+    const userOnyxDir = join(this.homeDir, ONYX_DIR);
+    mkdirSync(userOnyxDir, { recursive: true });
 
     const state = deepMerge(
       {
@@ -509,7 +509,7 @@ export class TestRig {
     );
 
     writeFileSync(
-      join(userGeminiDir, 'state.json'),
+      join(userOnyxDir, 'state.json'),
       JSON.stringify(state, null, 2),
     );
   }
@@ -531,25 +531,25 @@ export class TestRig {
   }
 
   /**
-   * The command and args to use to invoke Gemini CLI. Allows us to switch
-   * between using the bundled gemini.js (the default) and using the installed
-   * 'gemini' (used to verify npm bundles).
+   * The command and args to use to invoke Onyx CLI. Allows us to switch
+   * between using the bundled onyx.js (the default) and using the installed
+   * 'onyx' (used to verify npm bundles).
    */
   private _getCommandAndArgs(extraInitialArgs: string[] = []): {
     command: string;
     initialArgs: string[];
   } {
-    const binaryPath = env['INTEGRATION_TEST_GEMINI_BINARY_PATH'];
+    const binaryPath = env['INTEGRATION_TEST_ONYX_BINARY_PATH'];
     const isNpmReleaseTest =
-      env['INTEGRATION_TEST_USE_INSTALLED_GEMINI'] === 'true';
-    const geminiCommand = os.platform() === 'win32' ? 'gemini.cmd' : 'gemini';
+      env['INTEGRATION_TEST_USE_INSTALLED_ONYX'] === 'true';
+    const onyxCommand = os.platform() === 'win32' ? 'onyx.cmd' : 'onyx';
     let command = 'node';
     let initialArgs = [BUNDLE_PATH, ...extraInitialArgs];
     if (binaryPath) {
       command = binaryPath;
       initialArgs = extraInitialArgs;
     } else if (isNpmReleaseTest) {
-      command = geminiCommand;
+      command = onyxCommand;
       initialArgs = extraInitialArgs;
     }
     if (this.fakeResponsesPath) {
@@ -634,12 +634,12 @@ export class TestRig {
 
     // Update settings in workspace and home
     const updateSettings = (dir: string) => {
-      const settingsPath = join(dir, GEMINI_DIR, 'settings.json');
+      const settingsPath = join(dir, ONYX_DIR, 'settings.json');
       let settings: any = {};
       if (fs.existsSync(settingsPath)) {
         settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
       } else {
-        fs.mkdirSync(join(dir, GEMINI_DIR), { recursive: true });
+        fs.mkdirSync(join(dir, ONYX_DIR), { recursive: true });
       }
 
       if (!settings.mcpServers) {
@@ -666,19 +666,19 @@ export class TestRig {
   ): Record<string, string | undefined> {
     const cleanEnv: Record<string, string | undefined> = { ...process.env };
 
-    // Clear all GEMINI_ environment variables that might interfere with tests
+    // Clear all ONYX_ environment variables that might interfere with tests
     // except for those we explicitly want to keep or set.
     for (const key of Object.keys(cleanEnv)) {
       if (
-        (key.startsWith('GEMINI_') || key.startsWith('GOOGLE_GEMINI_')) &&
-        key !== 'GEMINI_API_KEY' &&
+        (key.startsWith('ONYX_') || key.startsWith('GOOGLE_ONYX_')) &&
+        key !== 'ONYX_API_KEY' &&
         key !== 'GOOGLE_API_KEY' &&
-        key !== 'GEMINI_MODEL' &&
-        key !== 'GEMINI_DEBUG' &&
-        key !== 'GEMINI_CLI_TEST_VAR' &&
-        key !== 'GEMINI_CLI_INTEGRATION_TEST' &&
-        key !== 'GOOGLE_GEMINI_BASE_URL' &&
-        !key.startsWith('GEMINI_CLI_ACTIVITY_LOG')
+        key !== 'ONYX_MODEL' &&
+        key !== 'ONYX_DEBUG' &&
+        key !== 'ONYX_CLI_TEST_VAR' &&
+        key !== 'ONYX_CLI_INTEGRATION_TEST' &&
+        key !== 'GOOGLE_ONYX_BASE_URL' &&
+        !key.startsWith('ONYX_CLI_ACTIVITY_LOG')
       ) {
         delete cleanEnv[key];
       }
@@ -686,8 +686,8 @@ export class TestRig {
 
     return {
       ...cleanEnv,
-      GEMINI_CLI_HOME: this.homeDir!,
-      GEMINI_PTY_INFO: 'child_process',
+      ONYX_CLI_HOME: this.homeDir!,
+      ONYX_PTY_INFO: 'child_process',
       ...extraEnv,
     };
   }
@@ -810,7 +810,7 @@ export class TestRig {
   }
 
   private _filterPodmanTelemetry(stdout: string): string {
-    if (env['GEMINI_SANDBOX'] !== 'podman') {
+    if (env['ONYX_SANDBOX'] !== 'podman') {
       return stdout;
     }
 
@@ -1091,7 +1091,7 @@ export class TestRig {
         return logs.some(
           (logData) =>
             logData.attributes &&
-            logData.attributes['event.name'] === `gemini_cli.${eventName}`,
+            logData.attributes['event.name'] === `onyx_cli.${eventName}`,
         );
       },
       timeout,
@@ -1291,7 +1291,7 @@ export class TestRig {
                 }
               } else if (
                 obj.attributes &&
-                obj.attributes['event.name'] === 'gemini_cli.tool_call'
+                obj.attributes['event.name'] === 'onyx_cli.tool_call'
               ) {
                 logs.push({
                   timestamp: obj.attributes['event.timestamp'],
@@ -1362,7 +1362,7 @@ export class TestRig {
   readToolLogs() {
     // For Podman, first check if telemetry file exists and has content
     // If not, fall back to parsing from stdout
-    if (env['GEMINI_SANDBOX'] === 'podman') {
+    if (env['ONYX_SANDBOX'] === 'podman') {
       // Try reading from file first
       const logFilePath = join(this.homeDir!, 'telemetry.log');
 
@@ -1405,7 +1405,7 @@ export class TestRig {
       // Look for tool call logs
       if (
         logData.attributes &&
-        logData.attributes['event.name'] === 'gemini_cli.tool_call'
+        logData.attributes['event.name'] === 'onyx_cli.tool_call'
       ) {
         const toolName = logData.attributes.function_name!;
         logs.push({
@@ -1430,7 +1430,7 @@ export class TestRig {
     const apiRequests = logs.filter(
       (logData) =>
         logData.attributes &&
-        logData.attributes['event.name'] === `gemini_cli.api_request`,
+        logData.attributes['event.name'] === `onyx_cli.api_request`,
     );
     return apiRequests;
   }
@@ -1440,7 +1440,7 @@ export class TestRig {
     const apiRequests = logs.filter(
       (logData) =>
         logData.attributes &&
-        logData.attributes['event.name'] === `gemini_cli.api_request`,
+        logData.attributes['event.name'] === `onyx_cli.api_request`,
     );
     return apiRequests.pop() || null;
   }
@@ -1448,9 +1448,9 @@ export class TestRig {
   async waitForMetric(metricName: string, timeout?: number) {
     await this.waitForTelemetryReady();
 
-    const fullName = metricName.startsWith('gemini_cli.')
+    const fullName = metricName.startsWith('onyx_cli.')
       ? metricName
-      : `gemini_cli.${metricName}`;
+      : `onyx_cli.${metricName}`;
 
     return poll(
       () => {
@@ -1479,7 +1479,7 @@ export class TestRig {
       if (logData && logData.scopeMetrics) {
         for (const scopeMetric of logData.scopeMetrics) {
           for (const metric of scopeMetric.metrics) {
-            if (metric.descriptor.name === `gemini_cli.${metricName}`) {
+            if (metric.descriptor.name === `onyx_cli.${metricName}`) {
               return metric;
             }
           }
@@ -1577,7 +1577,7 @@ export class TestRig {
       if (logData && logData.scopeMetrics) {
         for (const scopeMetric of logData.scopeMetrics) {
           for (const metric of scopeMetric.metrics) {
-            if (metric.descriptor.name === 'gemini_cli.memory.usage') {
+            if (metric.descriptor.name === 'onyx_cli.memory.usage') {
               for (const dp of metric.dataPoints) {
                 const sessionId =
                   (dp.attributes?.['session.id'] as string) || 'unknown';
@@ -1687,7 +1687,7 @@ export class TestRig {
       // Look for tool call logs
       if (
         logData.attributes &&
-        logData.attributes['event.name'] === 'gemini_cli.hook_call'
+        logData.attributes['event.name'] === 'onyx_cli.hook_call'
       ) {
         logs.push({
           hookCall: {

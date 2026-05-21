@@ -14,7 +14,7 @@ import { env } from 'node:process';
 import * as acp from '@agentclientprotocol/sdk';
 
 // Skip in sandbox mode - test spawns CLI directly which behaves differently in containers
-const sandboxEnv = env['GEMINI_SANDBOX'];
+const sandboxEnv = env['ONYX_SANDBOX'];
 const itMaybe = sandboxEnv && sandboxEnv !== 'false' ? it.skip : it;
 
 // Reuse existing fake responses that return a simple "Hello" response
@@ -67,12 +67,12 @@ describe('ACP telemetry', () => {
         stdio: ['pipe', 'pipe', 'inherit'],
         env: {
           ...process.env,
-          GEMINI_API_KEY: 'fake-key',
-          GEMINI_CLI_HOME: rig.homeDir!,
-          GEMINI_TELEMETRY_ENABLED: 'true',
-          GEMINI_TELEMETRY_TRACES_ENABLED: 'true',
-          GEMINI_TELEMETRY_TARGET: 'local',
-          GEMINI_TELEMETRY_OUTFILE: telemetryPath,
+          ONYX_API_KEY: 'fake-key',
+          ONYX_CLI_HOME: rig.homeDir!,
+          ONYX_TELEMETRY_ENABLED: 'true',
+          ONYX_TELEMETRY_TRACES_ENABLED: 'true',
+          ONYX_TELEMETRY_TARGET: 'local',
+          ONYX_TELEMETRY_OUTFILE: telemetryPath,
         },
       },
     );
@@ -114,3 +114,4 @@ describe('ACP telemetry', () => {
     );
   });
 });
+

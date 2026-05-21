@@ -18,7 +18,7 @@ describe('Checkpointing Integration', () => {
 
   beforeEach(async () => {
     tmpDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), 'gemini-checkpoint-test-'),
+      path.join(os.tmpdir(), 'onyx-checkpoint-test-'),
     );
     projectRoot = path.join(tmpDir, 'project');
     fakeHome = path.join(tmpDir, 'home');
@@ -149,7 +149,8 @@ describe('Checkpointing Integration', () => {
       },
     );
 
-    expect(logOutput).toBe('Onyx CLI <gemini-cli@google.com>');
+    expect(logOutput).toBe('Onyx CLI <onyx-cli@google.com>');
     expect(logOutput).not.toContain('Global User');
   });
 });
+

@@ -22,7 +22,8 @@ export default defineConfig({
       },
     },
     env: {
-      GEMINI_TEST_TYPE: 'memory',
+      ONYX_TEST_TYPE: 'memory',
     },
   },
 });
+

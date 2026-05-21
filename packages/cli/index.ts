@@ -45,9 +45,9 @@ async function getMemoryNodeArgs(): Promise<string[]> {
   try {
     const { readFileSync } = await import('node:fs');
     const { join } = await import('node:path');
-    // Respect GEMINI_CLI_HOME environment variable, falling back to os.homedir()
+    // Respect ONYX_CLI_HOME environment variable, falling back to os.homedir()
     const baseDir =
-      process.env['GEMINI_CLI_HOME'] || join(os.homedir(), '.onyx');
+      process.env['ONYX_CLI_HOME'] || join(os.homedir(), '.onyx');
     const settingsPath = join(baseDir, 'settings.json');
     const rawSettings = readFileSync(settingsPath, 'utf8');
     const settings = JSON.parse(rawSettings);
@@ -75,7 +75,7 @@ async function getMemoryNodeArgs(): Promise<string[]> {
 }
 
 async function run() {
-  if (!process.env['GEMINI_CLI_NO_RELAUNCH'] && !process.env['SANDBOX']) {
+  if (!process.env['ONYX_CLI_NO_RELAUNCH'] && !process.env['SANDBOX']) {
     // --- Lightweight Parent Process / Daemon ---
     // We avoid importing heavy dependencies here to save ~1.5s of startup time.
 

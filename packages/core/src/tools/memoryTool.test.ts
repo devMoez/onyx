@@ -7,72 +7,72 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   DEFAULT_CONTEXT_FILENAME,
-  getAllGeminiMdFilenames,
-  resetGeminiMdFilename,
-  setGeminiMdFilename,
+  getAllOnyxMdFilenames,
+  resetOnyxMdFilename,
+  setOnyxMdFilename,
 } from './memoryTool.js';
 
 describe('memoryTool filename helpers', () => {
   afterEach(() => {
-    resetGeminiMdFilename(DEFAULT_CONTEXT_FILENAME);
+    resetOnyxMdFilename(DEFAULT_CONTEXT_FILENAME);
   });
 
-  describe('setGeminiMdFilename', () => {
-    it('appends to currentGeminiMdFilename when a valid new name is provided', () => {
+  describe('setOnyxMdFilename', () => {
+    it('appends to currentOnyxMdFilename when a valid new name is provided', () => {
       const newName = 'CUSTOM_CONTEXT.md';
-      setGeminiMdFilename(newName);
-      expect(getAllGeminiMdFilenames()).toEqual([
+      setOnyxMdFilename(newName);
+      expect(getAllOnyxMdFilenames()).toEqual([
         newName,
         DEFAULT_CONTEXT_FILENAME,
       ]);
     });
 
-    it('does not update currentGeminiMdFilename if the new name is empty or whitespace', () => {
-      const initialNames = getAllGeminiMdFilenames();
-      setGeminiMdFilename('  ');
-      expect(getAllGeminiMdFilenames()).toEqual(initialNames);
+    it('does not update currentOnyxMdFilename if the new name is empty or whitespace', () => {
+      const initialNames = getAllOnyxMdFilenames();
+      setOnyxMdFilename('  ');
+      expect(getAllOnyxMdFilenames()).toEqual(initialNames);
 
-      setGeminiMdFilename('');
-      expect(getAllGeminiMdFilenames()).toEqual(initialNames);
+      setOnyxMdFilename('');
+      expect(getAllOnyxMdFilenames()).toEqual(initialNames);
     });
 
     it('handles adding an array of filenames', () => {
       const newNames = ['CUSTOM_CONTEXT.md', 'ANOTHER_CONTEXT.md'];
-      setGeminiMdFilename(newNames);
-      expect(getAllGeminiMdFilenames()).toEqual([
+      setOnyxMdFilename(newNames);
+      expect(getAllOnyxMdFilenames()).toEqual([
         ...newNames,
         DEFAULT_CONTEXT_FILENAME,
       ]);
     });
 
     it('ensures uniqueness when adding names', () => {
-      setGeminiMdFilename(DEFAULT_CONTEXT_FILENAME);
-      expect(getAllGeminiMdFilenames()).toEqual([DEFAULT_CONTEXT_FILENAME]);
+      setOnyxMdFilename(DEFAULT_CONTEXT_FILENAME);
+      expect(getAllOnyxMdFilenames()).toEqual([DEFAULT_CONTEXT_FILENAME]);
 
-      setGeminiMdFilename(['NEW.md', 'NEW.md']);
-      expect(getAllGeminiMdFilenames()).toEqual([
+      setOnyxMdFilename(['NEW.md', 'NEW.md']);
+      expect(getAllOnyxMdFilenames()).toEqual([
         'NEW.md',
         DEFAULT_CONTEXT_FILENAME,
       ]);
     });
   });
 
-  describe('resetGeminiMdFilename', () => {
+  describe('resetOnyxMdFilename', () => {
     it('replaces all filenames with the provided one', () => {
-      setGeminiMdFilename('OTHER.md');
-      resetGeminiMdFilename('RESET.md');
-      expect(getAllGeminiMdFilenames()).toEqual(['RESET.md']);
+      setOnyxMdFilename('OTHER.md');
+      resetOnyxMdFilename('RESET.md');
+      expect(getAllOnyxMdFilenames()).toEqual(['RESET.md']);
     });
 
     it('resets to default if no argument provided', () => {
-      resetGeminiMdFilename('OTHER.md');
-      resetGeminiMdFilename(DEFAULT_CONTEXT_FILENAME);
-      expect(getAllGeminiMdFilenames()).toEqual([DEFAULT_CONTEXT_FILENAME]);
+      resetOnyxMdFilename('OTHER.md');
+      resetOnyxMdFilename(DEFAULT_CONTEXT_FILENAME);
+      expect(getAllOnyxMdFilenames()).toEqual([DEFAULT_CONTEXT_FILENAME]);
     });
 
     it('handles array reset', () => {
-      resetGeminiMdFilename(['A.md', 'B.md']);
-      expect(getAllGeminiMdFilenames()).toEqual(['A.md', 'B.md']);
+      resetOnyxMdFilename(['A.md', 'B.md']);
+      expect(getAllOnyxMdFilenames()).toEqual(['A.md', 'B.md']);
     });
   });
 });

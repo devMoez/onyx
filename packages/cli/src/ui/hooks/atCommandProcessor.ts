@@ -216,7 +216,7 @@ interface ResolvedFile {
 
 interface IgnoredFile {
   path: string;
-  reason: 'git' | 'gemini' | 'both';
+  reason: 'git' | 'onyx' | 'both';
 }
 
 /**
@@ -250,23 +250,23 @@ async function resolveFilePaths(
         respectGitIgnore: true,
         respectonyxIgnore: false,
       });
-    const geminiIgnored =
+    const onyxIgnored =
       respectFileIgnore.respectonyxIgnore &&
       fileDiscovery.shouldIgnoreFile(pathName, {
         respectGitIgnore: false,
         respectonyxIgnore: true,
       });
 
-    if (gitIgnored || geminiIgnored) {
+    if (gitIgnored || onyxIgnored) {
       const reason =
-        gitIgnored && geminiIgnored ? 'both' : gitIgnored ? 'git' : 'gemini';
+        gitIgnored && onyxIgnored ? 'both' : gitIgnored ? 'git' : 'onyx';
       ignoredFiles.push({ path: pathName, reason });
       const reasonText =
         reason === 'both'
-          ? 'ignored by both git and gemini'
+          ? 'ignored by both git and onyx'
           : reason === 'git'
             ? 'git-ignored'
-            : 'gemini-ignored';
+            : 'onyx-ignored';
       onDebugMessage(`Path ${pathName} is ${reasonText} and will be skipped.`);
       continue;
     }
@@ -532,7 +532,7 @@ async function readLocalFiles(
     include: pathSpecsToRead,
     file_filtering_options: {
       respect_git_ignore: respectFileIgnore.respectGitIgnore,
-      respect_gemini_ignore: respectFileIgnore.respectonyxIgnore,
+      respect_onyx_ignore: respectFileIgnore.respectonyxIgnore,
     },
   };
 
@@ -631,7 +631,7 @@ function reportIgnoredFiles(
 
   const ignoredByReason: Record<string, string[]> = {
     git: [],
-    gemini: [],
+    onyx: [],
     both: [],
   };
 
@@ -643,8 +643,8 @@ function reportIgnoredFiles(
   if (ignoredByReason['git'].length) {
     messages.push(`Git-ignored: ${ignoredByReason['git'].join(', ')}`);
   }
-  if (ignoredByReason['gemini'].length) {
-    messages.push(`Gemini-ignored: ${ignoredByReason['gemini'].join(', ')}`);
+  if (ignoredByReason['onyx'].length) {
+    messages.push(`Onyx-ignored: ${ignoredByReason['onyx'].join(', ')}`);
   }
   if (ignoredByReason['both'].length) {
     messages.push(`Ignored by both: ${ignoredByReason['both'].join(', ')}`);

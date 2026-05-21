@@ -28,13 +28,13 @@ import { ApprovalMode } from '../policy/types.js';
 const createMockConfig = (overrides: Partial<Config> = {}): Config => {
   const config = {
     getUserTier: () => undefined,
-    getModel: () => 'gemini-2.5-pro',
-    getGemini31LaunchedSync: () => false,
-    getGemini31FlashLiteLaunchedSync: () => false,
+    getModel: () => 'onyx-2.5-pro',
+    getOnyx31LaunchedSync: () => false,
+    getOnyx31FlashLiteLaunchedSync: () => false,
     getUseCustomToolModelSync: () => {
-      const useGemini31 = config.getGemini31LaunchedSync();
+      const useOnyx31 = config.getOnyx31LaunchedSync();
       const authType = config.getContentGeneratorConfig().authType;
-      return useGemini31 && authType === AuthType.USE_GEMINI;
+      return useOnyx31 && authType === AuthType.USE_ONYX;
     },
     getContentGeneratorConfig: () => ({ authType: undefined }),
     getHasAccessToPreviewModel: () => true,
@@ -60,10 +60,10 @@ describe('policyHelpers', () => {
 
     it('leaves catalog order untouched when active model already present', () => {
       const config = createMockConfig({
-        getModel: () => 'gemini-2.5-pro',
+        getModel: () => 'onyx-2.5-pro',
       });
       const chain = resolvePolicyChain(config);
-      expect(chain[0]?.model).toBe('gemini-2.5-pro');
+      expect(chain[0]?.model).toBe('onyx-2.5-pro');
     });
 
     it('returns the default chain when active model is "auto"', () => {
@@ -74,38 +74,38 @@ describe('policyHelpers', () => {
 
       // Expect default chain [Pro, Flash]
       expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('gemini-2.5-pro');
-      expect(chain[1]?.model).toBe('gemini-2.5-flash');
+      expect(chain[0]?.model).toBe('onyx-2.5-pro');
+      expect(chain[1]?.model).toBe('onyx-2.5-flash');
     });
 
     it('uses auto chain when preferred model is auto', () => {
       const config = createMockConfig({
-        getModel: () => 'gemini-2.5-pro',
+        getModel: () => 'onyx-2.5-pro',
       });
       const chain = resolvePolicyChain(config, DEFAULT_GEMINI_MODEL_AUTO);
       expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('gemini-2.5-pro');
-      expect(chain[1]?.model).toBe('gemini-2.5-flash');
+      expect(chain[0]?.model).toBe('onyx-2.5-pro');
+      expect(chain[1]?.model).toBe('onyx-2.5-flash');
     });
 
     it('uses auto chain when configured model is auto even if preferred is concrete', () => {
       const config = createMockConfig({
         getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
       });
-      const chain = resolvePolicyChain(config, 'gemini-2.5-pro');
+      const chain = resolvePolicyChain(config, 'onyx-2.5-pro');
       expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('gemini-2.5-pro');
-      expect(chain[1]?.model).toBe('gemini-2.5-flash');
+      expect(chain[0]?.model).toBe('onyx-2.5-pro');
+      expect(chain[1]?.model).toBe('onyx-2.5-flash');
     });
 
     it('starts chain from preferredModel when model is "auto"', () => {
       const config = createMockConfig({
         getModel: () => 'auto',
       });
-      const chain = resolvePolicyChain(config, 'gemini-2.5-flash');
-      // Due to Gemini 2.x wrapsAround, the chain will contain both flash and pro
+      const chain = resolvePolicyChain(config, 'onyx-2.5-flash');
+      // Due to Onyx 2.x wrapsAround, the chain will contain both flash and pro
       expect(chain.length).toBeGreaterThanOrEqual(1);
-      expect(chain[0]?.model).toBe('gemini-2.5-flash');
+      expect(chain[0]?.model).toBe('onyx-2.5-flash');
     });
 
     it('returns flash-lite chain when preferred model is flash-lite', () => {
@@ -114,9 +114,9 @@ describe('policyHelpers', () => {
       });
       const chain = resolvePolicyChain(config, DEFAULT_GEMINI_FLASH_LITE_MODEL);
       expect(chain).toHaveLength(3);
-      expect(chain[0]?.model).toBe('gemini-2.5-flash-lite');
-      expect(chain[1]?.model).toBe('gemini-2.5-flash');
-      expect(chain[2]?.model).toBe('gemini-2.5-pro');
+      expect(chain[0]?.model).toBe('onyx-2.5-flash-lite');
+      expect(chain[1]?.model).toBe('onyx-2.5-flash');
+      expect(chain[2]?.model).toBe('onyx-2.5-pro');
     });
 
     it('returns flash-lite chain when configured model is flash-lite', () => {
@@ -125,53 +125,53 @@ describe('policyHelpers', () => {
       });
       const chain = resolvePolicyChain(config);
       expect(chain).toHaveLength(3);
-      expect(chain[0]?.model).toBe('gemini-2.5-flash-lite');
-      expect(chain[1]?.model).toBe('gemini-2.5-flash');
-      expect(chain[2]?.model).toBe('gemini-2.5-pro');
+      expect(chain[0]?.model).toBe('onyx-2.5-flash-lite');
+      expect(chain[1]?.model).toBe('onyx-2.5-flash');
+      expect(chain[2]?.model).toBe('onyx-2.5-pro');
     });
 
     it('wraps around the chain when wrapsAround is true', () => {
       const config = createMockConfig({
         getModel: () => DEFAULT_GEMINI_MODEL_AUTO,
       });
-      const chain = resolvePolicyChain(config, 'gemini-2.5-flash', true);
+      const chain = resolvePolicyChain(config, 'onyx-2.5-flash', true);
       expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('gemini-2.5-flash');
-      expect(chain[1]?.model).toBe('gemini-2.5-pro');
+      expect(chain[0]?.model).toBe('onyx-2.5-flash');
+      expect(chain[1]?.model).toBe('onyx-2.5-pro');
     });
 
-    it('proactively returns Gemini 2.5 chain if Gemini 3 requested but user lacks access', () => {
+    it('proactively returns Onyx 2.5 chain if Onyx 3 requested but user lacks access', () => {
       const config = createMockConfig({
-        getModel: () => 'auto-gemini-3',
+        getModel: () => 'auto-onyx-3',
         getHasAccessToPreviewModel: () => false,
       });
       const chain = resolvePolicyChain(config);
 
       // Should downgrade to [Pro 2.5, Flash 2.5]
       expect(chain).toHaveLength(2);
-      expect(chain[0]?.model).toBe('gemini-2.5-pro');
-      expect(chain[1]?.model).toBe('gemini-2.5-flash');
+      expect(chain[0]?.model).toBe('onyx-2.5-pro');
+      expect(chain[1]?.model).toBe('onyx-2.5-flash');
     });
 
-    it('returns Gemini 3.1 Pro chain when launched and auto-gemini-3 requested', () => {
+    it('returns Onyx 3.1 Pro chain when launched and auto-onyx-3 requested', () => {
       const config = createMockConfig({
-        getModel: () => 'auto-gemini-3',
-        getGemini31LaunchedSync: () => true,
+        getModel: () => 'auto-onyx-3',
+        getOnyx31LaunchedSync: () => true,
       });
       const chain = resolvePolicyChain(config);
       expect(chain[0]?.model).toBe(PREVIEW_GEMINI_3_1_MODEL);
-      expect(chain[1]?.model).toBe('gemini-3-flash-preview');
+      expect(chain[1]?.model).toBe('onyx-3-flash-preview');
     });
 
-    it('returns Gemini 3.1 Pro Custom Tools chain when launched, auth is Gemini, and auto-gemini-3 requested', () => {
+    it('returns Onyx 3.1 Pro Custom Tools chain when launched, auth is Onyx, and auto-onyx-3 requested', () => {
       const config = createMockConfig({
-        getModel: () => 'auto-gemini-3',
-        getGemini31LaunchedSync: () => true,
-        getContentGeneratorConfig: () => ({ authType: AuthType.USE_GEMINI }),
+        getModel: () => 'auto-onyx-3',
+        getOnyx31LaunchedSync: () => true,
+        getContentGeneratorConfig: () => ({ authType: AuthType.USE_ONYX }),
       });
       const chain = resolvePolicyChain(config);
       expect(chain[0]?.model).toBe(PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL);
-      expect(chain[1]?.model).toBe('gemini-3-flash-preview');
+      expect(chain[1]?.model).toBe('onyx-3-flash-preview');
     });
 
     it('applies SILENT_ACTIONS when ApprovalMode is PLAN', () => {
@@ -190,27 +190,27 @@ describe('policyHelpers', () => {
   describe('resolvePolicyChain behavior is identical between dynamic and legacy implementations', () => {
     const testCases = [
       { name: 'Default Auto', model: DEFAULT_GEMINI_MODEL_AUTO },
-      { name: 'Gemini 3 Auto', model: 'auto-gemini-3' },
+      { name: 'Onyx 3 Auto', model: 'auto-onyx-3' },
       { name: 'Unified Auto', model: 'auto' },
       { name: 'Flash Lite', model: DEFAULT_GEMINI_FLASH_LITE_MODEL },
       {
-        name: 'Gemini 3 Auto (3.1 Enabled)',
-        model: 'auto-gemini-3',
-        useGemini31: true,
+        name: 'Onyx 3 Auto (3.1 Enabled)',
+        model: 'auto-onyx-3',
+        useOnyx31: true,
       },
       {
-        name: 'Gemini 3 Auto (3.1 + Custom Tools)',
-        model: 'auto-gemini-3',
-        useGemini31: true,
-        authType: AuthType.USE_GEMINI,
+        name: 'Onyx 3 Auto (3.1 + Custom Tools)',
+        model: 'auto-onyx-3',
+        useOnyx31: true,
+        authType: AuthType.USE_ONYX,
       },
       {
-        name: 'Gemini 3 Auto (No Access)',
-        model: 'auto-gemini-3',
+        name: 'Onyx 3 Auto (No Access)',
+        model: 'auto-onyx-3',
         hasAccess: false,
       },
-      { name: 'Concrete Model (2.5 Pro)', model: 'gemini-2.5-pro' },
-      { name: 'Explicit Gemini 3', model: 'gemini-3-pro-preview' },
+      { name: 'Concrete Model (2.5 Pro)', model: 'onyx-2.5-pro' },
+      { name: 'Explicit Onyx 3', model: 'onyx-3-pro-preview' },
       { name: 'Custom Model', model: 'my-custom-model' },
       {
         name: 'Wrap Around',
@@ -220,14 +220,14 @@ describe('policyHelpers', () => {
     ];
 
     testCases.forEach(
-      ({ name, model, useGemini31, hasAccess, authType, wrapsAround }) => {
+      ({ name, model, useOnyx31, hasAccess, authType, wrapsAround }) => {
         it(`achieves parity for: ${name}`, () => {
           const createBaseConfig = (dynamic: boolean) =>
             createMockConfig({
               getExperimentalDynamicModelConfiguration: () => dynamic,
               getModel: () => model,
-              getGemini31LaunchedSync: () => useGemini31 ?? false,
-              getGemini31FlashLiteLaunchedSync: () => false,
+              getOnyx31LaunchedSync: () => useOnyx31 ?? false,
+              getOnyx31FlashLiteLaunchedSync: () => false,
               getHasAccessToPreviewModel: () => hasAccess ?? true,
               getContentGeneratorConfig: () => ({ authType }),
               getReleaseChannel: () => 'preview',
@@ -310,71 +310,71 @@ describe('policyHelpers', () => {
     it('returns requested model if it is available', () => {
       const config = createExtendedMockConfig();
       mockModelConfigService.getResolvedConfig.mockReturnValue({
-        model: 'gemini-pro',
+        model: 'onyx-pro',
         generateContentConfig: {},
       });
       mockAvailabilityService.selectFirstAvailable.mockReturnValue({
-        selectedModel: 'gemini-pro',
+        selectedModel: 'onyx-pro',
       });
 
       const result = applyModelSelection(config, {
-        model: 'gemini-pro',
+        model: 'onyx-pro',
         isChatModel: true,
       });
-      expect(result.model).toBe('gemini-pro');
+      expect(result.model).toBe('onyx-pro');
       expect(result.maxAttempts).toBeUndefined();
-      expect(config.setActiveModel).toHaveBeenCalledWith('gemini-pro');
+      expect(config.setActiveModel).toHaveBeenCalledWith('onyx-pro');
     });
 
     it('switches to backup model and updates config if requested is unavailable', () => {
       const config = createExtendedMockConfig();
       mockModelConfigService.getResolvedConfig
         .mockReturnValueOnce({
-          model: 'gemini-pro',
+          model: 'onyx-pro',
           generateContentConfig: { temperature: 0.9, topP: 1 },
         })
         .mockReturnValueOnce({
-          model: 'gemini-flash',
+          model: 'onyx-flash',
           generateContentConfig: { temperature: 0.1, topP: 1 },
         });
       mockAvailabilityService.selectFirstAvailable.mockReturnValue({
-        selectedModel: 'gemini-flash',
+        selectedModel: 'onyx-flash',
       });
 
       const result = applyModelSelection(config, {
-        model: 'gemini-pro',
+        model: 'onyx-pro',
         isChatModel: true,
       });
 
-      expect(result.model).toBe('gemini-flash');
+      expect(result.model).toBe('onyx-flash');
       expect(result.config).toEqual({
         temperature: 0.1,
         topP: 1,
       });
 
       expect(mockModelConfigService.getResolvedConfig).toHaveBeenCalledWith({
-        model: 'gemini-pro',
+        model: 'onyx-pro',
         isChatModel: true,
       });
       expect(mockModelConfigService.getResolvedConfig).toHaveBeenCalledWith({
-        model: 'gemini-flash',
+        model: 'onyx-flash',
         isChatModel: true,
       });
-      expect(config.setActiveModel).toHaveBeenCalledWith('gemini-flash');
+      expect(config.setActiveModel).toHaveBeenCalledWith('onyx-flash');
     });
 
     it('does not call setActiveModel if isChatModel is false', () => {
       const config = createExtendedMockConfig();
       mockModelConfigService.getResolvedConfig.mockReturnValue({
-        model: 'gemini-pro',
+        model: 'onyx-pro',
         generateContentConfig: {},
       });
       mockAvailabilityService.selectFirstAvailable.mockReturnValue({
-        selectedModel: 'gemini-pro',
+        selectedModel: 'onyx-pro',
       });
 
       applyModelSelection(config, {
-        model: 'gemini-pro',
+        model: 'onyx-pro',
         isChatModel: false,
       });
       expect(config.setActiveModel).not.toHaveBeenCalled();
@@ -383,42 +383,42 @@ describe('policyHelpers', () => {
     it('consumes sticky attempt if indicated and isChatModel is true', () => {
       const config = createExtendedMockConfig();
       mockModelConfigService.getResolvedConfig.mockReturnValue({
-        model: 'gemini-pro',
+        model: 'onyx-pro',
         generateContentConfig: {},
       });
       mockAvailabilityService.selectFirstAvailable.mockReturnValue({
-        selectedModel: 'gemini-pro',
+        selectedModel: 'onyx-pro',
         attempts: 1,
       });
 
       const result = applyModelSelection(config, {
-        model: 'gemini-pro',
+        model: 'onyx-pro',
         isChatModel: true,
       });
       expect(mockAvailabilityService.consumeStickyAttempt).toHaveBeenCalledWith(
-        'gemini-pro',
+        'onyx-pro',
       );
-      expect(config.setActiveModel).toHaveBeenCalledWith('gemini-pro');
+      expect(config.setActiveModel).toHaveBeenCalledWith('onyx-pro');
       expect(result.maxAttempts).toBe(1);
     });
 
     it('consumes sticky attempt if indicated but does not call setActiveModel if isChatModel is false', () => {
       const config = createExtendedMockConfig();
       mockModelConfigService.getResolvedConfig.mockReturnValue({
-        model: 'gemini-pro',
+        model: 'onyx-pro',
         generateContentConfig: {},
       });
       mockAvailabilityService.selectFirstAvailable.mockReturnValue({
-        selectedModel: 'gemini-pro',
+        selectedModel: 'onyx-pro',
         attempts: 1,
       });
 
       const result = applyModelSelection(config, {
-        model: 'gemini-pro',
+        model: 'onyx-pro',
         isChatModel: false,
       });
       expect(mockAvailabilityService.consumeStickyAttempt).toHaveBeenCalledWith(
-        'gemini-pro',
+        'onyx-pro',
       );
       expect(config.setActiveModel).not.toHaveBeenCalled();
       expect(result.maxAttempts).toBe(1);
@@ -427,17 +427,17 @@ describe('policyHelpers', () => {
     it('does not consume sticky attempt if consumeAttempt is false', () => {
       const config = createExtendedMockConfig();
       mockModelConfigService.getResolvedConfig.mockReturnValue({
-        model: 'gemini-pro',
+        model: 'onyx-pro',
         generateContentConfig: {},
       });
       mockAvailabilityService.selectFirstAvailable.mockReturnValue({
-        selectedModel: 'gemini-pro',
+        selectedModel: 'onyx-pro',
         attempts: 1,
       });
 
       const result = applyModelSelection(
         config,
-        { model: 'gemini-pro', isChatModel: true },
+        { model: 'onyx-pro', isChatModel: true },
         {
           consumeAttempt: false,
         },
@@ -445,7 +445,7 @@ describe('policyHelpers', () => {
       expect(
         mockAvailabilityService.consumeStickyAttempt,
       ).not.toHaveBeenCalled();
-      expect(config.setActiveModel).toHaveBeenCalledWith('gemini-pro');
+      expect(config.setActiveModel).toHaveBeenCalledWith('onyx-pro');
       expect(result.maxAttempts).toBe(1);
     });
   });

@@ -4,6 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type { Experiments } from './types.js';
+
+export type { Experiments };
+
 /**
  * Gets the experiments from the server.
  *
@@ -11,7 +15,7 @@
  */
 export async function getExperiments(
   _server?: any,
-): Promise<any> {
+): Promise<Experiments> {
   // Onyx modification: Disable remote experiments to avoid phoning home.
   return { flags: {}, experimentIds: [] };
 }

@@ -7,7 +7,7 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { Task } from './task.js';
 import {
-  GeminiEventType,
+  OnyxEventType,
   type Config,
   type ToolCallRequestInfo,
   type GitService,
@@ -270,7 +270,7 @@ describe('Task', () => {
 
       const citationText = 'Source: example.com';
       const citationEvent = {
-        type: GeminiEventType.Citation,
+        type: OnyxEventType.Citation,
         value: citationText,
       };
 
@@ -313,7 +313,7 @@ describe('Task', () => {
       );
 
       const modelInfoEvent = {
-        type: GeminiEventType.ModelInfo,
+        type: OnyxEventType.ModelInfo,
         value: 'new-model-name',
       };
 
@@ -342,8 +342,8 @@ describe('Task', () => {
     });
 
     it.each([
-      { eventType: GeminiEventType.Retry, eventName: 'Retry' },
-      { eventType: GeminiEventType.InvalidStream, eventName: 'InvalidStream' },
+      { eventType: OnyxEventType.Retry, eventName: 'Retry' },
+      { eventType: OnyxEventType.InvalidStream, eventName: 'InvalidStream' },
     ])(
       'should handle $eventName event without triggering error handling',
       async ({ eventType }) => {
@@ -383,7 +383,7 @@ describe('Task', () => {
   describe('currentPromptId and promptCount', () => {
     it('should correctly initialize and update promptId and promptCount', async () => {
       const mockConfig = createMockConfig();
-      mockConfig.getGeminiClient = vi.fn().mockReturnValue({
+      mockConfig.getOnyxClient = vi.fn().mockReturnValue({
         sendMessageStream: vi.fn().mockReturnValue((async function* () {})()),
       });
       mockConfig.getSessionId = () => 'test-session-id';

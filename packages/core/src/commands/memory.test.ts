@@ -28,7 +28,7 @@ import {
 vi.mock('../config/storage.js', () => ({
   Storage: {
     getUserSkillsDir: vi.fn(),
-    getGlobalGeminiDir: vi.fn(),
+    getGlobalOnyxDir: vi.fn(),
   },
 }));
 
@@ -40,8 +40,8 @@ describe('memory commands', () => {
     mockMemoryContextRefresh = vi.fn().mockResolvedValue(undefined);
     mockConfig = {
       getUserMemory: vi.fn(),
-      getGeminiMdFileCount: vi.fn(),
-      getGeminiMdFilePaths: vi.fn(),
+      getOnyxMdFileCount: vi.fn(),
+      getOnyxMdFilePaths: vi.fn(),
       getMemoryContextManager: vi.fn().mockReturnValue({
         refresh: mockMemoryContextRefresh,
       }),
@@ -60,7 +60,7 @@ describe('memory commands', () => {
       vi.mocked(mockConfig.getUserMemory).mockReturnValue(
         'some memory content',
       );
-      vi.mocked(mockConfig.getGeminiMdFileCount).mockReturnValue(1);
+      vi.mocked(mockConfig.getOnyxMdFileCount).mockReturnValue(1);
 
       const result = showMemory(mockConfig);
 
@@ -76,7 +76,7 @@ describe('memory commands', () => {
 
     it('should show a message if memory is empty', () => {
       vi.mocked(mockConfig.getUserMemory).mockReturnValue('');
-      vi.mocked(mockConfig.getGeminiMdFileCount).mockReturnValue(0);
+      vi.mocked(mockConfig.getOnyxMdFileCount).mockReturnValue(0);
 
       const result = showMemory(mockConfig);
 
@@ -93,7 +93,7 @@ describe('memory commands', () => {
       vi.mocked(mockConfig.getUserMemory).mockReturnValue({
         project: 'refreshed content',
       });
-      vi.mocked(mockConfig.getGeminiMdFileCount).mockReturnValue(2);
+      vi.mocked(mockConfig.getOnyxMdFileCount).mockReturnValue(2);
 
       const result = await refreshMemory(mockConfig);
 
@@ -112,7 +112,7 @@ describe('memory commands', () => {
 
     it('should show a message if no memory content is found after refresh', async () => {
       vi.mocked(mockConfig.getUserMemory).mockReturnValue({ project: '' });
-      vi.mocked(mockConfig.getGeminiMdFileCount).mockReturnValue(0);
+      vi.mocked(mockConfig.getOnyxMdFileCount).mockReturnValue(0);
 
       const result = await refreshMemory(mockConfig);
       expect(result.type).toBe('message');
@@ -128,7 +128,7 @@ describe('memory commands', () => {
   describe('listMemoryFiles', () => {
     it('should list the memory files in use', () => {
       const filePaths = ['/path/to/onyx.md', '/other/path/onyx.md'];
-      vi.mocked(mockConfig.getGeminiMdFilePaths).mockReturnValue(filePaths);
+      vi.mocked(mockConfig.getOnyxMdFilePaths).mockReturnValue(filePaths);
 
       const result = listMemoryFiles(mockConfig);
 
@@ -143,7 +143,7 @@ describe('memory commands', () => {
     });
 
     it('should show a message if no memory files are in use', () => {
-      vi.mocked(mockConfig.getGeminiMdFilePaths).mockReturnValue([]);
+      vi.mocked(mockConfig.getOnyxMdFilePaths).mockReturnValue([]);
 
       const result = listMemoryFiles(mockConfig);
 
@@ -155,7 +155,7 @@ describe('memory commands', () => {
     });
 
     it('should show a message if file paths are undefined', () => {
-      vi.mocked(mockConfig.getGeminiMdFilePaths).mockReturnValue(
+      vi.mocked(mockConfig.getOnyxMdFilePaths).mockReturnValue(
         undefined as unknown as string[],
       );
 
@@ -348,7 +348,7 @@ describe('memory commands', () => {
         },
         isTrustedFolder: () => true,
       } as unknown as Config;
-      vi.mocked(Storage.getGlobalGeminiDir).mockReturnValue(globalMemoryDir);
+      vi.mocked(Storage.getGlobalOnyxDir).mockReturnValue(globalMemoryDir);
     });
 
     afterEach(async () => {
@@ -707,14 +707,14 @@ describe('memory commands', () => {
       const patchDir = path.join(memoryTempDir, '.inbox', 'global');
       await fs.mkdir(patchDir, { recursive: true });
       await fs.writeFile(
-        path.join(patchDir, 'GEMINI.patch'),
+        path.join(patchDir, 'ONYX.patch'),
         buildCreationPatch(target, '# Personal preferences\n- prefer X\n'),
       );
 
       const result = await applyInboxMemoryPatch(
         patchConfig,
         'global',
-        'GEMINI.patch',
+        'ONYX.patch',
       );
 
       expect(result.success).toBe(true);
@@ -722,7 +722,7 @@ describe('memory commands', () => {
         '# Personal preferences\n- prefer X\n',
       );
       await expect(
-        fs.access(path.join(patchDir, 'GEMINI.patch')),
+        fs.access(path.join(patchDir, 'ONYX.patch')),
       ).rejects.toThrow();
     });
 
@@ -733,20 +733,20 @@ describe('memory commands', () => {
       const patchDir = path.join(memoryTempDir, '.inbox', 'global');
       await fs.mkdir(patchDir, { recursive: true });
       await fs.writeFile(
-        path.join(patchDir, 'GEMINI.patch'),
+        path.join(patchDir, 'ONYX.patch'),
         buildUpdatePatch(target, '- prefer X\n', '- prefer Y\n'),
       );
 
       const result = await applyInboxMemoryPatch(
         patchConfig,
         'global',
-        'GEMINI.patch',
+        'ONYX.patch',
       );
 
       expect(result.success).toBe(true);
       await expect(fs.readFile(target, 'utf-8')).resolves.toBe('- prefer Y\n');
       await expect(
-        fs.access(path.join(patchDir, 'GEMINI.patch')),
+        fs.access(path.join(patchDir, 'ONYX.patch')),
       ).rejects.toThrow();
     });
 
@@ -759,7 +759,7 @@ describe('memory commands', () => {
         const patchDir = path.join(memoryTempDir, '.inbox', 'global');
         await fs.mkdir(patchDir, { recursive: true });
         await fs.writeFile(
-          path.join(patchDir, 'GEMINI.patch'),
+          path.join(patchDir, 'ONYX.patch'),
           buildUpdatePatch(
             swapAsciiPathCase(target),
             '- prefer X\n',
@@ -773,7 +773,7 @@ describe('memory commands', () => {
         const result = await applyInboxMemoryPatch(
           patchConfig,
           'global',
-          'GEMINI.patch',
+          'ONYX.patch',
         );
 
         expect(result.success).toBe(true);
@@ -787,7 +787,7 @@ describe('memory commands', () => {
       const patchDir = path.join(memoryTempDir, '.inbox', 'global');
       await fs.mkdir(patchDir, { recursive: true });
       await fs.writeFile(
-        path.join(patchDir, 'GEMINI.patch'),
+        path.join(patchDir, 'ONYX.patch'),
         buildCreationPatch(
           path.join(globalMemoryDir, 'onyx.md'),
           'Prefer concise.\n',
@@ -797,12 +797,12 @@ describe('memory commands', () => {
       const result = await dismissInboxMemoryPatch(
         patchConfig,
         'global',
-        'GEMINI.patch',
+        'ONYX.patch',
       );
 
       expect(result.success).toBe(true);
       await expect(
-        fs.access(path.join(patchDir, 'GEMINI.patch')),
+        fs.access(path.join(patchDir, 'ONYX.patch')),
       ).rejects.toThrow();
     });
 

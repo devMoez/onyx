@@ -164,8 +164,8 @@ describe('handleInstall', () => {
   });
 
   function createMockExtension(
-    overrides: Partial<core.GeminiCLIExtension> = {},
-  ): core.GeminiCLIExtension {
+    overrides: Partial<core.OnyxCLIExtension> = {},
+  ): core.OnyxCLIExtension {
     return {
       name: 'mock-extension',
       version: '1.0.0',
@@ -283,7 +283,7 @@ describe('handleInstall', () => {
   it('should pass promptForSetting when skipSettings is not provided', async () => {
     mockInstallOrUpdateExtension.mockResolvedValue({
       name: 'test-extension',
-    } as unknown as core.GeminiCLIExtension);
+    } as unknown as core.OnyxCLIExtension);
 
     await handleInstall({
       source: 'http://google.com',
@@ -299,7 +299,7 @@ describe('handleInstall', () => {
   it('should pass null for requestSetting when skipSettings is true', async () => {
     mockInstallOrUpdateExtension.mockResolvedValue({
       name: 'test-extension',
-    } as unknown as core.GeminiCLIExtension);
+    } as unknown as core.OnyxCLIExtension);
 
     await handleInstall({
       source: 'http://google.com',

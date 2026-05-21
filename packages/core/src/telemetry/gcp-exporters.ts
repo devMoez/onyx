@@ -44,7 +44,7 @@ export class GcpMetricExporter extends MetricExporter {
     super({
       projectId,
       credentials,
-      prefix: 'custom.googleapis.com/gemini_cli',
+      prefix: 'custom.googleapis.com/onyx_cli',
     });
   }
 
@@ -58,7 +58,7 @@ export class GcpMetricExporter extends MetricExporter {
         // expected when the CLI shuts down quickly after a periodic export.
         const errorMessage = result.error.message || String(result.error);
         if (
-          process.env['GEMINI_STRICT_TELEMETRY_LIMITS'] === 'true' &&
+          process.env['ONYX_STRICT_TELEMETRY_LIMITS'] === 'true' &&
           errorMessage.includes(
             'written more frequently than the maximum sampling period',
           )
@@ -105,7 +105,7 @@ export class GcpLogExporter implements LogRecordExporter {
 
   constructor(projectId?: string, credentials?: JWTInput) {
     this.logging = new Logging({ projectId, credentials });
-    this.log = this.logging.log('gemini_cli');
+    this.log = this.logging.log('onyx_cli');
   }
 
   export(
@@ -121,7 +121,7 @@ export class GcpLogExporter implements LogRecordExporter {
         };
 
         const isStrictTelemetry =
-          process.env['GEMINI_STRICT_TELEMETRY_LIMITS'] === 'true';
+          process.env['ONYX_STRICT_TELEMETRY_LIMITS'] === 'true';
 
         let finalPayload: unknown = rawPayload;
 

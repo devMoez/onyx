@@ -22,7 +22,7 @@ describe('UserMessage', () => {
 
   it('renders normal user message with correct prefix', async () => {
     const { lastFrame, unmount } = await renderWithProviders(
-      <UserMessage text="Hello Gemini" width={80} />,
+      <UserMessage text="Hello Onyx" width={80} />,
       { width: 80 },
     );
     const output = lastFrame();
@@ -74,7 +74,7 @@ describe('UserMessage', () => {
 
     it('uses margins instead of background blocks when NO_COLOR is set', async () => {
       const { lastFrame, unmount } = await renderWithProviders(
-        <UserMessage text="Hello Gemini" width={80} />,
+        <UserMessage text="Hello Onyx" width={80} />,
         { width: 80, config: makeFakeConfig({ useBackgroundColor: true }) },
       );
       const output = lastFrame();
@@ -87,7 +87,7 @@ describe('UserMessage', () => {
       // lastFrame() returns the full buffer, so we can check for leading/trailing newlines or empty lines.
       const lines = output.split('\n').filter((l) => l.trim() !== '');
       expect(lines).toHaveLength(1);
-      expect(lines[0]).toContain('> Hello Gemini');
+      expect(lines[0]).toContain('> Hello Onyx');
 
       expect(output).toMatchSnapshot();
 

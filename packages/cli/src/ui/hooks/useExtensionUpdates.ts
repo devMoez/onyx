@@ -8,7 +8,7 @@ import {
   debugLogger,
   checkExhaustive,
   getErrorMessage,
-  type GeminiCLIExtension,
+  type OnyxCLIExtension,
 } from '@onyx/core';
 import {
   ExtensionUpdateState,
@@ -126,7 +126,7 @@ export const useExtensionUpdates = (
       });
     }
 
-    function shouldDoUpdate(extension: GeminiCLIExtension): boolean {
+    function shouldDoUpdate(extension: OnyxCLIExtension): boolean {
       if (scheduledUpdate) {
         if (scheduledUpdate.all) {
           return true;

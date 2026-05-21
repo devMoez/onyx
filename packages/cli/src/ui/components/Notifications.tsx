@@ -15,12 +15,12 @@ import { persistentState } from '../../utils/persistentState.js';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { KeypressPriority } from '../contexts/KeypressContext.js';
 
-import { GEMINI_DIR, Storage, homedir, WarningPriority } from '@onyx/core';
+import { ONYX_DIR, Storage, homedir, WarningPriority } from '@onyx/core';
 
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
 
-const settingsPath = path.join(homedir(), GEMINI_DIR, 'settings.json');
+const settingsPath = path.join(homedir(), ONYX_DIR, 'settings.json');
 
 const screenReaderNudgeFilePath = path.join(
   Storage.getGlobalTempDir(),

@@ -10,7 +10,7 @@ import fs from 'node:fs/promises';
 import { FileSearchFactory, AbortError, filter } from './fileSearch.js';
 import { createTmpDir, cleanupTmpDir } from '@onyx/test-utils';
 import * as crawler from './crawler.js';
-import { GEMINI_IGNORE_FILE_NAME } from '../../config/constants.js';
+import { ONYX_IGNORE_FILE_NAME } from '../../config/constants.js';
 import { FileDiscoveryService } from '../../services/fileDiscoveryService.js';
 import { escapePath } from '../paths.js';
 
@@ -25,7 +25,7 @@ describe('FileSearch', () => {
 
   it('should use .onyxIgnore rules', async () => {
     tmpDir = await createTmpDir({
-      [GEMINI_IGNORE_FILE_NAME]: 'dist/',
+      [ONYX_IGNORE_FILE_NAME]: 'dist/',
       dist: ['ignored.js'],
       src: ['not-ignored.js'],
     });
@@ -48,7 +48,7 @@ describe('FileSearch', () => {
 
     expect(results).toEqual([
       'src/',
-      GEMINI_IGNORE_FILE_NAME,
+      ONYX_IGNORE_FILE_NAME,
       'src/not-ignored.js',
     ]);
   });
@@ -57,9 +57,9 @@ describe('FileSearch', () => {
     tmpDir = await createTmpDir({
       '.git': {},
       '.gitignore': 'dist/',
-      [GEMINI_IGNORE_FILE_NAME]: 'build/',
+      [ONYX_IGNORE_FILE_NAME]: 'build/',
       dist: ['ignored-by-git.js'],
-      build: ['ignored-by-gemini.js'],
+      build: ['ignored-by-onyx.js'],
       src: ['not-ignored.js'],
     });
 
@@ -81,7 +81,7 @@ describe('FileSearch', () => {
 
     expect(results).toEqual([
       'src/',
-      GEMINI_IGNORE_FILE_NAME,
+      ONYX_IGNORE_FILE_NAME,
       '.gitignore',
       'src/not-ignored.js',
     ]);

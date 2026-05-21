@@ -153,7 +153,7 @@
     <rect x="171" y="680" width="72" height="17" fill="#001a00" />
     <text x="315" y="682" fill="#ffffff" textLength="36" lengthAdjust="spacingAndGlyphs">main</text>
     <text x="450" y="682" fill="#00cd00" textLength="54" lengthAdjust="spacingAndGlyphs">docker</text>
-    <text x="585" y="682" fill="#ffffff" textLength="126" lengthAdjust="spacingAndGlyphs">gemini-2.5-pro</text>
+    <text x="585" y="682" fill="#ffffff" textLength="126" lengthAdjust="spacingAndGlyphs">onyx-2.5-pro</text>
     <text x="783" y="682" fill="#ffffff" textLength="72" lengthAdjust="spacingAndGlyphs">42% used</text>
     <text x="864" y="682" fill="#333333" textLength="9" lengthAdjust="spacingAndGlyphs">│</text>
     <text x="891" y="682" fill="#333333" textLength="9" lengthAdjust="spacingAndGlyphs">│</text>

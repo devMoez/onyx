@@ -27,8 +27,8 @@ export class InitCommand implements Command {
       throw new Error('Command requires a workspace.');
     }
 
-    const geminiMdPath = path.join(targetDir, 'onyx.md');
-    const result = performInit(fs.existsSync(geminiMdPath));
+    const onyxMdPath = path.join(targetDir, 'onyx.md');
+    const result = performInit(fs.existsSync(onyxMdPath));
 
     switch (result.type) {
       case 'message':
@@ -37,7 +37,7 @@ export class InitCommand implements Command {
           data: result,
         };
       case 'submit_prompt':
-        fs.writeFileSync(geminiMdPath, '', 'utf8');
+        fs.writeFileSync(onyxMdPath, '', 'utf8');
 
         if (typeof result.content !== 'string') {
           throw new Error('Init command content must be a string.');
@@ -51,7 +51,7 @@ export class InitCommand implements Command {
           data: {
             type: 'message',
             messageType: 'info',
-            content: `A template onyx.md has been created at ${geminiMdPath}.\n\nTo populate it with project context, you can run the following prompt in a new chat:\n\n${result.content}`,
+            content: `A template onyx.md has been created at ${onyxMdPath}.\n\nTo populate it with project context, you can run the following prompt in a new chat:\n\n${result.content}`,
           },
         };
 

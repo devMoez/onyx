@@ -124,7 +124,7 @@ class AnalyzeScreenshotInvocation extends BaseToolInvocation<
       // Computer-use models require the computerUse tool declaration in every
       // request. We exclude all predefined action functions so the model
       // provides text analysis rather than issuing actions.
-      // Non-computer-use models (e.g., gemini-2.0-flash) do plain text
+      // Non-computer-use models (e.g., onyx-2.0-flash) do plain text
       // analysis natively and don't need this declaration.
       const tools = isComputerUseModel(visualModel)
         ? [

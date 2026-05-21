@@ -24,7 +24,7 @@ describe('Interactive file system', () => {
       settings: {
         security: {
           auth: {
-            selectedType: 'gemini-api-key',
+            selectedType: 'onyx-api-key',
           },
           disableYoloMode: false,
         },
@@ -58,3 +58,4 @@ describe('Interactive file system', () => {
     await rig.waitForTelemetryReady();
   });
 });
+

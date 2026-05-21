@@ -28,7 +28,7 @@ const BROWSER_PROFILE_DIR = 'cli-browser-profile';
  */
 export async function getBrowserConsentIfNeeded(): Promise<boolean> {
   const consentFilePath = path.join(
-    Storage.getGlobalGeminiDir(),
+    Storage.getGlobalOnyxDir(),
     BROWSER_PROFILE_DIR,
     BROWSER_CONSENT_FLAG_FILE,
   );

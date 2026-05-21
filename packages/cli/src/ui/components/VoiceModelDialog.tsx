@@ -62,7 +62,7 @@ export function VoiceModelDialog({
   const modelManager = useMemo(() => new WhisperModelManager(), []);
 
   const currentBackend =
-    settings.merged.experimental.voice?.backend ?? 'gemini-live';
+    settings.merged.experimental.voice?.backend ?? 'onyx-live';
   const currentWhisperModel =
     settings.merged.experimental.voice?.whisperModel ?? 'ggml-base.en.bin';
 
@@ -94,7 +94,7 @@ export function VoiceModelDialog({
         setSetting(
           SettingScope.User,
           'experimental.voice.backend',
-          'gemini-live',
+          'onyx-live',
         );
         onClose();
       }
@@ -151,10 +151,10 @@ export function VoiceModelDialog({
   const backendOptions = useMemo(
     () => [
       {
-        value: 'gemini-live',
-        title: 'Gemini Live API (Cloud)',
-        description: 'Real-time cloud transcription via Gemini Live API.',
-        key: 'gemini-live',
+        value: 'onyx-live',
+        title: 'Onyx Live API (Cloud)',
+        description: 'Real-time cloud transcription via Onyx Live API.',
+        key: 'onyx-live',
       },
       {
         value: 'whisper',
@@ -218,9 +218,9 @@ export function VoiceModelDialog({
                 initialIndex={currentBackend === 'whisper' ? 1 : 0}
                 showNumbers={true}
               />
-              {highlightedBackend === 'gemini-live' && (
+              {highlightedBackend === 'onyx-live' && (
                 <Box marginTop={1}>
-                  <WarningMessage text="When using the Gemini Live backend, voice recordings are sent to Google Cloud for transcription. Enterprise users should verify this aligns with their data privacy and compliance requirements." />
+                  <WarningMessage text="When using the Onyx Live backend, voice recordings are sent to Google Cloud for transcription. Enterprise users should verify this aligns with their data privacy and compliance requirements." />
                 </Box>
               )}
             </>

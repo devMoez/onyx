@@ -82,7 +82,7 @@ describe('GCP Exporters', () => {
     describe('constructor', () => {
       it('should create a log exporter with project ID', () => {
         expect(exporter).toBeDefined();
-        expect(mockLogging.log).toHaveBeenCalledWith('gemini_cli');
+        expect(mockLogging.log).toHaveBeenCalledWith('onyx_cli');
       });
 
       it('should create a log exporter without project ID', () => {
@@ -143,8 +143,8 @@ describe('GCP Exporters', () => {
         });
       });
 
-      it('should truncate payload strictly if GEMINI_STRICT_TELEMETRY_LIMITS is true', async () => {
-        vi.stubEnv('GEMINI_STRICT_TELEMETRY_LIMITS', 'true');
+      it('should truncate payload strictly if ONYX_STRICT_TELEMETRY_LIMITS is true', async () => {
+        vi.stubEnv('ONYX_STRICT_TELEMETRY_LIMITS', 'true');
 
         // Create an array of 60 strings, each 10,000 characters long.
         // Even after the 2k strict truncation pass, the total size will be
@@ -182,7 +182,7 @@ describe('GCP Exporters', () => {
         vi.unstubAllEnvs();
       });
 
-      it('should completely bypass truncation if GEMINI_STRICT_TELEMETRY_LIMITS is false or unset', async () => {
+      it('should completely bypass truncation if ONYX_STRICT_TELEMETRY_LIMITS is false or unset', async () => {
         const largeArray = Array(60).fill('a'.repeat(10000));
 
         const mockLogRecords: ReadableLogRecord[] = [

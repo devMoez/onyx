@@ -14,12 +14,12 @@ import tinygradient from 'tinygradient';
 
 const COLOR_CYCLE_DURATION_MS = 4000;
 
-interface GeminiSpinnerProps {
+interface OnyxSpinnerProps {
   spinnerType?: SpinnerName;
   altText?: string;
 }
 
-export const OnyxSpinner: React.FC<GeminiSpinnerProps> = ({
+export const OnyxSpinner: React.FC<OnyxSpinnerProps> = ({
   spinnerType = 'dots',
   altText,
 }) => {

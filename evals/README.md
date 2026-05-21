@@ -19,7 +19,7 @@ the model decide to write to disk when asked to save code?").
 
 They are also distinct from broad **industry benchmarks** (like SWE-bench).
 While benchmarks measure general capabilities across complex challenges, our
-behavioral evals focus on specific, granular behaviors relevant to the Gemini
+behavioral evals focus on specific, granular behaviors relevant to the Onyx
 CLI's features.
 
 ### Key Characteristics
@@ -167,7 +167,7 @@ This command sets the `RUN_EVALS` environment variable to `1`, which enables the
 ## Ensuring Eval is Stable Prior to Check-in
 
 The
-[Evals: Nightly](https://github.com/google-gemini/gemini-cli/actions/workflows/evals-nightly.yml)
+[Evals: Nightly](https://github.com/google-onyx/onyx-cli/actions/workflows/evals-nightly.yml)
 run is considered to be the source of truth for the quality of an eval test.
 Each run of it executes a test 3 times in a row, for each supported model. The
 result is then scored 0%, 33%, 66%, or 100% respectively, to indicate how many
@@ -176,8 +176,8 @@ of the individual executions passed.
 Googlers can schedule a manual run against their branch by clicking the link
 above.
 
-Tests should score at least 66% with key models including Gemini 3.1 pro, Gemini
-3.0 pro, and Gemini 3 flash prior to check in and they must pass 100% of the
+Tests should score at least 66% with key models including Onyx 3.1 pro, Onyx
+3.0 pro, and Onyx 3 flash prior to check in and they must pass 100% of the
 time before they are promoted.
 
 ## Test promotion process
@@ -200,10 +200,10 @@ evaluations into the CI.
 Results for evaluations are available on GitHub Actions:
 
 - **CI Evals**: Included in the
-  [E2E (Chained)](https://github.com/google-gemini/gemini-cli/actions/workflows/chained_e2e.yml)
+  [E2E (Chained)](https://github.com/google-onyx/onyx-cli/actions/workflows/chained_e2e.yml)
   workflow. These must pass 100% for every PR.
 - **Nightly Evals**: Run daily via the
-  [Evals: Nightly](https://github.com/google-gemini/gemini-cli/actions/workflows/evals-nightly.yml)
+  [Evals: Nightly](https://github.com/google-onyx/onyx-cli/actions/workflows/evals-nightly.yml)
   workflow. These track the long-term health and stability of model steering.
 
 ### Nightly Report Format
@@ -231,17 +231,17 @@ pushing:
 
 ```bash
 # Run the full regression loop for a specific model
-MODEL_LIST=gemini-3-flash-preview node scripts/run_eval_regression.js
+MODEL_LIST=onyx-3-flash-preview node scripts/run_eval_regression.js
 ```
 
 To debug a specific failing test with the same logic used in CI:
 
 ```bash
 # 1. Get the Vitest pattern for trustworthy tests
-OUTPUT=$(node scripts/get_trustworthy_evals.js "gemini-3-flash-preview")
+OUTPUT=$(node scripts/get_trustworthy_evals.js "onyx-3-flash-preview")
 
 # 2. Run the regression logic for those tests
-node scripts/run_regression_check.js "gemini-3-flash-preview" "$OUTPUT"
+node scripts/run_regression_check.js "onyx-3-flash-preview" "$OUTPUT"
 ```
 
 ### The Regression Quality Bar
@@ -292,14 +292,14 @@ will automate the following process:
 4.  **Report**: Provide a summary of the success rate.
 
 When investigating failures manually, you can enable verbose agent logs by
-setting the `GEMINI_DEBUG_LOG_FILE` environment variable.
+setting the `ONYX_DEBUG_LOG_FILE` environment variable.
 
 ### Best practices
 
 It's highly recommended to manually review and/or ask the agent to iterate on
 any prompt changes, even if they pass all evals. The prompt should prefer
 positive traits ('do X') and resort to negative traits ('do not do X') only when
-unable to accomplish the goal with positive traits. Gemini is quite good at
+unable to accomplish the goal with positive traits. Onyx is quite good at
 instrospecting on its prompt when asked the right questions.
 
 ## Promoting evaluations

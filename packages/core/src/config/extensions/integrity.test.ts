@@ -25,7 +25,7 @@ vi.mock('../../utils/paths.js', async (importOriginal) => {
   return {
     ...actual,
     homedir: () => '/mock/home',
-    GEMINI_DIR: '.onyx',
+    ONYX_DIR: '.onyx',
   };
 });
 

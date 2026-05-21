@@ -24,7 +24,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
 });
 
 describe('Policy Engine Integration Tests', () => {
-  beforeEach(() => vi.stubEnv('GEMINI_SYSTEM_MD', ''));
+  beforeEach(() => vi.stubEnv('ONYX_SYSTEM_MD', ''));
 
   afterEach(() => vi.unstubAllEnvs());
 
@@ -448,7 +448,7 @@ describe('Policy Engine Integration Tests', () => {
             '/home/user/.onyx/tmp/a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2/session-1/plans/feature_auth.md',
             '/home/user/.onyx/tmp/new-temp_dir_123/session-1/plans/plan.md', // new style of temp directory
             'C:\\Users\\user\\.onyx\\tmp\\project-id\\session-id\\plans\\plan.md',
-            'D:\\gemini-cli\\.onyx\\tmp\\project-id\\session-1\\plans\\plan.md', // no session ID
+            'D:\\onyx-cli\\.onyx\\tmp\\project-id\\session-1\\plans\\plan.md', // no session ID
           ];
 
           for (const file_path of validPaths) {

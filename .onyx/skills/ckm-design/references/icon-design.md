@@ -1,13 +1,13 @@
 # Icon Design Reference
 
-AI-powered SVG icon generation using Gemini 3.1 Pro Preview. 15 styles, 12
+AI-powered SVG icon generation using Onyx 3.1 Pro Preview. 15 styles, 12
 categories, multi-size export.
 
 ## Scripts
 
 | Script                     | Purpose                                        |
 | -------------------------- | ---------------------------------------------- |
-| `scripts/icon/generate.py` | Generate SVG icons with Gemini 3.1 Pro Preview |
+| `scripts/icon/generate.py` | Generate SVG icons with Onyx 3.1 Pro Preview |
 
 ## Commands
 
@@ -104,7 +104,7 @@ python3 ~/.claude/skills/design/scripts/icon/generate.py --list-categories
 
 ## Model
 
-- **gemini-3.1-pro-preview**: Best thinking, token efficiency, factual
+- **onyx-3.1-pro-preview**: Best thinking, token efficiency, factual
   consistency
 - Text-only output (SVG is XML text) — no image generation API needed
 - Supports structured output for consistent SVG formatting
@@ -120,6 +120,6 @@ python3 ~/.claude/skills/design/scripts/icon/generate.py --list-categories
 ## Setup
 
 ```bash
-export GEMINI_API_KEY="your-key"
+export ONYX_API_KEY="your-key"
 pip install google-genai
 ```

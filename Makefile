@@ -1,9 +1,9 @@
-# Makefile for gemini-cli
+# Makefile for onyx-cli
 
 .PHONY: help install build build-sandbox build-all test lint format preflight clean start debug release run-npx create-alias
 
 help:
-	@echo "Makefile for gemini-cli"
+	@echo "Makefile for onyx-cli"
 	@echo ""
 	@echo "Usage:"
 	@echo "  make install          - Install npm dependencies"
@@ -18,7 +18,7 @@ help:
 	@echo "  make debug            - Start the Onyx CLI in debug mode"
 	@echo ""
 	@echo "  make run-npx          - Run the CLI using npx (for testing the published package)"
-	@echo "  make create-alias     - Create a 'gemini' alias for your shell"
+	@echo "  make create-alias     - Create a 'onyx' alias for your shell"
 
 install:
 	npm install
@@ -53,7 +53,7 @@ debug:
 
 
 run-npx:
-	npx https://github.com/google-gemini/gemini-cli
+	npx https://github.com/google-onyx/onyx-cli
 
 create-alias:
 	scripts/create_alias.sh

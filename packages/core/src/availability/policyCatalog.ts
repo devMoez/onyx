@@ -30,8 +30,8 @@ export interface ModelPolicyOptions {
   previewEnabled: boolean;
   isAutoSelection?: boolean;
   userTier?: UserTierId;
-  useGemini31?: boolean;
-  useGemini31FlashLite?: boolean;
+  useOnyx31?: boolean;
+  useOnyx31FlashLite?: boolean;
   useCustomToolModel?: boolean;
 }
 
@@ -92,8 +92,8 @@ export function getModelPolicyChain(
   if (options.previewEnabled) {
     const proModel = resolveModel(
       PREVIEW_GEMINI_MODEL,
-      options.useGemini31,
-      options.useGemini31FlashLite,
+      options.useOnyx31,
+      options.useOnyx31FlashLite,
       options.useCustomToolModel,
     );
     return [

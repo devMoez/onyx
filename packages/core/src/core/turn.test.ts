@@ -7,9 +7,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   Turn,
-  GeminiEventType,
-  type ServerGeminiToolCallRequestEvent,
-  type ServerGeminiErrorEvent,
+  OnyxEventType,
+  type ServerOnyxToolCallRequestEvent,
+  type ServerOnyxErrorEvent,
 } from './turn.js';
 import type { GenerateContentResponse, Part, Content } from '@google/genai';
 import { reportError } from '../utils/errorReporting.js';
@@ -111,7 +111,7 @@ describe('Turn', () => {
       const events = [];
       const reqParts: Part[] = [{ text: 'Hi' }];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         reqParts,
         new AbortController().signal,
       )) {
@@ -119,7 +119,7 @@ describe('Turn', () => {
       }
 
       expect(mockSendMessageStream).toHaveBeenCalledWith(
-        { model: 'gemini' },
+        { model: 'onyx' },
         reqParts,
         'prompt-id-1',
         expect.any(AbortSignal),
@@ -128,8 +128,8 @@ describe('Turn', () => {
       );
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'Hello' },
-        { type: GeminiEventType.Content, value: ' world' },
+        { type: OnyxEventType.Content, value: 'Hello' },
+        { type: OnyxEventType.Content, value: ' world' },
       ]);
       expect(turn.getDebugResponses().length).toBe(2);
     });
@@ -160,7 +160,7 @@ describe('Turn', () => {
       const events = [];
       const reqParts: Part[] = [{ text: 'Use tools' }];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         reqParts,
         new AbortController().signal,
       )) {
@@ -168,8 +168,8 @@ describe('Turn', () => {
       }
 
       expect(events.length).toBe(2);
-      const event1 = events[0] as ServerGeminiToolCallRequestEvent;
-      expect(event1.type).toBe(GeminiEventType.ToolCallRequest);
+      const event1 = events[0] as ServerOnyxToolCallRequestEvent;
+      expect(event1.type).toBe(OnyxEventType.ToolCallRequest);
       expect(event1.value).toEqual(
         expect.objectContaining({
           callId: 'tool1__fc1',
@@ -180,8 +180,8 @@ describe('Turn', () => {
       );
       expect(turn.pendingToolCalls[0]).toEqual(event1.value);
 
-      const event2 = events[1] as ServerGeminiToolCallRequestEvent;
-      expect(event2.type).toBe(GeminiEventType.ToolCallRequest);
+      const event2 = events[1] as ServerOnyxToolCallRequestEvent;
+      expect(event2.type).toBe(OnyxEventType.ToolCallRequest);
       expect(event2.value).toEqual(
         expect.objectContaining({
           name: 'tool2',
@@ -224,15 +224,15 @@ describe('Turn', () => {
       const events = [];
       const reqParts: Part[] = [{ text: 'Test abort' }];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         reqParts,
         abortController.signal,
       )) {
         events.push(event);
       }
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'First part' },
-        { type: GeminiEventType.UserCancelled },
+        { type: OnyxEventType.Content, value: 'First part' },
+        { type: OnyxEventType.UserCancelled },
       ]);
       expect(turn.getDebugResponses().length).toBe(1);
     });
@@ -247,14 +247,14 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         reqParts,
         new AbortController().signal,
       )) {
         events.push(event);
       }
 
-      expect(events).toEqual([{ type: GeminiEventType.InvalidStream }]);
+      expect(events).toEqual([{ type: OnyxEventType.InvalidStream }]);
       expect(turn.getDebugResponses().length).toBe(0);
       expect(reportError).not.toHaveBeenCalled(); // Should not report as error
     });
@@ -270,7 +270,7 @@ describe('Turn', () => {
       mockMaybeIncludeSchemaDepthContext.mockResolvedValue(undefined);
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         reqParts,
         new AbortController().signal,
       )) {
@@ -278,8 +278,8 @@ describe('Turn', () => {
       }
 
       expect(events.length).toBe(1);
-      const errorEvent = events[0] as ServerGeminiErrorEvent;
-      expect(errorEvent.type).toBe(GeminiEventType.Error);
+      const errorEvent = events[0] as ServerOnyxErrorEvent;
+      expect(errorEvent.type).toBe(OnyxEventType.Error);
       expect(errorEvent.value).toEqual({
         error: {
           message: 'API Error',
@@ -289,7 +289,7 @@ describe('Turn', () => {
       expect(turn.getDebugResponses().length).toBe(0);
       expect(reportError).toHaveBeenCalledWith(
         error,
-        'Error when talking to Gemini API',
+        'Error when talking to Onyx API',
         [...historyContent, { role: 'user', parts: reqParts }],
         'Turn.run-sendMessageStream',
       );
@@ -314,7 +314,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         [{ text: 'Test undefined tool parts' }],
         new AbortController().signal,
       )) {
@@ -324,21 +324,21 @@ describe('Turn', () => {
       expect(events.length).toBe(3);
 
       // Assertions for each specific tool call event
-      const event1 = events[0] as ServerGeminiToolCallRequestEvent;
+      const event1 = events[0] as ServerOnyxToolCallRequestEvent;
       expect(event1.value).toMatchObject({
         callId: 'generic_tool__fc1',
         name: 'generic_tool',
         args: { arg1: 'val1' },
       });
 
-      const event2 = events[1] as ServerGeminiToolCallRequestEvent;
+      const event2 = events[1] as ServerOnyxToolCallRequestEvent;
       expect(event2.value).toMatchObject({
         callId: 'tool2__fc2',
         name: 'tool2',
         args: {},
       });
 
-      const event3 = events[2] as ServerGeminiToolCallRequestEvent;
+      const event3 = events[2] as ServerOnyxToolCallRequestEvent;
       expect(event3.value).toMatchObject({
         callId: 'generic_tool__fc3',
         name: 'generic_tool',
@@ -391,7 +391,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         [{ text: 'Test' }],
         new AbortController().signal,
       )) {
@@ -399,9 +399,9 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: contentText },
+        { type: OnyxEventType.Content, value: contentText },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: finishReason, usageMetadata },
         },
       ]);
@@ -428,7 +428,7 @@ describe('Turn', () => {
       const events = [];
       const reqParts: Part[] = [{ text: 'Test no finish reason' }];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         reqParts,
         new AbortController().signal,
       )) {
@@ -437,7 +437,7 @@ describe('Turn', () => {
 
       expect(events).toEqual([
         {
-          type: GeminiEventType.Content,
+          type: OnyxEventType.Content,
           value: 'Response without finish reason',
         },
       ]);
@@ -473,7 +473,7 @@ describe('Turn', () => {
       const events = [];
       const reqParts: Part[] = [{ text: 'Test multiple responses' }];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         reqParts,
         new AbortController().signal,
       )) {
@@ -481,10 +481,10 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'First part' },
-        { type: GeminiEventType.Content, value: 'Second part' },
+        { type: OnyxEventType.Content, value: 'First part' },
+        { type: OnyxEventType.Content, value: 'Second part' },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: 'OTHER', usageMetadata: undefined },
         },
       ]);
@@ -516,7 +516,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         [{ text: 'Test citations' }],
         new AbortController().signal,
       )) {
@@ -524,13 +524,13 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'Some text.' },
+        { type: OnyxEventType.Content, value: 'Some text.' },
         {
-          type: GeminiEventType.Citation,
+          type: OnyxEventType.Citation,
           value: 'Citations:\n(Source 1 Title) https://example.com/source1',
         },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: 'STOP', usageMetadata: undefined },
         },
       ]);
@@ -566,7 +566,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         [{ text: 'test' }],
         new AbortController().signal,
       )) {
@@ -574,14 +574,14 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'Some text.' },
+        { type: OnyxEventType.Content, value: 'Some text.' },
         {
-          type: GeminiEventType.Citation,
+          type: OnyxEventType.Citation,
           value:
             'Citations:\n(Title1) https://example.com/source1\n(Title2) https://example.com/source2',
         },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: 'STOP', usageMetadata: undefined },
         },
       ]);
@@ -613,7 +613,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         [{ text: 'test' }],
         new AbortController().signal,
       )) {
@@ -621,10 +621,10 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'Some text.' },
+        { type: OnyxEventType.Content, value: 'Some text.' },
       ]);
       // No Citation event (but we do get a Finished event with undefined reason)
-      expect(events.some((e) => e.type === GeminiEventType.Citation)).toBe(
+      expect(events.some((e) => e.type === OnyxEventType.Citation)).toBe(
         false,
       );
     });
@@ -659,7 +659,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         [{ text: 'test' }],
         new AbortController().signal,
       )) {
@@ -667,13 +667,13 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Content, value: 'Some text.' },
+        { type: OnyxEventType.Content, value: 'Some text.' },
         {
-          type: GeminiEventType.Citation,
+          type: OnyxEventType.Citation,
           value: 'Citations:\n(Good Source) https://example.com/source1',
         },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: 'STOP', usageMetadata: undefined },
         },
       ]);
@@ -697,14 +697,14 @@ describe('Turn', () => {
       const reqParts: Part[] = [{ text: 'Test malformed error handling' }];
 
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         reqParts,
         abortController.signal,
       )) {
         events.push(event);
       }
 
-      expect(events).toEqual([{ type: GeminiEventType.UserCancelled }]);
+      expect(events).toEqual([{ type: OnyxEventType.UserCancelled }]);
 
       expect(reportError).not.toHaveBeenCalled();
     });
@@ -723,7 +723,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         [],
         new AbortController().signal,
       )) {
@@ -731,8 +731,8 @@ describe('Turn', () => {
       }
 
       expect(events).toEqual([
-        { type: GeminiEventType.Retry },
-        { type: GeminiEventType.Content, value: 'Success' },
+        { type: OnyxEventType.Retry },
+        { type: OnyxEventType.Content, value: 'Success' },
       ]);
     });
 
@@ -742,7 +742,7 @@ describe('Turn', () => {
         part: { text: 'Hello' },
         responseId: 'trace-123',
         expectedEvent: {
-          type: GeminiEventType.Content,
+          type: OnyxEventType.Content,
           value: 'Hello',
           traceId: 'trace-123',
         },
@@ -752,7 +752,7 @@ describe('Turn', () => {
         part: { text: '[Thought: thinking]', thought: 'thinking' },
         responseId: 'trace-456',
         expectedEvent: {
-          type: GeminiEventType.Thought,
+          type: OnyxEventType.Thought,
           value: { subject: '', description: '[Thought: thinking]' },
           traceId: 'trace-456',
         },
@@ -771,7 +771,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         [{ text: 'Hi' }],
         new AbortController().signal,
       )) {
@@ -815,7 +815,7 @@ describe('Turn', () => {
 
       const events = [];
       for await (const event of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         [{ text: 'Test mixed content' }],
         new AbortController().signal,
       )) {
@@ -832,31 +832,31 @@ describe('Turn', () => {
       expect(events.length).toBe(5);
 
       const thoughtEvent = events.find(
-        (e) => e.type === GeminiEventType.Thought,
+        (e) => e.type === OnyxEventType.Thought,
       );
       expect(thoughtEvent).toBeDefined();
       expect(thoughtEvent).toMatchObject({
-        type: GeminiEventType.Thought,
+        type: OnyxEventType.Thought,
         value: { subject: 'Planning', description: 'the solution' },
         traceId: 'trace-789',
       });
 
       const contentEvent = events.find(
-        (e) => e.type === GeminiEventType.Content,
+        (e) => e.type === OnyxEventType.Content,
       );
       expect(contentEvent).toBeDefined();
       expect(contentEvent).toMatchObject({
-        type: GeminiEventType.Content,
+        type: OnyxEventType.Content,
         value: 'I will help you with that.',
         traceId: 'trace-789',
       });
 
       const toolCallEvent = events.find(
-        (e) => e.type === GeminiEventType.ToolCallRequest,
+        (e) => e.type === OnyxEventType.ToolCallRequest,
       );
       expect(toolCallEvent).toBeDefined();
       expect(toolCallEvent).toMatchObject({
-        type: GeminiEventType.ToolCallRequest,
+        type: OnyxEventType.ToolCallRequest,
         value: expect.objectContaining({
           callId: 'ReadFile__fc1',
           name: 'ReadFile',
@@ -865,20 +865,20 @@ describe('Turn', () => {
       });
 
       const citationEvent = events.find(
-        (e) => e.type === GeminiEventType.Citation,
+        (e) => e.type === OnyxEventType.Citation,
       );
       expect(citationEvent).toBeDefined();
       expect(citationEvent).toMatchObject({
-        type: GeminiEventType.Citation,
+        type: OnyxEventType.Citation,
         value: expect.stringContaining('https://example.com'),
       });
 
       const finishedEvent = events.find(
-        (e) => e.type === GeminiEventType.Finished,
+        (e) => e.type === OnyxEventType.Finished,
       );
       expect(finishedEvent).toBeDefined();
       expect(finishedEvent).toMatchObject({
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: 'STOP' },
       });
     });
@@ -899,7 +899,7 @@ describe('Turn', () => {
       mockSendMessageStream.mockResolvedValue(mockResponseStream);
       const reqParts: Part[] = [{ text: 'Hi' }];
       for await (const _ of turn.run(
-        { model: 'gemini' },
+        { model: 'onyx' },
         reqParts,
         new AbortController().signal,
       )) {

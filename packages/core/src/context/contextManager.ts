@@ -277,7 +277,7 @@ export class ContextManager {
 
   /**
    * Executes the final 'gc_backstop' pipeline if necessary, enforcing the token budget,
-   * and maps the Episodic Context Graph back into a raw Gemini Content[] array for transmission.
+   * and maps the Episodic Context Graph back into a raw Onyx Content[] array for transmission.
    * This is the primary method called by the agent framework before sending a request.
    */
   async renderHistory(

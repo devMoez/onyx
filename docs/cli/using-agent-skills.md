@@ -11,9 +11,9 @@ of precedence (lowest to highest):
 
 1.  **Built-in Skills**: Included with Onyx CLI and always available.
 2.  **Extension Skills**: Bundled within [extensions](../extensions/index.md).
-3.  **User Skills**: Located in `~/.gemini/skills/` or the `~/.agents/skills/`
+3.  **User Skills**: Located in `~/.onyx/skills/` or the `~/.agents/skills/`
     alias. These are available across all your projects.
-4.  **Workspace Skills**: Located in `.gemini/skills/` or the `.agents/skills/`
+4.  **Workspace Skills**: Located in `.onyx/skills/` or the `.agents/skills/`
     alias within your current directory. These are project-specific.
 
 > **Tip:** If multiple skills share the same name, the version from the
@@ -37,7 +37,7 @@ available expertise.
 
 ## Terminal utilities
 
-The `gemini skills` command provides management utilities directly from your
+The `onyx skills` command provides management utilities directly from your
 system shell.
 
 ### Install a skill
@@ -45,7 +45,7 @@ system shell.
 To install a skill from a remote repository or a local `.skill` package:
 
 ```bash
-gemini skills install https://github.com/user/my-awesome-skill
+onyx skills install https://github.com/user/my-awesome-skill
 ```
 
 By default, this installs to your **user profile**. Use `--scope workspace` to
@@ -57,7 +57,7 @@ If you are developing a skill, use the `link` command to create a reference to
 your local directory:
 
 ```bash
-gemini skills link ./path/to/my-skill
+onyx skills link ./path/to/my-skill
 ```
 
 ### Uninstall a skill
@@ -65,7 +65,7 @@ gemini skills link ./path/to/my-skill
 To completely remove an installed or linked skill:
 
 ```bash
-gemini skills uninstall <name>
+onyx skills uninstall <name>
 ```
 
 ## Security and consent

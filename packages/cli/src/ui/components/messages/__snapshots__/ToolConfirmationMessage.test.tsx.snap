@@ -10,7 +10,7 @@ Apply this change?
 
 ● 1. Allow once                                                                   
   2. Allow for this session
-  3. Allow for this file in all future sessions ~/.gemini/policies/auto-saved.toml
+  3. Allow for this file in all future sessions ~/.onyx/policies/auto-saved.toml
   4. Modify with external editor
   5. No, suggest changes (esc)
 "
@@ -119,10 +119,10 @@ Allow execution of [Shell]?
 `;
 
 exports[`ToolConfirmationMessage > should display urls if prompt and url are different 1`] = `
-"fetch https://github.com/google/gemini-react/blob/main/README.md
+"fetch https://github.com/google/onyx-react/blob/main/README.md
 
 URLs to fetch:
- - https://raw.githubusercontent.com/google/gemini-react/main/README.md
+ - https://raw.githubusercontent.com/google/onyx-react/main/README.md
 Do you want to proceed?
 
 ● 1. Allow once               

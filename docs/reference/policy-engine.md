@@ -14,17 +14,17 @@ To create your first policy:
     **macOS/Linux**
 
     ```bash
-    mkdir -p ~/.gemini/policies
+    mkdir -p ~/.onyx/policies
     ```
 
     **Windows (PowerShell)**
 
     ```powershell
-    New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.gemini\policies"
+    New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.onyx\policies"
     ```
 
 2.  **Create a new policy file** (for example,
-    `~/.gemini/policies/my-rules.toml`). You can use any filename ending in
+    `~/.onyx/policies/my-rules.toml`). You can use any filename ending in
     `.toml`; all such files in this directory will be loaded and combined:
     ```toml
     [[rule]]
@@ -125,9 +125,9 @@ There are three possible decisions a rule can enforce:
 ### Priority system and tiers
 
 > [!WARNING] The **Workspace** tier (project-level policies) is currently
-> non-functional. Defining policies in a workspace's `.gemini/policies`
+> non-functional. Defining policies in a workspace's `.onyx/policies`
 > directory will not have any effect. See
-> [issue #18186](https://github.com/google-gemini/gemini-cli/issues/18186). Use
+> [issue #18186](https://github.com/google-onyx/onyx-cli/issues/18186). Use
 > User or Admin policies instead.
 
 The policy engine uses a sophisticated priority system to resolve conflicts when
@@ -226,8 +226,8 @@ User, and (if configured) Admin directories.
 
 | Tier          | Type   | Location                                                 |
 | :------------ | :----- | :------------------------------------------------------- |
-| **User**      | Custom | `~/.gemini/policies/*.toml`                              |
-| **Workspace** | Custom | **(Disabled)** `$WORKSPACE_ROOT/.gemini/policies/*.toml` |
+| **User**      | Custom | `~/.onyx/policies/*.toml`                              |
+| **Workspace** | Custom | **(Disabled)** `$WORKSPACE_ROOT/.onyx/policies/*.toml` |
 | **Admin**     | System | _See below (OS specific)_                                |
 
 #### System-wide policies (Admin)
@@ -242,9 +242,9 @@ These are the default paths the CLI searches for admin policies:
 
 | OS          | Policy Directory Path                             |
 | :---------- | :------------------------------------------------ |
-| **Linux**   | `/etc/gemini-cli/policies`                        |
-| **macOS**   | `/Library/Application Support/GeminiCli/policies` |
-| **Windows** | `C:\ProgramData\gemini-cli\policies`              |
+| **Linux**   | `/etc/onyx-cli/policies`                        |
+| **macOS**   | `/Library/Application Support/OnyxCli/policies` |
+| **Windows** | `C:\ProgramData\onyx-cli\policies`              |
 
 ##### Supplemental Admin Policies
 

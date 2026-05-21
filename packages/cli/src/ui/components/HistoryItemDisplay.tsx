@@ -48,7 +48,7 @@ interface HistoryItemDisplayProps {
   terminalWidth: number;
   isPending: boolean;
   commands?: readonly SlashCommand[];
-  availableTerminalHeightGemini?: number;
+  availableTerminalHeightOnyx?: number;
   isExpandable?: boolean;
   isFirstThinking?: boolean;
   isFirstAfterThinking?: boolean;
@@ -61,7 +61,7 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
   terminalWidth,
   isPending,
   commands,
-  availableTerminalHeightGemini,
+  availableTerminalHeightOnyx,
   isExpandable,
   isFirstThinking = false,
   isFirstAfterThinking = false,
@@ -100,22 +100,22 @@ export const HistoryItemDisplay: React.FC<HistoryItemDisplayProps> = ({
       {itemForDisplay.type === 'user_shell' && (
         <UserShellMessage text={itemForDisplay.text} width={terminalWidth} />
       )}
-      {itemForDisplay.type === 'gemini' && (
+      {itemForDisplay.type === 'onyx' && (
         <OnyxMessage
           text={itemForDisplay.text}
           isPending={isPending}
           availableTerminalHeight={
-            availableTerminalHeightGemini ?? availableTerminalHeight
+            availableTerminalHeightOnyx ?? availableTerminalHeight
           }
           terminalWidth={terminalWidth}
         />
       )}
-      {itemForDisplay.type === 'gemini_content' && (
+      {itemForDisplay.type === 'onyx_content' && (
         <OnyxMessageContent
           text={itemForDisplay.text}
           isPending={isPending}
           availableTerminalHeight={
-            availableTerminalHeightGemini ?? availableTerminalHeight
+            availableTerminalHeightOnyx ?? availableTerminalHeight
           }
           terminalWidth={terminalWidth}
         />

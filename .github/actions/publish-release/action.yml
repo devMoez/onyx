@@ -1,5 +1,5 @@
 name: 'Publish Release'
-description: 'Builds, prepares, and publishes the gemini-cli packages to npm and creates a GitHub release.'
+description: 'Builds, prepares, and publishes the onyx-cli packages to npm and creates a GitHub release.'
 
 inputs:
   release-version:
@@ -51,7 +51,7 @@ inputs:
     type: 'boolean'
     required: false
     default: false
-  gemini_api_key:
+  onyx_api_key:
     description: 'The API key for running integration tests.'
     required: true
   npm-registry-publish-url:
@@ -85,8 +85,8 @@ runs:
       working-directory: '${{ inputs.working-directory }}'
       shell: 'bash'
       run: |
-        git config user.name "gemini-cli-robot"
-        git config user.email "gemini-cli-robot@google.com"
+        git config user.name "onyx-cli-robot"
+        git config user.email "onyx-cli-robot@google.com"
 
     - name: '🌿 Create and switch to a release branch'
       working-directory: '${{ inputs.working-directory }}'
@@ -262,7 +262,7 @@ runs:
         npm-package: '${{ inputs.cli-package-name }}@${{ inputs.release-version }}'
         expected-version: '${{ inputs.release-version }}'
         working-directory: '${{ inputs.working-directory }}'
-        gemini_api_key: '${{ inputs.gemini_api_key }}'
+        onyx_api_key: '${{ inputs.onyx_api_key }}'
         github-token: '${{ inputs.github-token }}'
         npm-registry-url: '${{ inputs.npm-registry-url }}'
         npm-registry-scope: '${{ inputs.npm-registry-scope }}'
@@ -292,16 +292,16 @@ runs:
         INPUTS_PREVIOUS_TAG: '${{ inputs.previous-tag }}'
       shell: 'bash'
       run: |
-        rm -f gemini-cli-bundle.zip
-        (cd bundle && chmod +x gemini.js && zip -r ../gemini-cli-bundle.zip .)
+        rm -f onyx-cli-bundle.zip
+        (cd bundle && chmod +x onyx.js && zip -r ../onyx-cli-bundle.zip .)
 
         echo "Testing the generated bundle archive..."
         rm -rf test-bundle
         mkdir -p test-bundle
-        unzip -q gemini-cli-bundle.zip -d test-bundle
+        unzip -q onyx-cli-bundle.zip -d test-bundle
 
         # Verify it runs and outputs a version
-        BUNDLE_VERSION=$(node test-bundle/gemini.js --version | xargs)
+        BUNDLE_VERSION=$(node test-bundle/onyx.js --version | xargs)
         echo "Bundle version output: ${BUNDLE_VERSION}"
         if [[ -z "${BUNDLE_VERSION}" ]]; then
           echo "Error: Bundle failed to execute or return version."
@@ -309,14 +309,14 @@ runs:
         fi
         rm -rf test-bundle
 
-        RELEASE_ASSETS=("gemini-cli-bundle.zip")
+        RELEASE_ASSETS=("onyx-cli-bundle.zip")
 
         # Check for and prepare macOS binaries if they exist
         for arch in arm64 x64; do
-          BINARY_PATH="dist/darwin-${arch}/gemini"
+          BINARY_PATH="dist/darwin-${arch}/onyx"
           if [[ -f "$BINARY_PATH" ]]; then
             chmod +x "$BINARY_PATH"
-            ZIP_NAME="gemini-darwin-${arch}-unsigned.zip"
+            ZIP_NAME="onyx-darwin-${arch}-unsigned.zip"
             zip -j "$ZIP_NAME" "$BINARY_PATH"
             RELEASE_ASSETS+=("$ZIP_NAME")
           fi

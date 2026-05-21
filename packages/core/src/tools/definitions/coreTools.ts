@@ -12,7 +12,7 @@
 import type { ToolDefinition, CoreToolSet } from './types.js';
 import { getToolFamily } from './modelFamilyService.js';
 import { DEFAULT_LEGACY_SET } from './model-family-sets/default-legacy.js';
-import { GEMINI_3_SET } from './model-family-sets/onyx-3.js';
+import { ONYX_3_SET } from './model-family-sets/onyx-3.js';
 import {
   getShellDeclaration,
   getExitPlanModeDeclaration,
@@ -50,7 +50,7 @@ export {
   PARAM_PATTERN,
   PARAM_CASE_SENSITIVE,
   PARAM_RESPECT_GIT_IGNORE,
-  PARAM_RESPECT_GEMINI_IGNORE,
+  PARAM_RESPECT_ONYX_IGNORE,
   PARAM_FILE_FILTERING_OPTIONS,
   PARAM_DESCRIPTION,
   // Tool-specific parameter names
@@ -103,7 +103,7 @@ export {
 
 // Re-export sets for compatibility
 export { DEFAULT_LEGACY_SET } from './model-family-sets/default-legacy.js';
-export { GEMINI_3_SET } from './model-family-sets/onyx-3.js';
+export { ONYX_3_SET } from './model-family-sets/onyx-3.js';
 
 /**
  * Resolves the appropriate tool set for a given model ID.
@@ -112,8 +112,8 @@ export function getToolSet(modelId?: string): CoreToolSet {
   const family = getToolFamily(modelId);
 
   switch (family) {
-    case 'gemini-3':
-      return GEMINI_3_SET;
+    case 'onyx-3':
+      return ONYX_3_SET;
     case 'default-legacy':
     default:
       return DEFAULT_LEGACY_SET;

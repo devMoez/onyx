@@ -32,7 +32,7 @@ vi.mock('./headless.js', async (importOriginal) => {
 describe('Trust Utility (Core)', () => {
   const tempDir = path.join(
     os.tmpdir(),
-    'gemini-trust-test-' + Math.random().toString(36).slice(2),
+    'onyx-trust-test-' + Math.random().toString(36).slice(2),
   );
   const trustedFoldersPath = path.join(tempDir, 'trustedFolders.json');
 

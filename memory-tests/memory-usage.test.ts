@@ -28,8 +28,8 @@ const TOLERANCE_PERCENT = 10;
 
 // Fake API key for tests using fake responses
 const TEST_ENV = {
-  GEMINI_API_KEY: 'fake-memory-test-key',
-  GEMINI_MEMORY_MONITOR_INTERVAL: '100',
+  ONYX_API_KEY: 'fake-memory-test-key',
+  ONYX_MEMORY_MONITOR_INTERVAL: '100',
 };
 
 describe('Memory Usage Tests', () => {
@@ -278,7 +278,7 @@ describe('Memory Usage Tests', () => {
           // Ensure the history file is linked
           const targetChatsDir = join(
             rig.homeDir!,
-            '.gemini',
+            '.onyx',
             'tmp',
             getProjectHash(rig.testDir!),
             'chats',
@@ -325,7 +325,7 @@ describe('Memory Usage Tests', () => {
           // Ensure the history file is linked
           const targetChatsDir = join(
             rig.homeDir!,
-            '.gemini',
+            '.onyx',
             'tmp',
             getProjectHash(rig.testDir!),
             'chats',
@@ -422,16 +422,16 @@ async function generateSharedLargeChatData(tempDir: string) {
       // Start of a new turn
       activeResponsesStream.write(JSON.stringify(complexityResponse) + '\n');
 
-      // Find all subsequent gemini messages until the next user message
+      // Find all subsequent onyx messages until the next user message
       let j = i + 1;
-      while (j < messages.length && messages[j].type === 'gemini') {
-        const geminiMsg = messages[j];
+      while (j < messages.length && messages[j].type === 'onyx') {
+        const onyxMsg = messages[j];
         const parts = [];
-        if (geminiMsg.content) {
-          parts.push({ text: geminiMsg.content });
+        if (onyxMsg.content) {
+          parts.push({ text: onyxMsg.content });
         }
-        if (geminiMsg.toolCalls) {
-          for (const tc of geminiMsg.toolCalls) {
+        if (onyxMsg.toolCalls) {
+          for (const tc of onyxMsg.toolCalls) {
             parts.push({
               functionCall: {
                 name: tc.name,
@@ -467,7 +467,7 @@ async function generateSharedLargeChatData(tempDir: string) {
       }
       // End of turn
       activeResponsesStream.write(JSON.stringify(summaryResponse) + '\n');
-      // Skip the gemini messages we just processed
+      // Skip the onyx messages we just processed
       i = j - 1;
     }
   }
@@ -526,3 +526,4 @@ async function generateSharedLargeChatData(tempDir: string) {
     prompts: promptsList.join('\n'),
   };
 }
+

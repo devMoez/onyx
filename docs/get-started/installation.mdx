@@ -17,7 +17,7 @@ installation methods, and release types.
 - **Runtime:** Node.js 20.0.0+
 - **Shell:** Bash, Zsh, or PowerShell
 - **Location:**
-  [Gemini Code Assist supported locations](https://developers.google.com/gemini-code-assist/resources/available-locations#americas)
+  [Onyx Code Assist supported locations](https://developers.google.com/onyx-code-assist/resources/available-locations#americas)
 - **Internet connection required**
 
 ## Install Onyx CLI
@@ -33,7 +33,7 @@ installation methods. Note that Onyx CLI comes pre-installed on
   Install globally with npm:
 
   ```bash
-  npm install -g @google/gemini-cli
+  npm install -g @google/onyx-cli
   ```
 
   </TabItem>
@@ -42,7 +42,7 @@ installation methods. Note that Onyx CLI comes pre-installed on
   Install globally with Homebrew:
 
   ```bash
-  brew install gemini-cli
+  brew install onyx-cli
   ```
 
   </TabItem>
@@ -51,7 +51,7 @@ installation methods. Note that Onyx CLI comes pre-installed on
   Install globally with MacPorts:
 
   ```bash
-  sudo port install gemini-cli
+  sudo port install onyx-cli
   ```
 
   </TabItem>
@@ -61,11 +61,11 @@ installation methods. Note that Onyx CLI comes pre-installed on
 
   ```bash
   # Create and activate a new environment
-  conda create -y -n gemini_env -c conda-forge nodejs
-  conda activate gemini_env
+  conda create -y -n onyx_env -c conda-forge nodejs
+  conda activate onyx_env
 
   # Install Onyx CLI globally via npm (inside the environment)
-  npm install -g @google/gemini-cli
+  npm install -g @google/onyx-cli
   ```
 
   </TabItem>
@@ -73,10 +73,10 @@ installation methods. Note that Onyx CLI comes pre-installed on
 
 ## Run Onyx CLI
 
-For most users, we recommend running Onyx CLI with the `gemini` command:
+For most users, we recommend running Onyx CLI with the `onyx` command:
 
 ```bash
-gemini
+onyx
 ```
 
 For a list of options and additional commands, see the
@@ -91,14 +91,14 @@ You can also run Onyx CLI using one of the following advanced methods:
 
   ```bash
   # Using npx (no installation required)
-  npx @google/gemini-cli
+  npx @google/onyx-cli
   ```
 
   You can also execute the CLI directly from the main branch on GitHub, which is
   helpful for testing features still in development:
 
   ```bash
-  npx https://github.com/google-gemini/gemini-cli
+  npx https://github.com/google-onyx/onyx-cli
   ```
 
   </TabItem>
@@ -112,13 +112,13 @@ You can also run Onyx CLI using one of the following advanced methods:
     to run the CLI.
     ```bash
     # Run the published sandbox image for a specified CLI version
-    docker run --rm -it us-docker.pkg.dev/gemini-code-dev/gemini-cli/sandbox:0.42.0-nightly.20260428.g59b2dea0e
+    docker run --rm -it us-docker.pkg.dev/onyx-code-dev/onyx-cli/sandbox:0.42.0-nightly.20260428.g59b2dea0e
     ```
   - **Using the `--sandbox` flag:** If you have Onyx CLI installed locally
     (using the standard installation described above), you can instruct it to run
     inside the sandbox container.
     ```bash
-    gemini --sandbox -y -p "your prompt here"
+    onyx --sandbox -y -p "your prompt here"
     ```
 
   </TabItem>
@@ -148,8 +148,8 @@ You can also run Onyx CLI using one of the following advanced methods:
     # Link the local cli package to your global node_modules
     npm link packages/cli
 
-    # Now you can run your local version using the `gemini` command
-    gemini
+    # Now you can run your local version using the `onyx` command
+    onyx
     ```
 
   </TabItem>
@@ -170,8 +170,8 @@ users, we recommend the stable release, which is the default installation.
 
   ```bash
   # Both commands install the latest stable release.
-  npm install -g @google/gemini-cli
-  npm install -g @google/gemini-cli@latest
+  npm install -g @google/onyx-cli
+  npm install -g @google/onyx-cli@latest
   ```
 
   </TabItem>
@@ -182,7 +182,7 @@ users, we recommend the stable release, which is the default installation.
   preview release by using the `preview` tag:
 
   ```bash
-  npm install -g @google/gemini-cli@preview
+  npm install -g @google/onyx-cli@preview
   ```
 
   </TabItem>
@@ -194,7 +194,7 @@ users, we recommend the stable release, which is the default installation.
   installing with the `nightly` tag:
 
   ```bash
-  npm install -g @google/gemini-cli@nightly
+  npm install -g @google/onyx-cli@nightly
   ```
 
   </TabItem>

@@ -9,7 +9,7 @@ import { authCommand } from './authCommand.js';
 import { type CommandContext } from './types.js';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
 import { SettingScope } from '../../config/settings.js';
-import type { GeminiClient } from '@onyx/core';
+import type { OnyxClient } from '@onyx/core';
 
 vi.mock('@onyx/core', async () => {
   const actual = await vi.importActual('@onyx/core');
@@ -26,7 +26,7 @@ describe('authCommand', () => {
     mockContext = createMockCommandContext({
       services: {
         agentContext: {
-          geminiClient: {
+          onyxClient: {
             stripThoughtsFromHistory: vi.fn(),
           },
         },
@@ -102,9 +102,9 @@ describe('authCommand', () => {
       const mockStripThoughts = vi.fn();
       const mockClient = {
         stripThoughtsFromHistory: mockStripThoughts,
-      } as unknown as GeminiClient;
+      } as unknown as OnyxClient;
       if (mockContext.services.agentContext?.config) {
-        mockContext.services.agentContext.config.getGeminiClient = vi.fn(
+        mockContext.services.agentContext.config.getOnyxClient = vi.fn(
           () => mockClient,
         );
       }
@@ -112,7 +112,7 @@ describe('authCommand', () => {
       await logoutCommand!.action!(mockContext, '');
 
       expect(
-        mockContext.services.agentContext?.geminiClient
+        mockContext.services.agentContext?.onyxClient
           .stripThoughtsFromHistory,
       ).toHaveBeenCalled();
     });

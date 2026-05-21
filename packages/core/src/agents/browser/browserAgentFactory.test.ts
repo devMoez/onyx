@@ -226,7 +226,7 @@ describe('browserAgentFactory', () => {
           },
           browser: {
             headless: false,
-            visualModel: 'gemini-2.5-flash-preview',
+            visualModel: 'onyx-2.5-flash-preview',
           },
         },
       });
@@ -256,7 +256,7 @@ describe('browserAgentFactory', () => {
           },
           browser: {
             headless: false,
-            visualModel: 'gemini-2.5-flash-preview',
+            visualModel: 'onyx-2.5-flash-preview',
           },
         },
       });
@@ -339,7 +339,7 @@ describe('browserAgentFactory', () => {
       const configWithVision = makeFakeConfig({
         agents: {
           overrides: { browser_agent: { enabled: true } },
-          browser: { headless: false, visualModel: 'gemini-2.5-flash-preview' },
+          browser: { headless: false, visualModel: 'onyx-2.5-flash-preview' },
         },
       });
 
@@ -362,7 +362,7 @@ describe('browserAgentFactory', () => {
       const configWithVision = makeFakeConfig({
         agents: {
           overrides: { browser_agent: { enabled: true } },
-          browser: { headless: false, visualModel: 'gemini-2.5-flash-preview' },
+          browser: { headless: false, visualModel: 'onyx-2.5-flash-preview' },
         },
       });
 

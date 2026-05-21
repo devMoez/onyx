@@ -132,7 +132,7 @@ Defines the actual parameters for the model.
 
 | Property                | Type     | Description                                                               |
 | :---------------------- | :------- | :------------------------------------------------------------------------ |
-| `model`                 | `string` | The identifier of the model to be called (for example, `gemini-2.5-pro`). |
+| `model`                 | `string` | The identifier of the model to be called (for example, `onyx-2.5-pro`). |
 | `generateContentConfig` | `object` | The configuration object passed to the `@google/genai` SDK.               |
 
 ### `GenerateContentConfig` (Common Parameters)
@@ -201,10 +201,10 @@ changing client code.
   "overrides": [
     {
       "match": {
-        "model": "gemini-2.5-pro"
+        "model": "onyx-2.5-pro"
       },
       "modelConfig": {
-        "model": "gemini-2.5-pro-experimental-001"
+        "model": "onyx-2.5-pro-experimental-001"
       }
     }
   ]

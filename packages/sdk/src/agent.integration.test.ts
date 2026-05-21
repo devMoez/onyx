@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { GeminiCliAgent } from './agent.js';
+import { OnyxCliAgent } from './agent.js';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -18,9 +18,9 @@ const RECORD_MODE = process.env['RECORD_NEW_RESPONSES'] === 'true';
 const getGoldenPath = (name: string) =>
   path.resolve(__dirname, '../test-data', `${name}.json`);
 
-describe('GeminiCliAgent Integration', () => {
+describe('OnyxCliAgent Integration', () => {
   beforeEach(() => {
-    vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+    vi.stubEnv('ONYX_API_KEY', 'test-api-key');
   });
 
   afterEach(() => {
@@ -29,9 +29,9 @@ describe('GeminiCliAgent Integration', () => {
   it('handles static instructions', async () => {
     const goldenFile = getGoldenPath('agent-static-instructions');
 
-    const agent = new GeminiCliAgent({
+    const agent = new OnyxCliAgent({
       instructions: 'You are a pirate. Respond in pirate speak.',
-      model: 'gemini-2.0-flash',
+      model: 'onyx-2.0-flash',
       recordResponses: RECORD_MODE ? goldenFile : undefined,
       fakeResponses: RECORD_MODE ? undefined : goldenFile,
     });
@@ -60,12 +60,12 @@ describe('GeminiCliAgent Integration', () => {
     const goldenFile = getGoldenPath('agent-dynamic-instructions');
 
     let callCount = 0;
-    const agent = new GeminiCliAgent({
+    const agent = new OnyxCliAgent({
       instructions: (_ctx) => {
         callCount++;
         return `You are a helpful assistant. The secret number is ${callCount}. Always mention the secret number when asked.`;
       },
-      model: 'gemini-2.0-flash',
+      model: 'onyx-2.0-flash',
       recordResponses: RECORD_MODE ? goldenFile : undefined,
       fakeResponses: RECORD_MODE ? undefined : goldenFile,
     });
@@ -103,9 +103,9 @@ describe('GeminiCliAgent Integration', () => {
     const goldenFile = getGoldenPath('agent-resume-session');
 
     // Create initial session
-    const agent = new GeminiCliAgent({
+    const agent = new OnyxCliAgent({
       instructions: 'You are a memory test. Remember the word "BANANA".',
-      model: 'gemini-2.0-flash',
+      model: 'onyx-2.0-flash',
       recordResponses: RECORD_MODE ? goldenFile : undefined,
       fakeResponses: RECORD_MODE ? undefined : goldenFile,
     });
@@ -141,21 +141,21 @@ describe('GeminiCliAgent Integration', () => {
   it('throws on invalid instructions', () => {
     // Missing instructions should be fine
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect(() => new GeminiCliAgent({} as any).session()).not.toThrow();
+    expect(() => new OnyxCliAgent({} as any).session()).not.toThrow();
 
     expect(() =>
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      new GeminiCliAgent({ instructions: 123 as any }).session(),
+      new OnyxCliAgent({ instructions: 123 as any }).session(),
     ).toThrow('Instructions must be a string or a function.');
   });
 
   it('propagates errors from dynamic instructions', async () => {
     const goldenFile = getGoldenPath('agent-static-instructions');
-    const agent = new GeminiCliAgent({
+    const agent = new OnyxCliAgent({
       instructions: () => {
         throw new Error('Dynamic instruction failure');
       },
-      model: 'gemini-2.0-flash',
+      model: 'onyx-2.0-flash',
       recordResponses: RECORD_MODE ? goldenFile : undefined,
       fakeResponses: RECORD_MODE ? undefined : goldenFile,
     });

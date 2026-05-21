@@ -6,7 +6,7 @@
 
 import * as glob from 'glob';
 import * as path from 'node:path';
-import { GEMINI_DIR, Storage, type Config, homedir } from '@onyx/core';
+import { ONYX_DIR, Storage, type Config, homedir } from '@onyx/core';
 import mock from 'mock-fs';
 import { FileCommandLoader } from './FileCommandLoader.js';
 import { assert, vi } from 'vitest';
@@ -563,7 +563,7 @@ describe('FileCommandLoader', () => {
       ).getProjectCommandsDir();
       const extensionDir = path.join(
         process.cwd(),
-        GEMINI_DIR,
+        ONYX_DIR,
         'extensions',
         'test-ext',
       );
@@ -576,7 +576,7 @@ describe('FileCommandLoader', () => {
           'project.toml': 'prompt = "Project command"',
         },
         [extensionDir]: {
-          'gemini-extension.json': JSON.stringify({
+          'onyx-extension.json': JSON.stringify({
             name: 'test-ext',
             version: '1.0.0',
           }),
@@ -618,14 +618,14 @@ describe('FileCommandLoader', () => {
       ).getProjectCommandsDir();
       const extensionDir = path.join(
         process.cwd(),
-        GEMINI_DIR,
+        ONYX_DIR,
         'extensions',
         'test-ext',
       );
 
       mock({
         [extensionDir]: {
-          'gemini-extension.json': JSON.stringify({
+          'onyx-extension.json': JSON.stringify({
             name: 'test-ext',
             version: '1.0.0',
           }),
@@ -716,20 +716,20 @@ describe('FileCommandLoader', () => {
     it('only loads commands from active extensions', async () => {
       const extensionDir1 = path.join(
         process.cwd(),
-        GEMINI_DIR,
+        ONYX_DIR,
         'extensions',
         'active-ext',
       );
       const extensionDir2 = path.join(
         process.cwd(),
-        GEMINI_DIR,
+        ONYX_DIR,
         'extensions',
         'inactive-ext',
       );
 
       mock({
         [extensionDir1]: {
-          'gemini-extension.json': JSON.stringify({
+          'onyx-extension.json': JSON.stringify({
             name: 'active-ext',
             version: '1.0.0',
           }),
@@ -738,7 +738,7 @@ describe('FileCommandLoader', () => {
           },
         },
         [extensionDir2]: {
-          'gemini-extension.json': JSON.stringify({
+          'onyx-extension.json': JSON.stringify({
             name: 'inactive-ext',
             version: '1.0.0',
           }),
@@ -779,14 +779,14 @@ describe('FileCommandLoader', () => {
     it('handles missing extension commands directory gracefully', async () => {
       const extensionDir = path.join(
         process.cwd(),
-        GEMINI_DIR,
+        ONYX_DIR,
         'extensions',
         'no-commands',
       );
 
       mock({
         [extensionDir]: {
-          'gemini-extension.json': JSON.stringify({
+          'onyx-extension.json': JSON.stringify({
             name: 'no-commands',
             version: '1.0.0',
           }),
@@ -815,14 +815,14 @@ describe('FileCommandLoader', () => {
     it('handles nested command structure in extensions', async () => {
       const extensionDir = path.join(
         process.cwd(),
-        GEMINI_DIR,
+        ONYX_DIR,
         'extensions',
         'a',
       );
 
       mock({
         [extensionDir]: {
-          'gemini-extension.json': JSON.stringify({
+          'onyx-extension.json': JSON.stringify({
             name: 'a',
             version: '1.0.0',
           }),
@@ -881,14 +881,14 @@ describe('FileCommandLoader', () => {
       const extensionId = 'my-test-ext-id-123';
       const extensionDir = path.join(
         process.cwd(),
-        GEMINI_DIR,
+        ONYX_DIR,
         'extensions',
         'my-test-ext',
       );
 
       mock({
         [extensionDir]: {
-          'gemini-extension.json': JSON.stringify({
+          'onyx-extension.json': JSON.stringify({
             name: 'my-test-ext',
             id: extensionId,
             version: '1.0.0',

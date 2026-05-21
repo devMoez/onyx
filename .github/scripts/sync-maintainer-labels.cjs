@@ -13,12 +13,12 @@ const { Octokit } = require('@octokit/rest');
  * - Filters for OPEN issues only.
  * - Skips DUPLICATES.
  * - Skips Pull Requests.
- * - ONLY labels issues in the PUBLIC (gemini-cli) repo.
+ * - ONLY labels issues in the PUBLIC (onyx-cli) repo.
  */
 
-const REPO_OWNER = 'google-gemini';
-const PUBLIC_REPO = 'gemini-cli';
-const PRIVATE_REPO = 'maintainers-gemini-cli';
+const REPO_OWNER = 'google-onyx';
+const PUBLIC_REPO = 'onyx-cli';
+const PRIVATE_REPO = 'maintainers-onyx-cli';
 const ALLOWED_REPOS = [PUBLIC_REPO, PRIVATE_REPO];
 
 const ROOT_ISSUES = [
@@ -37,7 +37,7 @@ const octokit = new Octokit({
 
 /**
  * Extracts child issue references from markdown Task Lists ONLY.
- * e.g. - [ ] #123 or - [x] google-gemini/gemini-cli#123
+ * e.g. - [ ] #123 or - [x] google-onyx/onyx-cli#123
  */
 function extractTaskListLinks(text, contextOwner, contextRepo) {
   if (!text) return [];

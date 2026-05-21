@@ -32,7 +32,7 @@ import {
   PARAM_PATTERN,
   PARAM_CASE_SENSITIVE,
   PARAM_RESPECT_GIT_IGNORE,
-  PARAM_RESPECT_GEMINI_IGNORE,
+  PARAM_RESPECT_ONYX_IGNORE,
   PARAM_FILE_FILTERING_OPTIONS,
   // Tool-specific parameter names
   READ_FILE_PARAM_START_LINE,
@@ -78,6 +78,7 @@ import {
   getShellDeclaration,
   getExitPlanModeDeclaration,
   getActivateSkillDeclaration,
+  getSystemControllerDeclaration,
 } from '../dynamic-declaration-helpers.js';
 
 export const DEFAULT_LEGACY_SET: CoreToolSet = {
@@ -285,7 +286,7 @@ export const DEFAULT_LEGACY_SET: CoreToolSet = {
             'Optional: Whether to respect .gitignore patterns when finding files. Only available in git repositories. Defaults to true.',
           type: 'boolean',
         },
-        [PARAM_RESPECT_GEMINI_IGNORE]: {
+        [PARAM_RESPECT_ONYX_IGNORE]: {
           description:
             'Optional: Whether to respect .onyxIgnore patterns when finding files. Defaults to true.',
           type: 'boolean',
@@ -323,7 +324,7 @@ export const DEFAULT_LEGACY_SET: CoreToolSet = {
                 'Optional: Whether to respect .gitignore patterns when listing files. Only available in git repositories. Defaults to true.',
               type: 'boolean',
             },
-            [PARAM_RESPECT_GEMINI_IGNORE]: {
+            [PARAM_RESPECT_ONYX_IGNORE]: {
               description:
                 'Optional: Whether to respect .onyxIgnore patterns when listing files. Defaults to true.',
               type: 'boolean',
@@ -413,7 +414,7 @@ A good instruction should concisely answer:
   google_web_search: {
     name: WEB_SEARCH_TOOL_NAME,
     description:
-      'Performs a web search using Google Search (via the Gemini API) and returns the results. This tool is useful for finding information on the internet based on a query.',
+      'Performs a web search using Google Search (via the Onyx API) and returns the results. This tool is useful for finding information on the internet based on a query.',
     parametersJsonSchema: {
       type: 'object',
       properties: {
@@ -501,7 +502,7 @@ Use this tool when the user's query implies needing the content of several files
                 'Optional: Whether to respect .gitignore patterns when listing files. Only available in git repositories. Defaults to true.',
               type: 'boolean',
             },
-            [PARAM_RESPECT_GEMINI_IGNORE]: {
+            [PARAM_RESPECT_ONYX_IGNORE]: {
               description:
                 'Optional: Whether to respect .onyxIgnore patterns when listing files. Defaults to true.',
               type: 'boolean',
@@ -546,13 +547,13 @@ DO NOT use this tool for simple tasks that can be completed in less than 2 steps
 ## Examples of When to Use the Todo List
 
 <example>
-User request: Create a website with a React for creating fancy logos using gemini-2.5-flash-image
+User request: Create a website with a React for creating fancy logos using onyx-2.5-flash-image
 
 ToDo list created by the agent:
 1. Initialize a new React project environment (e.g., using Vite).
 2. Design and build the core UI components: a text input (prompt field) for the logo description, selection controls for style parameters (if the API supports them), and an image preview area.
 3. Implement state management (e.g., React Context or Zustand) to manage the user's input prompt, the API loading status (pending, success, error), and the resulting image data.
-4. Create an API service module within the React app (using "fetch" or "axios") to securely format and send the prompt data via an HTTP POST request to the specified "gemini-2.5-flash-image" (Gemini model) endpoint.
+4. Create an API service module within the React app (using "fetch" or "axios") to securely format and send the prompt data via an HTTP POST request to the specified "onyx-2.5-flash-image" (Onyx model) endpoint.
 5. Implement asynchronous logic to handle the API call: show a loading indicator while the request is pending, retrieve the generated image (e.g., as a URL or base64 string) upon success, and display any errors.
 6. Display the returned "fancy logo" from the API response in the preview area component.
 7. Add functionality (e.g., a "Download" button) to allow the user to save the generated image file.
@@ -619,7 +620,7 @@ The agent did not use the todo list because this task could be completed by a ti
   get_internal_docs: {
     name: GET_INTERNAL_DOCS_TOOL_NAME,
     description:
-      'Returns the content of Gemini CLI internal documentation files. If no path is provided, returns a list of all available documentation paths.',
+      'Returns the content of Onyx CLI internal documentation files. If no path is provided, returns a list of all available documentation paths.',
     parametersJsonSchema: {
       type: 'object',
       properties: {
@@ -747,8 +748,7 @@ The agent did not use the todo list because this task could be completed by a ti
 
   list_mcp_resources: {
     name: LIST_MCP_RESOURCES_TOOL_NAME,
-    description:
-      'Lists all available resources exposed by connected MCP servers.',
+    description: 'Lists all available resources from connected MCP servers.',
     parametersJsonSchema: {
       type: 'object',
       properties: {
@@ -761,5 +761,5 @@ The agent did not use the todo list because this task could be completed by a ti
       required: [],
     },
   },
+  system_controller: getSystemControllerDeclaration(),
 };
-

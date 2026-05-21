@@ -20,7 +20,7 @@ vi.mock('../utils/memoryDiscovery.js', async (importOriginal) => {
     getUserProjectMemoryPaths: vi.fn(),
     getExtensionMemoryPaths: vi.fn(),
     getEnvironmentMemoryPaths: vi.fn(),
-    readGeminiMdFiles: vi.fn(),
+    readOnyxMdFiles: vi.fn(),
     loadJitSubdirectoryMemory: vi.fn(),
     deduplicatePathsByFileIdentity: vi.fn(),
     concatenateInstructions: vi
@@ -81,7 +81,7 @@ describe('MemoryContextManager', () => {
         envPaths,
       );
 
-      vi.mocked(memoryDiscovery.readGeminiMdFiles).mockResolvedValue([
+      vi.mocked(memoryDiscovery.readOnyxMdFiles).mockResolvedValue([
         { filePath: globalPaths[0], content: 'Global Content' },
         { filePath: envPaths[0], content: 'Env Content' },
       ]);
@@ -93,7 +93,7 @@ describe('MemoryContextManager', () => {
         ['/app'],
         ['.git'],
       );
-      expect(memoryDiscovery.readGeminiMdFiles).toHaveBeenCalledWith(
+      expect(memoryDiscovery.readOnyxMdFiles).toHaveBeenCalledWith(
         expect.arrayContaining([...globalPaths, ...envPaths]),
         'tree',
         ['.git'],
@@ -120,7 +120,7 @@ describe('MemoryContextManager', () => {
       vi.mocked(memoryDiscovery.getEnvironmentMemoryPaths).mockResolvedValue([
         '/app/src/onyx.md',
       ]);
-      vi.mocked(memoryDiscovery.readGeminiMdFiles).mockResolvedValue([
+      vi.mocked(memoryDiscovery.readOnyxMdFiles).mockResolvedValue([
         { filePath: '/app/onyx.md', content: 'content' },
         { filePath: '/app/src/onyx.md', content: 'env content' },
       ]);
@@ -137,7 +137,7 @@ describe('MemoryContextManager', () => {
       vi.mocked(memoryDiscovery.getGlobalMemoryPaths).mockResolvedValue([
         '/home/user/.onyx/onyx.md',
       ]);
-      vi.mocked(memoryDiscovery.readGeminiMdFiles).mockResolvedValue([
+      vi.mocked(memoryDiscovery.readOnyxMdFiles).mockResolvedValue([
         { filePath: '/home/user/.onyx/onyx.md', content: 'Global Content' },
       ]);
 
@@ -169,7 +169,7 @@ describe('MemoryContextManager', () => {
         identityMap: new Map<string, string>(),
       });
 
-      vi.mocked(memoryDiscovery.readGeminiMdFiles).mockResolvedValue([
+      vi.mocked(memoryDiscovery.readOnyxMdFiles).mockResolvedValue([
         { filePath: '/home/user/.onyx/onyx.md', content: 'Global Content' },
         { filePath: '/app/onyx.md', content: 'Project Content' },
       ]);
@@ -185,7 +185,7 @@ describe('MemoryContextManager', () => {
           '/app/onyx.md',
         ]),
       );
-      expect(memoryDiscovery.readGeminiMdFiles).toHaveBeenCalledWith(
+      expect(memoryDiscovery.readOnyxMdFiles).toHaveBeenCalledWith(
         ['/home/user/.onyx/onyx.md', '/app/onyx.md'],
         'tree',
         ['.git'],
@@ -217,7 +217,7 @@ describe('MemoryContextManager', () => {
         expect.any(Set),
         ['.git'],
       );
-      expect(result).toMatch(/--- Context from: \/app\/src\/GEMINI\.md ---/);
+      expect(result).toMatch(/--- Context from: \/app\/src\/ONYX\.md ---/);
       expect(result).toContain('Src Content');
       expect(memoryContextManager.getLoadedPaths()).toContain(
         '/app/src/onyx.md',

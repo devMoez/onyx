@@ -30,15 +30,15 @@ describe('test-mcp-support', () => {
       settings: {
         tools: { core: [] }, // disable core tools to force using MCP
         model: {
-          name: 'gemini-3-flash-preview',
+          name: 'onyx-3-flash-preview',
         },
       },
       fakeResponsesPath: join(__dirname, 'test-mcp-support.responses'),
     });
 
     // Workaround for ProjectRegistry save issue
-    const userGeminiDir = join(rig.homeDir!, '.gemini');
-    fs.writeFileSync(join(userGeminiDir, 'projects.json'), '{"projects":{}}');
+    const userOnyxDir = join(rig.homeDir!, '.onyx');
+    fs.writeFileSync(join(userOnyxDir, 'projects.json'), '{"projects":{}}');
 
     const builder = new TestMcpServerBuilder('weather-server').addTool(
       'get_weather',
@@ -57,7 +57,7 @@ describe('test-mcp-support', () => {
     // Run the CLI asking for weather
     const output = await rig.run({
       args: 'What is the weather in London? Answer with the raw tool response snippet.',
-      env: { GEMINI_API_KEY: 'dummy' },
+      env: { ONYX_API_KEY: 'dummy' },
     });
 
     // Assert tool call
@@ -73,3 +73,4 @@ describe('test-mcp-support', () => {
     expect(output.toLowerCase()).toContain('rainy');
   }, 30000);
 });
+

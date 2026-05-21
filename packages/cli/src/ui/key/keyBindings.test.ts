@@ -170,7 +170,7 @@ describe('loadCustomKeybindings', () => {
 
   beforeEach(async () => {
     tempDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), 'gemini-keybindings-test-'),
+      path.join(os.tmpdir(), 'onyx-keybindings-test-'),
     );
     tempFilePath = path.join(tempDir, 'keybindings.json');
     vi.spyOn(Storage, 'getUserKeybindingsPath').mockReturnValue(tempFilePath);

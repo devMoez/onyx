@@ -9,7 +9,7 @@ import {
   getErrorMessage,
   MessageSenderType,
   debugLogger,
-  geminiPartsToContentParts,
+  onyxPartsToContentParts,
   displayContentToString,
   parseThought,
   CoreToolCallStatus,
@@ -70,7 +70,7 @@ export const useAgentStream = ({
 
   const currentStreamIdRef = useRef<string | null>(null);
   const userMessageTimestampRef = useRef<number>(0);
-  const geminiMessageBufferRef = useRef<string>('');
+  const onyxMessageBufferRef = useRef<string>('');
   const [pendingHistoryItem, pendingHistoryItemRef, setPendingHistoryItem] =
     useStateAndRef<HistoryItemWithoutId | null>(null);
 
@@ -122,7 +122,7 @@ export const useAgentStream = ({
     if (pendingHistoryItemRef.current) {
       addItem(pendingHistoryItemRef.current, userMessageTimestampRef.current);
       setPendingHistoryItem(null);
-      geminiMessageBufferRef.current = '';
+      onyxMessageBufferRef.current = '';
     }
   }, [addItem, pendingHistoryItemRef, setPendingHistoryItem]);
 
@@ -160,30 +160,30 @@ export const useAgentStream = ({
           if (event.role === 'agent') {
             for (const part of event.content) {
               if (part.type === 'text') {
-                geminiMessageBufferRef.current += part.text;
+                onyxMessageBufferRef.current += part.text;
                 // Update pending history item with incremental text
                 const splitPoint = findLastSafeSplitPoint(
-                  geminiMessageBufferRef.current,
+                  onyxMessageBufferRef.current,
                 );
-                if (splitPoint === geminiMessageBufferRef.current.length) {
+                if (splitPoint === onyxMessageBufferRef.current.length) {
                   setPendingHistoryItem({
-                    type: 'gemini',
-                    text: geminiMessageBufferRef.current,
+                    type: 'onyx',
+                    text: onyxMessageBufferRef.current,
                   });
                 } else {
-                  const before = geminiMessageBufferRef.current.substring(
+                  const before = onyxMessageBufferRef.current.substring(
                     0,
                     splitPoint,
                   );
                   const after =
-                    geminiMessageBufferRef.current.substring(splitPoint);
+                    onyxMessageBufferRef.current.substring(splitPoint);
                   addItem(
-                    { type: 'gemini', text: before },
+                    { type: 'onyx', text: before },
                     userMessageTimestampRef.current,
                   );
-                  geminiMessageBufferRef.current = after;
+                  onyxMessageBufferRef.current = after;
                   setPendingHistoryItem({
-                    type: 'gemini_content',
+                    type: 'onyx_content',
                     text: after,
                   });
                 }
@@ -358,7 +358,7 @@ export const useAgentStream = ({
       setLastOutputTime(timestamp);
       userMessageTimestampRef.current = timestamp;
 
-      geminiMessageBufferRef.current = '';
+      onyxMessageBufferRef.current = '';
 
       if (!options?.isContinuation) {
         if (typeof query === 'string') {
@@ -368,7 +368,7 @@ export const useAgentStream = ({
         startNewPrompt();
       }
 
-      const parts = geminiPartsToContentParts(
+      const parts = onyxPartsToContentParts(
         typeof query === 'string' ? [{ text: query }] : query,
       );
 

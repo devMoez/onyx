@@ -22,7 +22,7 @@ const SHELLCHECK_VERSION = '0.11.0';
 const YAMLLINT_VERSION = '1.35.1';
 
 const TEMP_DIR =
-  process.env.GEMINI_LINT_TEMP_DIR || join(tmpdir(), 'gemini-cli-linters');
+  process.env.ONYX_LINT_TEMP_DIR || join(tmpdir(), 'onyx-cli-linters');
 
 function getPlatformArch() {
   const platform = process.platform;
@@ -184,7 +184,7 @@ function runCommand(command, stdio = 'inherit') {
 
 export function setupLinters() {
   console.log('Setting up linters...');
-  if (!process.env.GEMINI_LINT_TEMP_DIR) {
+  if (!process.env.ONYX_LINT_TEMP_DIR) {
     rmSync(TEMP_DIR, { recursive: true, force: true });
   }
   mkdirSync(TEMP_DIR, { recursive: true });
@@ -244,15 +244,15 @@ export function runPrettier() {
 
 export function runSensitiveKeywordLinter() {
   console.log('\nRunning sensitive keyword linter...');
-  const SENSITIVE_PATTERN = /gemini-\d+(\.\d+)?/g;
+  const SENSITIVE_PATTERN = /onyx-\d+(\.\d+)?/g;
   const ALLOWED_KEYWORDS = new Set([
-    'gemini-3.1',
-    'gemini-3',
-    'gemini-3.0',
-    'gemini-2.5',
-    'gemini-2.0',
-    'gemini-1.5',
-    'gemini-1.0',
+    'onyx-3.1',
+    'onyx-3',
+    'onyx-3.0',
+    'onyx-2.5',
+    'onyx-2.0',
+    'onyx-1.5',
+    'onyx-1.0',
   ]);
 
   function getChangedFiles() {

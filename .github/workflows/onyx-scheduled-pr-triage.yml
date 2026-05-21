@@ -1,4 +1,4 @@
-name: 'Gemini Scheduled PR Triage 🚀'
+name: 'Onyx Scheduled PR Triage 🚀'
 
 on:
   schedule:
@@ -9,7 +9,7 @@ jobs:
   audit-prs:
     timeout-minutes: 15
     if: |-
-      ${{ github.repository == 'google-gemini/gemini-cli' }}
+      ${{ github.repository == 'google-onyx/onyx-cli' }}
     permissions:
       contents: 'read'
       id-token: 'write'

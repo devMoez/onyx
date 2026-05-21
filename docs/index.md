@@ -1,13 +1,13 @@
 # Onyx CLI documentation
 
-Onyx CLI brings the power of Gemini models directly into your terminal. Use it
+Onyx CLI brings the power of Onyx models directly into your terminal. Use it
 to understand code, automate tasks, and build workflows with your local project
 context.
 
 ## Install
 
 ```bash
-npm install -g @google/gemini-cli
+npm install -g @google/onyx-cli
 ```
 
 ## Get started
@@ -21,7 +21,7 @@ Jump in to Onyx CLI.
   personal and enterprise accounts.
 - **[CLI cheatsheet](./cli/cli-reference.md):** A quick reference for common
   commands and options.
-- **[Gemini 3 on Onyx CLI](./get-started/gemini-3.md):** Learn about Gemini 3
+- **[Onyx 3 on Onyx CLI](./get-started/onyx-3.md):** Learn about Onyx 3
   support in Onyx CLI.
 
 ## Use Onyx CLI
@@ -81,11 +81,11 @@ Settings and customization options for Onyx CLI.
 - **[Custom commands](./cli/custom-commands.md):** Personalized shortcuts.
 - **[Enterprise configuration](./cli/enterprise.md):** Professional environment
   controls.
-- **[Ignore files (.geminiignore)](./cli/gemini-ignore.md):** Exclusion pattern
+- **[Ignore files (.onyxignore)](./cli/onyx-ignore.md):** Exclusion pattern
   reference.
 - **[Model configuration](./cli/generation-settings.md):** Fine-tune generation
   parameters like temperature and thinking budget.
-- **[Project context (GEMINI.md)](./cli/gemini-md.md):** Technical hierarchy of
+- **[Project context (ONYX.md)](./cli/onyx-md.md):** Technical hierarchy of
   context files.
 - **[System prompt override](./cli/system-prompt.md):** Instruction replacement
   logic.

@@ -1,21 +1,21 @@
-# @google/gemini-cli-sdk
+# @google/onyx-cli-sdk
 
-The Gemini CLI SDK provides a programmatic interface to interact with Gemini
+The Onyx CLI SDK provides a programmatic interface to interact with Onyx
 models and tools.
 
 ## Installation
 
 ```bash
-npm install @google/gemini-cli-sdk
+npm install @google/onyx-cli-sdk
 ```
 
 ## Usage
 
 ```typescript
-import { GeminiCliAgent } from '@google/gemini-cli-sdk';
+import { OnyxCliAgent } from '@google/onyx-cli-sdk';
 
 async function main() {
-  const agent = new GeminiCliAgent({
+  const agent = new OnyxCliAgent({
     instructions: 'You are a helpful assistant.',
   });
 

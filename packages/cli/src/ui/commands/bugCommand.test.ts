@@ -98,7 +98,7 @@ describe('bugCommand', () => {
       external: 0,
       arrayBuffers: 0,
     });
-    vi.stubEnv('SANDBOX', 'gemini-test');
+    vi.stubEnv('SANDBOX', 'onyx-test');
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2024-01-01T00:00:00Z'));
   });
@@ -114,13 +114,13 @@ describe('bugCommand', () => {
       services: {
         agentContext: {
           config: {
-            getModel: () => 'gemini-pro',
+            getModel: () => 'onyx-pro',
             getBugCommand: () => undefined,
             getIdeMode: () => true,
             getContentGeneratorConfig: () => ({ authType: 'oauth-personal' }),
             getSessionId: vi.fn().mockReturnValue('test-session-id'),
           } as unknown as Config,
-          geminiClient: {
+          onyxClient: {
             getChat: () => ({
               getHistory: () => [],
             }),
@@ -138,7 +138,7 @@ describe('bugCommand', () => {
 * **Session ID:** test-session-id
 * **Operating System:** test-platform v20.0.0
 * **Sandbox Environment:** test
-* **Model Version:** gemini-pro
+* **Model Version:** onyx-pro
 * **Auth Type:** oauth-personal
 * **Memory Usage:** 100 MB
 * **Terminal Name:** Test Terminal
@@ -146,7 +146,7 @@ describe('bugCommand', () => {
 * **Kitty Keyboard Protocol:** Supported
 * **IDE Client:** VSCode
 `;
-    const expectedUrl = `https://github.com/google-gemini/gemini-cli/issues/new?template=bug_report.yml&title=A%20test%20bug&info=${encodeURIComponent(expectedInfo)}&problem=A%20test%20bug`;
+    const expectedUrl = `https://github.com/google-onyx/onyx-cli/issues/new?template=bug_report.yml&title=A%20test%20bug&info=${encodeURIComponent(expectedInfo)}&problem=A%20test%20bug`;
 
     expect(open).toHaveBeenCalledWith(expectedUrl);
   });
@@ -160,16 +160,16 @@ describe('bugCommand', () => {
       services: {
         agentContext: {
           config: {
-            getModel: () => 'gemini-pro',
+            getModel: () => 'onyx-pro',
             getBugCommand: () => undefined,
             getIdeMode: () => true,
             getContentGeneratorConfig: () => ({ authType: 'vertex-ai' }),
             storage: {
-              getProjectTempDir: () => '/tmp/gemini',
+              getProjectTempDir: () => '/tmp/onyx',
             },
             getSessionId: vi.fn().mockReturnValue('test-session-id'),
           } as unknown as Config,
-          geminiClient: {
+          onyxClient: {
             getChat: () => ({
               getHistory: () => history,
             }),
@@ -182,7 +182,7 @@ describe('bugCommand', () => {
     await bugCommand.action(mockContext, 'Bug with history');
 
     const expectedPath = path.join(
-      '/tmp/gemini',
+      '/tmp/onyx',
       'bug-report-history-1704067200000.json',
     );
     expect(exportHistoryToFile).toHaveBeenCalledWith({
@@ -209,13 +209,13 @@ describe('bugCommand', () => {
       services: {
         agentContext: {
           config: {
-            getModel: () => 'gemini-pro',
+            getModel: () => 'onyx-pro',
             getBugCommand: () => ({ urlTemplate: customTemplate }),
             getIdeMode: () => true,
             getContentGeneratorConfig: () => ({ authType: 'vertex-ai' }),
             getSessionId: vi.fn().mockReturnValue('test-session-id'),
           } as unknown as Config,
-          geminiClient: {
+          onyxClient: {
             getChat: () => ({
               getHistory: () => [],
             }),
@@ -233,7 +233,7 @@ describe('bugCommand', () => {
 * **Session ID:** test-session-id
 * **Operating System:** test-platform v20.0.0
 * **Sandbox Environment:** test
-* **Model Version:** gemini-pro
+* **Model Version:** onyx-pro
 * **Auth Type:** vertex-ai
 * **Memory Usage:** 100 MB
 * **Terminal Name:** Test Terminal
@@ -253,14 +253,14 @@ describe('bugCommand', () => {
       services: {
         agentContext: {
           config: {
-            getModel: () => 'gemini-pro',
+            getModel: () => 'onyx-pro',
             getBugCommand: () => undefined,
             getIdeMode: () => false,
             getContentGeneratorConfig: () => ({ authType: 'oauth-personal' }),
             storage: tempDir ? { getProjectTempDir: () => tempDir } : undefined,
             getSessionId: vi.fn().mockReturnValue('test-session-id'),
           } as unknown as Config,
-          geminiClient: { getChat: () => ({ getHistory: () => [] }) },
+          onyxClient: { getChat: () => ({ getHistory: () => [] }) },
         },
       },
     });
@@ -275,7 +275,7 @@ describe('bugCommand', () => {
     });
     vi.mocked(captureHeapSnapshot).mockResolvedValueOnce(undefined);
 
-    const tempDir = path.join('/tmp', 'gemini-test');
+    const tempDir = path.join('/tmp', 'onyx-test');
     const context = buildHighMemoryContext(tempDir);
 
     if (!bugCommand.action) throw new Error('Action is not defined');
@@ -309,7 +309,7 @@ describe('bugCommand', () => {
       external: 0,
       arrayBuffers: 0,
     });
-    const context = buildHighMemoryContext('/tmp/gemini-test');
+    const context = buildHighMemoryContext('/tmp/onyx-test');
 
     if (!bugCommand.action) throw new Error('Action is not defined');
     await bugCommand.action(context, 'A light bug');
@@ -328,7 +328,7 @@ describe('bugCommand', () => {
     vi.mocked(captureHeapSnapshot).mockRejectedValueOnce(
       new Error('inspector failure'),
     );
-    const context = buildHighMemoryContext('/tmp/gemini-test');
+    const context = buildHighMemoryContext('/tmp/onyx-test');
 
     if (!bugCommand.action) throw new Error('Action is not defined');
     await expect(

@@ -14,7 +14,7 @@ import { isSlashCommand } from './ui/utils/commandUtils.js';
 import type { LoadedSettings } from './config/settings.js';
 import {
   convertSessionToClientHistory,
-  GeminiEventType,
+  OnyxEventType,
   FatalInputError,
   promptIdContext,
   OutputFormat,
@@ -86,7 +86,7 @@ export async function runNonInteractive(
       },
     });
 
-    if (process.env['GEMINI_CLI_ACTIVITY_LOG_TARGET']) {
+    if (process.env['ONYX_CLI_ACTIVITY_LOG_TARGET']) {
       const { setupInitialActivityLogger } = await import(
         './utils/devtoolsService.js'
       );
@@ -225,7 +225,7 @@ export async function runNonInteractive(
         }
       });
 
-      const geminiClient = config.getGeminiClient();
+      const onyxClient = config.getOnyxClient();
       scheduler = new Scheduler({
         context: config,
         messageBus: config.getMessageBus(),
@@ -235,7 +235,7 @@ export async function runNonInteractive(
 
       // Initialize chat.  Resume if resume data is passed.
       if (resumedSessionData) {
-        await geminiClient.resumeChat(
+        await onyxClient.resumeChat(
           convertSessionToClientHistory(
             resumedSessionData.conversation.messages,
           ),
@@ -317,7 +317,7 @@ export async function runNonInteractive(
         }
         const toolCallRequests: ToolCallRequestInfo[] = [];
 
-        const responseStream = geminiClient.sendMessageStream(
+        const responseStream = onyxClient.sendMessageStream(
           currentMessages[0]?.parts || [],
           abortController.signal,
           prompt_id,
@@ -331,7 +331,7 @@ export async function runNonInteractive(
             handleCancellationError(config);
           }
 
-          if (event.type === GeminiEventType.Content) {
+          if (event.type === OnyxEventType.Content) {
             const isRaw =
               config.getRawOutput() || config.getAcceptRawOutputRisk();
             const output = isRaw ? event.value : stripAnsi(event.value);
@@ -350,7 +350,7 @@ export async function runNonInteractive(
                 textOutput.write(output);
               }
             }
-          } else if (event.type === GeminiEventType.ToolCallRequest) {
+          } else if (event.type === OnyxEventType.ToolCallRequest) {
             if (streamFormatter) {
               streamFormatter.emitEvent({
                 type: JsonStreamEventType.TOOL_USE,
@@ -361,7 +361,7 @@ export async function runNonInteractive(
               });
             }
             toolCallRequests.push(event.value);
-          } else if (event.type === GeminiEventType.LoopDetected) {
+          } else if (event.type === OnyxEventType.LoopDetected) {
             const message = 'Loop detected, stopping execution';
             if (streamFormatter) {
               streamFormatter.emitEvent({
@@ -372,7 +372,7 @@ export async function runNonInteractive(
               });
             }
             warnings.push(message);
-          } else if (event.type === GeminiEventType.MaxSessionTurns) {
+          } else if (event.type === OnyxEventType.MaxSessionTurns) {
             const message = 'Maximum session turns exceeded';
             if (streamFormatter) {
               streamFormatter.emitEvent({
@@ -383,9 +383,9 @@ export async function runNonInteractive(
               });
             }
             warnings.push(message);
-          } else if (event.type === GeminiEventType.Error) {
+          } else if (event.type === OnyxEventType.Error) {
             throw event.value.error;
-          } else if (event.type === GeminiEventType.AgentExecutionStopped) {
+          } else if (event.type === OnyxEventType.AgentExecutionStopped) {
             const stopMessage = `Agent execution stopped: ${event.value.systemMessage?.trim() || event.value.reason}`;
             if (config.getOutputFormat() === OutputFormat.TEXT) {
               process.stderr.write(`${stopMessage}\n`);
@@ -419,7 +419,7 @@ export async function runNonInteractive(
               textOutput.ensureTrailingNewline(); // Ensure a final newline
             }
             return;
-          } else if (event.type === GeminiEventType.AgentExecutionBlocked) {
+          } else if (event.type === OnyxEventType.AgentExecutionBlocked) {
             const blockMessage = `Agent execution blocked: ${event.value.systemMessage?.trim() || event.value.reason}`;
             if (config.getOutputFormat() === OutputFormat.TEXT) {
               process.stderr.write(`[WARNING] ${blockMessage}\n`);
@@ -432,7 +432,7 @@ export async function runNonInteractive(
               });
             }
             warnings.push(blockMessage);
-          } else if (event.type === GeminiEventType.InvalidStream) {
+          } else if (event.type === OnyxEventType.InvalidStream) {
             invalidStreamError =
               'Invalid stream: The model returned an empty response or malformed tool call.';
             if (streamFormatter) {
@@ -499,11 +499,11 @@ export async function runNonInteractive(
             }
           }
 
-          // Record tool calls with full metadata before sending responses to Gemini
+          // Record tool calls with full metadata before sending responses to Onyx
           try {
             const currentModel =
-              geminiClient.getCurrentSequenceModel() ?? config.getModel();
-            geminiClient
+              onyxClient.getCurrentSequenceModel() ?? config.getModel();
+            onyxClient
               .getChat()
               .recordCompletedToolCalls(currentModel, completedToolCalls);
 

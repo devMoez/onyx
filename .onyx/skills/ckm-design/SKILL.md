@@ -1,6 +1,6 @@
 ---
 name: ckm:design
-description: "Comprehensive design skill: brand identity, design tokens, UI styling, logo generation (55 styles, Gemini AI), corporate identity program (50 deliverables, CIP mockups), HTML presentations (Chart.js), banner design (22 styles, social/ads/web/print), icon design (15 styles, SVG, Gemini 3.1 Pro), social photos (HTML→screenshot, multi-platform). Actions: design logo, create CIP, generate mockups, build slides, design banner, generate icon, create social photos, social media images, brand identity, design system. Platforms: Facebook, Twitter, LinkedIn, YouTube, Instagram, Pinterest, TikTok, Threads, Google Ads."
+description: "Comprehensive design skill: brand identity, design tokens, UI styling, logo generation (55 styles, Onyx AI), corporate identity program (50 deliverables, CIP mockups), HTML presentations (Chart.js), banner design (22 styles, social/ads/web/print), icon design (15 styles, SVG, Onyx 3.1 Pro), social photos (HTML→screenshot, multi-platform). Actions: design logo, create CIP, generate mockups, build slides, design banner, generate icon, create social photos, social media images, brand identity, design system. Platforms: Facebook, Twitter, LinkedIn, YouTube, Instagram, Pinterest, TikTok, Threads, Google Ads."
 argument-hint: "[design-type] [context]"
 license: MIT
 metadata:
@@ -39,7 +39,7 @@ Unified design skill: brand, tokens, UI, logo, CIP, slides, banners, social phot
 
 ## Logo Design (Built-in)
 
-55+ styles, 30 color palettes, 25 industry guides. Gemini Nano Banana models.
+55+ styles, 30 color palettes, 25 industry guides. Onyx Nano Banana models.
 
 ### Logo: Generate Design Brief
 
@@ -70,7 +70,7 @@ After generation, **ALWAYS** ask user about HTML preview via `AskUserQuestion`. 
 
 ## CIP Design (Built-in)
 
-50+ deliverables, 20 styles, 20 industries. Gemini Nano Banana (Flash/Pro).
+50+ deliverables, 20 styles, 20 industries. Onyx Nano Banana (Flash/Pro).
 
 ### CIP: Generate Brief
 
@@ -103,7 +103,7 @@ python3 ~/.claude/skills/design/scripts/cip/generate.py --brand "TopGroup" --log
 python3 ~/.claude/skills/design/scripts/cip/generate.py --brand "TechFlow" --deliverable "business card" --no-logo-prompt
 ```
 
-Models: `flash` (default, `gemini-2.5-flash-image`), `pro` (`gemini-3-pro-image-preview`)
+Models: `flash` (default, `onyx-2.5-flash-image`), `pro` (`onyx-3-pro-image-preview`)
 
 ### CIP: Render HTML Presentation
 
@@ -178,7 +178,7 @@ Load `references/banner-sizes-and-styles.md` for complete sizes and styles refer
 
 ## Icon Design (Built-in)
 
-15 styles, 12 categories. Gemini 3.1 Pro Preview generates SVG text output.
+15 styles, 12 categories. Onyx 3.1 Pro Preview generates SVG text output.
 
 ### Icon: Generate Single Icon
 
@@ -212,7 +212,7 @@ python3 ~/.claude/skills/design/scripts/icon/generate.py --prompt "user profile"
 | flat | Material design, Google-style |
 | gradient | Modern brands, SaaS |
 
-**Model:** `gemini-3.1-pro-preview` — text-only output (SVG is XML text). No image generation API needed.
+**Model:** `onyx-3.1-pro-preview` — text-only output (SVG is XML text). No image generation API needed.
 
 ## Social Photos (Built-in)
 
@@ -281,18 +281,18 @@ Load `references/social-photos-design.md` for sizes, templates, best practices.
 | Script | Purpose |
 |--------|---------|
 | `scripts/logo/search.py` | Search logo styles, colors, industries |
-| `scripts/logo/generate.py` | Generate logos with Gemini AI |
+| `scripts/logo/generate.py` | Generate logos with Onyx AI |
 | `scripts/logo/core.py` | BM25 search engine for logo data |
 | `scripts/cip/search.py` | Search CIP deliverables, styles, industries |
-| `scripts/cip/generate.py` | Generate CIP mockups with Gemini |
+| `scripts/cip/generate.py` | Generate CIP mockups with Onyx |
 | `scripts/cip/render-html.py` | Render HTML presentation from CIP mockups |
 | `scripts/cip/core.py` | BM25 search engine for CIP data |
-| `scripts/icon/generate.py` | Generate SVG icons with Gemini 3.1 Pro |
+| `scripts/icon/generate.py` | Generate SVG icons with Onyx 3.1 Pro |
 
 ## Setup
 
 ```bash
-export GEMINI_API_KEY="your-key"  # https://aistudio.google.com/apikey
+export ONYX_API_KEY="your-key"  # https://aistudio.google.com/apikey
 pip install google-genai pillow
 ```
 

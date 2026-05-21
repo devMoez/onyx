@@ -8,13 +8,13 @@ prerequisites, quickstart, and configuration.
 Before using sandboxing, you need to install and set up Onyx CLI:
 
 ```bash
-npm install -g @google/gemini-cli
+npm install -g @google/onyx-cli
 ```
 
 To verify the installation:
 
 ```bash
-gemini --version
+onyx --version
 ```
 
 ## Overview of sandboxing
@@ -39,7 +39,7 @@ configuration file.
 ### Using the command flag
 
 ```bash
-gemini -s -p "analyze the code structure"
+onyx -s -p "analyze the code structure"
 ```
 
 ### Using an environment variable
@@ -47,15 +47,15 @@ gemini -s -p "analyze the code structure"
 **macOS/Linux**
 
 ```bash
-export GEMINI_SANDBOX=true
-gemini -p "run the test suite"
+export ONYX_SANDBOX=true
+onyx -p "run the test suite"
 ```
 
 **Windows (PowerShell)**
 
 ```powershell
-$env:GEMINI_SANDBOX="true"
-gemini -p "run the test suite"
+$env:ONYX_SANDBOX="true"
+onyx -p "run the test suite"
 ```
 
 ### Configuring via settings.json
@@ -74,7 +74,7 @@ Enable sandboxing using one of the following methods (in order of precedence):
 
 1. **Command flag**: `-s` or `--sandbox`
 2. **Environment variable**:
-   `GEMINI_SANDBOX=true|docker|podman|sandbox-exec|runsc|lxc`
+   `ONYX_SANDBOX=true|docker|podman|sandbox-exec|runsc|lxc`
 3. **Settings file**: `"sandbox": true` in the `tools` object of your
    `settings.json` file (for example, `{"tools": {"sandbox": true}}`).
 
@@ -102,7 +102,7 @@ Built-in profiles (set via `SEATBELT_PROFILE` env var):
 ### 2. Container-based (Docker/Podman)
 
 Cross-platform sandboxing with complete process isolation using container
-technology. By default, it uses the `ghcr.io/google/gemini-cli:latest` image.
+technology. By default, it uses the `ghcr.io/google/onyx-cli:latest` image.
 
 **Prerequisites:**
 
@@ -124,8 +124,8 @@ Docker as the provider:
 
 ```bash
 # Using the environment variable (Recommended)
-export GEMINI_SANDBOX=docker
-gemini -p "build the project"
+export ONYX_SANDBOX=docker
+onyx -p "build the project"
 
 # Or configure it permanently in your settings.json
 # {"tools": {"sandbox": "docker"}}
@@ -142,7 +142,7 @@ or Podman image as your sandbox, provided it has standard shell utilities (like
 
 To configure a custom image that is hosted on a registry (or built locally),
 update your `settings.json` to use an object for the sandbox configuration, or
-set the `GEMINI_SANDBOX_IMAGE` environment variable.
+set the `ONYX_SANDBOX_IMAGE` environment variable.
 
 _Example: Configuring via `settings.json`_
 
@@ -160,7 +160,7 @@ _Example: Configuring via `settings.json`_
 _Example: Configuring via environment variable_
 
 ```bash
-export GEMINI_SANDBOX_IMAGE="us-central1-docker.pkg.dev/my-project/my-repo/my-custom-sandbox:latest"
+export ONYX_SANDBOX_IMAGE="us-central1-docker.pkg.dev/my-project/my-repo/my-custom-sandbox:latest"
 ```
 
 **Option B: Building a local custom image automatically**
@@ -168,13 +168,13 @@ export GEMINI_SANDBOX_IMAGE="us-central1-docker.pkg.dev/my-project/my-repo/my-cu
 If you prefer to define your environment as code, you can provide a Dockerfile
 and Onyx CLI will build the image automatically.
 
-1.  Create a `.gemini/sandbox.Dockerfile` in your project root.
+1.  Create a `.onyx/sandbox.Dockerfile` in your project root.
 2.  Ensure you have the `gh` CLI installed and authenticated (if you are using
-    the default `ghcr.io/google/gemini-cli` image as a base).
+    the default `ghcr.io/google/onyx-cli` image as a base).
 3.  Run your command with the `BUILD_SANDBOX` environment variable set:
 
 ```bash
-BUILD_SANDBOX=1 GEMINI_SANDBOX=docker gemini -p "run my custom build"
+BUILD_SANDBOX=1 ONYX_SANDBOX=docker onyx -p "run my custom build"
 ```
 
 ### 3. Windows Native Sandbox (Windows only)
@@ -211,7 +211,7 @@ strong security barrier between AI operations and the host OS.
 When you set `sandbox: "runsc"`, Onyx CLI runs
 `docker run --runtime=runsc ...` to execute containers with gVisor isolation.
 runsc is not auto-detected; you must specify it explicitly (e.g.
-`GEMINI_SANDBOX=runsc` or `sandbox: "runsc"`).
+`ONYX_SANDBOX=runsc` or `sandbox: "runsc"`).
 
 To set up runsc:
 
@@ -230,7 +230,7 @@ such as Snapcraft and Rockcraft.
 
 - Linux only.
 - LXC/LXD must be installed (`snap install lxd` or `apt install lxd`).
-- A container must be created and running before starting Onyx CLI. Gemini
+- A container must be created and running before starting Onyx CLI. Onyx
   does **not** create the container automatically.
 
 **Quick setup**:
@@ -240,19 +240,19 @@ such as Snapcraft and Rockcraft.
 lxd init --auto
 
 # Create and start an Ubuntu container
-lxc launch ubuntu:24.04 gemini-sandbox
+lxc launch ubuntu:24.04 onyx-sandbox
 
 # Enable LXC sandboxing
-export GEMINI_SANDBOX=lxc
-gemini -p "build the project"
+export ONYX_SANDBOX=lxc
+onyx -p "build the project"
 ```
 
 **Custom container name**:
 
 ```bash
-export GEMINI_SANDBOX=lxc
-export GEMINI_SANDBOX_IMAGE=my-snapcraft-container
-gemini -p "build the snap"
+export ONYX_SANDBOX=lxc
+export ONYX_SANDBOX_IMAGE=my-snapcraft-container
+onyx -p "build the snap"
 ```
 
 **Limitations**:
@@ -289,7 +289,7 @@ you can disable it by setting `security.toolSandboxing` to `false` in your
 
 <!-- prettier-ignore -->
 > [!NOTE]
-> Changing the `security.toolSandboxing` setting requires a restart of Gemini
+> Changing the `security.toolSandboxing` setting requires a restart of Onyx
 > CLI to take effect.
 
 ## Sandbox expansion
@@ -353,8 +353,8 @@ docker run -it \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /absolute/path/on/host/project:/absolute/path/on/host/project \
   -w /absolute/path/on/host/project \
-  -e GEMINI_SANDBOX=docker \
-  ghcr.io/google/gemini-cli:latest
+  -e ONYX_SANDBOX=docker \
+  ghcr.io/google/onyx-cli:latest
 ```
 
 ## Advanced settings
@@ -439,23 +439,23 @@ $env:SANDBOX_SET_UID_GID="false"  # Disable UID/GID mapping
 ### Debug mode
 
 ```bash
-DEBUG=1 gemini -s -p "debug command"
+DEBUG=1 onyx -s -p "debug command"
 ```
 
 <!-- prettier-ignore -->
 > [!NOTE]
 > If you have `DEBUG=true` in a project's `.env` file, it won't affect
-> gemini-cli due to automatic exclusion. Use `.gemini/.env` files for
-> gemini-cli specific debug settings.
+> onyx-cli due to automatic exclusion. Use `.onyx/.env` files for
+> onyx-cli specific debug settings.
 
 ### Inspect sandbox
 
 ```bash
 # Check environment
-gemini -s -p "run shell command: env | grep SANDBOX"
+onyx -s -p "run shell command: env | grep SANDBOX"
 
 # List mounts
-gemini -s -p "run shell command: mount | grep workspace"
+onyx -s -p "run shell command: mount | grep workspace"
 ```
 
 ## Security notes

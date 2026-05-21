@@ -24,7 +24,7 @@ vi.mock('fs', async (importOriginal) => {
 });
 
 import { Storage } from './storage.js';
-import { GEMINI_DIR, homedir, resolveToRealPath } from '../utils/paths.js';
+import { ONYX_DIR, homedir, resolveToRealPath } from '../utils/paths.js';
 import { ProjectRegistry } from './projectRegistry.js';
 import { StorageMigration } from './storageMigration.js';
 
@@ -52,7 +52,7 @@ describe('Storage – initialize', () => {
   it('sets up the registry and performs migration if `getProjectTempDir` is called', async () => {
     await storage.initialize();
     expect(storage.getProjectTempDir()).toBe(
-      path.join(os.homedir(), GEMINI_DIR, 'tmp', PROJECT_SLUG),
+      path.join(os.homedir(), ONYX_DIR, 'tmp', PROJECT_SLUG),
     );
 
     // Verify registry initialization
@@ -81,18 +81,18 @@ vi.mock('../utils/paths.js', async (importOriginal) => {
 
 describe('Storage – getGlobalSettingsPath', () => {
   it('returns path to ~/.onyx/settings.json', () => {
-    const expected = path.join(os.homedir(), GEMINI_DIR, 'settings.json');
+    const expected = path.join(os.homedir(), ONYX_DIR, 'settings.json');
     expect(Storage.getGlobalSettingsPath()).toBe(expected);
   });
 });
 
 describe('Storage - Security', () => {
-  it('falls back to tmp for gemini but returns empty for agents if the home directory cannot be determined', () => {
+  it('falls back to tmp for onyx but returns empty for agents if the home directory cannot be determined', () => {
     vi.mocked(homedir).mockReturnValue('');
 
     // .onyx falls back for backward compatibility
-    expect(Storage.getGlobalGeminiDir()).toBe(
-      path.join(os.tmpdir(), GEMINI_DIR),
+    expect(Storage.getGlobalOnyxDir()).toBe(
+      path.join(os.tmpdir(), ONYX_DIR),
     );
 
     // .agents returns empty to avoid insecure fallback WITHOUT throwing error
@@ -113,37 +113,37 @@ describe('Storage – additional helpers', () => {
   });
 
   it('getWorkspaceSettingsPath returns project/.onyx/settings.json', () => {
-    const expected = path.join(projectRoot, GEMINI_DIR, 'settings.json');
+    const expected = path.join(projectRoot, ONYX_DIR, 'settings.json');
     expect(storage.getWorkspaceSettingsPath()).toBe(expected);
   });
 
   it('getUserCommandsDir returns ~/.onyx/commands', () => {
-    const expected = path.join(os.homedir(), GEMINI_DIR, 'commands');
+    const expected = path.join(os.homedir(), ONYX_DIR, 'commands');
     expect(Storage.getUserCommandsDir()).toBe(expected);
   });
 
   it('getProjectCommandsDir returns project/.onyx/commands', () => {
-    const expected = path.join(projectRoot, GEMINI_DIR, 'commands');
+    const expected = path.join(projectRoot, ONYX_DIR, 'commands');
     expect(storage.getProjectCommandsDir()).toBe(expected);
   });
 
   it('getUserSkillsDir returns ~/.onyx/skills', () => {
-    const expected = path.join(os.homedir(), GEMINI_DIR, 'skills');
+    const expected = path.join(os.homedir(), ONYX_DIR, 'skills');
     expect(Storage.getUserSkillsDir()).toBe(expected);
   });
 
   it('getProjectSkillsDir returns project/.onyx/skills', () => {
-    const expected = path.join(projectRoot, GEMINI_DIR, 'skills');
+    const expected = path.join(projectRoot, ONYX_DIR, 'skills');
     expect(storage.getProjectSkillsDir()).toBe(expected);
   });
 
   it('getUserAgentsDir returns ~/.onyx/agents', () => {
-    const expected = path.join(os.homedir(), GEMINI_DIR, 'agents');
+    const expected = path.join(os.homedir(), ONYX_DIR, 'agents');
     expect(Storage.getUserAgentsDir()).toBe(expected);
   });
 
   it('getProjectAgentsDir returns project/.onyx/agents', () => {
-    const expected = path.join(projectRoot, GEMINI_DIR, 'agents');
+    const expected = path.join(projectRoot, ONYX_DIR, 'agents');
     expect(storage.getProjectAgentsDir()).toBe(expected);
   });
 
@@ -151,7 +151,7 @@ describe('Storage – additional helpers', () => {
     await storage.initialize();
     const expected = path.join(
       os.homedir(),
-      GEMINI_DIR,
+      ONYX_DIR,
       'tmp',
       PROJECT_SLUG,
       'memory',
@@ -162,14 +162,14 @@ describe('Storage – additional helpers', () => {
   it('getMcpOAuthTokensPath returns ~/.onyx/mcp-oauth-tokens.json', () => {
     const expected = path.join(
       os.homedir(),
-      GEMINI_DIR,
+      ONYX_DIR,
       'mcp-oauth-tokens.json',
     );
     expect(Storage.getMcpOAuthTokensPath()).toBe(expected);
   });
 
   it('getGlobalBinDir returns ~/.onyx/tmp/bin', () => {
-    const expected = path.join(os.homedir(), GEMINI_DIR, 'tmp', 'bin');
+    const expected = path.join(os.homedir(), ONYX_DIR, 'tmp', 'bin');
     expect(Storage.getGlobalBinDir()).toBe(expected);
   });
 
@@ -406,41 +406,41 @@ describe('Storage – additional helpers', () => {
 });
 
 describe('Storage - System Paths', () => {
-  const originalEnv = process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'];
+  const originalEnv = process.env['ONYX_CLI_SYSTEM_SETTINGS_PATH'];
 
   afterEach(() => {
     if (originalEnv !== undefined) {
-      process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'] = originalEnv;
+      process.env['ONYX_CLI_SYSTEM_SETTINGS_PATH'] = originalEnv;
     } else {
-      delete process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'];
+      delete process.env['ONYX_CLI_SYSTEM_SETTINGS_PATH'];
     }
   });
 
   it('getSystemSettingsPath returns correct path based on platform (default)', () => {
-    delete process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'];
+    delete process.env['ONYX_CLI_SYSTEM_SETTINGS_PATH'];
 
     const platform = os.platform();
     const result = Storage.getSystemSettingsPath();
 
     if (platform === 'darwin') {
       expect(result).toBe(
-        '/Library/Application Support/GeminiCli/settings.json',
+        '/Library/Application Support/OnyxCli/settings.json',
       );
     } else if (platform === 'win32') {
-      expect(result).toBe('C:\\ProgramData\\gemini-cli\\settings.json');
+      expect(result).toBe('C:\\ProgramData\\onyx-cli\\settings.json');
     } else {
-      expect(result).toBe('/etc/gemini-cli/settings.json');
+      expect(result).toBe('/etc/onyx-cli/settings.json');
     }
   });
 
-  it('getSystemSettingsPath follows GEMINI_CLI_SYSTEM_SETTINGS_PATH if set', () => {
+  it('getSystemSettingsPath follows ONYX_CLI_SYSTEM_SETTINGS_PATH if set', () => {
     const customPath = '/custom/path/settings.json';
-    process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'] = customPath;
+    process.env['ONYX_CLI_SYSTEM_SETTINGS_PATH'] = customPath;
     expect(Storage.getSystemSettingsPath()).toBe(customPath);
   });
 
   it('getSystemPoliciesDir returns correct path based on platform and ignores env var', () => {
-    process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'] =
+    process.env['ONYX_CLI_SYSTEM_SETTINGS_PATH'] =
       '/custom/path/settings.json';
     const platform = os.platform();
     const result = Storage.getSystemPoliciesDir();
@@ -448,11 +448,13 @@ describe('Storage - System Paths', () => {
     expect(result).not.toContain('/custom/path');
 
     if (platform === 'darwin') {
-      expect(result).toBe('/Library/Application Support/GeminiCli/policies');
+      expect(result).toBe(
+        '/Library/Application Support/OnyxCli/policies',
+      );
     } else if (platform === 'win32') {
-      expect(result).toBe('C:\\ProgramData\\gemini-cli\\policies');
+      expect(result).toBe('C:\\ProgramData\\onyx-cli\\policies');
     } else {
-      expect(result).toBe('/etc/gemini-cli/policies');
+      expect(result).toBe('/etc/onyx-cli/policies');
     }
   });
 });

@@ -12,7 +12,7 @@ import { useCallback, useReducer, useRef, useEffect } from 'react';
 import type {
   AnsiOutput,
   Config,
-  GeminiClient,
+  OnyxClient,
   CompletionBehavior,
 } from '@onyx/core';
 import {
@@ -41,8 +41,8 @@ export const OUTPUT_UPDATE_INTERVAL_MS = 1000;
 const RESTORE_VISIBILITY_DELAY_MS = 300;
 const MAX_OUTPUT_LENGTH = 10000;
 
-function addShellCommandToGeminiHistory(
-  geminiClient: GeminiClient,
+function addShellCommandToOnyxHistory(
+  onyxClient: OnyxClient,
   rawQuery: string,
   resultText: string,
 ) {
@@ -58,7 +58,7 @@ function addShellCommandToGeminiHistory(
     .replace(/\x60/g, '\\\x60');
 
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  geminiClient.addHistory({
+  onyxClient.addHistory({
     role: 'user',
     parts: [
       {
@@ -80,7 +80,7 @@ export const useExecutionLifecycle = (
   onExec: (command: Promise<void>) => void,
   onDebugMessage: (message: string) => void,
   config: Config,
-  geminiClient: GeminiClient,
+  onyxClient: OnyxClient,
   setShellInputFocused: (value: boolean) => void,
   terminalWidth?: number,
   terminalHeight?: number,
@@ -399,7 +399,7 @@ export const useExecutionLifecycle = (
               command += ' ';
             }
             const tmpDir = fs.mkdtempSync(
-              path.join(os.tmpdir(), 'gemini-shell-'),
+              path.join(os.tmpdir(), 'onyx-shell-'),
             );
             pwdFilePath = path.join(tmpDir, 'pwd.tmp');
             const escapedPwdFilePath = escapeShellArg(pwdFilePath, 'bash');
@@ -619,7 +619,7 @@ export const useExecutionLifecycle = (
             );
           }
 
-          addShellCommandToGeminiHistory(geminiClient, rawQuery, mainContent);
+          addShellCommandToOnyxHistory(onyxClient, rawQuery, mainContent);
         } catch (err) {
           setPendingHistoryItem(null);
           const errorMessage = err instanceof Error ? err.message : String(err);
@@ -660,7 +660,7 @@ export const useExecutionLifecycle = (
       addItemToHistory,
       setPendingHistoryItem,
       onExec,
-      geminiClient,
+      onyxClient,
       setShellInputFocused,
       terminalHeight,
       terminalWidth,

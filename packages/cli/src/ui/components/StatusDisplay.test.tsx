@@ -49,7 +49,7 @@ const createMockUIState = (overrides: UIStateOverrides = {}): UIState =>
     queueErrorMessage: null,
     activeHooks: [],
     ideContextState: null,
-    geminiMdFileCount: 0,
+    onyxMdFileCount: 0,
     contextFileNames: [],
     backgroundTaskCount: 0,
     buffer: { text: '' },
@@ -89,7 +89,7 @@ const renderStatusDisplay = async (
 
 describe('StatusDisplay', () => {
   beforeEach(() => {
-    vi.stubEnv('GEMINI_SYSTEM_MD', '');
+    vi.stubEnv('ONYX_SYSTEM_MD', '');
   });
 
   afterEach(() => {
@@ -112,7 +112,7 @@ describe('StatusDisplay', () => {
   });
 
   it('renders system md indicator if env var is set', async () => {
-    vi.stubEnv('GEMINI_SYSTEM_MD', 'true');
+    vi.stubEnv('ONYX_SYSTEM_MD', 'true');
     const { lastFrame, unmount } = await renderStatusDisplay();
     expect(lastFrame()).toMatchSnapshot();
     unmount();

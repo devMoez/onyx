@@ -8,11 +8,11 @@ import type React from 'react';
 import { Box, Text } from 'ink';
 import { useUIState } from '../../contexts/UIStateContext.js';
 import { ExtensionUpdateState } from '../../state/extensions.js';
-import { debugLogger, type GeminiCLIExtension } from '@onyx/core';
+import { debugLogger, type OnyxCLIExtension } from '@onyx/core';
 import { getFormattedSettingValue } from '../../../commands/extensions/utils.js';
 
 interface ExtensionsList {
-  extensions: readonly GeminiCLIExtension[];
+  extensions: readonly OnyxCLIExtension[];
 }
 
 export const ExtensionsList: React.FC<ExtensionsList> = ({ extensions }) => {

@@ -29,8 +29,8 @@ describe('OnyxPrivacyNotice', () => {
       <OnyxPrivacyNotice onExit={onExit} />,
     );
 
-    expect(lastFrame()).toContain('Gemini API Key Notice');
-    expect(lastFrame()).toContain('By using the Gemini API');
+    expect(lastFrame()).toContain('Onyx API Key Notice');
+    expect(lastFrame()).toContain('By using the Onyx API');
     expect(lastFrame()).toContain('Press Esc to exit');
     unmount();
   });

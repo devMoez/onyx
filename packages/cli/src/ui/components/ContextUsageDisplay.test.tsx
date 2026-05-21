@@ -21,7 +21,7 @@ describe('ContextUsageDisplay', () => {
     const { lastFrame, unmount } = await renderWithProviders(
       <ContextUsageDisplay
         promptTokenCount={5000}
-        model="gemini-pro"
+        model="onyx-pro"
         terminalWidth={120}
       />,
     );
@@ -34,7 +34,7 @@ describe('ContextUsageDisplay', () => {
     const { lastFrame, unmount } = await renderWithProviders(
       <ContextUsageDisplay
         promptTokenCount={0}
-        model="gemini-pro"
+        model="onyx-pro"
         terminalWidth={120}
       />,
     );
@@ -47,7 +47,7 @@ describe('ContextUsageDisplay', () => {
     const { lastFrame, unmount } = await renderWithProviders(
       <ContextUsageDisplay
         promptTokenCount={2000}
-        model="gemini-pro"
+        model="onyx-pro"
         terminalWidth={80}
       />,
       { width: 80 },
@@ -62,7 +62,7 @@ describe('ContextUsageDisplay', () => {
     const { lastFrame, unmount } = await renderWithProviders(
       <ContextUsageDisplay
         promptTokenCount={8000}
-        model="gemini-pro"
+        model="onyx-pro"
         terminalWidth={120}
       />,
     );
@@ -75,7 +75,7 @@ describe('ContextUsageDisplay', () => {
     const { lastFrame, unmount } = await renderWithProviders(
       <ContextUsageDisplay
         promptTokenCount={10000}
-        model="gemini-pro"
+        model="onyx-pro"
         terminalWidth={120}
       />,
     );

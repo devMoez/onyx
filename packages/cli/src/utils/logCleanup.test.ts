@@ -16,7 +16,7 @@ import { cleanupBackgroundLogs } from './logCleanup.js';
 
 vi.mock('@onyx/core', () => ({
   ShellExecutionService: {
-    getLogDir: vi.fn().mockReturnValue('/tmp/gemini/tmp/background-processes'),
+    getLogDir: vi.fn().mockReturnValue('/tmp/onyx/tmp/background-processes'),
   },
   debugLogger: {
     debug: vi.fn(),
@@ -34,7 +34,7 @@ vi.mock('node:fs', () => ({
 }));
 
 describe('logCleanup', () => {
-  const logDir = '/tmp/gemini/tmp/background-processes';
+  const logDir = '/tmp/onyx/tmp/background-processes';
 
   beforeEach(() => {
     vi.clearAllMocks();

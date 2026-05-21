@@ -30,20 +30,20 @@ jobs:
   merge_queue_skipper:
     name: 'Merge Queue Skipper'
     permissions: 'read-all'
-    runs-on: 'gemini-cli-ubuntu-16-core'
-    if: "github.repository == 'google-gemini/gemini-cli'"
+    runs-on: 'onyx-cli-ubuntu-16-core'
+    if: "github.repository == 'google-onyx/onyx-cli'"
     outputs:
       skip: '${{ steps.merge-queue-e2e-skipper.outputs.skip-check }}'
     steps:
       - id: 'merge-queue-e2e-skipper'
         uses: 'cariad-tech/merge-queue-ci-skipper@1032489e59437862c90a08a2c92809c903883772' # ratchet:cariad-tech/merge-queue-ci-skipper@main
         with:
-          secret: '${{ secrets.GEMINI_CLI_ROBOT_GITHUB_PAT }}'
+          secret: '${{ secrets.ONYX_CLI_ROBOT_GITHUB_PAT }}'
     continue-on-error: true
 
   download_repo_name:
-    runs-on: 'gemini-cli-ubuntu-16-core'
-    if: "github.repository == 'google-gemini/gemini-cli' && (github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run')"
+    runs-on: 'onyx-cli-ubuntu-16-core'
+    if: "github.repository == 'google-onyx/onyx-cli' && (github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run')"
     outputs:
       repo_name: '${{ steps.output-repo-name.outputs.repo_name }}'
       head_sha: '${{ steps.output-repo-name.outputs.head_sha }}'
@@ -90,9 +90,9 @@ jobs:
 
   parse_run_context:
     name: 'Parse run context'
-    runs-on: 'gemini-cli-ubuntu-16-core'
+    runs-on: 'onyx-cli-ubuntu-16-core'
     needs: 'download_repo_name'
-    if: "github.repository == 'google-gemini/gemini-cli' && always()"
+    if: "github.repository == 'google-onyx/onyx-cli' && always()"
     outputs:
       repository: '${{ steps.set_context.outputs.REPO }}'
       sha: '${{ steps.set_context.outputs.SHA }}'
@@ -108,20 +108,20 @@ jobs:
           echo "SHA=$SHA" >> "$GITHUB_OUTPUT"
 
   set_pending_status:
-    runs-on: 'gemini-cli-ubuntu-16-core'
+    runs-on: 'onyx-cli-ubuntu-16-core'
     permissions: 'write-all'
     needs:
       - 'parse_run_context'
-    if: "github.repository == 'google-gemini/gemini-cli' && always()"
+    if: "github.repository == 'google-onyx/onyx-cli' && always()"
     steps:
       - name: 'Set pending status'
         uses: 'myrotvorets/set-commit-status-action@16037e056d73b2d3c88e37e393ff369047f70886' # ratchet:myrotvorets/set-commit-status-action@master
-        if: "github.repository == 'google-gemini/gemini-cli' && always()"
+        if: "github.repository == 'google-onyx/onyx-cli' && always()"
         with:
           allowForks: 'true'
           repo: '${{ github.repository }}'
           sha: '${{ needs.parse_run_context.outputs.sha }}'
-          token: '${{ secrets.GEMINI_CLI_ROBOT_GITHUB_PAT }}'
+          token: '${{ secrets.ONYX_CLI_ROBOT_GITHUB_PAT }}'
           status: 'pending'
           context: 'E2E (Chained)'
 
@@ -130,9 +130,9 @@ jobs:
     needs:
       - 'merge_queue_skipper'
       - 'parse_run_context'
-    runs-on: 'gemini-cli-ubuntu-16-core'
+    runs-on: 'onyx-cli-ubuntu-16-core'
     if: |
-      github.repository == 'google-gemini/gemini-cli' && always() && (needs.merge_queue_skipper.result !='success' || needs.merge_queue_skipper.outputs.skip != 'true')
+      github.repository == 'google-onyx/onyx-cli' && always() && (needs.merge_queue_skipper.result !='success' || needs.merge_queue_skipper.outputs.skip != 'true')
     strategy:
       fail-fast: false
       matrix:
@@ -167,7 +167,7 @@ jobs:
 
       - name: 'Run E2E tests'
         env:
-          GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
+          ONYX_API_KEY: '${{ secrets.ONYX_API_KEY }}'
           ONYX_CLI_TRUST_WORKSPACE: true
           KEEP_OUTPUT: 'true'
           VERBOSE: 'true'
@@ -187,7 +187,7 @@ jobs:
       - 'parse_run_context'
     runs-on: 'macos-latest-large'
     if: |
-      github.repository == 'google-gemini/gemini-cli' && always() && (needs.merge_queue_skipper.result !='success' || needs.merge_queue_skipper.outputs.skip != 'true')
+      github.repository == 'google-onyx/onyx-cli' && always() && (needs.merge_queue_skipper.result !='success' || needs.merge_queue_skipper.outputs.skip != 'true')
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955' # ratchet:actions/checkout@v5
@@ -214,7 +214,7 @@ jobs:
       - name: 'Run E2E tests (non-Windows)'
         if: "${{runner.os != 'Windows'}}"
         env:
-          GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
+          ONYX_API_KEY: '${{ secrets.ONYX_API_KEY }}'
           ONYX_CLI_TRUST_WORKSPACE: true
           KEEP_OUTPUT: 'true'
           SANDBOX: 'sandbox:none'
@@ -227,8 +227,8 @@ jobs:
       - 'merge_queue_skipper'
       - 'parse_run_context'
     if: |
-      github.repository == 'google-gemini/gemini-cli' && always() && (needs.merge_queue_skipper.result !='success' || needs.merge_queue_skipper.outputs.skip != 'true')
-    runs-on: 'gemini-cli-windows-16-core'
+      github.repository == 'google-onyx/onyx-cli' && always() && (needs.merge_queue_skipper.result !='success' || needs.merge_queue_skipper.outputs.skip != 'true')
+    runs-on: 'onyx-cli-windows-16-core'
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955' # ratchet:actions/checkout@v5
@@ -292,7 +292,7 @@ jobs:
 
       - name: 'Run E2E tests'
         env:
-          GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
+          ONYX_API_KEY: '${{ secrets.ONYX_API_KEY }}'
           ONYX_CLI_TRUST_WORKSPACE: true
           KEEP_OUTPUT: 'true'
           SANDBOX: 'sandbox:none'
@@ -308,9 +308,9 @@ jobs:
     needs:
       - 'merge_queue_skipper'
       - 'parse_run_context'
-    runs-on: 'gemini-cli-ubuntu-16-core'
+    runs-on: 'onyx-cli-ubuntu-16-core'
     if: |
-      github.repository == 'google-gemini/gemini-cli' && always() && (needs.merge_queue_skipper.result !='success' || needs.merge_queue_skipper.outputs.skip != 'true')
+      github.repository == 'google-onyx/onyx-cli' && always() && (needs.merge_queue_skipper.result !='success' || needs.merge_queue_skipper.outputs.skip != 'true')
     steps:
       - name: 'Checkout'
         uses: 'actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955' # ratchet:actions/checkout@v5
@@ -340,9 +340,9 @@ jobs:
       - name: 'Run Evals (Required to pass)'
         if: "${{ steps.check_evals.outputs.should_run == 'true' }}"
         env:
-          GEMINI_API_KEY: '${{ secrets.GEMINI_API_KEY }}'
+          ONYX_API_KEY: '${{ secrets.ONYX_API_KEY }}'
           ONYX_CLI_TRUST_WORKSPACE: true
-          GEMINI_MODEL: 'gemini-3-pro-preview'
+          ONYX_MODEL: 'onyx-3-pro-preview'
           # Only run always passes behavioral tests.
           EVAL_SUITE_TYPE: 'behavioral'
           # Disable Vitest internal retries to avoid double-retrying;
@@ -361,14 +361,14 @@ jobs:
   e2e:
     name: 'E2E'
     if: |
-      github.repository == 'google-gemini/gemini-cli' && always() && (needs.merge_queue_skipper.result !='success' || needs.merge_queue_skipper.outputs.skip != 'true')
+      github.repository == 'google-onyx/onyx-cli' && always() && (needs.merge_queue_skipper.result !='success' || needs.merge_queue_skipper.outputs.skip != 'true')
     needs:
       - 'e2e_linux'
       - 'e2e_mac'
       - 'e2e_windows'
       - 'evals'
       - 'merge_queue_skipper'
-    runs-on: 'gemini-cli-ubuntu-16-core'
+    runs-on: 'onyx-cli-ubuntu-16-core'
     steps:
       - name: 'Check E2E test results'
         run: |
@@ -387,16 +387,16 @@ jobs:
           NEEDS_EVALS_RESULT: '${{ needs.evals.result }}'
 
   set_workflow_status:
-    runs-on: 'gemini-cli-ubuntu-16-core'
+    runs-on: 'onyx-cli-ubuntu-16-core'
     permissions: 'write-all'
-    if: "github.repository == 'google-gemini/gemini-cli' && always()"
+    if: "github.repository == 'google-onyx/onyx-cli' && always()"
     needs:
       - 'parse_run_context'
       - 'e2e'
     steps:
       - name: 'Set workflow status'
         uses: 'myrotvorets/set-commit-status-action@16037e056d73b2d3c88e37e393ff369047f70886' # ratchet:myrotvorets/set-commit-status-action@master
-        if: "github.repository == 'google-gemini/gemini-cli' && always()"
+        if: "github.repository == 'google-onyx/onyx-cli' && always()"
         with:
           allowForks: 'true'
           repo: '${{ github.repository }}'

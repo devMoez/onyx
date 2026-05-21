@@ -68,11 +68,11 @@ vi.mock('@onyx/core', async (importOriginal) => {
   Object.assign(MockStorage, {
     getGlobalTempDir: () => '/mock/temp',
     getGlobalSettingsPath: () => '/mock/home/.onyx/settings.json',
-    getGlobalGeminiDir: () => '/mock/home/.onyx',
+    getGlobalOnyxDir: () => '/mock/home/.onyx',
   });
   return {
     ...actual,
-    GEMINI_DIR: '.onyx',
+    ONYX_DIR: '.onyx',
     homedir: () => '/mock/home',
     WarningPriority: {
       Low: 'low',

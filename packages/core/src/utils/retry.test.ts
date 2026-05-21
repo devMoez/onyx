@@ -590,7 +590,7 @@ describe('retryWithBackoff', () => {
 
   describe('Flash model fallback for OAuth users', () => {
     it('should trigger fallback for OAuth personal users on TerminalQuotaError', async () => {
-      const fallbackCallback = vi.fn().mockResolvedValue('gemini-2.5-flash');
+      const fallbackCallback = vi.fn().mockResolvedValue('onyx-2.5-flash');
 
       let fallbackOccurred = false;
       const mockFn = vi.fn().mockImplementation(async () => {
@@ -646,7 +646,7 @@ describe('retryWithBackoff', () => {
       expect(calledDelayMs).toBeLessThanOrEqual(12345 * 1.2);
     });
 
-    it.each([[AuthType.USE_GEMINI], [AuthType.USE_VERTEX_AI], [undefined]])(
+    it.each([[AuthType.USE_ONYX], [AuthType.USE_VERTEX_AI], [undefined]])(
       'should invoke onPersistent429 callback (delegating decision) for non-Google auth users (authType: %s) on TerminalQuotaError',
       async (authType) => {
         const fallbackCallback = vi.fn();
@@ -740,7 +740,7 @@ describe('retryWithBackoff', () => {
   });
 
   it('should trigger fallback for OAuth personal users on persistent 500 errors', async () => {
-    const fallbackCallback = vi.fn().mockResolvedValue('gemini-2.5-flash');
+    const fallbackCallback = vi.fn().mockResolvedValue('onyx-2.5-flash');
 
     let fallbackOccurred = false;
     const mockFn = vi.fn().mockImplementation(async () => {

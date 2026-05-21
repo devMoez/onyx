@@ -117,7 +117,7 @@ async function restoreAction(
       } else if (action.type === 'load_history' && loadHistory) {
         loadHistory(action.history);
         if (action.clientHistory) {
-          agentContext!.geminiClient?.setHistory(action.clientHistory);
+          agentContext!.onyxClient?.setHistory(action.clientHistory);
         }
       }
     }

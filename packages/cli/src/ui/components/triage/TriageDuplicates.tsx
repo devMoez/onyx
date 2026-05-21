@@ -37,7 +37,7 @@ interface RankedCandidateInfo {
   reason: string;
 }
 
-interface GeminiRecommendation {
+interface OnyxRecommendation {
   recommendation: 'duplicate' | 'canonical' | 'not-duplicate' | 'skip';
   canonical_issue_number?: number;
   reason?: string;
@@ -48,7 +48,7 @@ interface GeminiRecommendation {
 interface AnalysisResult {
   candidates: Candidate[];
   canonicalIssue?: Candidate;
-  recommendation: GeminiRecommendation;
+  recommendation: OnyxRecommendation;
 }
 
 interface ProcessedIssue {
@@ -252,7 +252,7 @@ Return a JSON object with:
 `;
       const response = await client.generateJson({
         modelConfigKey: {
-          model: 'gemini-3-pro-preview',
+          model: 'onyx-3-pro-preview',
         },
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         schema: {
@@ -284,7 +284,7 @@ Return a JSON object with:
       });
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      const rec = response as unknown as GeminiRecommendation;
+      const rec = response as unknown as OnyxRecommendation;
 
       let canonical: Candidate | undefined;
       if (rec.canonical_issue_number) {
@@ -531,7 +531,7 @@ Return a JSON object with:
           'api',
           '-X',
           'PATCH',
-          `repos/google-gemini/gemini-cli/issues/${String(state.currentIssue.number).replace(/[^a-zA-Z0-9-]/g, '')}`, // Sanitize issue number
+          `repos/google-onyx/onyx-cli/issues/${String(state.currentIssue.number).replace(/[^a-zA-Z0-9-]/g, '')}`, // Sanitize issue number
           '-f',
           'state=closed',
           '-f',

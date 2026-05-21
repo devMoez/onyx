@@ -10,10 +10,10 @@ import {
   type ConfigParameters,
   AuthType,
   PREVIEW_GEMINI_MODEL_AUTO,
-  GeminiEventType,
+  OnyxEventType,
   type ToolCallRequestInfo,
-  type ServerGeminiStreamEvent,
-  type GeminiClient,
+  type ServerOnyxStreamEvent,
+  type OnyxClient,
   type Content,
   scheduleAgentTools,
   getAuthTypeFromEnv,
@@ -29,34 +29,34 @@ import { SdkAgentFilesystem } from './fs.js';
 import { SdkAgentShell } from './shell.js';
 import type {
   SessionContext,
-  GeminiCliAgentOptions,
+  OnyxCliAgentOptions,
   SystemInstructions,
 } from './types.js';
 import type { SkillReference } from './skills.js';
-import type { GeminiCliAgent } from './agent.js';
+import type { OnyxCliAgent } from './agent.js';
 
 /**
- * Represents an interactive conversation session with a Gemini CLI agent.
+ * Represents an interactive conversation session with a Onyx CLI agent.
  *
  * A session manages the conversation lifecycle: initialization, sending messages
  * via streaming, handling tool calls, and maintaining conversation history.
  *
- * Create a session via {@link GeminiCliAgent.session} or resume one with
- * {@link GeminiCliAgent.resumeSession}.
+ * Create a session via {@link OnyxCliAgent.session} or resume one with
+ * {@link OnyxCliAgent.resumeSession}.
  */
-export class GeminiCliSession {
+export class OnyxCliSession {
   private readonly config: Config;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private readonly tools: Array<Tool<any>>;
   private readonly skillRefs: SkillReference[];
   private readonly instructions: SystemInstructions | undefined;
-  private client: GeminiClient | undefined;
+  private client: OnyxClient | undefined;
   private initialized = false;
 
   constructor(
-    options: GeminiCliAgentOptions,
+    options: OnyxCliAgentOptions,
     private readonly sessionId: string,
-    private readonly agent: GeminiCliAgent,
+    private readonly agent: OnyxCliAgent,
     private readonly resumedData?: ResumedSessionData,
   ) {
     this.instructions = options.instructions;
@@ -165,12 +165,12 @@ export class GeminiCliSession {
       registry.registerTool(sdkTool);
     }
 
-    this.client = loopContext2.geminiClient;
+    this.client = loopContext2.onyxClient;
 
     if (this.resumedData) {
       const history: Content[] = this.resumedData.conversation.messages.map(
         (m) => {
-          const role = m.type === 'gemini' ? 'model' : 'user';
+          const role = m.type === 'onyx' ? 'model' : 'user';
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           let parts: any[] = [];
           if (Array.isArray(m.content)) {
@@ -196,13 +196,13 @@ export class GeminiCliSession {
    *
    * @param prompt - The user message to send.
    * @param signal - Optional {@link AbortSignal} to cancel the stream.
-   * @yields {@link ServerGeminiStreamEvent} events as they are received from
+   * @yields {@link ServerOnyxStreamEvent} events as they are received from
    *   the model.
    *
    * @example
    * ```typescript
    * for await (const event of session.sendStream('Explain this code')) {
-   *   if (event.type === GeminiEventType.ModelResponse) {
+   *   if (event.type === OnyxEventType.ModelResponse) {
    *     process.stdout.write(event.value);
    *   }
    * }
@@ -211,7 +211,7 @@ export class GeminiCliSession {
   async *sendStream(
     prompt: string,
     signal?: AbortSignal,
-  ): AsyncGenerator<ServerGeminiStreamEvent> {
+  ): AsyncGenerator<ServerOnyxStreamEvent> {
     if (!this.initialized || !this.client) {
       await this.initialize();
     }
@@ -222,7 +222,7 @@ export class GeminiCliSession {
     const fs = new SdkAgentFilesystem(this.config);
     const shell = new SdkAgentShell(this.config);
 
-    let request: Parameters<GeminiClient['sendMessageStream']>[0] = [
+    let request: Parameters<OnyxClient['sendMessageStream']>[0] = [
       { text: prompt },
     ];
 
@@ -249,7 +249,7 @@ export class GeminiCliSession {
 
       for await (const event of stream) {
         yield event;
-        if (event.type === GeminiEventType.ToolCallRequest) {
+        if (event.type === OnyxEventType.ToolCallRequest) {
           const toolCall = event.value;
           let args = toolCall.args;
           if (typeof args === 'string') {
@@ -309,7 +309,7 @@ export class GeminiCliSession {
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       request = functionResponses as unknown as Parameters<
-        GeminiClient['sendMessageStream']
+        OnyxClient['sendMessageStream']
       >[0];
     }
   }

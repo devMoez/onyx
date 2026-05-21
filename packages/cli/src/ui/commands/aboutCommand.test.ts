@@ -105,7 +105,7 @@ describe('aboutCommand', () => {
   });
 
   it('should show the correct sandbox environment variable', async () => {
-    process.env['SANDBOX'] = 'gemini-sandbox';
+    process.env['SANDBOX'] = 'onyx-sandbox';
     if (!aboutCommand.action) {
       throw new Error('The about command must have an action.');
     }
@@ -114,7 +114,7 @@ describe('aboutCommand', () => {
 
     expect(mockContext.ui.addItem).toHaveBeenCalledWith(
       expect.objectContaining({
-        sandboxEnv: 'gemini-sandbox',
+        sandboxEnv: 'onyx-sandbox',
       }),
     );
   });

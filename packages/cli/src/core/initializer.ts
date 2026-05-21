@@ -25,7 +25,7 @@ export interface InitializationResult {
   accountSuspensionInfo: AccountSuspensionInfo | null;
   themeError: string | null;
   shouldOpenAuthDialog: boolean;
-  geminiMdFileCount: number;
+  onyxMdFileCount: number;
 }
 
 /**
@@ -75,6 +75,6 @@ export async function initializeApp(
     accountSuspensionInfo,
     themeError,
     shouldOpenAuthDialog,
-    geminiMdFileCount: config.getGeminiMdFileCount(),
+    onyxMdFileCount: config.getOnyxMdFileCount(),
   };
 }

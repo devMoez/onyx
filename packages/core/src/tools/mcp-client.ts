@@ -44,7 +44,7 @@ import {
   AuthProviderType,
   type Config,
   type MCPServerConfig,
-  type GeminiCLIExtension,
+  type OnyxCLIExtension,
 } from '../config/config.js';
 import { GoogleCredentialProvider } from '../mcp/google-auth-provider.js';
 import { ServiceAccountImpersonationProvider } from '../mcp/sa-impersonation-provider.js';
@@ -88,8 +88,8 @@ import {
 import { expandEnvVars } from '../utils/envExpansion.js';
 
 import {
-  GEMINI_CLI_IDENTIFICATION_ENV_VAR,
-  GEMINI_CLI_IDENTIFICATION_ENV_VAR_VALUE,
+  ONYX_CLI_IDENTIFICATION_ENV_VAR,
+  ONYX_CLI_IDENTIFICATION_ENV_VAR_VALUE,
 } from '../services/shellExecutionService.js';
 
 export const MCP_DEFAULT_TIMEOUT_MSEC = 10 * 60 * 1000; // default to 10 minutes
@@ -1797,7 +1797,7 @@ export async function connectToMcpServer(
 ): Promise<Client> {
   const mcpClient = new Client(
     {
-      name: 'gemini-cli-mcp-client',
+      name: 'onyx-cli-mcp-client',
       version: clientVersion,
     },
     {
@@ -2284,7 +2284,7 @@ export async function createTransport(
   if (mcpServerConfig.command) {
     if (!cliConfig.isTrustedFolder()) {
       throw new Error(
-        `MCP server '${mcpServerName}' uses stdio transport but current folder is not trusted. Use 'gemini trust' to enable it.`,
+        `MCP server '${mcpServerName}' uses stdio transport but current folder is not trusted. Use 'onyx trust' to enable it.`,
       );
     }
     const extensionEnv = getExtensionEnvironment(mcpServerConfig.extension);
@@ -2297,8 +2297,8 @@ export async function createTransport(
     });
 
     const finalEnv: Record<string, string> = {
-      [GEMINI_CLI_IDENTIFICATION_ENV_VAR]:
-        GEMINI_CLI_IDENTIFICATION_ENV_VAR_VALUE,
+      [ONYX_CLI_IDENTIFICATION_ENV_VAR]:
+        ONYX_CLI_IDENTIFICATION_ENV_VAR_VALUE,
       ...extensionEnv,
     };
     for (const [key, value] of Object.entries(sanitizedEnv)) {
@@ -2368,7 +2368,7 @@ interface NamedTool {
 }
 
 function getExtensionEnvironment(
-  extension?: GeminiCLIExtension,
+  extension?: OnyxCLIExtension,
 ): Record<string, string> {
   const env: Record<string, string> = {};
   if (extension?.resolvedSettings) {

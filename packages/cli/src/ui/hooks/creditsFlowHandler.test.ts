@@ -9,7 +9,7 @@ import { handleCreditsFlow } from './creditsFlowHandler.js';
 import type { UseHistoryManagerReturn } from './useHistoryManager.js';
 import {
   type Config,
-  type GeminiUserTier,
+  type OnyxUserTier,
   makeFakeConfig,
   getG1CreditBalance,
   shouldAutoUseCredits,
@@ -43,7 +43,7 @@ describe('handleCreditsFlow', () => {
   let mockSetOverageMenuRequest: ReturnType<typeof vi.fn>;
   let mockSetEmptyWalletRequest: ReturnType<typeof vi.fn>;
   let mockSetModelSwitchedFromQuotaError: ReturnType<typeof vi.fn>;
-  const mockPaidTier: GeminiUserTier = {
+  const mockPaidTier: OnyxUserTier = {
     id: UserTierId.STANDARD,
     availableCredits: [{ creditType: G1_CREDIT_TYPE, creditAmount: '100' }],
   };
@@ -82,8 +82,8 @@ describe('handleCreditsFlow', () => {
       config: mockConfig,
       paidTier: mockPaidTier,
       overageStrategy: 'ask' as const,
-      failedModel: 'gemini-3-pro-preview',
-      fallbackModel: 'gemini-3-flash-preview',
+      failedModel: 'onyx-3-pro-preview',
+      fallbackModel: 'onyx-3-flash-preview',
       usageLimitReachedModel: 'all Pro models',
       resetTime: '3:45 PM',
       historyManager: mockHistoryManager,

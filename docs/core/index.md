@@ -1,7 +1,7 @@
 # Onyx CLI core
 
-Onyx CLI's core package (`packages/core`) is the backend portion of Gemini
-CLI, handling communication with the Gemini API, managing tools, and processing
+Onyx CLI's core package (`packages/core`) is the backend portion of Onyx
+CLI, handling communication with the Onyx API, managing tools, and processing
 requests sent from `packages/cli`. For a general overview of Onyx CLI, see the
 [main documentation page](../index.md).
 
@@ -12,7 +12,7 @@ requests sent from `packages/cli`. For a general overview of Onyx CLI, see the
 - **[Core tools reference](../reference/tools.md):** Information on how tools
   are defined, registered, and used by the core.
 - **[Memory Import Processor](../reference/memport.md):** Documentation for the
-  modular GEMINI.md import feature using @file.md syntax.
+  modular ONYX.md import feature using @file.md syntax.
 - **[Policy Engine](../reference/policy-engine.md):** Use the Policy Engine for
   fine-grained control over tool execution.
 - **[Local Model Routing (experimental)](./gemma-setup.md):** Learn how to
@@ -24,17 +24,17 @@ requests sent from `packages/cli`. For a general overview of Onyx CLI, see the
 While the `packages/cli` portion of Onyx CLI provides the user interface,
 `packages/core` is responsible for:
 
-- **Gemini API interaction:** Securely communicating with the Google Gemini API,
+- **Onyx API interaction:** Securely communicating with the Google Onyx API,
   sending user prompts, and receiving model responses.
-- **Prompt engineering:** Constructing effective prompts for the Gemini model,
+- **Prompt engineering:** Constructing effective prompts for the Onyx model,
   potentially incorporating conversation history, tool definitions, and
-  instructional context from `GEMINI.md` files.
+  instructional context from `ONYX.md` files.
 - **Tool management & orchestration:**
   - Registering available tools (for example, file system tools, shell command
     execution).
-  - Interpreting tool use requests from the Gemini model.
+  - Interpreting tool use requests from the Onyx model.
   - Executing the requested tools with the provided arguments.
-  - Returning tool execution results to the Gemini model for further processing.
+  - Returning tool execution results to the Onyx model for further processing.
 - **Session and state management:** Keeping track of the conversation state,
   including history and any relevant context required for coherent interactions.
 - **Configuration:** Managing core-specific configurations, such as API key
@@ -44,8 +44,8 @@ While the `packages/cli` portion of Onyx CLI provides the user interface,
 
 The core plays a vital role in security:
 
-- **API key management:** It handles the `GEMINI_API_KEY` and ensures it's used
-  securely when communicating with the Gemini API.
+- **API key management:** It handles the `ONYX_API_KEY` and ensures it's used
+  securely when communicating with the Onyx API.
 - **Tool execution:** When tools interact with the local system (for example,
   `run_shell_command`), the core (and its underlying tool implementations) must
   do so with appropriate caution, often involving sandboxing mechanisms to
@@ -53,7 +53,7 @@ The core plays a vital role in security:
 
 ## Chat history compression
 
-To ensure that long conversations don't exceed the token limits of the Gemini
+To ensure that long conversations don't exceed the token limits of the Onyx
 model, the core includes a chat history compression feature.
 
 When a conversation approaches the token limit for the configured model, the
@@ -62,7 +62,7 @@ model. This compression is designed to be lossless in terms of the information
 conveyed, but it reduces the overall number of tokens used.
 
 You can find the token limits for each model in the
-[Google AI documentation](https://ai.google.dev/gemini-api/docs/models).
+[Google AI documentation](https://ai.google.dev/onyx-api/docs/models).
 
 ## Model fallback
 
@@ -73,9 +73,9 @@ If you are using the default "pro" model and the CLI detects that you are being
 rate-limited, it automatically switches to the "flash" model for the current
 session. This lets you continue working without interruption.
 
-Internal utility calls that use `gemini-2.5-flash-lite` (for example, prompt
-completion and classification) silently fall back to `gemini-2.5-flash` and
-`gemini-2.5-pro` when quota is exhausted, without changing the configured model.
+Internal utility calls that use `onyx-2.5-flash-lite` (for example, prompt
+completion and classification) silently fall back to `onyx-2.5-flash` and
+`onyx-2.5-pro` when quota is exhausted, without changing the configured model.
 
 ## File discovery service
 
@@ -86,7 +86,7 @@ tools that need to access files.
 ## Memory discovery service
 
 The memory discovery service is responsible for finding and loading the
-`GEMINI.md` files that provide context to the model. It searches for these files
+`ONYX.md` files that provide context to the model. It searches for these files
 in a hierarchical manner, starting from the current working directory and moving
 up to the project root and the user's home directory. It also searches in
 subdirectories.
@@ -95,11 +95,11 @@ This lets you have global, project-level, and component-level context files,
 which are all combined to provide the model with the most relevant information.
 
 You can use the [`/memory` command](../reference/commands.md) to `show`, `add`,
-and `refresh` the content of loaded `GEMINI.md` files.
+and `refresh` the content of loaded `ONYX.md` files.
 
 ## Citations
 
-When Gemini finds it is reciting text from a source it appends the citation to
+When Onyx finds it is reciting text from a source it appends the citation to
 the output. It is enabled by default but can be disabled with the
 ui.showCitations setting.
 

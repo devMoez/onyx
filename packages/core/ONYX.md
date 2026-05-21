@@ -1,6 +1,6 @@
 # Onyx CLI Core (`@onyx/core`)
 
-Backend logic for Gemini CLI: API orchestration, prompt construction, tool
+Backend logic for Onyx CLI: API orchestration, prompt construction, tool
 execution, and agent management.
 
 ## Architecture

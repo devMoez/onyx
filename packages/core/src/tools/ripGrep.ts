@@ -471,8 +471,8 @@ class GrepToolInvocation extends BaseToolInvocation<
 
       // Add .onyxIgnore and custom ignore files support (if provided/mandated)
       // (ripgrep natively handles .gitignore)
-      const geminiIgnorePaths = this.fileDiscoveryService.getIgnoreFilePaths();
-      for (const ignorePath of geminiIgnorePaths) {
+      const onyxIgnorePaths = this.fileDiscoveryService.getIgnoreFilePaths();
+      for (const ignorePath of onyxIgnorePaths) {
         rgArgs.push('--ignore-file', ignorePath);
       }
     }

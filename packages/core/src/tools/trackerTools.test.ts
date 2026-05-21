@@ -34,7 +34,7 @@ describe('Tracker Tools Integration', () => {
       sessionId: 'test-session',
       targetDir: tempDir,
       cwd: tempDir,
-      model: 'gemini-3-flash',
+      model: 'onyx-3-flash',
       debugMode: false,
     });
     await config.initialize();

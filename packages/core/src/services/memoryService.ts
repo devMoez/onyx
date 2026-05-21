@@ -843,7 +843,7 @@ function buildAgentLoopContext(config: Config): AgentLoopContext {
     promptRegistry: new PromptRegistry(),
     resourceRegistry: new ResourceRegistry(),
     messageBus: autoApproveBus,
-    geminiClient: config.getGeminiClient(),
+    onyxClient: config.getOnyxClient(),
     sandboxManager: config.sandboxManager,
   };
 }

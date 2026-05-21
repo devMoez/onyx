@@ -37,11 +37,11 @@ rm -f "${log_dir}/setup.exit" "${log_dir}/final-assessment.exit" "${log_dir}/fin
 
 echo "🧹 Cleaning up previous worktree if it exists..." | tee -a "${log_dir}/setup.log"
 git worktree remove -f "${target_dir}" >> "${log_dir}/setup.log" 2>&1 || true
-git branch -D "gemini-async-pr-${pr_number}" >> "${log_dir}/setup.log" 2>&1 || true
+git branch -D "onyx-async-pr-${pr_number}" >> "${log_dir}/setup.log" 2>&1 || true
 git worktree prune >> "${log_dir}/setup.log" 2>&1 || true
 
 echo "📡 Fetching PR #${pr_number}..." | tee -a "${log_dir}/setup.log"
-if ! git fetch origin -f "pull/${pr_number}/head:gemini-async-pr-${pr_number}" >> "${log_dir}/setup.log" 2>&1; then
+if ! git fetch origin -f "pull/${pr_number}/head:onyx-async-pr-${pr_number}" >> "${log_dir}/setup.log" 2>&1; then
   echo 1 > "${log_dir}/setup.exit"
   echo "❌ Fetch failed. Check ${log_dir}/setup.log"
   notify "Async Review Failed" "Fetch failed." "${pr_number}"
@@ -52,7 +52,7 @@ if [[ ! -d "${target_dir}" ]]; then
   echo "🧹 Pruning missing worktrees..." | tee -a "${log_dir}/setup.log"
   git worktree prune >> "${log_dir}/setup.log" 2>&1
   echo "🌿 Creating worktree in ${target_dir}..." | tee -a "${log_dir}/setup.log"
-  if ! git worktree add "${target_dir}" "gemini-async-pr-${pr_number}" >> "${log_dir}/setup.log" 2>&1; then
+  if ! git worktree add "${target_dir}" "onyx-async-pr-${pr_number}" >> "${log_dir}/setup.log" 2>&1; then
     echo 1 > "${log_dir}/setup.exit"
     echo "❌ Worktree creation failed. Check ${log_dir}/setup.log"
     notify "Async Review Failed" "Worktree creation failed." "${pr_number}"
@@ -75,14 +75,14 @@ echo "  ↳ [2/5] Starting build and lint..."
 rm -f "${log_dir}/build-and-lint.exit"
 { { npm run clean && npm ci && npm run format && npm run build && npm run lint:ci && npm run typecheck; } > "${log_dir}/build-and-lint.log" 2>&1; echo $? > "${log_dir}/build-and-lint.exit"; } &
 
-# Dynamically resolve gemini binary (fallback to your nightly path)
-GEMINI_CMD="$(command -v gemini || echo "${HOME}/.gcli/nightly/node_modules/.bin/gemini")"
+# Dynamically resolve onyx binary (fallback to your nightly path)
+ONYX_CMD="$(command -v onyx || echo "${HOME}/.gcli/nightly/node_modules/.bin/onyx")"
 # shellcheck disable=SC2312
 POLICY_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/policy.toml"
 
-echo "  ↳ [3/5] Starting Gemini code review..."
+echo "  ↳ [3/5] Starting Onyx code review..."
 rm -f "${log_dir}/review.exit"
-{ "${GEMINI_CMD}" --policy "${POLICY_PATH}" -p "/review-frontend ${pr_number}" > "${log_dir}/review.md" 2>&1; echo $? > "${log_dir}/review.exit"; } &
+{ "${ONYX_CMD}" --policy "${POLICY_PATH}" -p "/review-frontend ${pr_number}" > "${log_dir}/review.md" 2>&1; echo $? > "${log_dir}/review.exit"; } &
 
 echo "  ↳ [4/5] Starting automated tests (waiting for build and lint)..."
 rm -f "${log_dir}/npm-test.exit"
@@ -143,13 +143,13 @@ rm -f "${log_dir}/npm-test.exit"
   fi
 } &
 
-echo "  ↳ [5/5] Starting Gemini test execution (waiting for build and lint)..."
+echo "  ↳ [5/5] Starting Onyx test execution (waiting for build and lint)..."
 rm -f "${log_dir}/test-execution.exit"
 { 
   while [[ ! -f "${log_dir}/build-and-lint.exit" ]]; do sleep 1; done
   read -r build_exit < "${log_dir}/build-and-lint.exit" || build_exit=""
   if [[ "${build_exit}" == "0" ]]; then
-    "${GEMINI_CMD}" --policy "${POLICY_PATH}" -p "Analyze the diff for PR ${pr_number} using 'gh pr diff ${pr_number}'. Instead of running the project's automated test suite (like 'npm test'), physically exercise the newly changed code in the terminal (e.g., by writing a temporary script to call the new functions, or testing the CLI command directly). Verify the feature's behavior works as expected. IMPORTANT: Do NOT modify any source code to fix errors. Just exercise the code and log the results, reporting any failures clearly. Do not ask for user confirmation." > "${log_dir}/test-execution.log" 2>&1; echo $? > "${log_dir}/test-execution.exit"
+    "${ONYX_CMD}" --policy "${POLICY_PATH}" -p "Analyze the diff for PR ${pr_number} using 'gh pr diff ${pr_number}'. Instead of running the project's automated test suite (like 'npm test'), physically exercise the newly changed code in the terminal (e.g., by writing a temporary script to call the new functions, or testing the CLI command directly). Verify the feature's behavior works as expected. IMPORTANT: Do NOT modify any source code to fix errors. Just exercise the code and log the results, reporting any failures clearly. Do not ask for user confirmation." > "${log_dir}/test-execution.log" 2>&1; echo $? > "${log_dir}/test-execution.exit"
   else
     echo "Skipped due to build-and-lint failure" > "${log_dir}/test-execution.log"
     echo 1 > "${log_dir}/test-execution.exit"
@@ -232,7 +232,7 @@ done
 echo ""
 
 echo "⏳ Tasks complete! Synthesizing final assessment..."
-if ! "${GEMINI_CMD}" --policy "${POLICY_PATH}" -p "Read the review at ${log_dir}/review.md, the automated test logs at ${log_dir}/npm-test.log, and the manual test execution logs at ${log_dir}/test-execution.log. Summarize the results, state whether the build and tests passed based on ${log_dir}/build-and-lint.exit and ${log_dir}/npm-test.exit, and give a final recommendation for PR ${pr_number}." > "${log_dir}/final-assessment.md" 2>&1; then
+if ! "${ONYX_CMD}" --policy "${POLICY_PATH}" -p "Read the review at ${log_dir}/review.md, the automated test logs at ${log_dir}/npm-test.log, and the manual test execution logs at ${log_dir}/test-execution.log. Summarize the results, state whether the build and tests passed based on ${log_dir}/build-and-lint.exit and ${log_dir}/npm-test.exit, and give a final recommendation for PR ${pr_number}." > "${log_dir}/final-assessment.md" 2>&1; then
   echo $? > "${log_dir}/final-assessment.exit"
   echo "❌ Final assessment synthesis failed!"
   echo "Check ${log_dir}/final-assessment.md for details."

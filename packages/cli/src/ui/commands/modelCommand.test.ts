@@ -109,13 +109,13 @@ describe('modelCommand', () => {
         },
       } as unknown as Config;
 
-      await setCommand!.action!(mockContext, 'gemini-pro');
+      await setCommand!.action!(mockContext, 'onyx-pro');
 
-      expect(mockSetModel).toHaveBeenCalledWith('gemini-pro', true);
+      expect(mockSetModel).toHaveBeenCalledWith('onyx-pro', true);
       expect(mockContext.ui.addItem).toHaveBeenCalledWith(
         expect.objectContaining({
           type: MessageType.INFO,
-          text: expect.stringContaining('Model set to gemini-pro'),
+          text: expect.stringContaining('Model set to onyx-pro'),
         }),
       );
     });
@@ -144,13 +144,13 @@ describe('modelCommand', () => {
         },
       } as unknown as Config;
 
-      await setCommand!.action!(mockContext, 'gemini-pro --persist');
+      await setCommand!.action!(mockContext, 'onyx-pro --persist');
 
-      expect(mockSetModel).toHaveBeenCalledWith('gemini-pro', false);
+      expect(mockSetModel).toHaveBeenCalledWith('onyx-pro', false);
       expect(mockContext.ui.addItem).toHaveBeenCalledWith(
         expect.objectContaining({
           type: MessageType.INFO,
-          text: expect.stringContaining('Model set to gemini-pro (persisted)'),
+          text: expect.stringContaining('Model set to onyx-pro (persisted)'),
         }),
       );
     });

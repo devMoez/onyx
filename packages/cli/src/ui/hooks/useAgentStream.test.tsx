@@ -139,7 +139,7 @@ describe('useAgentStream', () => {
 
     expect(result.current.pendingHistoryItems).toHaveLength(1);
     expect(result.current.pendingHistoryItems[0]).toMatchObject({
-      type: 'gemini',
+      type: 'onyx',
       text: 'Hello',
     });
 

@@ -49,7 +49,7 @@ import {
   CoreEvent,
   type McpProgressPayload,
 } from '../utils/events.js';
-import { GeminiCliOperation } from '../telemetry/constants.js';
+import { OnyxCliOperation } from '../telemetry/constants.js';
 
 interface SchedulerQueueItem {
   requests: ToolCallRequestInfo[];
@@ -195,7 +195,7 @@ export class Scheduler {
   ): Promise<CompletedToolCall[]> {
     return runInDevTraceSpan(
       {
-        operation: GeminiCliOperation.ScheduleToolCalls,
+        operation: OnyxCliOperation.ScheduleToolCalls,
         logPrompts: this.context.config.getTelemetryLogPromptsEnabled(),
         tracesEnabled: this.context.config.getTelemetryTracesEnabled(),
         sessionId: this.context.config.getSessionId(),

@@ -307,7 +307,7 @@ export async function createMcpDeclarativeTools(
 }
 
 /**
- * Converts MCP tool definition to Gemini FunctionDeclaration.
+ * Converts MCP tool definition to Onyx FunctionDeclaration.
  */
 function convertMcpToolToFunctionDeclaration(
   mcpTool: McpTool,

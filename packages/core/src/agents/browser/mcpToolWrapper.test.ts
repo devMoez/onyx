@@ -228,7 +228,7 @@ describe('mcpToolWrapper', () => {
         1,
         'evaluate_script',
         expect.objectContaining({
-          function: expect.stringContaining('__gemini_input_blocker'),
+          function: expect.stringContaining('__onyx_input_blocker'),
         }),
         expect.any(AbortSignal),
         true,
@@ -247,7 +247,7 @@ describe('mcpToolWrapper', () => {
         3,
         'evaluate_script',
         expect.objectContaining({
-          function: expect.stringContaining('__gemini_input_blocker'),
+          function: expect.stringContaining('__onyx_input_blocker'),
         }),
         expect.any(AbortSignal),
         true,

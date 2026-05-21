@@ -5,9 +5,9 @@ This document provides a guide to configuring and using Model Context Protocol
 
 ## What is an MCP server?
 
-An MCP server is an application that exposes tools and resources to the Gemini
+An MCP server is an application that exposes tools and resources to the Onyx
 CLI through the Model Context Protocol, allowing it to interact with external
-systems and data sources. MCP servers act as a bridge between the Gemini model
+systems and data sources. MCP servers act as a bridge between the Onyx model
 and your local environment or other services like APIs.
 
 An MCP server enables Onyx CLI to:
@@ -37,7 +37,7 @@ The discovery process is orchestrated by `discoverMcpTools()`, which:
 2. **Establishes connections** using appropriate transport mechanisms (Stdio,
    SSE, or Streamable HTTP)
 3. **Fetches tool definitions** from each server using the MCP protocol
-4. **Sanitizes and validates** tool schemas for compatibility with the Gemini
+4. **Sanitizes and validates** tool schemas for compatibility with the Onyx
    API
 5. **Registers tools** in the global tool registry with conflict resolution
 6. **Fetches and registers resources** if the server exposes any
@@ -226,7 +226,7 @@ leakage of sensitive host environment variables (like AWS keys or GitHub tokens)
 to arbitrary third-party MCP servers that might execute malicious code or log
 your environment. This includes:
 
-- Core project keys: `GEMINI_API_KEY`, `GOOGLE_API_KEY`, etc.
+- Core project keys: `ONYX_API_KEY`, `GOOGLE_API_KEY`, etc.
 - Variables matching sensitive patterns: `*TOKEN*`, `*SECRET*`, `*PASSWORD*`,
   `*KEY*`, `*AUTH*`, `*CREDENTIAL*`.
 - Certificates and private key patterns.
@@ -356,7 +356,7 @@ Use the `/mcp auth` command to manage OAuth authentication:
 
 OAuth tokens are automatically:
 
-- **Stored securely** in `~/.gemini/mcp-oauth-tokens.json`
+- **Stored securely** in `~/.onyx/mcp-oauth-tokens.json`
 - **Refreshed** when expired (if refresh tokens are available)
 - **Validated** before each connection attempt
 - **Cleaned up** when invalid or expired
@@ -581,7 +581,7 @@ Upon successful connection:
 2. **Schema validation:** Each tool's function declaration is validated
 3. **Tool filtering:** Tools are filtered based on `includeTools` and
    `excludeTools` configuration
-4. **Name sanitization:** Tool names are cleaned to meet Gemini API
+4. **Name sanitization:** Tool names are cleaned to meet Onyx API
    requirements:
    - Characters other than letters, numbers, underscore (`_`), hyphen (`-`), dot
      (`.`), and colon (`:`) are replaced with underscores
@@ -616,7 +616,7 @@ every discovered MCP tool is assigned a strict namespace.
 
 ### 4. Schema processing
 
-Tool parameter schemas undergo sanitization for Gemini API compatibility:
+Tool parameter schemas undergo sanitization for Onyx API compatibility:
 
 - **`$schema` properties** are removed
 - **`additionalProperties`** are stripped
@@ -637,7 +637,7 @@ After discovery:
 
 ## Tool execution flow
 
-When the Gemini model decides to use an MCP tool, the following execution flow
+When the Onyx model decides to use an MCP tool, the following execution flow
 occurs:
 
 ### 1. Tool invocation
@@ -745,7 +745,7 @@ Discovery State: COMPLETED
 
 ### Tool usage
 
-Once discovered, MCP tools are available to the Gemini model like built-in
+Once discovered, MCP tools are available to the Onyx model like built-in
 tools. The model will automatically:
 
 1. **Select appropriate tools** based on your requests
@@ -898,7 +898,7 @@ defaults:
 ### Schema compatibility
 
 - **Property stripping:** The system automatically removes certain schema
-  properties (`$schema`, `additionalProperties`) for Gemini API compatibility
+  properties (`$schema`, `additionalProperties`) for Onyx API compatibility
 - **Name sanitization:** Tool names are automatically sanitized to meet API
   requirements
 - **Conflict resolution:** Tool name conflicts between servers are resolved
@@ -971,7 +971,7 @@ When Onyx CLI receives this response, it will:
     and an image were received.
 
 This enables you to build sophisticated tools that can provide rich, multi-modal
-context to the Gemini model.
+context to the Onyx model.
 
 ## MCP prompts as slash commands
 
@@ -1051,7 +1051,7 @@ substituting the arguments into the prompt template and returning the final
 prompt text. The CLI then sends this prompt to the model for execution. This
 provides a convenient way to automate and share common workflows.
 
-## Managing MCP servers with `gemini mcp`
+## Managing MCP servers with `onyx mcp`
 
 While you can always configure MCP servers by manually editing your
 `settings.json` file, Onyx CLI provides a convenient set of commands to manage
@@ -1059,16 +1059,16 @@ your server configurations programmatically. These commands streamline the
 process of adding, listing, and removing MCP servers without needing to directly
 edit JSON files.
 
-### Adding a server (`gemini mcp add`)
+### Adding a server (`onyx mcp add`)
 
 The `add` command configures a new MCP server in your `settings.json`. Based on
 the scope (`-s, --scope`), it will be added to either the user config
-`~/.gemini/settings.json` or the project config `.gemini/settings.json` file.
+`~/.onyx/settings.json` or the project config `.onyx/settings.json` file.
 
 **Command:**
 
 ```bash
-gemini mcp add [options] <name> <commandOrUrl> [args...]
+onyx mcp add [options] <name> <commandOrUrl> [args...]
 ```
 
 - `<name>`: A unique name for the server.
@@ -1095,13 +1095,13 @@ This is the default transport for running local servers.
 
 ```bash
 # Basic syntax
-gemini mcp add [options] <name> <command> [args...]
+onyx mcp add [options] <name> <command> [args...]
 
 # Example: Adding a local server
-gemini mcp add -e API_KEY=123 -e DEBUG=true my-stdio-server /path/to/server arg1 arg2 arg3
+onyx mcp add -e API_KEY=123 -e DEBUG=true my-stdio-server /path/to/server arg1 arg2 arg3
 
 # Example: Adding a local python server
-gemini mcp add python-server python server.py -- --server-arg my-value
+onyx mcp add python-server python server.py -- --server-arg my-value
 ```
 
 #### Adding an HTTP server
@@ -1110,13 +1110,13 @@ This transport is for servers that use the streamable HTTP transport.
 
 ```bash
 # Basic syntax
-gemini mcp add --transport http <name> <url>
+onyx mcp add --transport http <name> <url>
 
 # Example: Adding an HTTP server
-gemini mcp add --transport http http-server https://api.example.com/mcp/
+onyx mcp add --transport http http-server https://api.example.com/mcp/
 
 # Example: Adding an HTTP server with an authentication header
-gemini mcp add --transport http --header "Authorization: Bearer abc123" secure-http https://api.example.com/mcp/
+onyx mcp add --transport http --header "Authorization: Bearer abc123" secure-http https://api.example.com/mcp/
 ```
 
 #### Adding an SSE server
@@ -1125,16 +1125,16 @@ This transport is for servers that use Server-Sent Events (SSE).
 
 ```bash
 # Basic syntax
-gemini mcp add --transport sse <name> <url>
+onyx mcp add --transport sse <name> <url>
 
 # Example: Adding an SSE server
-gemini mcp add --transport sse sse-server https://api.example.com/sse/
+onyx mcp add --transport sse sse-server https://api.example.com/sse/
 
 # Example: Adding an SSE server with an authentication header
-gemini mcp add --transport sse --header "Authorization: Bearer abc123" secure-sse https://api.example.com/sse/
+onyx mcp add --transport sse --header "Authorization: Bearer abc123" secure-sse https://api.example.com/sse/
 ```
 
-### Listing servers (`gemini mcp list`)
+### Listing servers (`onyx mcp list`)
 
 To view all MCP servers currently configured, use the `list` command. It
 displays each server's name, configuration details, and connection status. This
@@ -1143,7 +1143,7 @@ command has no flags.
 **Command:**
 
 ```bash
-gemini mcp list
+onyx mcp list
 ```
 
 <!-- prettier-ignore -->
@@ -1151,7 +1151,7 @@ gemini mcp list
 > For security, `stdio` MCP servers (those using the
 > `command` property) are only tested and displayed as "Connected" if the
 > current folder is trusted. If the folder is untrusted, they will show as
-> "Disconnected". Use `gemini trust` to trust the current folder.
+> "Disconnected". Use `onyx trust` to trust the current folder.
 
 **Example output:**
 
@@ -1175,10 +1175,10 @@ re-enabled when:
 2.  The model attempts to execute a tool from that server.
 3.  You invoke an MCP prompt from that server.
 
-You can also use `gemini mcp list` from your shell to see connection errors for
+You can also use `onyx mcp list` from your shell to see connection errors for
 all configured servers.
 
-### Removing a server (`gemini mcp remove`)
+### Removing a server (`onyx mcp remove`)
 
 To delete a server from your configuration, use the `remove` command with the
 server's name.
@@ -1186,7 +1186,7 @@ server's name.
 **Command:**
 
 ```bash
-gemini mcp remove <name>
+onyx mcp remove <name>
 ```
 
 **Options (flags):**
@@ -1196,13 +1196,13 @@ gemini mcp remove <name>
 **Example:**
 
 ```bash
-gemini mcp remove my-server
+onyx mcp remove my-server
 ```
 
 This will find and delete the "my-server" entry from the `mcpServers` object in
 the appropriate `settings.json` file based on the scope (`-s, --scope`).
 
-### Enabling/disabling a server (`gemini mcp enable`, `gemini mcp disable`)
+### Enabling/disabling a server (`onyx mcp enable`, `onyx mcp disable`)
 
 Temporarily disable an MCP server without removing its configuration, or
 re-enable a previously disabled server.
@@ -1210,8 +1210,8 @@ re-enable a previously disabled server.
 **Commands:**
 
 ```bash
-gemini mcp enable <name> [--session]
-gemini mcp disable <name> [--session]
+onyx mcp enable <name> [--session]
+onyx mcp disable <name> [--session]
 ```
 
 **Options (flags):**
@@ -1220,7 +1220,7 @@ gemini mcp disable <name> [--session]
 
 Disabled servers appear in `/mcp` status as "Disabled" but won't connect or
 provide tools. Enablement state is stored in
-`~/.gemini/mcp-server-enablement.json`.
+`~/.onyx/mcp-server-enablement.json`.
 
 The same commands are available as slash commands during an active session:
 `/mcp enable <name>` and `/mcp disable <name>`.

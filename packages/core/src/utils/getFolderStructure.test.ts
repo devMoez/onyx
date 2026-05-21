@@ -10,8 +10,8 @@ import * as os from 'node:os';
 import { getFolderStructure } from './getFolderStructure.js';
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
 import * as path from 'node:path';
-import { GEMINI_DIR } from './paths.js';
-import { GEMINI_IGNORE_FILE_NAME } from 'src/config/constants.js';
+import { ONYX_DIR } from './paths.js';
+import { ONYX_IGNORE_FILE_NAME } from 'src/config/constants.js';
 
 describe('getFolderStructure', () => {
   let testRootDir: string;
@@ -256,8 +256,8 @@ ${testRootDir}${path.sep}
       await createTestFile('file1.txt');
       await createTestFile('node_modules', 'some-package', 'index.js');
       await createTestFile('ignored.txt');
-      await createTestFile(GEMINI_DIR, 'config.yaml');
-      await createTestFile(GEMINI_DIR, 'logs.json');
+      await createTestFile(ONYX_DIR, 'config.yaml');
+      await createTestFile(ONYX_DIR, 'logs.json');
 
       const fileService = new FileDiscoveryService(testRootDir);
       const structure = await getFolderStructure(testRootDir, {
@@ -297,14 +297,14 @@ ${testRootDir}${path.sep}
   describe('with onyxIgnore', () => {
     it('should ignore onyxIgnore files by default', async () => {
       await fsPromises.writeFile(
-        path.join(testRootDir, GEMINI_IGNORE_FILE_NAME),
+        path.join(testRootDir, ONYX_IGNORE_FILE_NAME),
         'ignored.txt\nnode_modules/\n.onyx/\n!/.onyx/config.yaml',
       );
       await createTestFile('file1.txt');
       await createTestFile('node_modules', 'some-package', 'index.js');
       await createTestFile('ignored.txt');
-      await createTestFile(GEMINI_DIR, 'config.yaml');
-      await createTestFile(GEMINI_DIR, 'logs.json');
+      await createTestFile(ONYX_DIR, 'config.yaml');
+      await createTestFile(ONYX_DIR, 'logs.json');
 
       const fileService = new FileDiscoveryService(testRootDir);
       const structure = await getFolderStructure(testRootDir, {
@@ -317,21 +317,21 @@ ${testRootDir}${path.sep}
 
     it('should not ignore files if respectonyxIgnore is false', async () => {
       await fsPromises.writeFile(
-        path.join(testRootDir, GEMINI_IGNORE_FILE_NAME),
+        path.join(testRootDir, ONYX_IGNORE_FILE_NAME),
         'ignored.txt\nnode_modules/\n.onyx/\n!/.onyx/config.yaml',
       );
       await createTestFile('file1.txt');
       await createTestFile('node_modules', 'some-package', 'index.js');
       await createTestFile('ignored.txt');
-      await createTestFile(GEMINI_DIR, 'config.yaml');
-      await createTestFile(GEMINI_DIR, 'logs.json');
+      await createTestFile(ONYX_DIR, 'config.yaml');
+      await createTestFile(ONYX_DIR, 'logs.json');
 
       const fileService = new FileDiscoveryService(testRootDir);
       const structure = await getFolderStructure(testRootDir, {
         fileService,
         fileFilteringOptions: {
           respectonyxIgnore: false,
-          respectGitIgnore: true, // Explicitly disable gemini ignore only
+          respectGitIgnore: true, // Explicitly disable onyx ignore only
           customIgnoreFilePaths: [],
         },
       });

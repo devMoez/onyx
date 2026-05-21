@@ -80,7 +80,7 @@ import {
 } from './settings.js';
 import {
   FatalConfigError,
-  GEMINI_DIR,
+  ONYX_DIR,
   Storage,
   AuthType,
   type MCPServerConfig,
@@ -94,10 +94,10 @@ import {
 import { createMockSettings } from '../test-utils/settings.js';
 
 const MOCK_WORKSPACE_DIR = path.resolve(path.resolve('/mock/workspace'));
-// Use the (mocked) GEMINI_DIR for consistency
+// Use the (mocked) ONYX_DIR for consistency
 const MOCK_WORKSPACE_SETTINGS_PATH = path.join(
   MOCK_WORKSPACE_DIR,
-  GEMINI_DIR,
+  ONYX_DIR,
   'settings.json',
 );
 
@@ -150,7 +150,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
   // Create a smarter mock for isWorkspaceHomeDir
   vi.spyOn(actual.Storage.prototype, 'isWorkspaceHomeDir').mockImplementation(
     function (this: Storage) {
-      const target = testResolve(pathMod.dirname(this.getGeminiDir()));
+      const target = testResolve(pathMod.dirname(this.getOnyxDir()));
       // Pick up the mocked home directory specifically from the 'os' mock
       const home = testResolve(os.homedir());
       return actual.normalizePath(target) === actual.normalizePath(home);
@@ -1626,18 +1626,18 @@ describe('Settings Loading and Merging', () => {
       delete process.env['TEST_PORT'];
     });
 
-    describe('when GEMINI_CLI_SYSTEM_SETTINGS_PATH is set', () => {
+    describe('when ONYX_CLI_SYSTEM_SETTINGS_PATH is set', () => {
       const MOCK_ENV_SYSTEM_SETTINGS_PATH = path.resolve(
         '/mock/env/system/settings.json',
       );
 
       beforeEach(() => {
-        process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'] =
+        process.env['ONYX_CLI_SYSTEM_SETTINGS_PATH'] =
           MOCK_ENV_SYSTEM_SETTINGS_PATH;
       });
 
       afterEach(() => {
-        delete process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'];
+        delete process.env['ONYX_CLI_SYSTEM_SETTINGS_PATH'];
       });
 
       it('should load system settings from the path specified in the environment variable', () => {
@@ -1675,7 +1675,7 @@ describe('Settings Loading and Merging', () => {
       const mockSymlinkDir = path.resolve('/mock/symlink/to/home');
       const mockWorkspaceSettingsPath = path.join(
         mockSymlinkDir,
-        GEMINI_DIR,
+        ONYX_DIR,
         'settings.json',
       );
 
@@ -1834,7 +1834,7 @@ describe('Settings Loading and Merging', () => {
       (fs.readFileSync as Mock).mockImplementation(
         (p: fs.PathOrFileDescriptor) => {
           if (p === path.resolve('/mock/project/.env')) {
-            return 'DEBUG=true\nDEBUG_MODE=1\nGEMINI_API_KEY=test-key';
+            return 'DEBUG=true\nDEBUG_MODE=1\nONYX_API_KEY=test-key';
           }
           if (
             normalizePath(p) === normalizePath(MOCK_WORKSPACE_SETTINGS_PATH)
@@ -2039,10 +2039,10 @@ describe('Settings Loading and Merging', () => {
       isFolderTrustEnabled = true,
       isWorkspaceTrustedValue = true as boolean | undefined,
     }) {
-      delete process.env['GEMINI_API_KEY']; // reset
+      delete process.env['ONYX_API_KEY']; // reset
       delete process.env['TESTTEST']; // reset
-      const geminiEnvPath = path.resolve(
-        path.join(MOCK_WORKSPACE_DIR, GEMINI_DIR, '.env'),
+      const onyxEnvPath = path.resolve(
+        path.join(MOCK_WORKSPACE_DIR, ONYX_DIR, '.env'),
       );
       const workspaceEnvPath = path.resolve(
         path.join(MOCK_WORKSPACE_DIR, '.env'),
@@ -2056,7 +2056,7 @@ describe('Settings Loading and Merging', () => {
         const normalizedP = path.resolve(p.toString());
         return [
           path.resolve(USER_SETTINGS_PATH),
-          geminiEnvPath,
+          onyxEnvPath,
           workspaceEnvPath,
         ].includes(normalizedP);
       });
@@ -2078,8 +2078,8 @@ describe('Settings Loading and Merging', () => {
           const normalizedP = path.resolve(p.toString());
           if (normalizedP === path.resolve(USER_SETTINGS_PATH))
             return JSON.stringify(userSettingsContent);
-          if (normalizedP === geminiEnvPath || normalizedP === workspaceEnvPath)
-            return 'TESTTEST=1234\nGEMINI_API_KEY=test-key';
+          if (normalizedP === onyxEnvPath || normalizedP === workspaceEnvPath)
+            return 'TESTTEST=1234\nONYX_API_KEY=test-key';
           return '{}';
         },
       );
@@ -2093,7 +2093,7 @@ describe('Settings Loading and Merging', () => {
       loadEnvironment(settings, MOCK_WORKSPACE_DIR, isWorkspaceTrusted);
 
       expect(process.env['TESTTEST']).toEqual('1234');
-      expect(process.env['GEMINI_API_KEY']).toEqual('test-key');
+      expect(process.env['ONYX_API_KEY']).toEqual('test-key');
     });
 
     it('does not load env files from untrusted spaces when sandboxed', () => {
@@ -2116,7 +2116,7 @@ describe('Settings Loading and Merging', () => {
       loadEnvironment(settings, MOCK_WORKSPACE_DIR, isWorkspaceTrusted);
 
       expect(process.env['TESTTEST']).not.toEqual('1234');
-      expect(process.env['GEMINI_API_KEY']).toEqual('test-key');
+      expect(process.env['ONYX_API_KEY']).toEqual('test-key');
     });
 
     it('does not load env files when trust is undefined and sandboxed', () => {
@@ -2132,7 +2132,7 @@ describe('Settings Loading and Merging', () => {
       loadEnvironment(settings, MOCK_WORKSPACE_DIR, mockTrustFn);
 
       expect(process.env['TESTTEST']).not.toEqual('1234');
-      expect(process.env['GEMINI_API_KEY']).toEqual('test-key');
+      expect(process.env['ONYX_API_KEY']).toEqual('test-key');
     });
 
     it('loads whitelisted env files from untrusted spaces if sandboxing is enabled', () => {
@@ -2142,8 +2142,8 @@ describe('Settings Loading and Merging', () => {
       });
       loadEnvironment(settings, MOCK_WORKSPACE_DIR, isWorkspaceTrusted);
 
-      // GEMINI_API_KEY is in the whitelist, so it should be loaded.
-      expect(process.env['GEMINI_API_KEY']).toEqual('test-key');
+      // ONYX_API_KEY is in the whitelist, so it should be loaded.
+      expect(process.env['ONYX_API_KEY']).toEqual('test-key');
       // TESTTEST is NOT in the whitelist, so it should be blocked.
       expect(process.env['TESTTEST']).not.toEqual('1234');
     });
@@ -2158,7 +2158,7 @@ describe('Settings Loading and Merging', () => {
         });
         loadEnvironment(settings, MOCK_WORKSPACE_DIR, isWorkspaceTrusted);
 
-        expect(process.env['GEMINI_API_KEY']).toEqual('test-key');
+        expect(process.env['ONYX_API_KEY']).toEqual('test-key');
         expect(process.env['TESTTEST']).not.toEqual('1234');
       } finally {
         process.argv = originalArgv;
@@ -2642,7 +2642,7 @@ describe('Settings Loading and Merging', () => {
             maxNumTurns: 15,
             maxTimeMinutes: 5,
             thinkingBudget: 16384,
-            model: 'gemini-1.5-pro',
+            model: 'onyx-1.5-pro',
           },
           cliHelpAgentSettings: {
             enabled: false,
@@ -2670,7 +2670,7 @@ describe('Settings Loading and Merging', () => {
             maxTimeMinutes: 5,
           },
           modelConfig: {
-            model: 'gemini-1.5-pro',
+            model: 'onyx-1.5-pro',
             generateContentConfig: {
               thinkingConfig: {
                 thinkingBudget: 16384,
@@ -3068,14 +3068,14 @@ describe('Settings Loading and Merging', () => {
       originalArgv = [...process.argv];
       originalEnv = { ...process.env };
       // Clear relevant env vars
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['ONYX_API_KEY'];
       delete process.env['GOOGLE_API_KEY'];
       delete process.env['GOOGLE_CLOUD_PROJECT'];
       delete process.env['GOOGLE_CLOUD_LOCATION'];
       delete process.env['CLOUD_SHELL'];
       delete process.env['MALICIOUS_VAR'];
       delete process.env['FOO'];
-      delete process.env['_GEMINI_USER_GCP_PROJECT'];
+      delete process.env['_ONYX_USER_GCP_PROJECT'];
       vi.resetAllMocks();
       vi.mocked(fs.existsSync).mockReturnValue(false);
     });
@@ -3087,14 +3087,14 @@ describe('Settings Loading and Merging', () => {
 
     describe('sandbox detection', () => {
       it('should detect sandbox when -s is a real flag', () => {
-        process.argv = ['node', 'gemini', '-s', 'some prompt'];
+        process.argv = ['node', 'onyx', '-s', 'some prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',
         });
         vi.mocked(fs.existsSync).mockReturnValue(true);
         vi.mocked(fs.readFileSync).mockReturnValue(
-          'FOO=bar\nGEMINI_API_KEY=secret',
+          'FOO=bar\nONYX_API_KEY=secret',
         );
 
         loadEnvironment(
@@ -3102,30 +3102,30 @@ describe('Settings Loading and Merging', () => {
           MOCK_WORKSPACE_DIR,
         );
 
-        // If sandboxed and untrusted, FOO should NOT be loaded, but GEMINI_API_KEY should be.
+        // If sandboxed and untrusted, FOO should NOT be loaded, but ONYX_API_KEY should be.
         expect(process.env['FOO']).toBeUndefined();
-        expect(process.env['GEMINI_API_KEY']).toBe('secret');
+        expect(process.env['ONYX_API_KEY']).toBe('secret');
       });
 
       it('should detect sandbox when --sandbox is a real flag', () => {
-        process.argv = ['node', 'gemini', '--sandbox', 'prompt'];
+        process.argv = ['node', 'onyx', '--sandbox', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',
         });
         vi.mocked(fs.existsSync).mockReturnValue(true);
-        vi.mocked(fs.readFileSync).mockReturnValue('GEMINI_API_KEY=secret');
+        vi.mocked(fs.readFileSync).mockReturnValue('ONYX_API_KEY=secret');
 
         loadEnvironment(
           createMockSettings({ tools: { sandbox: false } }).merged,
           MOCK_WORKSPACE_DIR,
         );
 
-        expect(process.env['GEMINI_API_KEY']).toBe('secret');
+        expect(process.env['ONYX_API_KEY']).toBe('secret');
       });
 
       it('should ignore sandbox flags if they appear after --', () => {
-        process.argv = ['node', 'gemini', '--', '-s', 'some prompt'];
+        process.argv = ['node', 'onyx', '--', '-s', 'some prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',
@@ -3133,18 +3133,18 @@ describe('Settings Loading and Merging', () => {
         vi.mocked(fs.existsSync).mockImplementation((path) =>
           path.toString().endsWith('.env'),
         );
-        vi.mocked(fs.readFileSync).mockReturnValue('GEMINI_API_KEY=secret');
+        vi.mocked(fs.readFileSync).mockReturnValue('ONYX_API_KEY=secret');
 
         loadEnvironment(
           createMockSettings({ tools: { sandbox: false } }).merged,
           MOCK_WORKSPACE_DIR,
         );
 
-        expect(process.env['GEMINI_API_KEY']).toEqual('secret');
+        expect(process.env['ONYX_API_KEY']).toEqual('secret');
       });
 
       it('should NOT be tricked by positional arguments that look like flags', () => {
-        process.argv = ['node', 'gemini', 'my -s prompt'];
+        process.argv = ['node', 'onyx', 'my -s prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',
@@ -3152,20 +3152,20 @@ describe('Settings Loading and Merging', () => {
         vi.mocked(fs.existsSync).mockImplementation((path) =>
           path.toString().endsWith('.env'),
         );
-        vi.mocked(fs.readFileSync).mockReturnValue('GEMINI_API_KEY=secret');
+        vi.mocked(fs.readFileSync).mockReturnValue('ONYX_API_KEY=secret');
 
         loadEnvironment(
           createMockSettings({ tools: { sandbox: false } }).merged,
           MOCK_WORKSPACE_DIR,
         );
 
-        expect(process.env['GEMINI_API_KEY']).toEqual('secret');
+        expect(process.env['ONYX_API_KEY']).toEqual('secret');
       });
     });
 
     describe('env var sanitization', () => {
       it('should strictly enforce whitelist in untrusted/sandboxed mode', () => {
-        process.argv = ['node', 'gemini', '-s', 'prompt'];
+        process.argv = ['node', 'onyx', '-s', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',
@@ -3174,7 +3174,7 @@ describe('Settings Loading and Merging', () => {
           path.toString().endsWith('.env'),
         );
         vi.mocked(fs.readFileSync).mockReturnValue(`
-GEMINI_API_KEY=secret-key
+ONYX_API_KEY=secret-key
 MALICIOUS_VAR=should-be-ignored
 GOOGLE_API_KEY=another-secret
     `);
@@ -3184,13 +3184,13 @@ GOOGLE_API_KEY=another-secret
           MOCK_WORKSPACE_DIR,
         );
 
-        expect(process.env['GEMINI_API_KEY']).toBe('secret-key');
+        expect(process.env['ONYX_API_KEY']).toBe('secret-key');
         expect(process.env['GOOGLE_API_KEY']).toBe('another-secret');
         expect(process.env['MALICIOUS_VAR']).toBeUndefined();
       });
 
       it('should sanitize shell injection characters in whitelisted env vars in untrusted mode', () => {
-        process.argv = ['node', 'gemini', '--sandbox', 'prompt'];
+        process.argv = ['node', 'onyx', '--sandbox', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',
@@ -3201,7 +3201,7 @@ GOOGLE_API_KEY=another-secret
 
         const maliciousPayload = 'key-$(whoami)-`id`-&|;><*?[]{}';
         vi.mocked(fs.readFileSync).mockReturnValue(
-          `GEMINI_API_KEY=${maliciousPayload}`,
+          `ONYX_API_KEY=${maliciousPayload}`,
         );
 
         loadEnvironment(
@@ -3210,11 +3210,11 @@ GOOGLE_API_KEY=another-secret
         );
 
         // sanitizeEnvVar: value.replace(/[^a-zA-Z0-9\-_./]/g, '')
-        expect(process.env['GEMINI_API_KEY']).toBe('key-whoami-id-');
+        expect(process.env['ONYX_API_KEY']).toBe('key-whoami-id-');
       });
 
       it('should allow . and / in whitelisted env vars but sanitize other characters in untrusted mode', () => {
-        process.argv = ['node', 'gemini', '--sandbox', 'prompt'];
+        process.argv = ['node', 'onyx', '--sandbox', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',
@@ -3225,7 +3225,7 @@ GOOGLE_API_KEY=another-secret
 
         const complexPayload = 'secret-123/path.to/somewhere;rm -rf /';
         vi.mocked(fs.readFileSync).mockReturnValue(
-          `GEMINI_API_KEY=${complexPayload}`,
+          `ONYX_API_KEY=${complexPayload}`,
         );
 
         loadEnvironment(
@@ -3233,13 +3233,13 @@ GOOGLE_API_KEY=another-secret
           MOCK_WORKSPACE_DIR,
         );
 
-        expect(process.env['GEMINI_API_KEY']).toBe(
+        expect(process.env['ONYX_API_KEY']).toBe(
           'secret-123/path.to/somewhererm-rf/',
         );
       });
 
       it('should NOT sanitize variables from trusted sources', () => {
-        process.argv = ['node', 'gemini', 'prompt'];
+        process.argv = ['node', 'onyx', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: true,
           source: 'file',
@@ -3258,7 +3258,7 @@ GOOGLE_API_KEY=another-secret
       });
 
       it('should load environment variables normally when workspace is TRUSTED even if "sandboxed"', () => {
-        process.argv = ['node', 'gemini', '-s', 'prompt'];
+        process.argv = ['node', 'onyx', '-s', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: true,
           source: 'file',
@@ -3267,7 +3267,7 @@ GOOGLE_API_KEY=another-secret
           path.toString().endsWith('.env'),
         );
         vi.mocked(fs.readFileSync).mockReturnValue(`
-GEMINI_API_KEY=un-sanitized;key!
+ONYX_API_KEY=un-sanitized;key!
 MALICIOUS_VAR=allowed-because-trusted
     `);
 
@@ -3276,7 +3276,7 @@ MALICIOUS_VAR=allowed-because-trusted
           MOCK_WORKSPACE_DIR,
         );
 
-        expect(process.env['GEMINI_API_KEY']).toBe('un-sanitized;key!');
+        expect(process.env['ONYX_API_KEY']).toBe('un-sanitized;key!');
         expect(process.env['MALICIOUS_VAR']).toBe('allowed-because-trusted');
       });
 
@@ -3291,7 +3291,7 @@ MALICIOUS_VAR=allowed-because-trusted
     describe('Cloud Shell security', () => {
       it('should handle Cloud Shell special defaults securely when untrusted', () => {
         process.env['CLOUD_SHELL'] = 'true';
-        process.argv = ['node', 'gemini', '-s', 'prompt'];
+        process.argv = ['node', 'onyx', '-s', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',
@@ -3311,7 +3311,7 @@ MALICIOUS_VAR=allowed-because-trusted
       it('should not override GOOGLE_CLOUD_PROJECT in Cloud Shell when auth type is vertex-ai', () => {
         vi.stubEnv('CLOUD_SHELL', 'true');
         vi.stubEnv('GOOGLE_CLOUD_PROJECT', 'my-vertex-project');
-        process.argv = ['node', 'gemini', '-s', 'prompt'];
+        process.argv = ['node', 'onyx', '-s', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',
@@ -3334,7 +3334,7 @@ MALICIOUS_VAR=allowed-because-trusted
       it('should respect .env override for GOOGLE_CLOUD_PROJECT in Cloud Shell when auth type is vertex-ai', () => {
         vi.stubEnv('CLOUD_SHELL', 'true');
         vi.stubEnv('GOOGLE_CLOUD_PROJECT', 'my-vertex-project');
-        process.argv = ['node', 'gemini', '-s', 'prompt'];
+        process.argv = ['node', 'onyx', '-s', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: true,
           source: 'file',
@@ -3359,7 +3359,7 @@ MALICIOUS_VAR=allowed-because-trusted
 
       it('should clear cloudshell-gca when switching to Vertex AI without an original project', () => {
         process.env['CLOUD_SHELL'] = 'true';
-        process.argv = ['node', 'gemini', '-s', 'prompt'];
+        process.argv = ['node', 'onyx', '-s', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',
@@ -3387,20 +3387,20 @@ MALICIOUS_VAR=allowed-because-trusted
       it('should restore original project when switching to Vertex AI after Cloud Shell override', () => {
         process.env['CLOUD_SHELL'] = 'true';
         process.env['GOOGLE_CLOUD_PROJECT'] = 'my-real-project';
-        process.argv = ['node', 'gemini', '-s', 'prompt'];
+        process.argv = ['node', 'onyx', '-s', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',
         });
         vi.mocked(fs.existsSync).mockReturnValue(false);
 
-        // First call: saves original to _GEMINI_USER_GCP_PROJECT, sets cloudshell-gca
+        // First call: saves original to _ONYX_USER_GCP_PROJECT, sets cloudshell-gca
         loadEnvironment(
           createMockSettings({ tools: { sandbox: false } }).merged,
           MOCK_WORKSPACE_DIR,
         );
         expect(process.env['GOOGLE_CLOUD_PROJECT']).toBe('cloudshell-gca');
-        expect(process.env['_GEMINI_USER_GCP_PROJECT']).toBe('my-real-project');
+        expect(process.env['_ONYX_USER_GCP_PROJECT']).toBe('my-real-project');
 
         // Second call: switching to Vertex AI should restore the saved value
         loadEnvironment(
@@ -3418,8 +3418,8 @@ MALICIOUS_VAR=allowed-because-trusted
         // the saved original from the parent process.
         process.env['CLOUD_SHELL'] = 'true';
         process.env['GOOGLE_CLOUD_PROJECT'] = 'cloudshell-gca';
-        process.env['_GEMINI_USER_GCP_PROJECT'] = 'my-real-project';
-        process.argv = ['node', 'gemini', '-s', 'prompt'];
+        process.env['_ONYX_USER_GCP_PROJECT'] = 'my-real-project';
+        process.argv = ['node', 'onyx', '-s', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',
@@ -3438,7 +3438,7 @@ MALICIOUS_VAR=allowed-because-trusted
 
       it('should sanitize GOOGLE_CLOUD_PROJECT in Cloud Shell when loaded from .env in untrusted mode', () => {
         process.env['CLOUD_SHELL'] = 'true';
-        process.argv = ['node', 'gemini', '-s', 'prompt'];
+        process.argv = ['node', 'onyx', '-s', 'prompt'];
         vi.mocked(isWorkspaceTrusted).mockReturnValue({
           isTrusted: false,
           source: 'file',

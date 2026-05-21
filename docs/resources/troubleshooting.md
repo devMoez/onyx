@@ -11,7 +11,7 @@ topics on:
 ## Authentication or login errors
 
 - **Error:
-  `You must be a named user on your organization's Gemini Code Assist Standard edition subscription to use this service. Please contact your administrator to request an entitlement to Gemini Code Assist Standard edition.`**
+  `You must be a named user on your organization's Onyx Code Assist Standard edition subscription to use this service. Please contact your administrator to request an entitlement to Onyx Code Assist Standard edition.`**
   - **Cause:** This error might occur if Onyx CLI detects the
     `GOOGLE_CLOUD_PROJECT` or `GOOGLE_CLOUD_PROJECT_ID` environment variable is
     defined. Setting these variables forces an organization subscription check.
@@ -26,14 +26,14 @@ topics on:
       using a different Google account.
 
     - **Organizational Users:** Contact your Google Cloud administrator to be
-      added to your organization's Gemini Code Assist subscription.
+      added to your organization's Onyx Code Assist subscription.
 
 - **Error:
   `Failed to sign in. Message: Your current account is not eligible... because it is not currently available in your location.`**
   - **Cause:** Onyx CLI does not currently support your location. For a full
     list of supported locations, see the following pages:
-    - Gemini Code Assist for individuals:
-      [Available locations](https://developers.google.com/gemini-code-assist/resources/available-locations#americas)
+    - Onyx Code Assist for individuals:
+      [Available locations](https://developers.google.com/onyx-code-assist/resources/available-locations#americas)
 
 - **Error: `Failed to sign in. Message: Request contains an invalid argument`**
   - **Cause:** Users with Google Workspace accounts or Google Cloud accounts
@@ -41,7 +41,7 @@ topics on:
     tier of the Google Code Assist plan.
   - **Solution:** For Google Cloud accounts, you can work around this by setting
     `GOOGLE_CLOUD_PROJECT` to your project ID. Alternatively, you can obtain the
-    Gemini API key from
+    Onyx API key from
     [Google AI Studio](http://aistudio.google.com/app/apikey), which also
     includes a separate free tier.
 
@@ -72,14 +72,14 @@ topics on:
     configure the MCP server to use a different port.
 
 - **Error: Command not found (when attempting to run Onyx CLI with
-  `gemini`).**
+  `onyx`).**
   - **Cause:** Onyx CLI is not correctly installed or it is not in your
     system's `PATH`.
   - **Solution:** The update depends on how you installed Onyx CLI:
-    - If you installed `gemini` globally, check that your `npm` global binary
+    - If you installed `onyx` globally, check that your `npm` global binary
       directory is in your `PATH`. You can update Onyx CLI using the command
-      `npm install -g @google/gemini-cli@latest`.
-    - If you are running `gemini` from source, ensure you are using the correct
+      `npm install -g @google/onyx-cli@latest`.
+    - If you are running `onyx` from source, ensure you are using the correct
       command to invoke it (for example, `node packages/cli/dist/index.js ...`).
       To update Onyx CLI, pull the latest changes from the repository, and
       then rebuild using the command `npm run build`.
@@ -113,21 +113,21 @@ topics on:
     mode.
   - **Solution:** If the `CI_` prefixed variable is not needed for the CLI to
     function, you can temporarily unset it for the command. For example,
-    `env -u CI_TOKEN gemini`
+    `env -u CI_TOKEN onyx`
 
 - **DEBUG mode not working from project .env file**
   - **Issue:** Setting `DEBUG=true` in a project's `.env` file doesn't enable
-    debug mode for gemini-cli.
+    debug mode for onyx-cli.
   - **Cause:** The `DEBUG` and `DEBUG_MODE` variables are automatically excluded
-    from project `.env` files to prevent interference with gemini-cli behavior.
-  - **Solution:** Use a `.gemini/.env` file instead, or configure the
+    from project `.env` files to prevent interference with onyx-cli behavior.
+  - **Solution:** Use a `.onyx/.env` file instead, or configure the
     `advanced.excludedEnvVars` setting in your `settings.json` to exclude fewer
     variables.
 
 - **Warning: `npm WARN deprecated node-domexception@1.0.0` or
   `npm WARN deprecated glob` during install/update**
   - **Issue:** When installing or updating Onyx CLI globally via
-    `npm install -g @google/gemini-cli` or `npm update -g @google/gemini-cli`,
+    `npm install -g @google/onyx-cli` or `npm update -g @google/onyx-cli`,
     you might see deprecation warnings regarding `node-domexception` or old
     versions of `glob`.
   - **Cause:** These warnings occur because some dependencies (or their
@@ -183,7 +183,7 @@ is especially useful for scripting and automation.
 
 If you encounter an issue that was not covered here in this _Troubleshooting
 guide_, consider searching Onyx CLI
-[Issue tracker on GitHub](https://github.com/google-gemini/gemini-cli/issues).
+[Issue tracker on GitHub](https://github.com/google-onyx/onyx-cli/issues).
 If you can't find an issue similar to yours, consider creating a new GitHub
 Issue with a detailed description. Pull requests are also welcome!
 

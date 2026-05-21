@@ -1,6 +1,6 @@
-# Gemini CLI DevTools
+# Onyx CLI DevTools
 
-Integrated Developer Tools for Gemini CLI, providing a Chrome DevTools-like
+Integrated Developer Tools for Onyx CLI, providing a Chrome DevTools-like
 interface for Network and Console inspection. Launched automatically when the
 `general.devtools` setting is enabled.
 
@@ -28,7 +28,7 @@ No environment variables needed for normal use.
 ## Architecture
 
 ```
-gemini.tsx / nonInteractiveCli.ts
+onyx.tsx / nonInteractiveCli.ts
          │  (dynamic import)
          ▼
   devtoolsService.ts          ← orchestration + DevTools lifecycle
@@ -47,7 +47,7 @@ gemini.tsx / nonInteractiveCli.ts
 
 | Variable                         | Description                                   |
 | -------------------------------- | --------------------------------------------- |
-| `GEMINI_CLI_ACTIVITY_LOG_TARGET` | File path for JSONL mode (optional, fallback) |
+| `ONYX_CLI_ACTIVITY_LOG_TARGET` | File path for JSONL mode (optional, fallback) |
 
 ## API Endpoints
 

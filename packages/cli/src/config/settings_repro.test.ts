@@ -135,7 +135,7 @@ describe('Settings Repro', () => {
       },
       security: {
         auth: {
-          selectedType: 'gemini-api-key',
+          selectedType: 'onyx-api-key',
         },
         folderTrust: {
           enabled: true,

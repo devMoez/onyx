@@ -52,7 +52,7 @@ export function calculateTurnStats(
     const msg = conversation.messages[i];
     if (msg.type === 'user') break; // Stop at next user message
 
-    if (msg.type === 'gemini' && msg.toolCalls) {
+    if (msg.type === 'onyx' && msg.toolCalls) {
       for (const toolCall of msg.toolCalls) {
         const fileDiff = getFileDiffFromResultDisplay(toolCall.resultDisplay);
         if (fileDiff) {
@@ -103,7 +103,7 @@ export function calculateRewindImpact(
     const msg = conversation.messages[i];
     // Do NOT break on user message - we want total impact
 
-    if (msg.type === 'gemini' && msg.toolCalls) {
+    if (msg.type === 'onyx' && msg.toolCalls) {
       for (const toolCall of msg.toolCalls) {
         const fileDiff = getFileDiffFromResultDisplay(toolCall.resultDisplay);
         if (fileDiff) {
@@ -159,7 +159,7 @@ export async function revertFileChanges(
   // Iterate backwards from the end to the message being rewound (exclusive of the messageId itself)
   for (let i = conversation.messages.length - 1; i > messageIndex; i--) {
     const msg = conversation.messages[i];
-    if (msg.type === 'gemini' && msg.toolCalls) {
+    if (msg.type === 'onyx' && msg.toolCalls) {
       for (let j = msg.toolCalls.length - 1; j >= 0; j--) {
         const toolCall = msg.toolCalls[j];
         const fileDiff = getFileDiffFromResultDisplay(toolCall.resultDisplay);

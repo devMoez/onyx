@@ -264,12 +264,12 @@ export function buildAvailableModels(
 } {
   const preferredModel = config.getModel() || GEMINI_MODEL_ALIAS_AUTO;
   const shouldShowPreviewModels = config.getHasAccessToPreviewModel();
-  const useGemini31 = config.getGemini31LaunchedSync?.() ?? false;
-  const useGemini31FlashLite =
-    config.getGemini31FlashLiteLaunchedSync?.() ?? false;
+  const useOnyx31 = config.getOnyx31LaunchedSync?.() ?? false;
+  const useOnyx31FlashLite =
+    config.getOnyx31FlashLiteLaunchedSync?.() ?? false;
   const selectedAuthType = settings.merged.security.auth.selectedType;
   const useCustomToolModel =
-    useGemini31 && selectedAuthType === AuthType.USE_GEMINI;
+    useOnyx31 && selectedAuthType === AuthType.USE_ONYX;
 
   // --- DYNAMIC PATH ---
   if (
@@ -277,8 +277,8 @@ export function buildAvailableModels(
     config.getModelConfigService
   ) {
     const options = config.getModelConfigService().getAvailableModelOptions({
-      useGemini3_1: useGemini31,
-      useGemini3_1FlashLite: useGemini31FlashLite,
+      useOnyx3_1: useOnyx31,
+      useOnyx3_1FlashLite: useOnyx31FlashLite,
       useCustomTools: useCustomToolModel,
       hasAccessToPreview: shouldShowPreviewModels,
     });
@@ -296,7 +296,7 @@ export function buildAvailableModels(
       title: getDisplayString(GEMINI_MODEL_ALIAS_AUTO),
       description: getAutoModelDescription(
         shouldShowPreviewModels,
-        useGemini31,
+        useOnyx31,
       ),
     },
   ];
@@ -317,7 +317,7 @@ export function buildAvailableModels(
   ];
 
   if (shouldShowPreviewModels) {
-    const previewProModel = useGemini31
+    const previewProModel = useOnyx31
       ? PREVIEW_GEMINI_3_1_MODEL
       : PREVIEW_GEMINI_MODEL;
 
@@ -336,7 +336,7 @@ export function buildAvailableModels(
       },
     ];
 
-    if (useGemini31FlashLite) {
+    if (useOnyx31FlashLite) {
       previewOptions.push({
         value: PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL,
         title: getDisplayString(PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL),

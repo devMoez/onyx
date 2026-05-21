@@ -5,8 +5,8 @@
  */
 
 export interface ModelResolutionContext {
-  useGemini3_1?: boolean;
-  useGemini3_1FlashLite?: boolean;
+  useOnyx3_1?: boolean;
+  useOnyx3_1FlashLite?: boolean;
   useCustomTools?: boolean;
   hasAccessToPreview?: boolean;
   requestedModel?: string;
@@ -53,15 +53,12 @@ export interface ModelCapabilityContext {
 
 export const PREVIEW_GEMINI_MODEL = 'gemini-3-pro-preview';
 export const PREVIEW_GEMINI_3_1_MODEL = 'gemini-3.1-pro-preview';
-export const PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL =
-  'gemini-3.1-pro-preview-customtools';
+export const PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL = 'gemini-3.1-pro-preview-customtools';
 export const PREVIEW_GEMINI_FLASH_MODEL = 'gemini-3-flash-preview';
-export const PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL =
-  'gemini-3.1-flash-lite-preview';
+export const PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL = 'gemini-3.1-flash-lite-preview';
 export const DEFAULT_GEMINI_MODEL = 'gemini-2.5-pro';
 export const DEFAULT_GEMINI_FLASH_MODEL = 'gemini-2.5-flash';
 export const DEFAULT_GEMINI_FLASH_LITE_MODEL = 'gemini-2.5-flash-lite';
-
 export const GEMMA_4_31B_IT_MODEL = 'gemma-4-31b-it';
 export const GEMMA_4_26B_A4B_IT_MODEL = 'gemma-4-26b-a4b-it';
 
@@ -92,20 +89,21 @@ export const GEMINI_MODEL_ALIAS_FLASH_LITE = 'flash-lite';
 
 export const DEFAULT_GEMINI_EMBEDDING_MODEL = 'gemini-embedding-001';
 
+
 // Cap the thinking at 8192 to prevent run-away thinking loops.
 export const DEFAULT_THINKING_MODE = 8192;
 
 export function getAutoModelDescription(
   hasAccessToPreview: boolean,
-  useGemini3_1: boolean = false,
+  useOnyx3_1: boolean = false,
 ) {
   const proModel = hasAccessToPreview
-    ? useGemini3_1
+    ? useOnyx3_1
       ? 'gemini-3.1-pro'
       : 'gemini-3-pro'
     : 'gemini-2.5-pro';
   const flashModel = hasAccessToPreview ? 'gemini-3-flash' : 'gemini-2.5-flash';
-  return `Let Gemini CLI decide the best model for the task: ${proModel}, ${flashModel}`;
+  return `Let Onyx CLI decide the best model for the task: ${proModel}, ${flashModel}`;
 }
 
 /**
@@ -113,14 +111,14 @@ export function getAutoModelDescription(
  * to a concrete model name.
  *
  * @param requestedModel The model alias or concrete model name requested by the user.
- * @param useGemini3_1 Whether to use Gemini 3.1 Pro Preview for auto/pro aliases.
+ * @param useOnyx3_1 Whether to use Onyx 3.1 Pro Preview for auto/pro aliases.
  * @param hasAccessToPreview Whether the user has access to preview models.
  * @returns The resolved concrete model name.
  */
 export function resolveModel(
   requestedModel: string,
-  useGemini3_1: boolean = false,
-  useGemini3_1FlashLite: boolean = false,
+  useOnyx3_1: boolean = false,
+  useOnyx3_1FlashLite: boolean = false,
   useCustomToolModel: boolean = false,
   hasAccessToPreview: boolean = true,
   config?: ModelCapabilityContext,
@@ -134,8 +132,8 @@ export function resolveModel(
 
   if (config?.getExperimentalDynamicModelConfiguration?.() === true) {
     const resolved = config.modelConfigService.resolveModelId(normalizedModel, {
-      useGemini3_1,
-      useGemini3_1FlashLite,
+      useOnyx3_1,
+      useOnyx3_1FlashLite,
       useCustomTools: useCustomToolModel,
       hasAccessToPreview,
     });
@@ -166,7 +164,7 @@ export function resolveModel(
     }
     case PREVIEW_GEMINI_MODEL:
     case PREVIEW_GEMINI_MODEL_AUTO: {
-      if (useGemini3_1) {
+      if (useOnyx3_1) {
         resolved = useCustomToolModel
           ? PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL
           : PREVIEW_GEMINI_3_1_MODEL;
@@ -184,7 +182,7 @@ export function resolveModel(
       break;
     }
     case GEMINI_MODEL_ALIAS_FLASH_LITE: {
-      resolved = useGemini3_1FlashLite
+      resolved = useOnyx3_1FlashLite
         ? PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL
         : DEFAULT_GEMINI_FLASH_LITE_MODEL;
       break;
@@ -226,7 +224,7 @@ export function resolveModel(
  *
  * @param requestedModel The current requested model (e.g. auto).
  * @param modelAlias The alias selected by the classifier ('flash' or 'pro').
- * @param useGemini3_1 Whether to use Gemini 3.1 Pro Preview.
+ * @param useOnyx3_1 Whether to use Onyx 3.1 Pro Preview.
  * @param useCustomToolModel Whether to use the custom tool model.
  * @param config Optional config object for dynamic model configuration.
  * @returns The resolved concrete model name.
@@ -234,8 +232,8 @@ export function resolveModel(
 export function resolveClassifierModel(
   requestedModel: string,
   modelAlias: string,
-  useGemini3_1: boolean = false,
-  useGemini3_1FlashLite: boolean = false,
+  useOnyx3_1: boolean = false,
+  useOnyx3_1FlashLite: boolean = false,
   useCustomToolModel: boolean = false,
   hasAccessToPreview: boolean = true,
   config?: ModelCapabilityContext,
@@ -245,8 +243,8 @@ export function resolveClassifierModel(
       modelAlias,
       requestedModel,
       {
-        useGemini3_1,
-        useGemini3_1FlashLite,
+        useOnyx3_1,
+        useOnyx3_1FlashLite,
         useCustomTools: useCustomToolModel,
         hasAccessToPreview,
       },
@@ -279,8 +277,8 @@ export function resolveClassifierModel(
   }
   return resolveModel(
     requestedModel,
-    useGemini3_1,
-    useGemini3_1FlashLite,
+    useOnyx3_1,
+    useOnyx3_1FlashLite,
     useCustomToolModel,
     hasAccessToPreview,
   );
@@ -301,9 +299,9 @@ export function getDisplayString(
     case GEMINI_MODEL_ALIAS_AUTO:
       return 'Auto';
     case PREVIEW_GEMINI_MODEL_AUTO:
-      return 'Auto (Gemini 3)';
+      return 'Auto (Onyx 3)';
     case DEFAULT_GEMINI_MODEL_AUTO:
-      return 'Auto (Gemini 2.5)';
+      return 'Auto (Onyx 2.5)';
     case GEMMA_4_31B_IT_MODEL:
       return GEMMA_4_31B_IT_MODEL;
     case GEMMA_4_26B_A4B_IT_MODEL:
@@ -367,11 +365,11 @@ export function isProModel(
 }
 
 /**
- * Checks if the model is a Gemini 3 model.
+ * Checks if the model is a Onyx 3 model.
  *
  * @param model The model name to check.
  * @param config Optional config object for dynamic model configuration.
- * @returns True if the model is a Gemini 3 model.
+ * @returns True if the model is a Onyx 3 model.
  */
 export function isGemini3Model(
   model: string,
@@ -390,6 +388,9 @@ export function isGemini3Model(
   return /^gemini-3(\.|-|$)/.test(resolved);
 }
 
+/** @deprecated Use isGemini3Model */
+export const isOnyx3Model = isGemini3Model;
+
 /**
  * Checks if the model is a Gemini 2.x model.
  *
@@ -401,6 +402,9 @@ export function isGemini2Model(model: string): boolean {
   // longer needed.
   return /^gemini-2(\.|$)/.test(model);
 }
+
+/** @deprecated Use isGemini2Model */
+export const isOnyx2Model = isGemini2Model;
 
 /**
  * Checks if the model is a "custom" model (not Gemini branded).
@@ -426,7 +430,7 @@ export function isCustomModel(
 
 /**
  * Checks if the model should be treated as a modern model.
- * This includes Gemini 3 models and any custom models.
+ * This includes Onyx 3 models and any custom models.
  *
  * @param model The model name to check.
  * @returns True if the model supports modern features like thoughts.
@@ -459,7 +463,7 @@ export function isAutoModel(
 
 /**
  * Checks if the model supports multimodal function responses (multimodal data nested within function response).
- * This is supported in Gemini 3.
+ * This is supported in Onyx 3.
  *
  * @param model The model name to check.
  * @returns True if the model supports multimodal function responses.
@@ -474,20 +478,20 @@ export function supportsMultimodalFunctionResponse(
         ?.multimodalToolUse === true
     );
   }
-  return model.startsWith('gemini-3-');
+  return model.startsWith('onyx-3-');
 }
 
 /**
  * Checks if the given model is considered active based on the current configuration.
  *
  * @param model The model name to check.
- * @param useGemini3_1 Whether Gemini 3.1 Pro Preview is enabled.
+ * @param useOnyx3_1 Whether Onyx 3.1 Pro Preview is enabled.
  * @returns True if the model is active.
  */
 export function isActiveModel(
   model: string,
-  useGemini3_1: boolean = false,
-  useGemini3_1FlashLite: boolean = false,
+  useOnyx3_1: boolean = false,
+  useOnyx3_1FlashLite: boolean = false,
   useCustomToolModel: boolean = false,
   experimentalGemma: boolean = true,
 ): boolean {
@@ -498,9 +502,9 @@ export function isActiveModel(
     return experimentalGemma;
   }
   if (model === PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL) {
-    return useGemini3_1FlashLite;
+    return useOnyx3_1FlashLite;
   }
-  if (useGemini3_1) {
+  if (useOnyx3_1) {
     if (model === PREVIEW_GEMINI_MODEL) {
       return false;
     }

@@ -8,11 +8,11 @@ import os from 'node:os';
 import fs from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { quote } from 'shell-quote';
-import { debugLogger, GEMINI_DIR } from '@onyx/core';
+import { debugLogger, ONYX_DIR } from '@onyx/core';
 
-export const LOCAL_DEV_SANDBOX_IMAGE_NAME = 'gemini-cli-sandbox';
-export const SANDBOX_NETWORK_NAME = 'gemini-cli-sandbox';
-export const SANDBOX_PROXY_NAME = 'gemini-cli-sandbox-proxy';
+export const LOCAL_DEV_SANDBOX_IMAGE_NAME = 'onyx-cli-sandbox';
+export const SANDBOX_NETWORK_NAME = 'onyx-cli-sandbox';
+export const SANDBOX_PROXY_NAME = 'onyx-cli-sandbox-proxy';
 export const BUILTIN_SEATBELT_PROFILES = [
   'permissive-open',
   'permissive-proxied',
@@ -135,7 +135,7 @@ export function entrypoint(workdir: string, cliArgs: string[]): string[] {
     shellCmds.push(`export PYTHONPATH="$PYTHONPATH${pythonPathSuffix}";`);
   }
 
-  const projectSandboxBashrc = `${GEMINI_DIR}/sandbox.bashrc`;
+  const projectSandboxBashrc = `${ONYX_DIR}/sandbox.bashrc`;
   if (fs.existsSync(projectSandboxBashrc)) {
     shellCmds.push(`source ${getContainerPath(projectSandboxBashrc)};`);
   }
@@ -155,8 +155,8 @@ export function entrypoint(workdir: string, cliArgs: string[]): string[] {
         ? 'npm run debug --'
         : 'npm rebuild && npm run start --'
       : isDebugMode
-        ? `node --inspect-brk=0.0.0.0:${process.env['DEBUG_PORT'] || '9229'} $(which gemini)`
-        : 'gemini';
+        ? `node --inspect-brk=0.0.0.0:${process.env['DEBUG_PORT'] || '9229'} $(which onyx)`
+        : 'onyx';
 
   const args = [...shellCmds, cliCmd, ...quotedCliArgs];
   return ['bash', '-c', args.join(' ')];

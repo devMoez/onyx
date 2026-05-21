@@ -19,7 +19,7 @@ describe('SidecarLoader (Real FS)', () => {
   let sidecarPath: string;
 
   beforeEach(async () => {
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'gemini-sidecar-test-'));
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'onyx-sidecar-test-'));
     sidecarPath = path.join(tmpDir, 'sidecar.json');
     registry = new ContextProcessorRegistry();
     registry.registerProcessor({

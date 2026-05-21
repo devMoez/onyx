@@ -24,7 +24,7 @@ export interface AdaptiveLearningConfig {
 /**
  * An Adaptive Token Calculator that dynamically learns the true token cost of the user's
  * conversation by applying an Exponential Moving Average (EMA) gradient descent to
- * real usage metadata returned from the Gemini API.
+ * real usage metadata returned from the Onyx API.
  *
  * It wraps the deterministic `StaticTokenCalculator` base heuristic to ensure
  * immutable node cost caching while still surfacing a self-corrected estimate
@@ -58,7 +58,7 @@ export class AdaptiveTokenCalculator implements AdvancedTokenCalculator {
       ? this.getOverheadTokens()
       : 0;
 
-    // The Gemini API token count includes the static overhead (system instruction + tools)
+    // The Onyx API token count includes the static overhead (system instruction + tools)
     // and the dynamic chat history (which we measure as promptBaseUnits).
     // We subtract the overhead so the adaptive calculator is comparing "apples to apples"
     // when learning the weight multiplier for the graph nodes.

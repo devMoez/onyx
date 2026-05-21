@@ -29,12 +29,12 @@ describe('parseAndFormatApiError', () => {
       errorMessage,
       undefined,
       undefined,
-      'gemini-2.5-pro',
+      'onyx-2.5-pro',
       DEFAULT_GEMINI_FLASH_MODEL,
     );
     expect(result).toContain('[API Error: Rate limit exceeded');
     expect(result).toContain(
-      'Possible quota limitations in place or slow response times detected. Switching to the gemini-2.5-flash model',
+      'Possible quota limitations in place or slow response times detected. Switching to the onyx-2.5-flash model',
     );
   });
 
@@ -72,7 +72,7 @@ describe('parseAndFormatApiError', () => {
       error: {
         code: 429,
         message:
-          "Gemini 2.5 Pro Preview doesn't have a free quota tier. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits.",
+          "Onyx 2.5 Pro Preview doesn't have a free quota tier. For more information on this error, head to: https://ai.google.dev/onyx-api/docs/rate-limits.",
         status: 'RESOURCE_EXHAUSTED',
       },
     });
@@ -85,8 +85,8 @@ describe('parseAndFormatApiError', () => {
       },
     });
 
-    const result = parseAndFormatApiError(errorMessage, AuthType.USE_GEMINI);
-    expect(result).toContain('Gemini 2.5 Pro Preview');
+    const result = parseAndFormatApiError(errorMessage, AuthType.USE_ONYX);
+    expect(result).toContain('Onyx 2.5 Pro Preview');
     expect(result).toContain(OnyxMessage);
   });
 

@@ -176,18 +176,18 @@ export class AppRig {
   constructor(private options: AppRigOptions = {}) {
     const uniqueId = randomUUID();
     this.testDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), `gemini-app-rig-${uniqueId.slice(0, 8)}-`),
+      path.join(os.tmpdir(), `onyx-app-rig-${uniqueId.slice(0, 8)}-`),
     );
     this.sessionId = `test-session-${uniqueId}`;
     activeRigs.set(this.sessionId, this);
 
     // Pre-create the persistent state file to bypass the terminal setup prompt
-    const geminiDir = path.join(this.testDir, '.onyx');
-    if (!fs.existsSync(geminiDir)) {
-      fs.mkdirSync(geminiDir, { recursive: true });
+    const onyxDir = path.join(this.testDir, '.onyx');
+    if (!fs.existsSync(onyxDir)) {
+      fs.mkdirSync(onyxDir, { recursive: true });
     }
     fs.writeFileSync(
-      path.join(geminiDir, 'state.json'),
+      path.join(onyxDir, 'state.json'),
       JSON.stringify({ terminalSetupPromptShown: true }),
     );
   }
@@ -237,28 +237,28 @@ export class AppRig {
       await this.config!.initialize();
       // Since we mocked useAuthCommand, we must manually trigger the first
       // refreshAuth to ensure contentGenerator is initialized.
-      await this.config!.refreshAuth(AuthType.USE_GEMINI);
+      await this.config!.refreshAuth(AuthType.USE_ONYX);
     });
   }
 
   private setupEnvironment() {
     // Stub environment variables to avoid interference from developer's machine
-    vi.stubEnv('GEMINI_CLI_HOME', this.testDir);
+    vi.stubEnv('ONYX_CLI_HOME', this.testDir);
     vi.stubEnv('TERM_PROGRAM', 'other');
     vi.stubEnv('VSCODE_GIT_IPC_HANDLE', '');
     if (this.options.fakeResponsesPath) {
-      vi.stubEnv('GEMINI_API_KEY', 'test-api-key');
+      vi.stubEnv('ONYX_API_KEY', 'test-api-key');
       MockShellExecutionService.setPassthrough(false);
     } else {
-      if (!process.env['GEMINI_API_KEY']) {
+      if (!process.env['ONYX_API_KEY']) {
         throw new Error(
-          'GEMINI_API_KEY must be set in the environment for live model tests.',
+          'ONYX_API_KEY must be set in the environment for live model tests.',
         );
       }
       // For live tests, we allow falling through to the real shell service if no mock matches
       MockShellExecutionService.setPassthrough(true);
     }
-    vi.stubEnv('GEMINI_DEFAULT_AUTH_TYPE', AuthType.USE_GEMINI);
+    vi.stubEnv('ONYX_DEFAULT_AUTH_TYPE', AuthType.USE_ONYX);
   }
 
   private createRigSettings(): LoadedSettings {
@@ -268,7 +268,7 @@ export class AppRig {
         settings: {
           security: {
             auth: {
-              selectedType: AuthType.USE_GEMINI,
+              selectedType: AuthType.USE_ONYX,
               useExternal: true,
             },
             folderTrust: {
@@ -285,7 +285,7 @@ export class AppRig {
       merged: {
         security: {
           auth: {
-            selectedType: AuthType.USE_GEMINI,
+            selectedType: AuthType.USE_ONYX,
             useExternal: true,
           },
           folderTrust: {
@@ -312,7 +312,7 @@ export class AppRig {
       const newContentGeneratorConfig = {
         authType: authMethod,
         proxy: gcConfig.getProxy(),
-        apiKey: process.env['GEMINI_API_KEY'] || 'test-api-key',
+        apiKey: process.env['ONYX_API_KEY'] || 'test-api-key',
       };
 
       gcConfig.contentGenerator = await createContentGenerator(
@@ -400,7 +400,7 @@ export class AppRig {
         tc.status === CoreToolCallStatus.Cancelled
       ) {
         return !(tc as TrackedCompletedToolCall | TrackedCancelledToolCall)
-          .responseSubmittedToGemini;
+          .responseSubmittedToOnyx;
       }
       return false;
     });
@@ -426,7 +426,7 @@ export class AppRig {
             accountSuspensionInfo: null,
             themeError: null,
             shouldOpenAuthDialog: false,
-            geminiMdFileCount: 0,
+            onyxMdFileCount: 0,
           }}
         />,
         {
@@ -737,7 +737,7 @@ export class AppRig {
     // Poison the chat recording service to prevent late writes to the test directory
     if (this.config) {
       const recordingService = this.config
-        .getGeminiClient()
+        .getOnyxClient()
         ?.getChatRecordingService();
       if (recordingService) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

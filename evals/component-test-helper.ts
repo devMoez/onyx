@@ -26,13 +26,13 @@ import {
   ExtensionLoader,
   IntegrityDataStatus,
   makeFakeConfig,
-  type GeminiCLIExtension,
+  type OnyxCLIExtension,
 } from '@onyx/core';
 import { createMockSettings } from '../packages/cli/src/test-utils/settings.js';
 
 // A minimal mock ExtensionManager to bypass integrity checks
 class MockExtensionManager extends ExtensionLoader {
-  override getExtensions(): GeminiCLIExtension[] {
+  override getExtensions(): OnyxCLIExtension[] {
     return [];
   }
   setRequestConsent = (): void => {};
@@ -61,10 +61,10 @@ export class ComponentRig {
   ) {
     const uniqueId = randomUUID();
     this.testDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), `gemini-component-rig-${uniqueId.slice(0, 8)}-`),
+      path.join(os.tmpdir(), `onyx-component-rig-${uniqueId.slice(0, 8)}-`),
     );
     this.homeDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), `gemini-component-home-${uniqueId.slice(0, 8)}-`),
+      path.join(os.tmpdir(), `onyx-component-home-${uniqueId.slice(0, 8)}-`),
     );
     this.sessionId = `test-session-${uniqueId}`;
   }
@@ -94,16 +94,16 @@ export class ComponentRig {
     this.config = makeFakeConfig(configParams);
     await this.config.initialize();
 
-    // Refresh auth using USE_GEMINI to initialize the real BaseLlmClient.
-    // This must happen BEFORE stubbing GEMINI_CLI_HOME because OAuth credential
-    // lookup resolves through homedir() → GEMINI_CLI_HOME.
-    await this.config.refreshAuth(AuthType.USE_GEMINI);
+    // Refresh auth using USE_ONYX to initialize the real BaseLlmClient.
+    // This must happen BEFORE stubbing ONYX_CLI_HOME because OAuth credential
+    // lookup resolves through homedir() → ONYX_CLI_HOME.
+    await this.config.refreshAuth(AuthType.USE_ONYX);
 
     // Isolate storage paths (session files, skills, extraction state) by
-    // pointing GEMINI_CLI_HOME at a per-test temp directory.  Storage resolves
+    // pointing ONYX_CLI_HOME at a per-test temp directory.  Storage resolves
     // global paths through `homedir()` which reads this env var.  This is set
     // after auth so credential lookup uses the real home directory.
-    vi.stubEnv('GEMINI_CLI_HOME', this.homeDir);
+    vi.stubEnv('ONYX_CLI_HOME', this.homeDir);
   }
 
   async cleanup() {
@@ -150,3 +150,4 @@ export function componentEvalTest(
 
   runEval(policy, evalCase, fn, (evalCase.timeout ?? 60000) + 10000);
 }
+

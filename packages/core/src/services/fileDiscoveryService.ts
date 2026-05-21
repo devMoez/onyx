@@ -13,7 +13,7 @@ import {
   type IgnoreFileFilter,
 } from '../utils/ignoreFileParser.js';
 import { isGitRepository } from '../utils/gitUtils.js';
-import { GEMINI_IGNORE_FILE_NAME } from '../config/constants.js';
+import { ONYX_IGNORE_FILE_NAME } from '../config/constants.js';
 import { isNodeError } from '../utils/errors.js';
 import { debugLogger } from '../utils/debugLogger.js';
 import fs from 'node:fs';
@@ -32,7 +32,7 @@ export interface FilterReport {
 
 export class FileDiscoveryService {
   private gitIgnoreFilter: GitIgnoreFilter | null = null;
-  private geminiIgnoreFilter: IgnoreFileFilter | null = null;
+  private onyxIgnoreFilter: IgnoreFileFilter | null = null;
   private customIgnoreFilter: IgnoreFileFilter | null = null;
   private combinedIgnoreFilter: GitIgnoreFilter | IgnoreFileFilter | null =
     null;
@@ -49,9 +49,9 @@ export class FileDiscoveryService {
     if (isGitRepository(this.projectRoot)) {
       this.gitIgnoreFilter = new GitIgnoreParser(this.projectRoot);
     }
-    this.geminiIgnoreFilter = new IgnoreFileParser(
+    this.onyxIgnoreFilter = new IgnoreFileParser(
       this.projectRoot,
-      GEMINI_IGNORE_FILE_NAME,
+      ONYX_IGNORE_FILE_NAME,
     );
     if (this.defaultFilterFileOptions.customIgnoreFilePaths?.length) {
       this.customIgnoreFilter = new IgnoreFileParser(
@@ -61,25 +61,25 @@ export class FileDiscoveryService {
     }
 
     if (this.gitIgnoreFilter) {
-      const geminiPatterns = this.geminiIgnoreFilter.getPatterns();
+      const onyxPatterns = this.onyxIgnoreFilter.getPatterns();
       const customPatterns = this.customIgnoreFilter
         ? this.customIgnoreFilter.getPatterns()
         : [];
       // Create combined parser: .gitignore + .onyxIgnore + custom ignore
       this.combinedIgnoreFilter = new GitIgnoreParser(
         this.projectRoot,
-        // customPatterns should go the last to ensure overwriting of geminiPatterns
-        [...geminiPatterns, ...customPatterns],
+        // customPatterns should go the last to ensure overwriting of onyxPatterns
+        [...onyxPatterns, ...customPatterns],
       );
     } else {
       // Create combined parser when not git repo
-      const geminiPatterns = this.geminiIgnoreFilter.getPatterns();
+      const onyxPatterns = this.onyxIgnoreFilter.getPatterns();
       const customPatterns = this.customIgnoreFilter
         ? this.customIgnoreFilter.getPatterns()
         : [];
       this.combinedIgnoreFilter = new IgnoreFileParser(
         this.projectRoot,
-        [...geminiPatterns, ...customPatterns],
+        [...onyxPatterns, ...customPatterns],
         true,
       );
     }
@@ -239,7 +239,7 @@ export class FileDiscoveryService {
 
     if (
       respectonyxIgnore &&
-      this.geminiIgnoreFilter?.isIgnored(filePath, isDirectory)
+      this.onyxIgnoreFilter?.isIgnored(filePath, isDirectory)
     ) {
       return true;
     }
@@ -253,10 +253,10 @@ export class FileDiscoveryService {
   getIgnoreFilePaths(): string[] {
     const paths: string[] = [];
     if (
-      this.geminiIgnoreFilter &&
+      this.onyxIgnoreFilter &&
       this.defaultFilterFileOptions.respectonyxIgnore
     ) {
-      paths.push(...this.geminiIgnoreFilter.getIgnoreFilePaths());
+      paths.push(...this.onyxIgnoreFilter.getIgnoreFilePaths());
     }
     if (this.customIgnoreFilter) {
       paths.push(...this.customIgnoreFilter.getIgnoreFilePaths());

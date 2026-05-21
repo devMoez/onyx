@@ -39,7 +39,7 @@ describe('Retry Utility Fallback Integration', () => {
       targetDir: '/test',
       debugMode: false,
       cwd: '/test',
-      model: 'gemini-2.5-pro',
+      model: 'onyx-2.5-pro',
     });
     mockGoogleApiError = {
       code: 429,
@@ -62,7 +62,7 @@ describe('Retry Utility Fallback Integration', () => {
 
     // Call the handler directly via the config property
     const result = await config.fallbackModelHandler!(
-      'gemini-2.5-pro',
+      'onyx-2.5-pro',
       DEFAULT_GEMINI_FLASH_MODEL,
       new Error('test'),
     );
@@ -149,7 +149,7 @@ describe('Retry Utility Fallback Integration', () => {
       initialDelayMs: 1,
       maxDelayMs: 10,
       onPersistent429: fallbackCallback,
-      authType: AuthType.USE_GEMINI, // API key auth type
+      authType: AuthType.USE_ONYX, // API key auth type
     });
 
     await expect(promise).rejects.toThrow('Daily limit');

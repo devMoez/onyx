@@ -31,13 +31,13 @@ export const initCommand: SlashCommand = {
       };
     }
     const targetDir = context.services.agentContext.config.getTargetDir();
-    const geminiMdPath = path.join(targetDir, 'onyx.md');
+    const onyxMdPath = path.join(targetDir, 'onyx.md');
 
-    const result = performInit(fs.existsSync(geminiMdPath));
+    const result = performInit(fs.existsSync(onyxMdPath));
 
     if (result.type === 'submit_prompt') {
       // Create an empty onyx.md file
-      fs.writeFileSync(geminiMdPath, '', 'utf8');
+      fs.writeFileSync(onyxMdPath, '', 'utf8');
 
       context.ui.addItem(
         {

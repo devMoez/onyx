@@ -7,7 +7,7 @@
 import type {
   Config,
   ToolRegistry,
-  ServerGeminiStreamEvent,
+  ServerOnyxStreamEvent,
   SessionMetrics,
   AnyDeclarativeTool,
   AnyToolInvocation,
@@ -15,7 +15,7 @@ import type {
 } from '@onyx/core';
 import {
   ToolErrorType,
-  GeminiEventType,
+  OnyxEventType,
   OutputFormat,
   uiTelemetryService,
   FatalInputError,
@@ -105,7 +105,7 @@ describe('runNonInteractive', () => {
   let consoleErrorSpy: MockInstance;
   let processStdoutSpy: MockInstance;
   let processStderrSpy: MockInstance;
-  let mockGeminiClient: {
+  let mockOnyxClient: {
     sendMessageStream: Mock;
     resumeChat: Mock;
     getChatRecordingService: Mock;
@@ -155,7 +155,7 @@ describe('runNonInteractive', () => {
       getFunctionDeclarations: vi.fn().mockReturnValue([]),
     } as unknown as ToolRegistry;
 
-    mockGeminiClient = {
+    mockOnyxClient = {
       sendMessageStream: vi.fn(),
       resumeChat: vi.fn().mockResolvedValue(undefined),
       getChatRecordingService: vi.fn(() => ({
@@ -173,7 +173,7 @@ describe('runNonInteractive', () => {
         unsubscribe: vi.fn(),
         publish: vi.fn(),
       }),
-      getGeminiClient: vi.fn().mockReturnValue(mockGeminiClient),
+      getOnyxClient: vi.fn().mockReturnValue(mockOnyxClient),
       getToolRegistry: vi.fn().mockReturnValue(mockToolRegistry),
       getMaxSessionTurns: vi.fn().mockReturnValue(10),
       getSessionId: vi.fn().mockReturnValue('test-session-id'),
@@ -227,8 +227,8 @@ describe('runNonInteractive', () => {
   });
 
   async function* createStreamFromEvents(
-    events: ServerGeminiStreamEvent[],
-  ): AsyncGenerator<ServerGeminiStreamEvent> {
+    events: ServerOnyxStreamEvent[],
+  ): AsyncGenerator<ServerOnyxStreamEvent> {
     for (const event of events) {
       yield event;
     }
@@ -238,15 +238,15 @@ describe('runNonInteractive', () => {
     processStdoutSpy.mock.calls.map((c) => c[0]).join('');
 
   it('should process input and write text output', async () => {
-    const events: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Hello' },
-      { type: GeminiEventType.Content, value: ' World' },
+    const events: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Hello' },
+      { type: OnyxEventType.Content, value: ' World' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -257,7 +257,7 @@ describe('runNonInteractive', () => {
       prompt_id: 'prompt-id-1',
     });
 
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledWith(
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledWith(
       [{ text: 'Test input' }],
       expect.any(AbortSignal),
       'prompt-id-1',
@@ -269,15 +269,15 @@ describe('runNonInteractive', () => {
     // so we no longer expect shutdownTelemetry to be called directly here
   });
 
-  it('should register activity logger when GEMINI_CLI_ACTIVITY_LOG_TARGET is set', async () => {
-    vi.stubEnv('GEMINI_CLI_ACTIVITY_LOG_TARGET', '/tmp/test.jsonl');
-    const events: ServerGeminiStreamEvent[] = [
+  it('should register activity logger when ONYX_CLI_ACTIVITY_LOG_TARGET is set', async () => {
+    vi.stubEnv('ONYX_CLI_ACTIVITY_LOG_TARGET', '/tmp/test.jsonl');
+    const events: ServerOnyxStreamEvent[] = [
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -292,15 +292,15 @@ describe('runNonInteractive', () => {
     vi.unstubAllEnvs();
   });
 
-  it('should not register activity logger when GEMINI_CLI_ACTIVITY_LOG_TARGET is not set', async () => {
-    vi.stubEnv('GEMINI_CLI_ACTIVITY_LOG_TARGET', '');
-    const events: ServerGeminiStreamEvent[] = [
+  it('should not register activity logger when ONYX_CLI_ACTIVITY_LOG_TARGET is not set', async () => {
+    vi.stubEnv('ONYX_CLI_ACTIVITY_LOG_TARGET', '');
+    const events: ServerOnyxStreamEvent[] = [
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -316,8 +316,8 @@ describe('runNonInteractive', () => {
   });
 
   it('should handle a single tool call and respond', async () => {
-    const toolCallEvent: ServerGeminiStreamEvent = {
-      type: GeminiEventType.ToolCallRequest,
+    const toolCallEvent: ServerOnyxStreamEvent = {
+      type: OnyxEventType.ToolCallRequest,
       value: {
         callId: 'tool-1',
         name: 'testTool',
@@ -349,16 +349,16 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const firstCallEvents: ServerGeminiStreamEvent[] = [toolCallEvent];
-    const secondCallEvents: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Final answer' },
+    const firstCallEvents: ServerOnyxStreamEvent[] = [toolCallEvent];
+    const secondCallEvents: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Final answer' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
       },
     ];
 
-    mockGeminiClient.sendMessageStream
+    mockOnyxClient.sendMessageStream
       .mockReturnValueOnce(createStreamFromEvents(firstCallEvents))
       .mockReturnValueOnce(createStreamFromEvents(secondCallEvents));
 
@@ -369,12 +369,12 @@ describe('runNonInteractive', () => {
       prompt_id: 'prompt-id-2',
     });
 
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledTimes(2);
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledTimes(2);
     expect(mockSchedulerSchedule).toHaveBeenCalledWith(
       [expect.objectContaining({ name: 'testTool' })],
       expect.any(AbortSignal),
     );
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenNthCalledWith(
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenNthCalledWith(
       2,
       [{ text: 'Tool response' }],
       expect.any(AbortSignal),
@@ -390,8 +390,8 @@ describe('runNonInteractive', () => {
     // is printed between each block of text output from the model.
 
     // 1. Define the tool requests that the model will ask the CLI to run.
-    const toolCallEvent: ServerGeminiStreamEvent = {
-      type: GeminiEventType.ToolCallRequest,
+    const toolCallEvent: ServerOnyxStreamEvent = {
+      type: OnyxEventType.ToolCallRequest,
       value: {
         callId: 'mock-tool',
         name: 'mockTool',
@@ -417,25 +417,25 @@ describe('runNonInteractive', () => {
 
     // 3. Define the sequence of events streamed from the mock model.
     // Turn 1: Model outputs text, then requests a tool call.
-    const modelTurn1: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Use mock tool' },
+    const modelTurn1: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Use mock tool' },
       toolCallEvent,
     ];
     // Turn 2: Model outputs more text, then requests another tool call.
-    const modelTurn2: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Use mock tool again' },
+    const modelTurn2: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Use mock tool again' },
       toolCallEvent,
     ];
     // Turn 3: Model outputs a final answer.
-    const modelTurn3: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Finished.' },
+    const modelTurn3: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Finished.' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
       },
     ];
 
-    mockGeminiClient.sendMessageStream
+    mockOnyxClient.sendMessageStream
       .mockReturnValueOnce(createStreamFromEvents(modelTurn1))
       .mockReturnValueOnce(createStreamFromEvents(modelTurn2))
       .mockReturnValueOnce(createStreamFromEvents(modelTurn3));
@@ -458,8 +458,8 @@ describe('runNonInteractive', () => {
   });
 
   it('should handle error during tool execution and should send error back to the model', async () => {
-    const toolCallEvent: ServerGeminiStreamEvent = {
-      type: GeminiEventType.ToolCallRequest,
+    const toolCallEvent: ServerOnyxStreamEvent = {
+      type: OnyxEventType.ToolCallRequest,
       value: {
         callId: 'tool-1',
         name: 'errorTool',
@@ -498,17 +498,17 @@ describe('runNonInteractive', () => {
         },
       },
     ]);
-    const finalResponse: ServerGeminiStreamEvent[] = [
+    const finalResponse: ServerOnyxStreamEvent[] = [
       {
-        type: GeminiEventType.Content,
+        type: OnyxEventType.Content,
         value: 'Sorry, let me try again.',
       },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
       },
     ];
-    mockGeminiClient.sendMessageStream
+    mockOnyxClient.sendMessageStream
       .mockReturnValueOnce(createStreamFromEvents([toolCallEvent]))
       .mockReturnValueOnce(createStreamFromEvents(finalResponse));
 
@@ -523,8 +523,8 @@ describe('runNonInteractive', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'Error executing tool errorTool: Execution failed',
     );
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledTimes(2);
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenNthCalledWith(
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledTimes(2);
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenNthCalledWith(
       2,
       [
         {
@@ -546,7 +546,7 @@ describe('runNonInteractive', () => {
 
   it('should exit with error if sendMessageStream throws initially', async () => {
     const apiError = new Error('API connection failed');
-    mockGeminiClient.sendMessageStream.mockImplementation(() => {
+    mockOnyxClient.sendMessageStream.mockImplementation(() => {
       throw apiError;
     });
 
@@ -561,8 +561,8 @@ describe('runNonInteractive', () => {
   });
 
   it('should not exit if a tool is not found, and should send error back to model', async () => {
-    const toolCallEvent: ServerGeminiStreamEvent = {
-      type: GeminiEventType.ToolCallRequest,
+    const toolCallEvent: ServerOnyxStreamEvent = {
+      type: OnyxEventType.ToolCallRequest,
       value: {
         callId: 'tool-1',
         name: 'nonexistentTool',
@@ -591,18 +591,18 @@ describe('runNonInteractive', () => {
         },
       },
     ]);
-    const finalResponse: ServerGeminiStreamEvent[] = [
+    const finalResponse: ServerOnyxStreamEvent[] = [
       {
-        type: GeminiEventType.Content,
+        type: OnyxEventType.Content,
         value: "Sorry, I can't find that tool.",
       },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
       },
     ];
 
-    mockGeminiClient.sendMessageStream
+    mockOnyxClient.sendMessageStream
       .mockReturnValueOnce(createStreamFromEvents([toolCallEvent]))
       .mockReturnValueOnce(createStreamFromEvents(finalResponse));
 
@@ -617,7 +617,7 @@ describe('runNonInteractive', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'Error executing tool nonexistentTool: Tool "nonexistentTool" not found in registry.',
     );
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledTimes(2);
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledTimes(2);
     expect(getWrittenOutput()).toBe("Sorry, I can't find that tool.\n");
   });
 
@@ -654,15 +654,15 @@ describe('runNonInteractive', () => {
       processedQuery: processedParts,
     });
 
-    // Mock a simple stream response from the Gemini client
-    const events: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Summary complete.' },
+    // Mock a simple stream response from the Onyx client
+    const events: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Summary complete.' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -675,7 +675,7 @@ describe('runNonInteractive', () => {
     });
 
     // 5. Assert that sendMessageStream was called with the PROCESSED parts, not the raw input
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledWith(
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledWith(
       processedParts,
       expect.any(AbortSignal),
       'prompt-id-7',
@@ -688,14 +688,14 @@ describe('runNonInteractive', () => {
   });
 
   it('should process input and write JSON output with stats', async () => {
-    const events: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Hello World' },
+    const events: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Hello World' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
     vi.mocked(mockConfig.getOutputFormat).mockReturnValue(OutputFormat.JSON);
@@ -710,7 +710,7 @@ describe('runNonInteractive', () => {
       prompt_id: 'prompt-id-1',
     });
 
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledWith(
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledWith(
       [{ text: 'Test input' }],
       expect.any(AbortSignal),
       'prompt-id-1',
@@ -733,8 +733,8 @@ describe('runNonInteractive', () => {
   it('should write JSON output with stats for tool-only commands (no text response)', async () => {
     // Test the scenario where a command completes successfully with only tool calls
     // but no text response - this would have caught the original bug
-    const toolCallEvent: ServerGeminiStreamEvent = {
-      type: GeminiEventType.ToolCallRequest,
+    const toolCallEvent: ServerOnyxStreamEvent = {
+      type: OnyxEventType.ToolCallRequest,
       value: {
         callId: 'tool-1',
         name: 'testTool',
@@ -767,23 +767,23 @@ describe('runNonInteractive', () => {
     ]);
 
     // First call returns only tool call, no content
-    const firstCallEvents: ServerGeminiStreamEvent[] = [
+    const firstCallEvents: ServerOnyxStreamEvent[] = [
       toolCallEvent,
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 5 } },
       },
     ];
 
     // Second call returns no content (tool-only completion)
-    const secondCallEvents: ServerGeminiStreamEvent[] = [
+    const secondCallEvents: ServerOnyxStreamEvent[] = [
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 3 } },
       },
     ];
 
-    mockGeminiClient.sendMessageStream
+    mockOnyxClient.sendMessageStream
       .mockReturnValueOnce(createStreamFromEvents(firstCallEvents))
       .mockReturnValueOnce(createStreamFromEvents(secondCallEvents));
 
@@ -799,7 +799,7 @@ describe('runNonInteractive', () => {
       prompt_id: 'prompt-id-tool-only',
     });
 
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledTimes(2);
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledTimes(2);
     expect(mockSchedulerSchedule).toHaveBeenCalledWith(
       [expect.objectContaining({ name: 'testTool' })],
       expect.any(AbortSignal),
@@ -821,13 +821,13 @@ describe('runNonInteractive', () => {
 
   it('should write JSON output with stats for empty response commands', async () => {
     // Test the scenario where a command completes but produces no content at all
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerOnyxStreamEvent[] = [
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 1 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
     vi.mocked(mockConfig.getOutputFormat).mockReturnValue(OutputFormat.JSON);
@@ -842,7 +842,7 @@ describe('runNonInteractive', () => {
       prompt_id: 'prompt-id-empty',
     });
 
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledWith(
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledWith(
       [{ text: 'Empty response test' }],
       expect.any(AbortSignal),
       'prompt-id-empty',
@@ -868,7 +868,7 @@ describe('runNonInteractive', () => {
     vi.mocked(mockConfig.getOutputFormat).mockReturnValue(OutputFormat.JSON);
     const testError = new Error('Invalid input provided');
 
-    mockGeminiClient.sendMessageStream.mockImplementation(() => {
+    mockOnyxClient.sendMessageStream.mockImplementation(() => {
       throw testError;
     });
 
@@ -910,7 +910,7 @@ describe('runNonInteractive', () => {
     vi.mocked(mockConfig.getOutputFormat).mockReturnValue(OutputFormat.JSON);
     const fatalError = new FatalInputError('Invalid command syntax provided');
 
-    mockGeminiClient.sendMessageStream.mockImplementation(() => {
+    mockOnyxClient.sendMessageStream.mockImplementation(() => {
       throw fatalError;
     });
 
@@ -959,14 +959,14 @@ describe('runNonInteractive', () => {
     };
     mockGetCommands.mockReturnValue([mockCommand]);
 
-    const events: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Response from command' },
+    const events: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Response from command' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 5 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -978,7 +978,7 @@ describe('runNonInteractive', () => {
     });
 
     // Ensure the prompt sent to the model is from the command, not the raw input
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledWith(
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledWith(
       [{ text: 'Prompt from command' }],
       expect.any(AbortSignal),
       'prompt-id-slash',
@@ -999,14 +999,14 @@ describe('runNonInteractive', () => {
     );
     handleSlashCommandSpy.mockResolvedValue([{ text: 'Slash command output' }]);
 
-    const events: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Response to slash command' },
+    const events: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Response to slash command' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -1023,7 +1023,7 @@ describe('runNonInteractive', () => {
       mockConfig,
       mockSettings,
     );
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledWith(
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledWith(
       [{ text: 'Slash command output' }],
       expect.any(AbortSignal),
       'prompt-id-slash',
@@ -1068,11 +1068,11 @@ describe('runNonInteractive', () => {
         throw new Error('Cancelled');
       });
 
-    const events: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Thinking...' },
+    const events: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Thinking...' },
     ];
     // Create a stream that responds to abortion
-    mockGeminiClient.sendMessageStream.mockImplementation(
+    mockOnyxClient.sendMessageStream.mockImplementation(
       (_messages, signal: AbortSignal) =>
         (async function* () {
           yield events[0];
@@ -1181,14 +1181,14 @@ describe('runNonInteractive', () => {
     // No commands are mocked, so any slash command is "unknown"
     mockGetCommands.mockReturnValue([]);
 
-    const events: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Response to unknown' },
+    const events: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Response to unknown' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 5 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -1200,7 +1200,7 @@ describe('runNonInteractive', () => {
     });
 
     // Ensure the raw input is sent to the model
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledWith(
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledWith(
       [{ text: '/unknowncommand' }],
       expect.any(AbortSignal),
       'prompt-id-unknown',
@@ -1245,14 +1245,14 @@ describe('runNonInteractive', () => {
     };
     mockGetCommands.mockReturnValue([mockCommand]);
 
-    const events: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Acknowledged' },
+    const events: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Acknowledged' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 1 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -1278,14 +1278,14 @@ describe('runNonInteractive', () => {
       './services/BuiltinCommandLoader.js'
     );
     mockGetCommands.mockReturnValue([]); // No commands found, so it will fall through
-    const events: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Acknowledged' },
+    const events: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Acknowledged' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 1 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -1326,8 +1326,8 @@ describe('runNonInteractive', () => {
       getFunctionDeclarations: vi.fn().mockReturnValue([{ name: 'ShellTool' }]),
     } as unknown as ToolRegistry);
 
-    const toolCallEvent: ServerGeminiStreamEvent = {
-      type: GeminiEventType.ToolCallRequest,
+    const toolCallEvent: ServerOnyxStreamEvent = {
+      type: OnyxEventType.ToolCallRequest,
       value: {
         callId: 'tool-shell-1',
         name: 'ShellTool',
@@ -1359,16 +1359,16 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const firstCallEvents: ServerGeminiStreamEvent[] = [toolCallEvent];
-    const secondCallEvents: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'file.txt' },
+    const firstCallEvents: ServerOnyxStreamEvent[] = [toolCallEvent];
+    const secondCallEvents: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'file.txt' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
       },
     ];
 
-    mockGeminiClient.sendMessageStream
+    mockOnyxClient.sendMessageStream
       .mockReturnValueOnce(createStreamFromEvents(firstCallEvents))
       .mockReturnValueOnce(createStreamFromEvents(secondCallEvents));
 
@@ -1388,13 +1388,13 @@ describe('runNonInteractive', () => {
 
   describe('CoreEvents Integration', () => {
     it('subscribes to UserFeedback and drains backlog on start', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerOnyxStreamEvent[] = [
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
         },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -1413,13 +1413,13 @@ describe('runNonInteractive', () => {
     });
 
     it('unsubscribes from UserFeedback on finish', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerOnyxStreamEvent[] = [
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
         },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -1437,13 +1437,13 @@ describe('runNonInteractive', () => {
     });
 
     it('logs to process.stderr when UserFeedback event is received', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerOnyxStreamEvent[] = [
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
         },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -1474,13 +1474,13 @@ describe('runNonInteractive', () => {
 
     it('logs optional error object to process.stderr in debug mode', async () => {
       vi.mocked(mockConfig.getDebugMode).mockReturnValue(true);
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerOnyxStreamEvent[] = [
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
         },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -1525,8 +1525,8 @@ describe('runNonInteractive', () => {
       MOCK_SESSION_METRICS,
     );
 
-    const toolCallEvent: ServerGeminiStreamEvent = {
-      type: GeminiEventType.ToolCallRequest,
+    const toolCallEvent: ServerOnyxStreamEvent = {
+      type: OnyxEventType.ToolCallRequest,
       value: {
         callId: 'tool-1',
         name: 'testTool',
@@ -1553,19 +1553,19 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const firstCallEvents: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Thinking...' },
+    const firstCallEvents: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Thinking...' },
       toolCallEvent,
     ];
-    const secondCallEvents: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Final answer' },
+    const secondCallEvents: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Final answer' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
       },
     ];
 
-    mockGeminiClient.sendMessageStream
+    mockOnyxClient.sendMessageStream
       .mockReturnValueOnce(createStreamFromEvents(firstCallEvents))
       .mockReturnValueOnce(createStreamFromEvents(secondCallEvents));
 
@@ -1584,11 +1584,11 @@ describe('runNonInteractive', () => {
   });
 
   it('should handle EPIPE error gracefully', async () => {
-    const events: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Hello' },
-      { type: GeminiEventType.Content, value: ' World' },
+    const events: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Hello' },
+      { type: OnyxEventType.Content, value: ' World' },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -1620,14 +1620,14 @@ describe('runNonInteractive', () => {
   });
 
   it('should resume chat when resumedSessionData is provided', async () => {
-    const events: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Resumed' },
+    const events: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Resumed' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 5 } },
       },
     ];
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(events),
     );
 
@@ -1653,7 +1653,7 @@ describe('runNonInteractive', () => {
       resumedSessionData,
     });
 
-    expect(mockGeminiClient.resumeChat).toHaveBeenCalledWith(
+    expect(mockOnyxClient.resumeChat).toHaveBeenCalledWith(
       expect.any(Array),
       resumedSessionData,
     );
@@ -1664,16 +1664,16 @@ describe('runNonInteractive', () => {
     {
       name: 'loop detected',
       events: [
-        { type: GeminiEventType.LoopDetected },
-      ] as ServerGeminiStreamEvent[],
+        { type: OnyxEventType.LoopDetected },
+      ] as ServerOnyxStreamEvent[],
       input: 'Loop test',
       promptId: 'prompt-id-loop',
     },
     {
       name: 'max session turns',
       events: [
-        { type: GeminiEventType.MaxSessionTurns },
-      ] as ServerGeminiStreamEvent[],
+        { type: OnyxEventType.MaxSessionTurns },
+      ] as ServerOnyxStreamEvent[],
       input: 'Max turns test',
       promptId: 'prompt-id-max-turns',
     },
@@ -1687,14 +1687,14 @@ describe('runNonInteractive', () => {
         MOCK_SESSION_METRICS,
       );
 
-      const streamEvents: ServerGeminiStreamEvent[] = [
+      const streamEvents: ServerOnyxStreamEvent[] = [
         ...events,
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
         },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(streamEvents),
       );
 
@@ -1721,15 +1721,15 @@ describe('runNonInteractive', () => {
     {
       name: 'loop detected',
       events: [
-        { type: GeminiEventType.LoopDetected },
-      ] as ServerGeminiStreamEvent[],
+        { type: OnyxEventType.LoopDetected },
+      ] as ServerOnyxStreamEvent[],
       expectedWarning: 'Loop detected, stopping execution',
     },
     {
       name: 'max session turns',
       events: [
-        { type: GeminiEventType.MaxSessionTurns },
-      ] as ServerGeminiStreamEvent[],
+        { type: OnyxEventType.MaxSessionTurns },
+      ] as ServerOnyxStreamEvent[],
       expectedWarning: 'Maximum session turns exceeded',
     },
   ])(
@@ -1740,14 +1740,14 @@ describe('runNonInteractive', () => {
         MOCK_SESSION_METRICS,
       );
 
-      const streamEvents: ServerGeminiStreamEvent[] = [
+      const streamEvents: ServerOnyxStreamEvent[] = [
         ...events,
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
         },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(streamEvents),
       );
 
@@ -1765,8 +1765,8 @@ describe('runNonInteractive', () => {
   );
 
   it('should log error when tool recording fails', async () => {
-    const toolCallEvent: ServerGeminiStreamEvent = {
-      type: GeminiEventType.ToolCallRequest,
+    const toolCallEvent: ServerOnyxStreamEvent = {
+      type: OnyxEventType.ToolCallRequest,
       value: {
         callId: 'tool-1',
         name: 'testTool',
@@ -1791,21 +1791,21 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const events: ServerGeminiStreamEvent[] = [
+    const events: ServerOnyxStreamEvent[] = [
       toolCallEvent,
-      { type: GeminiEventType.Content, value: 'Done' },
+      { type: OnyxEventType.Content, value: 'Done' },
       {
-        type: GeminiEventType.Finished,
+        type: OnyxEventType.Finished,
         value: { reason: undefined, usageMetadata: { totalTokenCount: 5 } },
       },
     ];
-    mockGeminiClient.sendMessageStream
+    mockOnyxClient.sendMessageStream
       .mockReturnValueOnce(createStreamFromEvents(events))
       .mockReturnValueOnce(
         createStreamFromEvents([
-          { type: GeminiEventType.Content, value: 'Done' },
+          { type: OnyxEventType.Content, value: 'Done' },
           {
-            type: GeminiEventType.Finished,
+            type: OnyxEventType.Finished,
             value: { reason: undefined, usageMetadata: { totalTokenCount: 5 } },
           },
         ]),
@@ -1818,9 +1818,9 @@ describe('runNonInteractive', () => {
       }),
     };
     // @ts-expect-error - Mocking internal structure
-    mockGeminiClient.getChat = vi.fn().mockReturnValue(mockChat);
+    mockOnyxClient.getChat = vi.fn().mockReturnValue(mockChat);
     // @ts-expect-error - Mocking internal structure
-    mockGeminiClient.getCurrentSequenceModel = vi
+    mockOnyxClient.getCurrentSequenceModel = vi
       .fn()
       .mockReturnValue('model-1');
 
@@ -1846,8 +1846,8 @@ describe('runNonInteractive', () => {
   });
 
   it('should stop agent execution immediately when a tool call returns STOP_EXECUTION error', async () => {
-    const toolCallEvent: ServerGeminiStreamEvent = {
-      type: GeminiEventType.ToolCallRequest,
+    const toolCallEvent: ServerOnyxStreamEvent = {
+      type: OnyxEventType.ToolCallRequest,
       value: {
         callId: 'stop-call',
         name: 'stopTool',
@@ -1874,15 +1874,15 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const firstCallEvents: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Executing tool...' },
+    const firstCallEvents: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Executing tool...' },
       toolCallEvent,
     ];
 
     // Setup the mock to return events for the first call.
     // We expect the loop to terminate after the tool execution.
     // If it doesn't, it might call sendMessageStream again, which we'll assert against.
-    mockGeminiClient.sendMessageStream
+    mockOnyxClient.sendMessageStream
       .mockReturnValueOnce(createStreamFromEvents(firstCallEvents))
       .mockReturnValueOnce(createStreamFromEvents([]));
 
@@ -1896,7 +1896,7 @@ describe('runNonInteractive', () => {
     expect(mockSchedulerSchedule).toHaveBeenCalled();
 
     // The key assertion: sendMessageStream should have been called ONLY ONCE (initial user input).
-    expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledTimes(1);
+    expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledTimes(1);
 
     expect(processStderrSpy).toHaveBeenCalledWith(
       'Agent execution stopped: Stop reason from hook\n',
@@ -1909,8 +1909,8 @@ describe('runNonInteractive', () => {
       MOCK_SESSION_METRICS,
     );
 
-    const toolCallEvent: ServerGeminiStreamEvent = {
-      type: GeminiEventType.ToolCallRequest,
+    const toolCallEvent: ServerOnyxStreamEvent = {
+      type: OnyxEventType.ToolCallRequest,
       value: {
         callId: 'stop-call',
         name: 'stopTool',
@@ -1936,12 +1936,12 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const firstCallEvents: ServerGeminiStreamEvent[] = [
-      { type: GeminiEventType.Content, value: 'Partial content' },
+    const firstCallEvents: ServerOnyxStreamEvent[] = [
+      { type: OnyxEventType.Content, value: 'Partial content' },
       toolCallEvent,
     ];
 
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(firstCallEvents),
     );
 
@@ -1973,8 +1973,8 @@ describe('runNonInteractive', () => {
       MOCK_SESSION_METRICS,
     );
 
-    const toolCallEvent: ServerGeminiStreamEvent = {
-      type: GeminiEventType.ToolCallRequest,
+    const toolCallEvent: ServerOnyxStreamEvent = {
+      type: OnyxEventType.ToolCallRequest,
       value: {
         callId: 'stop-call',
         name: 'stopTool',
@@ -2000,9 +2000,9 @@ describe('runNonInteractive', () => {
       },
     ]);
 
-    const firstCallEvents: ServerGeminiStreamEvent[] = [toolCallEvent];
+    const firstCallEvents: ServerOnyxStreamEvent[] = [toolCallEvent];
 
-    mockGeminiClient.sendMessageStream.mockReturnValue(
+    mockOnyxClient.sendMessageStream.mockReturnValue(
       createStreamFromEvents(firstCallEvents),
     );
 
@@ -2020,13 +2020,13 @@ describe('runNonInteractive', () => {
 
   describe('Agent Execution Events', () => {
     it('should handle AgentExecutionStopped event', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerOnyxStreamEvent[] = [
         {
-          type: GeminiEventType.AgentExecutionStopped,
+          type: OnyxEventType.AgentExecutionStopped,
           value: { reason: 'Stopped by hook' },
         },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -2041,7 +2041,7 @@ describe('runNonInteractive', () => {
         'Agent execution stopped: Stopped by hook\n',
       );
       // Should exit without calling sendMessageStream again
-      expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledTimes(1);
+      expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledTimes(1);
     });
 
     it('should write JSON output when AgentExecutionStopped event occurs', async () => {
@@ -2050,15 +2050,15 @@ describe('runNonInteractive', () => {
         MOCK_SESSION_METRICS,
       );
 
-      const events: ServerGeminiStreamEvent[] = [
-        { type: GeminiEventType.Content, value: 'Partial content' },
+      const events: ServerOnyxStreamEvent[] = [
+        { type: OnyxEventType.Content, value: 'Partial content' },
         {
-          type: GeminiEventType.AgentExecutionStopped,
+          type: OnyxEventType.AgentExecutionStopped,
           value: { reason: 'Stopped by hook' },
         },
       ];
 
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -2091,15 +2091,15 @@ describe('runNonInteractive', () => {
         MOCK_SESSION_METRICS,
       );
 
-      const events: ServerGeminiStreamEvent[] = [
-        { type: GeminiEventType.Content, value: 'Partial content' },
+      const events: ServerOnyxStreamEvent[] = [
+        { type: OnyxEventType.Content, value: 'Partial content' },
         {
-          type: GeminiEventType.AgentExecutionStopped,
+          type: OnyxEventType.AgentExecutionStopped,
           value: { reason: 'Stopped by hook' },
         },
       ];
 
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -2116,19 +2116,19 @@ describe('runNonInteractive', () => {
     });
 
     it('should handle AgentExecutionBlocked event', async () => {
-      const allEvents: ServerGeminiStreamEvent[] = [
+      const allEvents: ServerOnyxStreamEvent[] = [
         {
-          type: GeminiEventType.AgentExecutionBlocked,
+          type: OnyxEventType.AgentExecutionBlocked,
           value: { reason: 'Blocked by hook' },
         },
-        { type: GeminiEventType.Content, value: 'Final answer' },
+        { type: OnyxEventType.Content, value: 'Final answer' },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
         },
       ];
 
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(allEvents),
       );
 
@@ -2143,24 +2143,24 @@ describe('runNonInteractive', () => {
         '[WARNING] Agent execution blocked: Blocked by hook\n',
       );
       // sendMessageStream is called once, recursion is internal to it and transparent to the caller
-      expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledTimes(1);
+      expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledTimes(1);
       expect(getWrittenOutput()).toBe('Final answer\n');
     });
 
     it('should emit ERROR event in STREAM_JSON mode when AgentExecutionBlocked occurs', async () => {
-      const allEvents: ServerGeminiStreamEvent[] = [
+      const allEvents: ServerOnyxStreamEvent[] = [
         {
-          type: GeminiEventType.AgentExecutionBlocked,
+          type: OnyxEventType.AgentExecutionBlocked,
           value: { reason: 'Blocked by hook' },
         },
-        { type: GeminiEventType.Content, value: 'Final answer' },
+        { type: OnyxEventType.Content, value: 'Final answer' },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
         },
       ];
 
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(allEvents),
       );
 
@@ -2195,19 +2195,19 @@ describe('runNonInteractive', () => {
     });
 
     it('should include warning in JSON mode when AgentExecutionBlocked occurs', async () => {
-      const allEvents: ServerGeminiStreamEvent[] = [
+      const allEvents: ServerOnyxStreamEvent[] = [
         {
-          type: GeminiEventType.AgentExecutionBlocked,
+          type: OnyxEventType.AgentExecutionBlocked,
           value: { reason: 'Blocked by hook' },
         },
-        { type: GeminiEventType.Content, value: 'Final answer' },
+        { type: OnyxEventType.Content, value: 'Final answer' },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
         },
       ];
 
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(allEvents),
       );
 
@@ -2228,23 +2228,23 @@ describe('runNonInteractive', () => {
     });
 
     it('should handle multiple AgentExecutionBlocked events and collect all warnings', async () => {
-      const allEvents: ServerGeminiStreamEvent[] = [
+      const allEvents: ServerOnyxStreamEvent[] = [
         {
-          type: GeminiEventType.AgentExecutionBlocked,
+          type: OnyxEventType.AgentExecutionBlocked,
           value: { reason: 'Block 1', systemMessage: 'Reason 1' },
         },
         {
-          type: GeminiEventType.AgentExecutionBlocked,
+          type: OnyxEventType.AgentExecutionBlocked,
           value: { reason: 'Block 2', systemMessage: 'Reason 2' },
         },
-        { type: GeminiEventType.Content, value: 'Final answer' },
+        { type: OnyxEventType.Content, value: 'Final answer' },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
         },
       ];
 
-      mockGeminiClient.sendMessageStream.mockImplementation(() =>
+      mockOnyxClient.sendMessageStream.mockImplementation(() =>
         createStreamFromEvents(allEvents),
       );
       vi.spyOn(uiTelemetryService, 'getMetrics').mockReturnValue(
@@ -2267,15 +2267,15 @@ describe('runNonInteractive', () => {
     });
 
     it('should not include warnings field in JSON output if no blocks occur', async () => {
-      const allEvents: ServerGeminiStreamEvent[] = [
-        { type: GeminiEventType.Content, value: 'Clean answer' },
+      const allEvents: ServerOnyxStreamEvent[] = [
+        { type: OnyxEventType.Content, value: 'Clean answer' },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
         },
       ];
 
-      mockGeminiClient.sendMessageStream.mockImplementation(() =>
+      mockOnyxClient.sendMessageStream.mockImplementation(() =>
         createStreamFromEvents(allEvents),
       );
       vi.spyOn(uiTelemetryService, 'getMetrics').mockReturnValue(
@@ -2296,10 +2296,10 @@ describe('runNonInteractive', () => {
     });
 
     it('should handle InvalidStream event gracefully in TEXT mode', async () => {
-      const events: ServerGeminiStreamEvent[] = [
-        { type: GeminiEventType.InvalidStream },
+      const events: ServerOnyxStreamEvent[] = [
+        { type: OnyxEventType.InvalidStream },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -2313,7 +2313,7 @@ describe('runNonInteractive', () => {
       expect(processStderrSpy).toHaveBeenCalledWith(
         '[ERROR] Invalid stream: The model returned an empty response or malformed tool call.\n',
       );
-      expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledTimes(1);
+      expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledTimes(1);
     });
 
     it('should handle InvalidStream event gracefully in STREAM_JSON mode', async () => {
@@ -2323,10 +2323,10 @@ describe('runNonInteractive', () => {
       vi.spyOn(mockConfig, 'getOutputFormat').mockReturnValue(
         OutputFormat.STREAM_JSON,
       );
-      const events: ServerGeminiStreamEvent[] = [
-        { type: GeminiEventType.InvalidStream },
+      const events: ServerOnyxStreamEvent[] = [
+        { type: OnyxEventType.InvalidStream },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -2343,7 +2343,7 @@ describe('runNonInteractive', () => {
       expect(output).toContain(
         'Invalid stream: The model returned an empty response or malformed tool call.',
       );
-      expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledTimes(1);
+      expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledTimes(1);
     });
 
     it('should handle InvalidStream event gracefully in JSON mode', async () => {
@@ -2353,10 +2353,10 @@ describe('runNonInteractive', () => {
       vi.spyOn(mockConfig, 'getOutputFormat').mockReturnValue(
         OutputFormat.JSON,
       );
-      const events: ServerGeminiStreamEvent[] = [
-        { type: GeminiEventType.InvalidStream },
+      const events: ServerOnyxStreamEvent[] = [
+        { type: OnyxEventType.InvalidStream },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -2373,7 +2373,7 @@ describe('runNonInteractive', () => {
       expect(output).toContain(
         'Invalid stream: The model returned an empty response or malformed tool call.',
       );
-      expect(mockGeminiClient.sendMessageStream).toHaveBeenCalledTimes(1);
+      expect(mockOnyxClient.sendMessageStream).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -2385,16 +2385,16 @@ describe('runNonInteractive', () => {
     const PLAIN_TEXT_LINK = 'Link';
 
     it('should sanitize ANSI output by default', async () => {
-      const events: ServerGeminiStreamEvent[] = [
-        { type: GeminiEventType.Content, value: ANSI_SEQUENCE },
-        { type: GeminiEventType.Content, value: ' ' },
-        { type: GeminiEventType.Content, value: OSC_HYPERLINK },
+      const events: ServerOnyxStreamEvent[] = [
+        { type: OnyxEventType.Content, value: ANSI_SEQUENCE },
+        { type: OnyxEventType.Content, value: ' ' },
+        { type: OnyxEventType.Content, value: OSC_HYPERLINK },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
         },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -2411,16 +2411,16 @@ describe('runNonInteractive', () => {
     });
 
     it('should allow ANSI output when rawOutput is true', async () => {
-      const events: ServerGeminiStreamEvent[] = [
-        { type: GeminiEventType.Content, value: ANSI_SEQUENCE },
-        { type: GeminiEventType.Content, value: ' ' },
-        { type: GeminiEventType.Content, value: OSC_HYPERLINK },
+      const events: ServerOnyxStreamEvent[] = [
+        { type: OnyxEventType.Content, value: ANSI_SEQUENCE },
+        { type: OnyxEventType.Content, value: ' ' },
+        { type: OnyxEventType.Content, value: OSC_HYPERLINK },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 10 } },
         },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -2438,14 +2438,14 @@ describe('runNonInteractive', () => {
     });
 
     it('should allow ANSI output when only acceptRawOutputRisk is true', async () => {
-      const events: ServerGeminiStreamEvent[] = [
-        { type: GeminiEventType.Content, value: ANSI_SEQUENCE },
+      const events: ServerOnyxStreamEvent[] = [
+        { type: OnyxEventType.Content, value: ANSI_SEQUENCE },
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 5 } },
         },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -2463,13 +2463,13 @@ describe('runNonInteractive', () => {
     });
 
     it('should warn when rawOutput is true and acceptRisk is false', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerOnyxStreamEvent[] = [
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
         },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -2489,13 +2489,13 @@ describe('runNonInteractive', () => {
     });
 
     it('should not warn when rawOutput is true and acceptRisk is true', async () => {
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerOnyxStreamEvent[] = [
         {
-          type: GeminiEventType.Finished,
+          type: OnyxEventType.Finished,
           value: { reason: undefined, usageMetadata: { totalTokenCount: 0 } },
         },
       ];
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 
@@ -2515,8 +2515,8 @@ describe('runNonInteractive', () => {
     });
 
     it('should report cancelled tool calls as success in stream-json mode (legacy parity)', async () => {
-      const toolCallEvent: ServerGeminiStreamEvent = {
-        type: GeminiEventType.ToolCallRequest,
+      const toolCallEvent: ServerOnyxStreamEvent = {
+        type: OnyxEventType.ToolCallRequest,
         value: {
           callId: 'tool-1',
           name: 'testTool',
@@ -2541,15 +2541,15 @@ describe('runNonInteractive', () => {
         },
       ]);
 
-      const events: ServerGeminiStreamEvent[] = [
+      const events: ServerOnyxStreamEvent[] = [
         toolCallEvent,
         {
-          type: GeminiEventType.Content,
+          type: OnyxEventType.Content,
           value: 'Model continues...',
         },
       ];
 
-      mockGeminiClient.sendMessageStream.mockReturnValue(
+      mockOnyxClient.sendMessageStream.mockReturnValue(
         createStreamFromEvents(events),
       );
 

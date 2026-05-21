@@ -1,4 +1,4 @@
-# Gemini CLI Test Utils (`@onyx/test-utils`)
+# Onyx CLI Test Utils (`@onyx/test-utils`)
 
 Shared test utilities used across the monorepo. This is a private package — not
 published to npm.
@@ -25,7 +25,7 @@ endpoints and rate-limiting.
 1. **Programmatic Builder:**
 
    ```typescript
-   import { TestMcpServerBuilder } from '@google/gemini-cli-test-utils';
+   import { TestMcpServerBuilder } from '@google/onyx-cli-test-utils';
 
    const builder = new TestMcpServerBuilder('weather-server').addTool(
      'get_weather',

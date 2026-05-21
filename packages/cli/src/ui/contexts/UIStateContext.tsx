@@ -129,10 +129,10 @@ export interface UIState {
   confirmUpdateExtensionRequests: ConfirmationRequest[];
   loopDetectionConfirmationRequest: LoopDetectionConfirmationRequest | null;
   permissionConfirmationRequest: PermissionConfirmationRequest | null;
-  geminiMdFileCount: number;
+  onyxMdFileCount: number;
   streamingState: StreamingState;
   initError: string | null;
-  pendingGeminiHistoryItems: HistoryItemWithoutId[];
+  pendingOnyxHistoryItems: HistoryItemWithoutId[];
   thought: ThoughtSummary | null;
   isInputActive: boolean;
   isVoiceModeEnabled: boolean;

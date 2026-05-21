@@ -99,3 +99,4 @@ describe('replace', () => {
     expect(rig.readFile(fileName)).toBe(expectedContent);
   });
 });
+

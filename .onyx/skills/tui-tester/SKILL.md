@@ -42,7 +42,7 @@ agent-tui live start --open
 ### 4. Onyx CLI Specifics
 - **Build First**: Always run `npm run build` or `npm run build:all` before testing local changes.
 - **Bypass Trust**: Set `ONYX_CLI_TRUST_WORKSPACE=true` to avoid focus-stealing modals.
-- **Isolate Config**: Use `GEMINI_CLI_HOME` to prevent interference with your personal settings.
+- **Isolate Config**: Use `ONYX_CLI_HOME` to prevent interference with your personal settings.
 
 ## Workflow Example
 

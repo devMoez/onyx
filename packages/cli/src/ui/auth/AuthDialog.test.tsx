@@ -77,9 +77,9 @@ describe('AuthDialog', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.stubEnv('CLOUD_SHELL', undefined as unknown as string);
-    vi.stubEnv('GEMINI_CLI_USE_COMPUTE_ADC', undefined as unknown as string);
-    vi.stubEnv('GEMINI_DEFAULT_AUTH_TYPE', undefined as unknown as string);
-    vi.stubEnv('GEMINI_API_KEY', undefined as unknown as string);
+    vi.stubEnv('ONYX_CLI_USE_COMPUTE_ADC', undefined as unknown as string);
+    vi.stubEnv('ONYX_DEFAULT_AUTH_TYPE', undefined as unknown as string);
+    vi.stubEnv('ONYX_API_KEY', undefined as unknown as string);
 
     props = {
       config: {
@@ -122,10 +122,10 @@ describe('AuthDialog', () => {
         desc: 'in Cloud Shell',
       },
       {
-        env: { GEMINI_CLI_USE_COMPUTE_ADC: 'true' },
+        env: { ONYX_CLI_USE_COMPUTE_ADC: 'true' },
         shouldContain: [computeAdcItem(metadataServerLabel)],
         shouldNotContain: [computeAdcItem(cloudShellLabel)],
-        desc: 'with GEMINI_CLI_USE_COMPUTE_ADC',
+        desc: 'with ONYX_CLI_USE_COMPUTE_ADC',
       },
       {
         env: {},
@@ -158,16 +158,16 @@ describe('AuthDialog', () => {
   });
 
   it('filters auth types when enforcedType is set', async () => {
-    props.settings.merged.security.auth.enforcedType = AuthType.USE_GEMINI;
+    props.settings.merged.security.auth.enforcedType = AuthType.USE_ONYX;
     const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
     const items = mockedRadioButtonSelect.mock.calls[0][0].items;
     expect(items).toHaveLength(1);
-    expect(items[0].value).toBe(AuthType.USE_GEMINI);
+    expect(items[0].value).toBe(AuthType.USE_ONYX);
     unmount();
   });
 
   it('sets initial index to 0 when enforcedType is set', async () => {
-    props.settings.merged.security.auth.enforcedType = AuthType.USE_GEMINI;
+    props.settings.merged.security.auth.enforcedType = AuthType.USE_ONYX;
     const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
     const { initialIndex } = mockedRadioButtonSelect.mock.calls[0][0];
     expect(initialIndex).toBe(0);
@@ -186,17 +186,17 @@ describe('AuthDialog', () => {
       },
       {
         setup: () => {
-          vi.stubEnv('GEMINI_DEFAULT_AUTH_TYPE', AuthType.USE_GEMINI);
+          vi.stubEnv('ONYX_DEFAULT_AUTH_TYPE', AuthType.USE_ONYX);
         },
-        expected: AuthType.USE_GEMINI,
-        desc: 'from GEMINI_DEFAULT_AUTH_TYPE env var',
+        expected: AuthType.USE_ONYX,
+        desc: 'from ONYX_DEFAULT_AUTH_TYPE env var',
       },
       {
         setup: () => {
-          vi.stubEnv('GEMINI_API_KEY', 'test-key');
+          vi.stubEnv('ONYX_API_KEY', 'test-key');
         },
-        expected: AuthType.USE_GEMINI,
-        desc: 'from GEMINI_API_KEY env var',
+        expected: AuthType.USE_ONYX,
+        desc: 'from ONYX_API_KEY env var',
       },
       {
         setup: () => {},
@@ -218,10 +218,10 @@ describe('AuthDialog', () => {
       const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_GEMINI);
+      await handleAuthSelect(AuthType.USE_ONYX);
 
       expect(mockedValidateAuthMethod).toHaveBeenCalledWith(
-        AuthType.USE_GEMINI,
+        AuthType.USE_ONYX,
         props.settings,
       );
       expect(props.onAuthError).toHaveBeenCalledWith('Invalid method');
@@ -273,7 +273,7 @@ describe('AuthDialog', () => {
       const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_GEMINI);
+      await handleAuthSelect(AuthType.USE_ONYX);
 
       expect(props.setAuthContext).toHaveBeenCalledWith({});
       unmount();
@@ -281,13 +281,13 @@ describe('AuthDialog', () => {
 
     it('always shows API key dialog even when env var is present', async () => {
       mockedValidateAuthMethod.mockResolvedValue(null);
-      vi.stubEnv('GEMINI_API_KEY', 'test-key-from-env');
+      vi.stubEnv('ONYX_API_KEY', 'test-key-from-env');
       // props.settings.merged.security.auth.selectedType is undefined here, simulating initial setup
 
       const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_GEMINI);
+      await handleAuthSelect(AuthType.USE_ONYX);
 
       expect(props.setAuthState).toHaveBeenCalledWith(
         AuthState.AwaitingApiKeyInput,
@@ -297,13 +297,13 @@ describe('AuthDialog', () => {
 
     it('always shows API key dialog even when env var is empty string', async () => {
       mockedValidateAuthMethod.mockResolvedValue(null);
-      vi.stubEnv('GEMINI_API_KEY', ''); // Empty string
+      vi.stubEnv('ONYX_API_KEY', ''); // Empty string
       // props.settings.merged.security.auth.selectedType is undefined here
 
       const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_GEMINI);
+      await handleAuthSelect(AuthType.USE_ONYX);
 
       expect(props.setAuthState).toHaveBeenCalledWith(
         AuthState.AwaitingApiKeyInput,
@@ -313,13 +313,13 @@ describe('AuthDialog', () => {
 
     it('shows API key dialog on initial setup if no env var is present', async () => {
       mockedValidateAuthMethod.mockResolvedValue(null);
-      // process.env['GEMINI_API_KEY'] is not set
+      // process.env['ONYX_API_KEY'] is not set
       // props.settings.merged.security.auth.selectedType is undefined here, simulating initial setup
 
       const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_GEMINI);
+      await handleAuthSelect(AuthType.USE_ONYX);
 
       expect(props.setAuthState).toHaveBeenCalledWith(
         AuthState.AwaitingApiKeyInput,
@@ -329,7 +329,7 @@ describe('AuthDialog', () => {
 
     it('always shows API key dialog on re-auth even if env var is present', async () => {
       mockedValidateAuthMethod.mockResolvedValue(null);
-      vi.stubEnv('GEMINI_API_KEY', 'test-key-from-env');
+      vi.stubEnv('ONYX_API_KEY', 'test-key-from-env');
       // Simulate switching from a different auth method (e.g., Google Login → API key)
       props.settings.merged.security.auth.selectedType =
         AuthType.LOGIN_WITH_GOOGLE;
@@ -337,7 +337,7 @@ describe('AuthDialog', () => {
       const { unmount } = await renderWithProviders(<AuthDialog {...props} />);
       const { onSelect: handleAuthSelect } =
         mockedRadioButtonSelect.mock.calls[0][0];
-      await handleAuthSelect(AuthType.USE_GEMINI);
+      await handleAuthSelect(AuthType.USE_ONYX);
 
       expect(props.setAuthState).toHaveBeenCalledWith(
         AuthState.AwaitingApiKeyInput,
@@ -408,7 +408,7 @@ describe('AuthDialog', () => {
         desc: 'calls setAuthState(Unauthenticated) on escape if auth method is set',
         setup: () => {
           props.settings.merged.security.auth.selectedType =
-            AuthType.USE_GEMINI;
+            AuthType.USE_ONYX;
         },
         expectations: (p: typeof props) => {
           expect(p.setAuthState).toHaveBeenCalledWith(
@@ -446,7 +446,7 @@ describe('AuthDialog', () => {
     });
 
     it('renders correctly with enforced auth type', async () => {
-      props.settings.merged.security.auth.enforcedType = AuthType.USE_GEMINI;
+      props.settings.merged.security.auth.enforcedType = AuthType.USE_ONYX;
       const { lastFrame, unmount } = await renderWithProviders(
         <AuthDialog {...props} />,
       );

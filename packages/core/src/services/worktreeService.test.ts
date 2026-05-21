@@ -10,7 +10,7 @@ import * as fs from 'node:fs/promises';
 import {
   getProjectRootForWorktree,
   createWorktree,
-  isGeminiWorktree,
+  isOnyxWorktree,
   hasWorktreeChanges,
   cleanupWorktree,
   getWorktreePath,
@@ -107,20 +107,20 @@ describe('worktree utilities', () => {
     });
   });
 
-  describe('isGeminiWorktree', () => {
-    it('should return true for a valid gemini worktree path', () => {
-      expect(isGeminiWorktree(expectedPath, projectRoot)).toBe(true);
+  describe('isOnyxWorktree', () => {
+    it('should return true for a valid onyx worktree path', () => {
+      expect(isOnyxWorktree(expectedPath, projectRoot)).toBe(true);
       expect(
-        isGeminiWorktree(path.join(expectedPath, 'src'), projectRoot),
+        isOnyxWorktree(path.join(expectedPath, 'src'), projectRoot),
       ).toBe(true);
     });
 
-    it('should return false for a path outside gemini worktrees', () => {
-      expect(isGeminiWorktree(path.join(projectRoot, 'src'), projectRoot)).toBe(
+    it('should return false for a path outside onyx worktrees', () => {
+      expect(isOnyxWorktree(path.join(projectRoot, 'src'), projectRoot)).toBe(
         false,
       );
       expect(
-        isGeminiWorktree(path.resolve('/some/other/path'), projectRoot),
+        isOnyxWorktree(path.resolve('/some/other/path'), projectRoot),
       ).toBe(false);
     });
   });

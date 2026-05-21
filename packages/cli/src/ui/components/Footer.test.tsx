@@ -48,7 +48,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
 });
 
 const defaultProps = {
-  model: 'gemini-pro',
+  model: 'onyx-pro',
   targetDir: path.join(
     path.parse(process.cwd()).root,
     'Users',
@@ -108,7 +108,7 @@ const mockSessionStats = {
       latency: { avg: 0, max: 0, min: 0 },
     },
     models: {
-      'gemini-pro': {
+      'onyx-pro': {
         api: {
           totalRequests: 0,
           totalErrors: 0,
@@ -132,7 +132,7 @@ const mockSessionStats = {
 describe('<Footer />', () => {
   beforeEach(() => {
     const root = path.parse(process.cwd()).root;
-    vi.stubEnv('GEMINI_CLI_HOME', path.join(root, 'Users', 'test'));
+    vi.stubEnv('ONYX_CLI_HOME', path.join(root, 'Users', 'test'));
     vi.stubEnv('SANDBOX', '');
     vi.stubEnv('SEATBELT_PROFILE', '');
   });
@@ -204,7 +204,7 @@ describe('<Footer />', () => {
       // (Note: VimModeProvider defaults to 'INSERT' mode when enabled)
       expect(output).toContain('[INSERT]');
       // Other items should be present but might be shortened
-      expect(output).toContain('gemini-pro');
+      expect(output).toContain('onyx-pro');
       unmount();
     });
   });
@@ -347,7 +347,7 @@ describe('<Footer />', () => {
     });
 
     it('should display "current process" for custom sandbox when SANDBOX env is set', async () => {
-      vi.stubEnv('SANDBOX', 'gemini-cli-test-sandbox');
+      vi.stubEnv('SANDBOX', 'onyx-cli-test-sandbox');
       const { lastFrame, unmount } = await renderWithProviders(<Footer />, {
         config: mockConfig,
         width: 120,
@@ -406,7 +406,7 @@ describe('<Footer />', () => {
     });
 
     it('should prioritize untrusted message over sandbox info', async () => {
-      vi.stubEnv('SANDBOX', 'gemini-cli-test-sandbox');
+      vi.stubEnv('SANDBOX', 'onyx-cli-test-sandbox');
       const { lastFrame, unmount } = await renderWithProviders(<Footer />, {
         config: mockConfig,
         width: 120,
@@ -567,7 +567,7 @@ describe('<Footer />', () => {
             metrics: {
               ...mockSessionStats.metrics,
               models: {
-                'gemini-pro': {
+                'onyx-pro': {
                   api: {
                     totalRequests: 0,
                     totalErrors: 0,
@@ -699,7 +699,7 @@ describe('<Footer />', () => {
         config: authConfig,
         width: 120,
         uiState: {
-          currentModel: 'gemini-pro',
+          currentModel: 'onyx-pro',
           sessionStats: mockSessionStats,
         },
         settings: createMockSettings({
@@ -732,7 +732,7 @@ describe('<Footer />', () => {
         config: authConfig,
         width: 120,
         uiState: {
-          currentModel: 'gemini-pro',
+          currentModel: 'onyx-pro',
           sessionStats: mockSessionStats,
         },
         settings: createMockSettings({
@@ -758,7 +758,7 @@ describe('<Footer />', () => {
         config: mockConfig,
         width: 120,
         uiState: {
-          currentModel: 'gemini-pro',
+          currentModel: 'onyx-pro',
           sessionStats: mockSessionStats,
         },
         settings: createMockSettings({
@@ -806,7 +806,7 @@ describe('<Footer />', () => {
       expect(output).toContain('/model');
       // Data should be present
       expect(output).toContain('main');
-      expect(output).toContain('gemini-pro');
+      expect(output).toContain('onyx-pro');
       unmount();
     });
 
@@ -865,13 +865,13 @@ describe('<Footer />', () => {
         width: 120,
         uiState: {
           sessionStats: mockSessionStats,
-          currentModel: 'gemini-2.5-flash', // Fallback active, showing Flash
+          currentModel: 'onyx-2.5-flash', // Fallback active, showing Flash
         },
       });
 
       // Footer should show the effective model (Flash), not the config model (Pro)
-      expect(lastFrame()).toContain('gemini-2.5-flash');
-      expect(lastFrame()).not.toContain('gemini-2.5-pro');
+      expect(lastFrame()).toContain('onyx-2.5-flash');
+      expect(lastFrame()).not.toContain('onyx-2.5-pro');
       unmount();
     });
 
@@ -881,11 +881,11 @@ describe('<Footer />', () => {
         width: 120,
         uiState: {
           sessionStats: mockSessionStats,
-          currentModel: 'gemini-2.5-pro', // Normal mode, showing Pro
+          currentModel: 'onyx-2.5-pro', // Normal mode, showing Pro
         },
       });
 
-      expect(lastFrame()).toContain('gemini-2.5-pro');
+      expect(lastFrame()).toContain('onyx-2.5-pro');
       unmount();
     });
   });

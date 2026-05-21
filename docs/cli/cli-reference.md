@@ -7,17 +7,17 @@ and parameters.
 
 | Command                            | Description                        | Example                                                      |
 | ---------------------------------- | ---------------------------------- | ------------------------------------------------------------ |
-| `gemini`                           | Start interactive REPL             | `gemini`                                                     |
-| `gemini -p "query"`                | Query non-interactively            | `gemini -p "summarize README.md"`                            |
-| gemini "query"                     | Query and continue interactively   | gemini "explain this project"                                |
-| `cat file \| gemini`               | Process piped content              | `cat logs.txt \| gemini`<br>`Get-Content logs.txt \| gemini` |
-| `gemini -i "query"`                | Execute and continue interactively | `gemini -i "What is the purpose of this project?"`           |
-| `gemini -r "latest"`               | Continue most recent session       | `gemini -r "latest"`                                         |
-| `gemini -r "latest" "query"`       | Continue session with a new prompt | `gemini -r "latest" "Check for type errors"`                 |
-| `gemini -r "<session-id>" "query"` | Resume session by ID               | `gemini -r "abc123" "Finish this PR"`                        |
-| `gemini update`                    | Update to latest version           | `gemini update`                                              |
-| `gemini extensions`                | Manage extensions                  | See [Extensions Management](#extensions-management)          |
-| `gemini mcp`                       | Configure MCP servers              | See [MCP Server Management](#mcp-server-management)          |
+| `onyx`                           | Start interactive REPL             | `onyx`                                                     |
+| `onyx -p "query"`                | Query non-interactively            | `onyx -p "summarize README.md"`                            |
+| onyx "query"                     | Query and continue interactively   | onyx "explain this project"                                |
+| `cat file \| onyx`               | Process piped content              | `cat logs.txt \| onyx`<br>`Get-Content logs.txt \| onyx` |
+| `onyx -i "query"`                | Execute and continue interactively | `onyx -i "What is the purpose of this project?"`           |
+| `onyx -r "latest"`               | Continue most recent session       | `onyx -r "latest"`                                         |
+| `onyx -r "latest" "query"`       | Continue session with a new prompt | `onyx -r "latest" "Check for type errors"`                 |
+| `onyx -r "<session-id>" "query"` | Resume session by ID               | `onyx -r "abc123" "Finish this PR"`                        |
+| `onyx update`                    | Update to latest version           | `onyx update`                                              |
+| `onyx extensions`                | Manage extensions                  | See [Extensions Management](#extensions-management)          |
+| `onyx mcp`                       | Configure MCP servers              | See [MCP Server Management](#mcp-server-management)          |
 
 ### Positional arguments
 
@@ -35,7 +35,7 @@ These commands are available within the interactive REPL.
 | `/agents reload`     | Reload the agent registry                       |
 | `/commands list`     | List available custom slash commands            |
 | `/commands reload`   | Reload custom slash commands                    |
-| `/memory reload`     | Reload context files (for example, `GEMINI.md`) |
+| `/memory reload`     | Reload context files (for example, `ONYX.md`) |
 | `/mcp reload`        | Restart and reload MCP servers                  |
 | `/extensions reload` | Reload all active extensions                    |
 | `/help`              | Show help for all commands                      |
@@ -51,7 +51,7 @@ These commands are available within the interactive REPL.
 | `--model`                        | `-m`  | string  | `auto`    | Model to use. See [Model Selection](#model-selection) for available values.                                                                                            |
 | `--prompt`                       | `-p`  | string  | -         | Prompt text. Appended to stdin input if provided. Forces non-interactive mode.                                                                                         |
 | `--prompt-interactive`           | `-i`  | string  | -         | Execute prompt and continue in interactive mode                                                                                                                        |
-| `--worktree`                     | `-w`  | string  | -         | Start Gemini in a new git worktree. If no name is provided, one is generated automatically. Requires `experimental.worktrees: true` in settings.                       |
+| `--worktree`                     | `-w`  | string  | -         | Start Onyx in a new git worktree. If no name is provided, one is generated automatically. Requires `experimental.worktrees: true` in settings.                       |
 | `--sandbox`                      | `-s`  | boolean | `false`   | Run in a sandboxed environment for safer execution                                                                                                                     |
 | `--skip-trust`                   | -     | boolean | `false`   | Trust the current workspace for this session, skipping the folder trust check.                                                                                         |
 | `--approval-mode`                | -     | string  | `default` | Approval mode for tool execution. Choices: `default`, `auto_edit`, `yolo`, `plan`                                                                                      |
@@ -71,7 +71,7 @@ These commands are available within the interactive REPL.
 
 ## Model selection
 
-The `--model` (or `-m`) flag lets you specify which Gemini model to use. You can
+The `--model` (or `-m`) flag lets you specify which Onyx model to use. You can
 use either model aliases (user-friendly names) or concrete model names.
 
 ### Model aliases
@@ -80,27 +80,27 @@ These are convenient shortcuts that map to specific models:
 
 | Alias        | Resolves To                                | Description                                                                                                               |
 | ------------ | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| `auto`       | `gemini-2.5-pro` or `gemini-3-pro-preview` | **Default.** Resolves to the preview model if preview features are enabled, otherwise resolves to the standard pro model. |
-| `pro`        | `gemini-2.5-pro` or `gemini-3-pro-preview` | For complex reasoning tasks. Uses preview model if enabled.                                                               |
-| `flash`      | `gemini-2.5-flash`                         | Fast, balanced model for most tasks.                                                                                      |
-| `flash-lite` | `gemini-2.5-flash-lite`                    | Fastest model for simple tasks.                                                                                           |
+| `auto`       | `onyx-2.5-pro` or `onyx-3-pro-preview` | **Default.** Resolves to the preview model if preview features are enabled, otherwise resolves to the standard pro model. |
+| `pro`        | `onyx-2.5-pro` or `onyx-3-pro-preview` | For complex reasoning tasks. Uses preview model if enabled.                                                               |
+| `flash`      | `onyx-2.5-flash`                         | Fast, balanced model for most tasks.                                                                                      |
+| `flash-lite` | `onyx-2.5-flash-lite`                    | Fastest model for simple tasks.                                                                                           |
 
 ## Extensions management
 
 | Command                                            | Description                                  | Example                                                                        |
 | -------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------ |
-| `gemini extensions install <source>`               | Install extension from Git URL or local path | `gemini extensions install https://github.com/user/my-extension`               |
-| `gemini extensions install <source> --ref <ref>`   | Install from specific branch/tag/commit      | `gemini extensions install https://github.com/user/my-extension --ref develop` |
-| `gemini extensions install <source> --auto-update` | Install with auto-update enabled             | `gemini extensions install https://github.com/user/my-extension --auto-update` |
-| `gemini extensions uninstall <name>`               | Uninstall one or more extensions             | `gemini extensions uninstall my-extension`                                     |
-| `gemini extensions list`                           | List all installed extensions                | `gemini extensions list`                                                       |
-| `gemini extensions update <name>`                  | Update a specific extension                  | `gemini extensions update my-extension`                                        |
-| `gemini extensions update --all`                   | Update all extensions                        | `gemini extensions update --all`                                               |
-| `gemini extensions enable <name>`                  | Enable an extension                          | `gemini extensions enable my-extension`                                        |
-| `gemini extensions disable <name>`                 | Disable an extension                         | `gemini extensions disable my-extension`                                       |
-| `gemini extensions link <path>`                    | Link local extension for development         | `gemini extensions link /path/to/extension`                                    |
-| `gemini extensions new <path>`                     | Create new extension from template           | `gemini extensions new ./my-extension`                                         |
-| `gemini extensions validate <path>`                | Validate extension structure                 | `gemini extensions validate ./my-extension`                                    |
+| `onyx extensions install <source>`               | Install extension from Git URL or local path | `onyx extensions install https://github.com/user/my-extension`               |
+| `onyx extensions install <source> --ref <ref>`   | Install from specific branch/tag/commit      | `onyx extensions install https://github.com/user/my-extension --ref develop` |
+| `onyx extensions install <source> --auto-update` | Install with auto-update enabled             | `onyx extensions install https://github.com/user/my-extension --auto-update` |
+| `onyx extensions uninstall <name>`               | Uninstall one or more extensions             | `onyx extensions uninstall my-extension`                                     |
+| `onyx extensions list`                           | List all installed extensions                | `onyx extensions list`                                                       |
+| `onyx extensions update <name>`                  | Update a specific extension                  | `onyx extensions update my-extension`                                        |
+| `onyx extensions update --all`                   | Update all extensions                        | `onyx extensions update --all`                                               |
+| `onyx extensions enable <name>`                  | Enable an extension                          | `onyx extensions enable my-extension`                                        |
+| `onyx extensions disable <name>`                 | Disable an extension                         | `onyx extensions disable my-extension`                                       |
+| `onyx extensions link <path>`                    | Link local extension for development         | `onyx extensions link /path/to/extension`                                    |
+| `onyx extensions new <path>`                     | Create new extension from template           | `onyx extensions new ./my-extension`                                         |
+| `onyx extensions validate <path>`                | Validate extension structure                 | `onyx extensions validate ./my-extension`                                    |
 
 See [Extensions Documentation](../extensions/index.md) for more details.
 
@@ -108,13 +108,13 @@ See [Extensions Documentation](../extensions/index.md) for more details.
 
 | Command                                                       | Description                     | Example                                                                                              |
 | ------------------------------------------------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `gemini mcp add <name> <command>`                             | Add stdio-based MCP server      | `gemini mcp add github npx -y @modelcontextprotocol/server-github`                                   |
-| `gemini mcp add <name> <url> --transport http`                | Add HTTP-based MCP server       | `gemini mcp add api-server http://localhost:3000 --transport http`                                   |
-| `gemini mcp add <name> <command> --env KEY=value`             | Add with environment variables  | `gemini mcp add slack node server.js --env SLACK_TOKEN=xoxb-xxx`                                     |
-| `gemini mcp add <name> <command> --scope user`                | Add with user scope             | `gemini mcp add db node db-server.js --scope user`                                                   |
-| `gemini mcp add <name> <command> --include-tools tool1,tool2` | Add with specific tools         | `gemini mcp add github npx -y @modelcontextprotocol/server-github --include-tools list_repos,get_pr` |
-| `gemini mcp remove <name>`                                    | Remove an MCP server            | `gemini mcp remove github`                                                                           |
-| `gemini mcp list`                                             | List all configured MCP servers | `gemini mcp list`                                                                                    |
+| `onyx mcp add <name> <command>`                             | Add stdio-based MCP server      | `onyx mcp add github npx -y @modelcontextprotocol/server-github`                                   |
+| `onyx mcp add <name> <url> --transport http`                | Add HTTP-based MCP server       | `onyx mcp add api-server http://localhost:3000 --transport http`                                   |
+| `onyx mcp add <name> <command> --env KEY=value`             | Add with environment variables  | `onyx mcp add slack node server.js --env SLACK_TOKEN=xoxb-xxx`                                     |
+| `onyx mcp add <name> <command> --scope user`                | Add with user scope             | `onyx mcp add db node db-server.js --scope user`                                                   |
+| `onyx mcp add <name> <command> --include-tools tool1,tool2` | Add with specific tools         | `onyx mcp add github npx -y @modelcontextprotocol/server-github --include-tools list_repos,get_pr` |
+| `onyx mcp remove <name>`                                    | Remove an MCP server            | `onyx mcp remove github`                                                                           |
+| `onyx mcp list`                                             | List all configured MCP servers | `onyx mcp list`                                                                                    |
 
 See [MCP Server Integration](../tools/mcp-server.md) for more details.
 
@@ -122,13 +122,13 @@ See [MCP Server Integration](../tools/mcp-server.md) for more details.
 
 | Command                          | Description                           | Example                                           |
 | -------------------------------- | ------------------------------------- | ------------------------------------------------- |
-| `gemini skills list`             | List all discovered agent skills      | `gemini skills list`                              |
-| `gemini skills install <source>` | Install skill from Git, path, or file | `gemini skills install https://github.com/u/repo` |
-| `gemini skills link <path>`      | Link local agent skills via symlink   | `gemini skills link /path/to/my-skills`           |
-| `gemini skills uninstall <name>` | Uninstall an agent skill              | `gemini skills uninstall my-skill`                |
-| `gemini skills enable <name>`    | Enable an agent skill                 | `gemini skills enable my-skill`                   |
-| `gemini skills disable <name>`   | Disable an agent skill                | `gemini skills disable my-skill`                  |
-| `gemini skills enable --all`     | Enable all skills                     | `gemini skills enable --all`                      |
-| `gemini skills disable --all`    | Disable all skills                    | `gemini skills disable --all`                     |
+| `onyx skills list`             | List all discovered agent skills      | `onyx skills list`                              |
+| `onyx skills install <source>` | Install skill from Git, path, or file | `onyx skills install https://github.com/u/repo` |
+| `onyx skills link <path>`      | Link local agent skills via symlink   | `onyx skills link /path/to/my-skills`           |
+| `onyx skills uninstall <name>` | Uninstall an agent skill              | `onyx skills uninstall my-skill`                |
+| `onyx skills enable <name>`    | Enable an agent skill                 | `onyx skills enable my-skill`                   |
+| `onyx skills disable <name>`   | Disable an agent skill                | `onyx skills disable my-skill`                  |
+| `onyx skills enable --all`     | Enable all skills                     | `onyx skills enable --all`                      |
+| `onyx skills disable --all`    | Disable all skills                    | `onyx skills disable --all`                     |
 
 See [Agent Skills Documentation](./skills.md) for more details.

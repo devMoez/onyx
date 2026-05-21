@@ -35,7 +35,7 @@ export type CancelAllFn = (signal: AbortSignal) => void;
  * It matches the Core ToolCall structure + the UI metadata flag.
  */
 export type TrackedToolCall = ToolCall & {
-  responseSubmittedToGemini?: boolean;
+  responseSubmittedToOnyx?: boolean;
   subagentHistory?: SubagentActivityItem[];
 };
 
@@ -240,7 +240,7 @@ export function useToolScheduler(
         for (const [sid, calls] of Object.entries(nextMap)) {
           nextMap[sid] = calls.map((tc) =>
             callIdsToMark.includes(tc.request.callId)
-              ? { ...tc, responseSubmittedToGemini: true }
+              ? { ...tc, responseSubmittedToOnyx: true }
               : tc,
           );
         }
@@ -335,7 +335,7 @@ function adaptToolCalls(
 
   return coreCalls.map((coreCall): TrackedToolCall => {
     const prev = prevMap.get(coreCall.request.callId);
-    const responseSubmittedToGemini = prev?.responseSubmittedToGemini ?? false;
+    const responseSubmittedToOnyx = prev?.responseSubmittedToOnyx ?? false;
     let status = coreCall.status;
     // If a tool call has completed but scheduled a tail call, it is in a transitional
     // state. Force the UI to render it as "executing".
@@ -352,7 +352,7 @@ function adaptToolCalls(
     return {
       ...coreCall,
       status,
-      responseSubmittedToGemini,
+      responseSubmittedToOnyx,
     } as TrackedToolCall;
   });
 }

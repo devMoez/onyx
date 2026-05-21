@@ -496,7 +496,7 @@ export class ShellToolInvocation extends BaseToolInvocation<
 
     const onAbort = () => combinedController.abort();
     try {
-      tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-shell-'));
+      tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'onyx-shell-'));
       tempFilePath = path.join(tempDir, 'pgrep.tmp');
 
       // pgrep is not available on Windows, so we can't get background PIDs
@@ -1017,7 +1017,7 @@ export class ShellToolInvocation extends BaseToolInvocation<
           this.context.config,
           { model: 'summarizer-shell' },
           llmContent,
-          this.context.geminiClient,
+          this.context.onyxClient,
           signal,
         );
         return {

@@ -75,7 +75,7 @@ describe('statsCommand', () => {
     const mockQuota = { buckets: [] };
     const mockRefreshUserQuota = vi.fn().mockResolvedValue(mockQuota);
     const mockGetUserTierName = vi.fn().mockReturnValue('Basic');
-    const mockGetModel = vi.fn().mockReturnValue('gemini-pro');
+    const mockGetModel = vi.fn().mockReturnValue('onyx-pro');
     const mockGetQuotaRemaining = vi.fn().mockReturnValue(85);
     const mockGetQuotaLimit = vi.fn().mockReturnValue(100);
     const mockGetQuotaResetTime = vi
@@ -103,7 +103,7 @@ describe('statsCommand', () => {
       expect.objectContaining({
         quotas: mockQuota,
         tier: 'Basic',
-        currentModel: 'gemini-pro',
+        currentModel: 'onyx-pro',
         pooledRemaining: 85,
         pooledLimit: 100,
         pooledResetTime: '2025-01-01T12:00:00Z',

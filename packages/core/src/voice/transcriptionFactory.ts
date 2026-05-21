@@ -6,7 +6,7 @@
 
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-import { homedir, GEMINI_DIR } from '../utils/paths.js';
+import { homedir, ONYX_DIR } from '../utils/paths.js';
 import { onyxLiveTranscriptionProvider } from './onyxLiveTranscriptionProvider.js';
 import { WhisperTranscriptionProvider } from './whisperTranscriptionProvider.js';
 import type { TranscriptionProvider } from './transcriptionProvider.js';
@@ -16,10 +16,10 @@ export class TranscriptionFactory {
     voiceConfig: { backend?: string; whisperModel?: string } | undefined,
     apiKey: string,
   ): TranscriptionProvider {
-    const backend = voiceConfig?.backend ?? 'gemini-live';
+    const backend = voiceConfig?.backend ?? 'onyx-live';
 
     if (backend === 'whisper') {
-      const modelsDir = path.join(homedir(), GEMINI_DIR, 'whisper_models');
+      const modelsDir = path.join(homedir(), ONYX_DIR, 'whisper_models');
       if (!fs.existsSync(modelsDir)) {
         fs.mkdirSync(modelsDir, { recursive: true });
       }
@@ -35,7 +35,7 @@ export class TranscriptionFactory {
       });
     }
 
-    // Default to Gemini Live
+    // Default to Onyx Live
     return new onyxLiveTranscriptionProvider(apiKey);
   }
 }

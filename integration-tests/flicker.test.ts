@@ -40,3 +40,4 @@ describe('Flicker Detector', () => {
     expect(flickerMetric).toBeNull();
   });
 });
+

@@ -29,8 +29,8 @@ export async function validateAuthMethodWithSettings(
   if (settings.merged.security.auth.useExternal) {
     return null;
   }
-  // If using Gemini API key, we don't validate it here as we might need to prompt for it.
-  if (authType === AuthType.USE_GEMINI) {
+  // If using Onyx API key, we don't validate it here as we might need to prompt for it.
+  if (authType === AuthType.USE_ONYX) {
     return null;
   }
   return validateAuthMethod(authType);
@@ -66,7 +66,7 @@ export const useAuthCommand = (
   );
 
   const reloadApiKey = useCallback(async () => {
-    const envKey = process.env['GEMINI_API_KEY'];
+    const envKey = process.env['ONYX_API_KEY'];
     if (envKey !== undefined) {
       setApiKeyDefaultValue(envKey);
       return envKey;
@@ -93,9 +93,9 @@ export const useAuthCommand = (
 
       const authType = settings.merged.security.auth.selectedType;
       if (!authType) {
-        if (process.env['GEMINI_API_KEY']) {
+        if (process.env['ONYX_API_KEY']) {
           onAuthError(
-            'Existing API key detected (GEMINI_API_KEY). Select "Gemini API Key" option to use it.',
+            'Existing API key detected (ONYX_API_KEY). Select "Onyx API Key" option to use it.',
           );
         } else {
           onAuthError('No authentication method selected.');
@@ -103,7 +103,7 @@ export const useAuthCommand = (
         return;
       }
 
-      if (authType === AuthType.USE_GEMINI) {
+      if (authType === AuthType.USE_ONYX) {
         const key = await reloadApiKey(); // Use the unified function
         if (!key) {
           setAuthState(AuthState.AwaitingApiKeyInput);
@@ -121,14 +121,14 @@ export const useAuthCommand = (
         return;
       }
 
-      const defaultAuthType = process.env['GEMINI_DEFAULT_AUTH_TYPE'];
+      const defaultAuthType = process.env['ONYX_DEFAULT_AUTH_TYPE'];
       if (
         defaultAuthType &&
         // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         !Object.values(AuthType).includes(defaultAuthType as AuthType)
       ) {
         onAuthError(
-          `Invalid value for GEMINI_DEFAULT_AUTH_TYPE: "${defaultAuthType}". ` +
+          `Invalid value for ONYX_DEFAULT_AUTH_TYPE: "${defaultAuthType}". ` +
             `Valid values are: ${Object.values(AuthType).join(', ')}.`,
         );
         return;

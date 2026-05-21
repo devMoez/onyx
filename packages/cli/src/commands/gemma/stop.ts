@@ -138,7 +138,7 @@ export const stopCommand: CommandModule = {
     if (running) {
       debugLogger.log(
         chalk.yellow(
-          `A server is responding on port ${port}, but it was not started by "gemini gemma start".`,
+          `A server is responding on port ${port}, but it was not started by "onyx gemma start".`,
         ),
       );
       debugLogger.log(

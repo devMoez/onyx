@@ -17,14 +17,14 @@ interface MigrateArgs {
 }
 
 /**
- * Mapping from Claude Code event names to Gemini event names
+ * Mapping from Claude Code event names to Onyx event names
  */
 const EVENT_MAPPING: Record<string, string> = {
   PreToolUse: 'BeforeTool',
   PostToolUse: 'AfterTool',
   UserPromptSubmit: 'BeforeAgent',
   Stop: 'AfterAgent',
-  SubAgentStop: 'AfterAgent', // Gemini doesn't have sub-agents, map to AfterAgent
+  SubAgentStop: 'AfterAgent', // Onyx doesn't have sub-agents, map to AfterAgent
   SessionStart: 'SessionStart',
   SessionEnd: 'SessionEnd',
   PreCompact: 'PreCompress',
@@ -32,7 +32,7 @@ const EVENT_MAPPING: Record<string, string> = {
 };
 
 /**
- * Mapping from Claude Code tool names to Gemini tool names
+ * Mapping from Claude Code tool names to Onyx tool names
  */
 const TOOL_NAME_MAPPING: Record<string, string> = {
   Edit: 'replace',
@@ -45,17 +45,17 @@ const TOOL_NAME_MAPPING: Record<string, string> = {
 };
 
 /**
- * Transform a matcher regex to update tool names from Claude to Gemini
+ * Transform a matcher regex to update tool names from Claude to Onyx
  */
 function transformMatcher(matcher: string | undefined): string | undefined {
   if (!matcher) return matcher;
 
   let transformed = matcher;
-  for (const [claudeName, geminiName] of Object.entries(TOOL_NAME_MAPPING)) {
+  for (const [claudeName, onyxName] of Object.entries(TOOL_NAME_MAPPING)) {
     // Replace exact matches and matches within regex alternations
     transformed = transformed.replace(
       new RegExp(`\\b${claudeName}\\b`, 'g'),
-      geminiName,
+      onyxName,
     );
   }
 
@@ -63,7 +63,7 @@ function transformMatcher(matcher: string | undefined): string | undefined {
 }
 
 /**
- * Migrate a Claude Code hook configuration to Gemini format
+ * Migrate a Claude Code hook configuration to Onyx format
  */
 function migrateClaudeHook(claudeHook: unknown): unknown {
   if (!claudeHook || typeof claudeHook !== 'object') {
@@ -78,12 +78,12 @@ function migrateClaudeHook(claudeHook: unknown): unknown {
   if ('command' in hook) {
     migrated['command'] = hook['command'];
 
-    // Replace CLAUDE_PROJECT_DIR with GEMINI_PROJECT_DIR in command
+    // Replace CLAUDE_PROJECT_DIR with ONYX_PROJECT_DIR in command
     // eslint-disable-next-line no-restricted-syntax
     if (typeof migrated['command'] === 'string') {
       migrated['command'] = migrated['command'].replace(
         /\$CLAUDE_PROJECT_DIR/g,
-        '$GEMINI_PROJECT_DIR',
+        '$ONYX_PROJECT_DIR',
       );
     }
   }
@@ -93,7 +93,7 @@ function migrateClaudeHook(claudeHook: unknown): unknown {
     migrated['type'] = 'command';
   }
 
-  // Map timeout field (Claude uses seconds, Gemini uses seconds)
+  // Map timeout field (Claude uses seconds, Onyx uses seconds)
   // eslint-disable-next-line no-restricted-syntax
   if ('timeout' in hook && typeof hook['timeout'] === 'number') {
     migrated['timeout'] = hook['timeout'];
@@ -103,7 +103,7 @@ function migrateClaudeHook(claudeHook: unknown): unknown {
 }
 
 /**
- * Migrate Claude Code hooks configuration to Gemini format
+ * Migrate Claude Code hooks configuration to Onyx format
  */
 function migrateClaudeHooks(claudeConfig: unknown): Record<string, unknown> {
   if (!claudeConfig || typeof claudeConfig !== 'object') {
@@ -112,7 +112,7 @@ function migrateClaudeHooks(claudeConfig: unknown): Record<string, unknown> {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const config = claudeConfig as Record<string, unknown>;
-  const geminiHooks: Record<string, unknown> = {};
+  const onyxHooks: Record<string, unknown> = {};
 
   // Check if there's a hooks section
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
@@ -123,7 +123,7 @@ function migrateClaudeHooks(claudeConfig: unknown): Record<string, unknown> {
 
   for (const [eventName, eventConfig] of Object.entries(hooksSection)) {
     // Map event name
-    const geminiEventName = EVENT_MAPPING[eventName] || eventName;
+    const onyxEventName = EVENT_MAPPING[eventName] || eventName;
 
     if (!Array.isArray(eventConfig)) {
       continue;
@@ -161,10 +161,10 @@ function migrateClaudeHooks(claudeConfig: unknown): Record<string, unknown> {
       return migratedDef;
     });
 
-    geminiHooks[geminiEventName] = migratedDefinitions;
+    onyxHooks[onyxEventName] = migratedDefinitions;
   }
 
-  return geminiHooks;
+  return onyxHooks;
 }
 
 /**
@@ -235,7 +235,7 @@ export async function handleMigrateFromClaude() {
     `Migrating ${Object.keys(migratedHooks).length} hook event(s)...`,
   );
 
-  // Load current Gemini settings
+  // Load current Onyx settings
   const settings = loadSettings(workingDir);
 
   // Merge migrated hooks with existing hooks
@@ -260,7 +260,7 @@ export async function handleMigrateFromClaude() {
 
 export const migrateCommand: CommandModule = {
   command: 'migrate',
-  describe: 'Migrate hooks from Claude Code to Gemini CLI',
+  describe: 'Migrate hooks from Claude Code to Onyx CLI',
   builder: (yargs) =>
     yargs.option('from-claude', {
       describe: 'Migrate from Claude Code hooks',
@@ -274,7 +274,7 @@ export const migrateCommand: CommandModule = {
       await handleMigrateFromClaude();
     } else {
       debugLogger.log(
-        'Usage: gemini hooks migrate --from-claude\n\nMigrate hooks from Claude Code to Gemini CLI format.',
+        'Usage: onyx hooks migrate --from-claude\n\nMigrate hooks from Claude Code to Onyx CLI format.',
       );
     }
     await exitCli();

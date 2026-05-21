@@ -146,8 +146,8 @@ describe('onyxChat', () => {
       }
       return result;
     });
-    let currentModel = 'gemini-pro';
-    let currentActiveModel = 'gemini-pro';
+    let currentModel = 'onyx-pro';
+    let currentActiveModel = 'onyx-pro';
 
     mockConfig = {
       getRequestTimeoutMs: vi.fn().mockReturnValue(undefined),
@@ -191,7 +191,7 @@ describe('onyxChat', () => {
       modelConfigService: {
         getResolvedConfig: vi.fn().mockImplementation((modelConfigKey) => {
           const model = modelConfigKey.model ?? mockConfig.getModel();
-          const thinkingConfig = model.startsWith('gemini-3')
+          const thinkingConfig = model.startsWith('onyx-3')
             ? {
                 thinkingLevel: ThinkingLevel.HIGH,
               }
@@ -269,7 +269,7 @@ describe('onyxChat', () => {
             },
             {
               id: 'b',
-              type: 'gemini',
+              type: 'onyx',
               content: [{ text: 'turn 2' }],
               create_time: new Date(),
             },
@@ -429,7 +429,7 @@ describe('onyxChat', () => {
 
       // 2. Action & Assert: The stream should fail because there's no finish reason.
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-2.0-flash' },
+        { model: 'onyx-2.0-flash' },
         'test message',
         'prompt-id-no-finish-empty-end',
         new AbortController().signal,
@@ -813,7 +813,7 @@ describe('onyxChat', () => {
 
       // 3. Action: Send the function response back to the model and consume the stream.
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-2.0-flash' },
+        { model: 'onyx-2.0-flash' },
         {
           functionResponse: {
             name: 'find_restaurant',
@@ -901,7 +901,7 @@ describe('onyxChat', () => {
       );
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-2.0-flash' },
+        { model: 'onyx-2.0-flash' },
         'test message',
         'prompt-id-1',
         new AbortController().signal,
@@ -954,7 +954,7 @@ describe('onyxChat', () => {
         );
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-2.0-flash' },
+        { model: 'onyx-2.0-flash' },
         'test message',
         'prompt-id-1',
         new AbortController().signal,
@@ -1034,7 +1034,7 @@ describe('onyxChat', () => {
       );
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-2.5-pro' },
+        { model: 'onyx-2.5-pro' },
         'test',
         'prompt-id-malformed',
         new AbortController().signal,
@@ -1082,7 +1082,7 @@ describe('onyxChat', () => {
 
       // 2. Send a message
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-2.5-pro' },
+        { model: 'onyx-2.5-pro' },
         'test retry',
         'prompt-id-retry-malformed',
         new AbortController().signal,
@@ -1174,7 +1174,7 @@ describe('onyxChat', () => {
       );
     });
 
-    it('should use thinkingLevel and remove thinkingBudget for gemini-3 models', async () => {
+    it('should use thinkingLevel and remove thinkingBudget for onyx-3 models', async () => {
       const response = (async function* () {
         yield {
           candidates: [
@@ -1190,7 +1190,7 @@ describe('onyxChat', () => {
       );
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-3-test-only-model-string-for-testing' },
+        { model: 'onyx-3-test-only-model-string-for-testing' },
         'hello',
         'prompt-id-thinking-level',
         new AbortController().signal,
@@ -1202,7 +1202,7 @@ describe('onyxChat', () => {
 
       expect(mockContentGenerator.generateContentStream).toHaveBeenCalledWith(
         expect.objectContaining({
-          model: 'gemini-3-test-only-model-string-for-testing',
+          model: 'onyx-3-test-only-model-string-for-testing',
           config: expect.objectContaining({
             thinkingConfig: {
               thinkingBudget: undefined,
@@ -1215,7 +1215,7 @@ describe('onyxChat', () => {
       );
     });
 
-    it('should use thinkingBudget and remove thinkingLevel for non-gemini-3 models', async () => {
+    it('should use thinkingBudget and remove thinkingLevel for non-onyx-3 models', async () => {
       const response = (async function* () {
         yield {
           candidates: [
@@ -1231,7 +1231,7 @@ describe('onyxChat', () => {
       );
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-2.0-flash' },
+        { model: 'onyx-2.0-flash' },
         'hello',
         'prompt-id-thinking-budget',
         new AbortController().signal,
@@ -1243,7 +1243,7 @@ describe('onyxChat', () => {
 
       expect(mockContentGenerator.generateContentStream).toHaveBeenCalledWith(
         expect.objectContaining({
-          model: 'gemini-2.0-flash',
+          model: 'onyx-2.0-flash',
           config: expect.objectContaining({
             thinkingConfig: {
               thinkingBudget: 8192,
@@ -1301,16 +1301,16 @@ describe('onyxChat', () => {
       const newWrites = appendFileSync.mock.calls.slice(writeCountBefore);
       expect(newWrites.length).toBeGreaterThan(0);
 
-      const geminiWrite = newWrites.find((w) => {
+      const onyxWrite = newWrites.find((w) => {
         try {
           const data = JSON.parse(w[1] as string);
-          return data.type === 'gemini';
+          return data.type === 'onyx';
         } catch {
           return false;
         }
       });
 
-      expect(geminiWrite).toBeDefined();
+      expect(onyxWrite).toBeDefined();
     });
   });
 
@@ -1381,7 +1381,7 @@ describe('onyxChat', () => {
 
       // ACT: Send a message and collect all events from the stream.
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-2.0-flash' },
+        { model: 'onyx-2.0-flash' },
         'test message',
         'prompt-id-yield-retry',
         new AbortController().signal,
@@ -1424,7 +1424,7 @@ describe('onyxChat', () => {
         );
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-2.0-flash' },
+        { model: 'onyx-2.0-flash' },
         'test',
         'prompt-id-retry-success',
         new AbortController().signal,
@@ -1497,7 +1497,7 @@ describe('onyxChat', () => {
         );
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-2.0-flash' },
+        { model: 'onyx-2.0-flash' },
         'test message',
         'prompt-id-retry-temperature',
         new AbortController().signal,
@@ -1559,7 +1559,7 @@ describe('onyxChat', () => {
       );
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-2.0-flash' },
+        { model: 'onyx-2.0-flash' },
         'test',
         'prompt-id-retry-fail',
         new AbortController().signal,
@@ -1626,7 +1626,7 @@ describe('onyxChat', () => {
         );
 
         const stream = await chat.sendMessageStream(
-          { model: 'gemini-2.0-flash' },
+          { model: 'onyx-2.0-flash' },
           'test message',
           'prompt-id-400',
           new AbortController().signal,
@@ -1842,7 +1842,7 @@ describe('onyxChat', () => {
 
     // 3. Send a new message
     const stream = await chat.sendMessageStream(
-      { model: 'gemini-2.0-flash' },
+      { model: 'onyx-2.0-flash' },
       'Second question',
       'prompt-id-retry-existing',
       new AbortController().signal,
@@ -1915,7 +1915,7 @@ describe('onyxChat', () => {
 
     // 2. Call the method and consume the stream.
     const stream = await chat.sendMessageStream(
-      { model: 'gemini-2.0-flash' },
+      { model: 'onyx-2.0-flash' },
       'test empty stream',
       'prompt-id-empty-stream',
       new AbortController().signal,
@@ -2181,7 +2181,7 @@ describe('onyxChat', () => {
 
     // Send a message and consume the stream
     const stream = await chat.sendMessageStream(
-      { model: 'gemini-2.0-flash' },
+      { model: 'onyx-2.0-flash' },
       'test message',
       'prompt-id-discard-test',
       new AbortController().signal,
@@ -2398,7 +2398,7 @@ describe('onyxChat', () => {
       );
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-pro' },
+        { model: 'onyx-pro' },
         'test',
         'prompt-healthy',
         new AbortController().signal,
@@ -2434,7 +2434,7 @@ describe('onyxChat', () => {
       );
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-pro' },
+        { model: 'onyx-pro' },
         'test',
         'prompt-sticky-once',
         new AbortController().signal,
@@ -2485,7 +2485,7 @@ describe('onyxChat', () => {
 
       const consume = async () => {
         const stream = await chat.sendMessageStream(
-          { model: 'gemini-pro' },
+          { model: 'onyx-pro' },
           'test',
           'prompt-fallback-arg',
           new AbortController().signal,
@@ -2498,7 +2498,7 @@ describe('onyxChat', () => {
 
       await expect(consume()).rejects.toThrow();
 
-      // handleFallback is called with the ATTEMPTED model (model-a), not the requested one (gemini-pro)
+      // handleFallback is called with the ATTEMPTED model (model-a), not the requested one (onyx-pro)
       expect(mockHandleFallback).toHaveBeenCalledWith(
         expect.anything(),
         'model-a',
@@ -2564,7 +2564,7 @@ describe('onyxChat', () => {
         .mockResolvedValueOnce(secondResponse);
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-pro' },
+        { model: 'onyx-pro' },
         'test',
         'prompt-config-refresh',
         new AbortController().signal,
@@ -2625,7 +2625,7 @@ describe('onyxChat', () => {
       });
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-pro' },
+        { model: 'onyx-pro' },
         'test',
         'prompt-id',
         new AbortController().signal,
@@ -2656,7 +2656,7 @@ describe('onyxChat', () => {
       });
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-pro' },
+        { model: 'onyx-pro' },
         'test',
         'prompt-id',
         new AbortController().signal,
@@ -2696,7 +2696,7 @@ describe('onyxChat', () => {
       });
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-pro' },
+        { model: 'onyx-pro' },
         'test',
         'prompt-id',
         new AbortController().signal,
@@ -2733,7 +2733,7 @@ describe('onyxChat', () => {
       });
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-pro' },
+        { model: 'onyx-pro' },
         'test',
         'prompt-id',
         new AbortController().signal,
@@ -2793,7 +2793,7 @@ describe('onyxChat', () => {
       );
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-pro' },
+        { model: 'onyx-pro' },
         audioParts,
         'test-id',
         new AbortController().signal,
@@ -2872,7 +2872,7 @@ describe('onyxChat', () => {
       );
 
       const stream = await chat.sendMessageStream(
-        { model: 'gemini-pro' },
+        { model: 'onyx-pro' },
         parallelParts,
         'test-id',
         new AbortController().signal,

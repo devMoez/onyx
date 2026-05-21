@@ -330,7 +330,7 @@ describe('AppContainer State Management', () => {
   const mockedUseShellInactivityStatus = useShellInactivityStatus as Mock;
   const mockedUseFocusState = useFocus as Mock;
 
-  const DEFAULT_GEMINI_STREAM_MOCK = {
+  const DEFAULT_ONYX_STREAM_MOCK = {
     streamingState: 'idle',
     submitQuery: vi.fn(),
     initError: null,
@@ -415,7 +415,7 @@ describe('AppContainer State Management', () => {
       handleNewMessage: vi.fn(),
       clearErrorCount: vi.fn(),
     });
-    mockeduseOnyxStream.mockReturnValue(DEFAULT_GEMINI_STREAM_MOCK);
+    mockeduseOnyxStream.mockReturnValue(DEFAULT_ONYX_STREAM_MOCK);
     mockedUseVim.mockReturnValue({ handleInput: vi.fn() });
     mockedUseFolderTrust.mockReturnValue({
       isFolderTrustDialogOpen: false,
@@ -519,7 +519,7 @@ describe('AppContainer State Management', () => {
       themeError: null,
       authError: null,
       shouldOpenAuthDialog: false,
-      geminiMdFileCount: 0,
+      onyxMdFileCount: 0,
     } as InitializationResult;
   });
 
@@ -615,7 +615,7 @@ describe('AppContainer State Management', () => {
         hasReceivedFocusEvent: true,
       });
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         pendingHistoryItems: [
           {
             type: 'tool_group',
@@ -659,7 +659,7 @@ describe('AppContainer State Management', () => {
         hasReceivedFocusEvent: true,
       });
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         pendingHistoryItems: [
           {
             type: 'tool_group',
@@ -698,7 +698,7 @@ describe('AppContainer State Management', () => {
         hasReceivedFocusEvent: false,
       });
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         pendingHistoryItems: [
           {
             type: 'tool_group',
@@ -736,7 +736,7 @@ describe('AppContainer State Management', () => {
       });
       let currentStreamingState: 'idle' | 'responding' = 'responding';
       mockeduseOnyxStream.mockImplementation(() => ({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: currentStreamingState,
       }));
 
@@ -752,7 +752,7 @@ describe('AppContainer State Management', () => {
       ).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'session_complete',
-          detail: 'Gemini CLI finished responding.',
+          detail: 'Onyx CLI finished responding.',
         }),
       );
       expect(terminalNotificationsMocks.notifyViaTerminal).toHaveBeenCalled();
@@ -767,7 +767,7 @@ describe('AppContainer State Management', () => {
       });
       let currentStreamingState: 'idle' | 'responding' = 'responding';
       mockeduseOnyxStream.mockImplementation(() => ({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: currentStreamingState,
       }));
 
@@ -783,7 +783,7 @@ describe('AppContainer State Management', () => {
       ).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'session_complete',
-          detail: 'Gemini CLI finished responding.',
+          detail: 'Onyx CLI finished responding.',
         }),
       );
 
@@ -801,7 +801,7 @@ describe('AppContainer State Management', () => {
       });
       let currentStreamingState: 'idle' | 'responding' = 'responding';
       mockeduseOnyxStream.mockImplementation(() => ({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: currentStreamingState,
       }));
 
@@ -848,7 +848,7 @@ describe('AppContainer State Management', () => {
       ];
 
       mockeduseOnyxStream.mockImplementation(() => ({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         pendingHistoryItems,
       }));
 
@@ -1045,7 +1045,7 @@ describe('AppContainer State Management', () => {
             },
             {
               id: 'msg-2',
-              type: 'gemini' as const,
+              type: 'onyx' as const,
               content: 'Hi there!',
               role: 'model' as const,
               parts: [{ text: 'Hi there!' }],
@@ -1089,7 +1089,7 @@ describe('AppContainer State Management', () => {
         recordToolCalls: vi.fn(),
       };
 
-      const mockGeminiClient = {
+      const mockOnyxClient = {
         isInitialized: vi.fn(() => true),
         resumeChat: vi.fn(),
         getUserTier: vi.fn(),
@@ -1097,8 +1097,8 @@ describe('AppContainer State Management', () => {
       };
 
       const configWithRecording = makeFakeConfig();
-      vi.spyOn(configWithRecording, 'getGeminiClient').mockReturnValue(
-        mockGeminiClient as unknown as ReturnType<Config['getGeminiClient']>,
+      vi.spyOn(configWithRecording, 'getOnyxClient').mockReturnValue(
+        mockOnyxClient as unknown as ReturnType<Config['getOnyxClient']>,
       );
 
       const { unmount } = await act(async () =>
@@ -1123,7 +1123,7 @@ describe('AppContainer State Management', () => {
         getCurrentConversation: vi.fn(),
       };
 
-      const mockGeminiClient = {
+      const mockOnyxClient = {
         isInitialized: vi.fn(() => true),
         resumeChat: vi.fn(),
         getUserTier: vi.fn(),
@@ -1132,8 +1132,8 @@ describe('AppContainer State Management', () => {
       };
 
       const configWithRecording = makeFakeConfig();
-      vi.spyOn(configWithRecording, 'getGeminiClient').mockReturnValue(
-        mockGeminiClient as unknown as ReturnType<Config['getGeminiClient']>,
+      vi.spyOn(configWithRecording, 'getOnyxClient').mockReturnValue(
+        mockOnyxClient as unknown as ReturnType<Config['getOnyxClient']>,
       );
       vi.spyOn(configWithRecording, 'getSessionId').mockReturnValue(
         'test-session-123',
@@ -1149,8 +1149,8 @@ describe('AppContainer State Management', () => {
       );
 
       // Verify the recording service structure is correct
-      expect(configWithRecording.getGeminiClient).toBeDefined();
-      expect(mockGeminiClient.getChatRecordingService).toBeDefined();
+      expect(configWithRecording.getOnyxClient).toBeDefined();
+      expect(mockOnyxClient.getChatRecordingService).toBeDefined();
       expect(mockChatRecordingService.initialize).toBeDefined();
       expect(mockChatRecordingService.recordMessage).toBeDefined();
       unmount();
@@ -1168,15 +1168,15 @@ describe('AppContainer State Management', () => {
         getSessionId: vi.fn(() => 'test-session-123'),
       };
 
-      const mockGeminiClient = {
+      const mockOnyxClient = {
         isInitialized: vi.fn(() => true),
         getChatRecordingService: vi.fn(() => mockChatRecordingService),
         getUserTier: vi.fn(),
       };
 
       const configWithRecording = makeFakeConfig();
-      vi.spyOn(configWithRecording, 'getGeminiClient').mockReturnValue(
-        mockGeminiClient as unknown as ReturnType<Config['getGeminiClient']>,
+      vi.spyOn(configWithRecording, 'getOnyxClient').mockReturnValue(
+        mockOnyxClient as unknown as ReturnType<Config['getOnyxClient']>,
       );
 
       const { unmount } = await act(async () =>
@@ -1199,7 +1199,7 @@ describe('AppContainer State Management', () => {
   describe('Session Resume Flow', () => {
     it('accepts resumed session data', async () => {
       const mockResumeChat = vi.fn();
-      const mockGeminiClient = {
+      const mockOnyxClient = {
         isInitialized: vi.fn(() => true),
         resumeChat: mockResumeChat,
         getUserTier: vi.fn(),
@@ -1212,8 +1212,8 @@ describe('AppContainer State Management', () => {
       };
 
       const configWithClient = makeFakeConfig();
-      vi.spyOn(configWithClient, 'getGeminiClient').mockReturnValue(
-        mockGeminiClient as unknown as ReturnType<Config['getGeminiClient']>,
+      vi.spyOn(configWithClient, 'getOnyxClient').mockReturnValue(
+        mockOnyxClient as unknown as ReturnType<Config['getOnyxClient']>,
       );
 
       const resumedData = {
@@ -1231,7 +1231,7 @@ describe('AppContainer State Management', () => {
             },
             {
               id: 'msg-2',
-              type: 'gemini' as const,
+              type: 'onyx' as const,
               content: 'Previous answer',
               role: 'model' as const,
               parts: [{ text: 'Previous answer' }],
@@ -1254,14 +1254,14 @@ describe('AppContainer State Management', () => {
       );
 
       // Verify the resume functionality structure is in place
-      expect(mockGeminiClient.resumeChat).toBeDefined();
+      expect(mockOnyxClient.resumeChat).toBeDefined();
       expect(resumedData.conversation.messages).toHaveLength(2);
       unmount();
     });
 
     it('does not attempt resume when client is not initialized', async () => {
       const mockResumeChat = vi.fn();
-      const mockGeminiClient = {
+      const mockOnyxClient = {
         isInitialized: vi.fn(() => false), // Not initialized
         resumeChat: mockResumeChat,
         getUserTier: vi.fn(),
@@ -1269,8 +1269,8 @@ describe('AppContainer State Management', () => {
       };
 
       const configWithClient = makeFakeConfig();
-      vi.spyOn(configWithClient, 'getGeminiClient').mockReturnValue(
-        mockGeminiClient as unknown as ReturnType<Config['getGeminiClient']>,
+      vi.spyOn(configWithClient, 'getOnyxClient').mockReturnValue(
+        mockOnyxClient as unknown as ReturnType<Config['getOnyxClient']>,
       );
 
       const resumedData = {
@@ -1354,15 +1354,15 @@ describe('AppContainer State Management', () => {
         })),
       };
 
-      const mockGeminiClient = {
+      const mockOnyxClient = {
         isInitialized: vi.fn(() => true),
         getChatRecordingService: vi.fn(() => mockChatRecordingService),
         getUserTier: vi.fn(),
       };
 
       const configWithRecording = makeFakeConfig();
-      vi.spyOn(configWithRecording, 'getGeminiClient').mockReturnValue(
-        mockGeminiClient as unknown as ReturnType<Config['getGeminiClient']>,
+      vi.spyOn(configWithRecording, 'getOnyxClient').mockReturnValue(
+        mockOnyxClient as unknown as ReturnType<Config['getOnyxClient']>,
       );
 
       const { unmount } = await act(async () =>
@@ -1394,8 +1394,8 @@ describe('AppContainer State Management', () => {
     it('passes a valid proQuotaRequest to QuotaContext when provided by the hook', async () => {
       // Arrange: Create a mock request object that a UI dialog would receive
       const mockRequest = {
-        failedModel: 'gemini-pro',
-        fallbackModel: 'gemini-flash',
+        failedModel: 'onyx-pro',
+        fallbackModel: 'onyx-flash',
         resolve: vi.fn(),
       };
       mockedUseQuotaAndFallback.mockReturnValue({
@@ -1456,7 +1456,7 @@ describe('AppContainer State Management', () => {
 
       // Mock the streaming state as Active
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: 'Some thought' },
       });
@@ -1491,7 +1491,7 @@ describe('AppContainer State Management', () => {
 
       // Mock the streaming state
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: 'Some thought' },
       });
@@ -1510,7 +1510,7 @@ describe('AppContainer State Management', () => {
 
       expect(titleWrites).toHaveLength(1);
       expect(titleWrites[0][0]).toBe(
-        `\x1b]0;${'Gemini CLI (workspace)'.padEnd(80, ' ')}\x07`,
+        `\x1b]0;${'Onyx CLI (workspace)'.padEnd(80, ' ')}\x07`,
       );
       unmount();
     });
@@ -1552,7 +1552,7 @@ describe('AppContainer State Management', () => {
       // Mock the streaming state and thought
       const thoughtSubject = 'Processing request';
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: thoughtSubject },
       });
@@ -1586,7 +1586,7 @@ describe('AppContainer State Management', () => {
       });
 
       // Mock the streaming state as Idle with no thought
-      mockeduseOnyxStream.mockReturnValue(DEFAULT_GEMINI_STREAM_MOCK);
+      mockeduseOnyxStream.mockReturnValue(DEFAULT_ONYX_STREAM_MOCK);
 
       // Act: Render the container
       const { unmount } = await act(async () =>
@@ -1619,7 +1619,7 @@ describe('AppContainer State Management', () => {
       // Mock the streaming state and thought
       const thoughtSubject = 'Confirm tool execution';
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: 'waiting_for_confirmation',
         thought: { subject: thoughtSubject },
       });
@@ -1673,7 +1673,7 @@ describe('AppContainer State Management', () => {
 
         // Mock an active shell pty but not focused
         mockeduseOnyxStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+          ...DEFAULT_ONYX_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
           pendingToolCalls: [],
@@ -1729,7 +1729,7 @@ describe('AppContainer State Management', () => {
 
         // Mock an active shell pty with redirection active
         mockeduseOnyxStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+          ...DEFAULT_ONYX_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
           pendingToolCalls: [
@@ -1796,7 +1796,7 @@ describe('AppContainer State Management', () => {
 
         // Mock an active shell pty with NO output since operation started (silent)
         mockeduseOnyxStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+          ...DEFAULT_ONYX_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
           pendingToolCalls: [],
@@ -1844,7 +1844,7 @@ describe('AppContainer State Management', () => {
         // Mock an active shell pty but not focused
         let lastOutputTime = startTime + 1000;
         mockeduseOnyxStream.mockImplementation(() => ({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+          ...DEFAULT_ONYX_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
           activePtyId: 'pty-1',
@@ -1869,7 +1869,7 @@ describe('AppContainer State Management', () => {
         // Update lastOutputTime to simulate new output
         lastOutputTime = startTime + 21000;
         mockeduseOnyxStream.mockImplementation(() => ({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+          ...DEFAULT_ONYX_STREAM_MOCK,
           streamingState: 'responding',
           thought: { subject: 'Executing shell command' },
           activePtyId: 'pty-1',
@@ -1925,7 +1925,7 @@ describe('AppContainer State Management', () => {
       // Mock the streaming state and thought with a short subject
       const shortTitle = 'Short';
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: shortTitle },
       });
@@ -1962,7 +1962,7 @@ describe('AppContainer State Management', () => {
       // Mock the streaming state and thought
       const title = 'Test Title';
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: 'responding',
         thought: { subject: title },
       });
@@ -1995,11 +1995,11 @@ describe('AppContainer State Management', () => {
       });
 
       // Mock CLI_TITLE environment variable
-      vi.stubEnv('CLI_TITLE', 'Custom Gemini Title');
+      vi.stubEnv('CLI_TITLE', 'Custom Onyx Title');
 
       // Mock the streaming state
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: 'responding',
       });
 
@@ -2017,7 +2017,7 @@ describe('AppContainer State Management', () => {
 
       expect(titleWrites).toHaveLength(1);
       expect(titleWrites[0][0]).toBe(
-        `\x1b]0;${'✦  Working… (Custom Gemini Title)'.padEnd(80, ' ')}\x07`,
+        `\x1b]0;${'✦  Working… (Custom Onyx Title)'.padEnd(80, ' ')}\x07`,
       );
       unmount();
     });
@@ -2138,7 +2138,7 @@ describe('AppContainer State Management', () => {
       // Mock request cancellation
       mockCancelOngoingRequest = vi.fn();
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         cancelOngoingRequest: mockCancelOngoingRequest,
       });
 
@@ -2162,7 +2162,7 @@ describe('AppContainer State Management', () => {
     describe('CTRL+C', () => {
       it('should cancel ongoing request on first press', async () => {
         mockeduseOnyxStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+          ...DEFAULT_ONYX_STREAM_MOCK,
           streamingState: 'responding',
           cancelOngoingRequest: mockCancelOngoingRequest,
         });
@@ -2277,7 +2277,7 @@ describe('AppContainer State Management', () => {
       beforeEach(() => {
         // Mock activePtyId to enable focus
         mockeduseOnyxStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+          ...DEFAULT_ONYX_STREAM_MOCK,
           activePtyId: 1,
         });
       });
@@ -2307,7 +2307,7 @@ describe('AppContainer State Management', () => {
       it('should auto-unfocus when activePtyId becomes null', async () => {
         // Start with active pty and focused
         mockeduseOnyxStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+          ...DEFAULT_ONYX_STREAM_MOCK,
           activePtyId: 1,
         });
 
@@ -2324,7 +2324,7 @@ describe('AppContainer State Management', () => {
 
         // Now mock activePtyId becoming null
         mockeduseOnyxStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+          ...DEFAULT_ONYX_STREAM_MOCK,
           activePtyId: null,
         });
 
@@ -2340,7 +2340,7 @@ describe('AppContainer State Management', () => {
       it('should focus background shell on Tab when already visible (not toggle it off)', async () => {
         const mockToggleBackgroundTask = vi.fn();
         mockeduseOnyxStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+          ...DEFAULT_ONYX_STREAM_MOCK,
           activePtyId: null,
           isBackgroundTaskVisible: true,
           backgroundTasks: new Map([[123, { pid: 123, status: 'running' }]]),
@@ -2368,7 +2368,7 @@ describe('AppContainer State Management', () => {
       it('should toggle background shell on Ctrl+B even if visible but not focused', async () => {
         const mockToggleBackgroundTask = vi.fn();
         mockeduseOnyxStream.mockReturnValue({
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+          ...DEFAULT_ONYX_STREAM_MOCK,
           activePtyId: null,
           isBackgroundTaskVisible: true,
           backgroundTasks: new Map([[123, { pid: 123, status: 'running' }]]),
@@ -2393,20 +2393,20 @@ describe('AppContainer State Management', () => {
 
       it('should show and focus background shell on Ctrl+B if hidden', async () => {
         const mockToggleBackgroundTask = vi.fn();
-        const geminiStreamMock = {
-          ...DEFAULT_GEMINI_STREAM_MOCK,
+        const onyxStreamMock = {
+          ...DEFAULT_ONYX_STREAM_MOCK,
           activePtyId: null,
           isBackgroundTaskVisible: false,
           backgroundTasks: new Map([[123, { pid: 123, status: 'running' }]]),
           toggleBackgroundTasks: mockToggleBackgroundTask,
         };
-        mockeduseOnyxStream.mockReturnValue(geminiStreamMock);
+        mockeduseOnyxStream.mockReturnValue(onyxStreamMock);
 
         await setupKeypressTest();
 
         // Update the mock state when toggled to simulate real behavior
         mockToggleBackgroundTask.mockImplementation(() => {
-          geminiStreamMock.isBackgroundTaskVisible = true;
+          onyxStreamMock.isBackgroundTaskVisible = true;
         });
 
         // Press Ctrl+B
@@ -2498,7 +2498,7 @@ describe('AppContainer State Management', () => {
       expect(capturedUIState.shortcutsHelpVisible).toBe(true);
 
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: 'responding',
       });
 
@@ -3021,10 +3021,10 @@ describe('AppContainer State Management', () => {
   });
 
   describe('Banner Text', () => {
-    it('should render placeholder banner text for USE_GEMINI auth type', async () => {
+    it('should render placeholder banner text for USE_ONYX auth type', async () => {
       const config = makeFakeConfig();
       vi.spyOn(config, 'getContentGeneratorConfig').mockReturnValue({
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
         apiKey: 'fake-key',
       });
       let unmount: () => void;
@@ -3044,7 +3044,7 @@ describe('AppContainer State Management', () => {
 
     // Helper to extract arguments from the useOnyxStream hook call
     // This isolates the positional argument dependency to a single location
-    const extractUseGeminiStreamArgs = (args: unknown[]) => ({
+    const extractUseOnyxStreamArgs = (args: unknown[]) => ({
       onCancelSubmit: args[13] as (shouldRestorePrompt?: boolean) => void,
     });
 
@@ -3059,7 +3059,7 @@ describe('AppContainer State Management', () => {
     it('preserves buffer when cancelling, even if empty (user is in control)', async () => {
       const { unmount } = await act(async () => renderAppContainer());
 
-      const { onCancelSubmit } = extractUseGeminiStreamArgs(
+      const { onCancelSubmit } = extractUseOnyxStreamArgs(
         mockeduseOnyxStream.mock.lastCall!,
       );
 
@@ -3090,7 +3090,7 @@ describe('AppContainer State Management', () => {
 
       const { unmount } = await act(async () => renderAppContainer());
 
-      const { onCancelSubmit } = extractUseGeminiStreamArgs(
+      const { onCancelSubmit } = extractUseOnyxStreamArgs(
         mockeduseOnyxStream.mock.lastCall!,
       );
 
@@ -3116,7 +3116,7 @@ describe('AppContainer State Management', () => {
       const { unmount } = await act(async () => renderAppContainer());
       expect(capturedInputState.userMessages).toContain('previous message');
 
-      const { onCancelSubmit } = extractUseGeminiStreamArgs(
+      const { onCancelSubmit } = extractUseOnyxStreamArgs(
         mockeduseOnyxStream.mock.lastCall!,
       );
 
@@ -3580,7 +3580,7 @@ describe('AppContainer State Management', () => {
     it('should allow plan mode when enabled and idle', async () => {
       vi.spyOn(mockConfig, 'isPlanEnabled').mockReturnValue(true);
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         pendingHistoryItems: [],
       });
 
@@ -3594,7 +3594,7 @@ describe('AppContainer State Management', () => {
     it('should NOT allow plan mode when disabled in config', async () => {
       vi.spyOn(mockConfig, 'isPlanEnabled').mockReturnValue(false);
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         pendingHistoryItems: [],
       });
 
@@ -3608,7 +3608,7 @@ describe('AppContainer State Management', () => {
     it('should NOT allow plan mode when streaming', async () => {
       vi.spyOn(mockConfig, 'isPlanEnabled').mockReturnValue(true);
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: StreamingState.Responding,
         pendingHistoryItems: [],
       });
@@ -3623,7 +3623,7 @@ describe('AppContainer State Management', () => {
     it('should NOT allow plan mode when a tool is awaiting confirmation', async () => {
       vi.spyOn(mockConfig, 'isPlanEnabled').mockReturnValue(true);
       mockeduseOnyxStream.mockReturnValue({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         streamingState: StreamingState.Idle,
         pendingHistoryItems: [
           {
@@ -3662,7 +3662,7 @@ describe('AppContainer State Management', () => {
 
       // Start compression by mocking pendingHistoryItems to include a pending compression
       mockeduseOnyxStream.mockImplementation(() => ({
-        ...DEFAULT_GEMINI_STREAM_MOCK,
+        ...DEFAULT_ONYX_STREAM_MOCK,
         pendingHistoryItems: [
           {
             type: MessageType.COMPRESSION,

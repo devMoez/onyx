@@ -44,11 +44,11 @@ describe('Trusted Folders', () => {
 
   beforeEach(() => {
     // Create a temporary directory for each test
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-cli-test-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'onyx-cli-test-'));
     trustedFoldersPath = path.join(tempDir, 'trustedFolders.json');
 
     // Set the environment variable to point to the temp file
-    vi.stubEnv('GEMINI_CLI_TRUSTED_FOLDERS_PATH', trustedFoldersPath);
+    vi.stubEnv('ONYX_CLI_TRUSTED_FOLDERS_PATH', trustedFoldersPath);
 
     // Reset the internal state
     resetTrustedFoldersForTesting();
@@ -419,8 +419,8 @@ describe('Trusted Folders', () => {
     };
 
     it('should NOT return true when isHeadlessMode is true, ignoring config', async () => {
-      const geminiCore = await import('@onyx/core');
-      vi.spyOn(geminiCore, 'isHeadlessMode').mockReturnValue(true);
+      const onyxCore = await import('@onyx/core');
+      vi.spyOn(onyxCore, 'isHeadlessMode').mockReturnValue(true);
 
       expect(isWorkspaceTrusted(mockSettings)).toEqual({
         isTrusted: undefined,
@@ -441,8 +441,8 @@ describe('Trusted Folders', () => {
     });
 
     it('should fall back to config when isHeadlessMode is false', async () => {
-      const geminiCore = await import('@onyx/core');
-      vi.spyOn(geminiCore, 'isHeadlessMode').mockReturnValue(false);
+      const onyxCore = await import('@onyx/core');
+      vi.spyOn(onyxCore, 'isHeadlessMode').mockReturnValue(false);
 
       const config = { '/projectA': TrustLevel.DO_NOT_TRUST };
       fs.writeFileSync(trustedFoldersPath, JSON.stringify(config), 'utf-8');
@@ -453,8 +453,8 @@ describe('Trusted Folders', () => {
     });
 
     it('should return undefined for isPathTrusted when isHeadlessMode is true', async () => {
-      const geminiCore = await import('@onyx/core');
-      vi.spyOn(geminiCore, 'isHeadlessMode').mockReturnValue(true);
+      const onyxCore = await import('@onyx/core');
+      vi.spyOn(onyxCore, 'isHeadlessMode').mockReturnValue(true);
 
       const folders = loadTrustedFolders();
       expect(folders.isPathTrusted('/any-untrusted-path')).toBe(undefined);
@@ -531,9 +531,9 @@ describe('Trusted Folders', () => {
       fs.writeFileSync(trustedFoldersPath, JSON.stringify(config), 'utf-8');
 
       const envPath = path.join(untrustedDir, '.env');
-      fs.writeFileSync(envPath, 'GEMINI_API_KEY=secret', 'utf-8');
+      fs.writeFileSync(envPath, 'ONYX_API_KEY=secret', 'utf-8');
 
-      vi.stubEnv('GEMINI_API_KEY', '');
+      vi.stubEnv('ONYX_API_KEY', '');
 
       const settings = createMockSettings({
         security: { folderTrust: { enabled: true } },
@@ -541,7 +541,7 @@ describe('Trusted Folders', () => {
 
       loadEnvironment(settings.merged, untrustedDir);
 
-      expect(process.env['GEMINI_API_KEY']).toBe('');
+      expect(process.env['ONYX_API_KEY']).toBe('');
 
       vi.unstubAllEnvs();
     });

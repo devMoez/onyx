@@ -93,9 +93,9 @@ const OAUTH_SCOPE = [
 
 const HTTP_REDIRECT = 301;
 const SIGN_IN_SUCCESS_URL =
-  'https://developers.google.com/gemini-code-assist/auth_success_gemini';
+  'https://developers.google.com/onyx-code-assist/auth_success_onyx';
 const SIGN_IN_FAILURE_URL =
-  'https://developers.google.com/gemini-code-assist/auth_failure_gemini';
+  'https://developers.google.com/onyx-code-assist/auth_failure_onyx';
 
 /**
  * An Authentication URL for updating the credentials of a Oauth2Client
@@ -234,8 +234,8 @@ async function initOauthClient(
     if (!config.isInteractive()) {
       throw new FatalAuthenticationError(
         'Manual authorization is required but the current session is non-interactive. ' +
-          'Please run the Gemini CLI in an interactive terminal to log in, ' +
-          'provide a GEMINI_API_KEY, or ensure Application Default Credentials are configured.',
+          'Please run the Onyx CLI in an interactive terminal to log in, ' +
+          'provide a ONYX_API_KEY, or ensure Application Default Credentials are configured.',
       );
     }
     let success = false;
@@ -260,7 +260,7 @@ async function initOauthClient(
       }
     } finally {
       exitAlternateScreen();
-      // If this was triggered from an active Gemini CLI TUI this event ensures
+      // If this was triggered from an active Onyx CLI TUI this event ensures
       // the TUI will re-initialize the terminal state just like it will when
       // another editor like VIM may have modified the buffer of settings.
       coreEvents.emit(CoreEvent.ExternalEditorClosed);

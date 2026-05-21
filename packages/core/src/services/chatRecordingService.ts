@@ -180,7 +180,7 @@ export async function loadConversationRecord(
           const isUser = hasProperty(record, 'type') && record.type === 'user';
           const isUserOrAssistant =
             hasProperty(record, 'type') &&
-            (record.type === 'user' || record.type === 'gemini');
+            (record.type === 'user' || record.type === 'onyx');
           // Track message count and first user message
           if (options?.metadataOnly) {
             messageIds.push(id);
@@ -263,7 +263,7 @@ export async function loadConversationRecord(
       : loadedMessages.filter((m) => m.type === 'user').length;
     const hasUserOrAssistant = options?.metadataOnly
       ? Array.from(messageKinds.values()).some((m) => m.isUserOrAssistant)
-      : loadedMessages.some((m) => m.type === 'user' || m.type === 'gemini');
+      : loadedMessages.some((m) => m.type === 'user' || m.type === 'onyx');
 
     return {
       sessionId: metadata.sessionId,
@@ -289,7 +289,7 @@ export async function loadConversationRecord(
       hasUserOrAssistantMessage:
         options?.metadataOnly && metadataMessages.length > 0
           ? metadataMessages.some(
-              (m) => m.type === 'user' || m.type === 'gemini',
+              (m) => m.type === 'user' || m.type === 'onyx',
             )
           : hasUserOrAssistant,
     };
@@ -524,7 +524,7 @@ export class ChatRecordingService {
         message.displayContent,
         message.id,
       );
-      if (msg.type === 'gemini') {
+      if (msg.type === 'onyx') {
         msg.thoughts = this.queuedThoughts;
         msg.tokens = this.queuedTokens;
         msg.model = message.model;
@@ -580,7 +580,7 @@ export class ChatRecordingService {
         total: respUsageMetadata.totalTokenCount ?? 0,
       };
       const lastMsg = this.getLastMessage(this.cachedConversation);
-      if (lastMsg && lastMsg.type === 'gemini' && !lastMsg.tokens) {
+      if (lastMsg && lastMsg.type === 'onyx' && !lastMsg.tokens) {
         lastMsg.tokens = tokens;
         this.queuedTokens = null;
         this.pushMessage(lastMsg);
@@ -615,12 +615,12 @@ export class ChatRecordingService {
       const lastMsg = this.getLastMessage(this.cachedConversation);
       if (
         !lastMsg ||
-        lastMsg.type !== 'gemini' ||
+        lastMsg.type !== 'onyx' ||
         this.queuedThoughts.length > 0
       ) {
         const newMsg: MessageRecord = {
-          ...this.newMessage('gemini' as const, ''),
-          type: 'gemini' as const,
+          ...this.newMessage('onyx' as const, ''),
+          type: 'onyx' as const,
           toolCalls: enrichedToolCalls,
           thoughts: this.queuedThoughts,
           model,
@@ -919,7 +919,7 @@ export class ChatRecordingService {
         // It's a new (possibly synthetic) turn like a summary
         updated = true;
         return this.newMessage(
-          turn.content.role === 'user' ? 'user' : 'gemini',
+          turn.content.role === 'user' ? 'user' : 'onyx',
           turn.content.parts || [],
           undefined,
           turn.id,
@@ -928,20 +928,20 @@ export class ChatRecordingService {
 
       // 2. Specialized 'Masking Sync' for tool call results
       // If a user turn in history contains a functionResponse, we update the
-      // corresponding ToolCallRecord in the preceding gemini message.
+      // corresponding ToolCallRecord in the preceding onyx message.
       for (const turn of history) {
         if (turn.content.role !== 'user') continue;
         for (const part of turn.content.parts || []) {
           if (part.functionResponse) {
             const callId = part.functionResponse.id;
-            // Find the gemini message that contains this tool call
-            const geminiMsg = newMessages.find(
+            // Find the onyx message that contains this tool call
+            const onyxMsg = newMessages.find(
               (m) =>
-                m.type === 'gemini' &&
+                m.type === 'onyx' &&
                 m.toolCalls?.some((tc) => tc.id === callId),
             );
-            if (geminiMsg && geminiMsg.type === 'gemini') {
-              const tc = geminiMsg.toolCalls!.find((tc) => tc.id === callId);
+            if (onyxMsg && onyxMsg.type === 'onyx') {
+              const tc = onyxMsg.toolCalls!.find((tc) => tc.id === callId);
               if (tc) {
                 // If the history version is different (e.g. masked), sync it into the record
                 // We sync the entire parts array of the user turn to ensure sibling parts are preserved
@@ -1023,7 +1023,7 @@ async function parseLegacyRecordFallback(
           firstUserMessage: fallbackFirstUserMessageStr,
           hasUserOrAssistantMessage:
             legacyRecord.messages?.some(
-              (m) => m.type === 'user' || m.type === 'gemini',
+              (m) => m.type === 'user' || m.type === 'onyx',
             ) || false,
         };
       }
@@ -1033,7 +1033,7 @@ async function parseLegacyRecordFallback(
           legacyRecord.messages?.filter((m) => m.type === 'user').length || 0,
         hasUserOrAssistantMessage:
           legacyRecord.messages?.some(
-            (m) => m.type === 'user' || m.type === 'gemini',
+            (m) => m.type === 'user' || m.type === 'onyx',
           ) || false,
       };
     }

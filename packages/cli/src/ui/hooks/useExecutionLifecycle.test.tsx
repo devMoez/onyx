@@ -111,7 +111,7 @@ import {
 } from './useExecutionLifecycle.js';
 import {
   type Config,
-  type GeminiClient,
+  type OnyxClient,
   type ShellExecutionResult,
   type ShellOutputEvent,
   type AnsiOutput,
@@ -128,7 +128,7 @@ describe('useExecutionLifecycle', () => {
   let onExecMock: Mock;
   let onDebugMessageMock: Mock;
   let mockConfig: Config;
-  let mockGeminiClient: GeminiClient;
+  let mockOnyxClient: OnyxClient;
 
   let mockShellOutputCallback: (event: ShellOutputEvent) => void;
   let resolveExecutionPromise: (result: ShellExecutionResult) => void;
@@ -158,7 +158,7 @@ describe('useExecutionLifecycle', () => {
         },
       }),
     } as unknown as Config;
-    mockGeminiClient = { addHistory: vi.fn() } as unknown as GeminiClient;
+    mockOnyxClient = { addHistory: vi.fn() } as unknown as OnyxClient;
 
     vi.mocked(os.platform).mockReturnValue('linux');
     vi.mocked(os.tmpdir).mockReturnValue('/tmp');
@@ -167,7 +167,7 @@ describe('useExecutionLifecycle', () => {
     );
     mockIsBinary.mockReturnValue(false);
     vi.mocked(fs.existsSync).mockReturnValue(false);
-    vi.mocked(fs.mkdtempSync).mockReturnValue('/tmp/gemini-shell-abcdef');
+    vi.mocked(fs.mkdtempSync).mockReturnValue('/tmp/onyx-shell-abcdef');
 
     mockShellExecutionService.mockImplementation((_cmd, _cwd, callback) => {
       mockShellOutputCallback = callback;
@@ -195,7 +195,7 @@ describe('useExecutionLifecycle', () => {
         onExecMock,
         onDebugMessageMock,
         mockConfig,
-        mockGeminiClient,
+        mockOnyxClient,
         setShellInputFocusedMock,
         undefined,
         undefined,
@@ -253,7 +253,7 @@ describe('useExecutionLifecycle', () => {
         }),
       ],
     });
-    const tmpFile = path.join('/tmp/gemini-shell-abcdef', 'pwd.tmp');
+    const tmpFile = path.join('/tmp/onyx-shell-abcdef', 'pwd.tmp');
     const escapedTmpFile = escapeShellArg(tmpFile, 'bash');
     const wrappedCommand = `{\nls -l\n}\n__code=$?; pwd > ${escapedTmpFile}; exit $__code`;
     expect(mockShellExecutionService).toHaveBeenCalledWith(
@@ -316,7 +316,7 @@ describe('useExecutionLifecycle', () => {
         ],
       }),
     );
-    expect(mockGeminiClient.addHistory).toHaveBeenCalled();
+    expect(mockOnyxClient.addHistory).toHaveBeenCalled();
     expect(setShellInputFocusedMock).toHaveBeenCalledWith(false);
   });
 
@@ -364,7 +364,7 @@ describe('useExecutionLifecycle', () => {
         );
       });
 
-      const tmpFile = path.join('/tmp/gemini-shell-abcdef', 'pwd.tmp');
+      const tmpFile = path.join('/tmp/onyx-shell-abcdef', 'pwd.tmp');
       const escapedTmpFile = escapeShellArg(tmpFile, 'bash');
       const wrappedCommand = `{\nstream\n}\n__code=$?; pwd > ${escapedTmpFile}; exit $__code`;
       expect(mockShellExecutionService).toHaveBeenCalledWith(
@@ -657,7 +657,7 @@ describe('useExecutionLifecycle', () => {
       type: 'error',
       text: 'An unexpected error occurred: Synchronous spawn error',
     });
-    const tmpFile = path.join('/tmp/gemini-shell-abcdef', 'pwd.tmp');
+    const tmpFile = path.join('/tmp/onyx-shell-abcdef', 'pwd.tmp');
     // Verify that the temporary file was cleaned up
     expect(vi.mocked(fs.unlinkSync)).toHaveBeenCalledWith(tmpFile);
     expect(setShellInputFocusedMock).toHaveBeenCalledWith(false);
@@ -665,7 +665,7 @@ describe('useExecutionLifecycle', () => {
 
   describe('Directory Change Warning', () => {
     it('should show a warning if the working directory changes', async () => {
-      const tmpFile = path.join('/tmp/gemini-shell-abcdef', 'pwd.tmp');
+      const tmpFile = path.join('/tmp/onyx-shell-abcdef', 'pwd.tmp');
       vi.mocked(fs.existsSync).mockReturnValue(true);
       vi.mocked(fs.readFileSync).mockReturnValue('/test/dir/new'); // A different directory
 

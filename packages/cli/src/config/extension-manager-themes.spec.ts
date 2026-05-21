@@ -21,7 +21,7 @@ import { createExtension } from '../test-utils/createExtension.js';
 import { ExtensionManager } from './extension-manager.js';
 import { themeManager, DEFAULT_THEME } from '../ui/themes/theme-manager.js';
 import {
-  GEMINI_DIR,
+  ONYX_DIR,
   type Config,
   tmpdir,
   NoopSandboxManager,
@@ -35,7 +35,7 @@ describe('ExtensionManager theme loading', () => {
 
   beforeAll(async () => {
     tempHomeDir = await fs.promises.mkdtemp(
-      path.join(tmpdir(), 'gemini-cli-test-'),
+      path.join(tmpdir(), 'onyx-cli-test-'),
     );
   });
 
@@ -46,8 +46,8 @@ describe('ExtensionManager theme loading', () => {
   });
 
   beforeEach(() => {
-    process.env['GEMINI_CLI_HOME'] = tempHomeDir;
-    userExtensionsDir = path.join(tempHomeDir, GEMINI_DIR, 'extensions');
+    process.env['ONYX_CLI_HOME'] = tempHomeDir;
+    userExtensionsDir = path.join(tempHomeDir, ONYX_DIR, 'extensions');
     // Ensure userExtensionsDir is clean for each test
     fs.rmSync(userExtensionsDir, { recursive: true, force: true });
     fs.mkdirSync(userExtensionsDir, { recursive: true });
@@ -70,7 +70,7 @@ describe('ExtensionManager theme loading', () => {
   });
 
   afterEach(() => {
-    delete process.env['GEMINI_CLI_HOME'];
+    delete process.env['ONYX_CLI_HOME'];
   });
 
   it('should register themes from an extension when started', async () => {
@@ -97,7 +97,7 @@ describe('ExtensionManager theme loading', () => {
       getMcpClientManager: () => ({
         startExtension: vi.fn().mockResolvedValue(undefined),
       }),
-      getGeminiClient: () => ({
+      getOnyxClient: () => ({
         isInitialized: () => false,
         updateSystemInstruction: vi.fn(),
         setTools: vi.fn(),
@@ -110,7 +110,7 @@ describe('ExtensionManager theme loading', () => {
         isIgnored: () => false,
       }),
       getMemoryContextManager: () => undefined,
-      getGeminiMdFilePaths: () => [],
+      getOnyxMdFilePaths: () => [],
       getMcpServers: () => ({}),
       getAllowedMcpServers: () => [],
       getSanitizationConfig: () => ({
@@ -208,10 +208,10 @@ describe('ExtensionManager theme loading', () => {
         stopExtension: vi.fn().mockResolvedValue(undefined),
       }),
       setUserMemory: vi.fn(),
-      setGeminiMdFileCount: vi.fn(),
-      setGeminiMdFilePaths: vi.fn(),
+      setOnyxMdFileCount: vi.fn(),
+      setOnyxMdFilePaths: vi.fn(),
       getEnableExtensionReloading: () => true,
-      getGeminiClient: () => ({
+      getOnyxClient: () => ({
         isInitialized: () => false,
         updateSystemInstruction: vi.fn(),
         setTools: vi.fn(),

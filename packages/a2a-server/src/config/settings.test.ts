@@ -23,7 +23,7 @@ vi.mock('node:os', async (importOriginal) => {
   const path = await import('node:path');
   return {
     ...actual,
-    homedir: () => path.join(actual.tmpdir(), `gemini-home-${mocks.suffix}`),
+    homedir: () => path.join(actual.tmpdir(), `onyx-home-${mocks.suffix}`),
   };
 });
 
@@ -33,32 +33,32 @@ vi.mock('@onyx/core', async (importOriginal) => {
   const os = await import('node:os');
   return {
     ...actual,
-    GEMINI_DIR: '.onyx',
+    ONYX_DIR: '.onyx',
     debugLogger: {
       error: vi.fn(),
     },
     getErrorMessage: (error: unknown) => String(error),
-    homedir: () => path.join(os.tmpdir(), `gemini-home-${mocks.suffix}`),
+    homedir: () => path.join(os.tmpdir(), `onyx-home-${mocks.suffix}`),
   };
 });
 
 describe('loadSettings', () => {
-  const mockHomeDir = path.join(os.tmpdir(), `gemini-home-${mocks.suffix}`);
+  const mockHomeDir = path.join(os.tmpdir(), `onyx-home-${mocks.suffix}`);
   const mockWorkspaceDir = path.join(
     os.tmpdir(),
-    `gemini-workspace-${mocks.suffix}`,
+    `onyx-workspace-${mocks.suffix}`,
   );
-  const mockGeminiHomeDir = path.join(mockHomeDir, '.onyx');
-  const mockGeminiWorkspaceDir = path.join(mockWorkspaceDir, '.onyx');
+  const mockOnyxHomeDir = path.join(mockHomeDir, '.onyx');
+  const mockOnyxWorkspaceDir = path.join(mockWorkspaceDir, '.onyx');
 
   beforeEach(() => {
     vi.clearAllMocks();
     // Create the directories using the real fs
-    if (!fs.existsSync(mockGeminiHomeDir)) {
-      fs.mkdirSync(mockGeminiHomeDir, { recursive: true });
+    if (!fs.existsSync(mockOnyxHomeDir)) {
+      fs.mkdirSync(mockOnyxHomeDir, { recursive: true });
     }
-    if (!fs.existsSync(mockGeminiWorkspaceDir)) {
-      fs.mkdirSync(mockGeminiWorkspaceDir, { recursive: true });
+    if (!fs.existsSync(mockOnyxWorkspaceDir)) {
+      fs.mkdirSync(mockOnyxWorkspaceDir, { recursive: true });
     }
 
     // Clean up settings files before each test
@@ -66,7 +66,7 @@ describe('loadSettings', () => {
       fs.rmSync(USER_SETTINGS_PATH);
     }
     const workspaceSettingsPath = path.join(
-      mockGeminiWorkspaceDir,
+      mockOnyxWorkspaceDir,
       'settings.json',
     );
     if (fs.existsSync(workspaceSettingsPath)) {
@@ -140,7 +140,7 @@ describe('loadSettings', () => {
       },
     };
     const workspaceSettingsPath = path.join(
-      mockGeminiWorkspaceDir,
+      mockOnyxWorkspaceDir,
       'settings.json',
     );
     fs.writeFileSync(workspaceSettingsPath, JSON.stringify(workspaceSettings));

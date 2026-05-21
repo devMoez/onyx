@@ -6,18 +6,18 @@
 
 /**
  * @fileoverview Pure, stateless-per-call translation functions that convert
- * ServerGeminiStreamEvent objects into AgentEvent objects.
+ * ServerOnyxStreamEvent objects into AgentEvent objects.
  *
  * No side effects, no generators. Each call to `translateEvent` takes an event
  * and mutable TranslationState, returning zero or more AgentEvents.
  */
 
 import type { FinishReason } from '@google/genai';
-import { GeminiEventType } from '../core/turn.js';
+import { OnyxEventType } from '../core/turn.js';
 import type {
-  ServerGeminiStreamEvent,
+  ServerOnyxStreamEvent,
   StructuredError,
-  GeminiFinishedEventValue,
+  OnyxFinishedEventValue,
 } from '../core/turn.js';
 import type {
   AgentEvent,
@@ -28,7 +28,7 @@ import type {
   ToolDisplay,
 } from './types.js';
 import {
-  geminiPartsToContentParts,
+  onyxPartsToContentParts,
   buildToolResponseData,
 } from './content-utils.js';
 import { toolResultDisplayToDisplayContent } from './tool-display-utils.js';
@@ -91,23 +91,23 @@ function ensureStreamStart(state: TranslationState, out: AgentEvent[]): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Translates a single ServerGeminiStreamEvent into zero or more AgentEvents.
+ * Translates a single ServerOnyxStreamEvent into zero or more AgentEvents.
  * Mutates `state` (counter, flags) as a side effect.
  */
 export function translateEvent(
-  event: ServerGeminiStreamEvent,
+  event: ServerOnyxStreamEvent,
   state: TranslationState,
 ): AgentEvent[] {
   const out: AgentEvent[] = [];
 
   switch (event.type) {
-    case GeminiEventType.ModelInfo:
+    case OnyxEventType.ModelInfo:
       state.model = event.value;
       ensureStreamStart(state, out);
       out.push(makeEvent('session_update', state, { model: event.value }));
       break;
 
-    case GeminiEventType.Content:
+    case OnyxEventType.Content:
       ensureStreamStart(state, out);
       out.push(
         makeEvent('message', state, {
@@ -117,7 +117,7 @@ export function translateEvent(
       );
       break;
 
-    case GeminiEventType.Thought:
+    case OnyxEventType.Thought:
       ensureStreamStart(state, out);
       out.push(
         makeEvent('message', state, {
@@ -130,7 +130,7 @@ export function translateEvent(
       );
       break;
 
-    case GeminiEventType.Citation:
+    case OnyxEventType.Citation:
       ensureStreamStart(state, out);
       out.push(
         makeEvent('message', state, {
@@ -141,15 +141,15 @@ export function translateEvent(
       );
       break;
 
-    case GeminiEventType.Finished:
+    case OnyxEventType.Finished:
       handleFinished(event.value, state, out);
       break;
 
-    case GeminiEventType.Error:
+    case OnyxEventType.Error:
       handleError(event.value.error, state, out);
       break;
 
-    case GeminiEventType.UserCancelled:
+    case OnyxEventType.UserCancelled:
       ensureStreamStart(state, out);
       out.push(
         makeEvent('agent_end', state, {
@@ -158,7 +158,7 @@ export function translateEvent(
       );
       break;
 
-    case GeminiEventType.MaxSessionTurns:
+    case OnyxEventType.MaxSessionTurns:
       ensureStreamStart(state, out);
       out.push(
         makeEvent('agent_end', state, {
@@ -170,7 +170,7 @@ export function translateEvent(
       );
       break;
 
-    case GeminiEventType.LoopDetected:
+    case OnyxEventType.LoopDetected:
       ensureStreamStart(state, out);
       out.push(
         makeEvent('error', state, {
@@ -182,7 +182,7 @@ export function translateEvent(
       );
       break;
 
-    case GeminiEventType.ContextWindowWillOverflow:
+    case OnyxEventType.ContextWindowWillOverflow:
       ensureStreamStart(state, out);
       out.push(
         makeEvent('error', state, {
@@ -193,7 +193,7 @@ export function translateEvent(
       );
       break;
 
-    case GeminiEventType.AgentExecutionStopped:
+    case OnyxEventType.AgentExecutionStopped:
       ensureStreamStart(state, out);
       out.push(
         makeEvent('agent_end', state, {
@@ -205,7 +205,7 @@ export function translateEvent(
       );
       break;
 
-    case GeminiEventType.AgentExecutionBlocked:
+    case OnyxEventType.AgentExecutionBlocked:
       ensureStreamStart(state, out);
       out.push(
         makeEvent('error', state, {
@@ -217,7 +217,7 @@ export function translateEvent(
       );
       break;
 
-    case GeminiEventType.InvalidStream:
+    case OnyxEventType.InvalidStream:
       ensureStreamStart(state, out);
       out.push(
         makeEvent('error', state, {
@@ -228,7 +228,7 @@ export function translateEvent(
       );
       break;
 
-    case GeminiEventType.ToolCallRequest:
+    case OnyxEventType.ToolCallRequest:
       ensureStreamStart(state, out);
       state.pendingToolNames.set(event.value.callId, event.value.name);
       out.push(
@@ -241,7 +241,7 @@ export function translateEvent(
       );
       break;
 
-    case GeminiEventType.ToolCallResponse: {
+    case OnyxEventType.ToolCallResponse: {
       ensureStreamStart(state, out);
       const data = buildToolResponseData(event.value);
       const display: ToolDisplay | undefined =
@@ -259,7 +259,7 @@ export function translateEvent(
           name: state.pendingToolNames.get(event.value.callId) ?? 'unknown',
           content: event.value.error
             ? [{ type: 'text', text: event.value.error.message }]
-            : geminiPartsToContentParts(event.value.responseParts),
+            : onyxPartsToContentParts(event.value.responseParts),
           isError: event.value.error !== undefined,
           ...(display ? { display } : {}),
           ...(data ? { data } : {}),
@@ -269,13 +269,13 @@ export function translateEvent(
       break;
     }
 
-    case GeminiEventType.ToolCallConfirmation:
+    case OnyxEventType.ToolCallConfirmation:
       // Elicitations are handled separately by the session layer
       break;
 
     // Internal concerns — no AgentEvent emitted
-    case GeminiEventType.ChatCompressed:
-    case GeminiEventType.Retry:
+    case OnyxEventType.ChatCompressed:
+    case OnyxEventType.Retry:
       break;
 
     default:
@@ -292,7 +292,7 @@ export function translateEvent(
 // ---------------------------------------------------------------------------
 
 function handleFinished(
-  value: GeminiFinishedEventValue,
+  value: OnyxFinishedEventValue,
   state: TranslationState,
   out: AgentEvent[],
 ): void {
@@ -323,7 +323,7 @@ function handleError(
 // ---------------------------------------------------------------------------
 
 /**
- * Maps a Gemini FinishReason to an AgentEnd reason.
+ * Maps a Onyx FinishReason to an AgentEnd reason.
  */
 export function mapFinishReason(
   reason: FinishReason | undefined,
@@ -446,7 +446,7 @@ function isStructuredError(error: unknown): error is StructuredError {
 }
 
 /**
- * Maps Gemini usageMetadata to Usage.
+ * Maps Onyx usageMetadata to Usage.
  */
 export function mapUsage(
   metadata: {

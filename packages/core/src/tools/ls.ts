@@ -47,7 +47,7 @@ export interface LSToolParams {
    */
   file_filtering_options?: {
     respect_git_ignore?: boolean;
-    respect_gemini_ignore?: boolean;
+    respect_onyx_ignore?: boolean;
   };
 }
 
@@ -220,7 +220,7 @@ class LSToolInvocation extends BaseToolInvocation<LSToolParams, ToolResult> {
             this.config.getFileFilteringOptions().respectGitIgnore ??
             DEFAULT_FILE_FILTERING_OPTIONS.respectGitIgnore,
           respectonyxIgnore:
-            this.params.file_filtering_options?.respect_gemini_ignore ??
+            this.params.file_filtering_options?.respect_onyx_ignore ??
             this.config.getFileFilteringOptions().respectonyxIgnore ??
             DEFAULT_FILE_FILTERING_OPTIONS.respectonyxIgnore,
         });

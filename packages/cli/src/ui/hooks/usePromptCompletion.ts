@@ -62,7 +62,7 @@ export function usePromptCompletion({
 
   const generatePromptSuggestions = useCallback(async () => {
     const trimmedText = buffer.text.trim();
-    const geminiClient = config?.getGeminiClient();
+    const onyxClient = config?.getOnyxClient();
 
     if (trimmedText === lastRequestedTextRef.current) {
       return;
@@ -74,7 +74,7 @@ export function usePromptCompletion({
 
     if (
       trimmedText.length < PROMPT_COMPLETION_MIN_LENGTH ||
-      !geminiClient ||
+      !onyxClient ||
       isSlashCommand(trimmedText) ||
       trimmedText.includes('@') ||
       !isPromptCompletionEnabled
@@ -102,7 +102,7 @@ export function usePromptCompletion({
         },
       ];
 
-      const response = await geminiClient.generateContent(
+      const response = await onyxClient.generateContent(
         { model: 'prompt-completion' },
         contents,
         signal,

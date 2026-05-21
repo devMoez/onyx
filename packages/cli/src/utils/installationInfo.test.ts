@@ -106,7 +106,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect running via npx', () => {
-    const npxPath = `/Users/test/.npm/_npx/12345/bin/gemini`;
+    const npxPath = `/Users/test/.npm/_npx/12345/bin/onyx`;
     process.argv[1] = npxPath;
     mockedRealPathSync.mockReturnValue(npxPath);
 
@@ -118,7 +118,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect running via pnpx', () => {
-    const pnpxPath = `/Users/test/.pnpm/_pnpx/12345/bin/gemini`;
+    const pnpxPath = `/Users/test/.pnpm/_pnpx/12345/bin/onyx`;
     process.argv[1] = pnpxPath;
     mockedRealPathSync.mockReturnValue(pnpxPath);
 
@@ -130,7 +130,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect running via bunx', () => {
-    const bunxPath = `/Users/test/.bun/install/cache/12345/bin/gemini`;
+    const bunxPath = `/Users/test/.bun/install/cache/12345/bin/onyx`;
     process.argv[1] = bunxPath;
     mockedRealPathSync.mockReturnValue(bunxPath);
     mockedExecSync.mockImplementation(() => {
@@ -149,20 +149,20 @@ describe('getInstallationInfo', () => {
       value: 'darwin',
     });
     // Use a path that matches what brew would resolve to
-    const cliPath = '/opt/homebrew/Cellar/gemini-cli/1.0.0/bin/gemini';
+    const cliPath = '/opt/homebrew/Cellar/onyx-cli/1.0.0/bin/onyx';
     process.argv[1] = cliPath;
 
     mockedExecSync.mockImplementation((cmd) => {
-      if (typeof cmd === 'string' && cmd.includes('brew --prefix gemini-cli')) {
-        return '/opt/homebrew/opt/gemini-cli';
+      if (typeof cmd === 'string' && cmd.includes('brew --prefix onyx-cli')) {
+        return '/opt/homebrew/opt/onyx-cli';
       }
       throw new Error(`Command failed: ${cmd}`);
     });
 
     mockedRealPathSync.mockImplementation((p) => {
       if (p === cliPath) return cliPath;
-      if (p === '/opt/homebrew/opt/gemini-cli') {
-        return '/opt/homebrew/Cellar/gemini-cli/1.0.0';
+      if (p === '/opt/homebrew/opt/onyx-cli') {
+        return '/opt/homebrew/Cellar/onyx-cli/1.0.0';
       }
       return String(p);
     });
@@ -170,13 +170,13 @@ describe('getInstallationInfo', () => {
     const info = getInstallationInfo(projectRoot, true);
 
     expect(mockedExecSync).toHaveBeenCalledWith(
-      expect.stringContaining('brew --prefix gemini-cli'),
+      expect.stringContaining('brew --prefix onyx-cli'),
       expect.anything(),
     );
     expect(info.packageManager).toBe(PackageManager.HOMEBREW);
     expect(info.isGlobal).toBe(true);
     expect(info.updateMessage).toBe(
-      'Installed via Homebrew. Please update with "brew upgrade gemini-cli".',
+      'Installed via Homebrew. Please update with "brew upgrade onyx-cli".',
     );
   });
 
@@ -184,7 +184,7 @@ describe('getInstallationInfo', () => {
     Object.defineProperty(process, 'platform', {
       value: 'darwin',
     });
-    const cliPath = '/usr/local/bin/gemini';
+    const cliPath = '/usr/local/bin/onyx';
     process.argv[1] = cliPath;
     mockedRealPathSync.mockReturnValue(cliPath);
     mockedExecSync.mockImplementation(() => {
@@ -194,7 +194,7 @@ describe('getInstallationInfo', () => {
     const info = getInstallationInfo(projectRoot, true);
 
     expect(mockedExecSync).toHaveBeenCalledWith(
-      expect.stringContaining('brew --prefix gemini-cli'),
+      expect.stringContaining('brew --prefix onyx-cli'),
       expect.anything(),
     );
     // Should fall back to default global npm
@@ -203,7 +203,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect global pnpm installation', () => {
-    const pnpmPath = `/Users/test/.pnpm/global/5/node_modules/.pnpm/some-hash/node_modules/@google/gemini-cli/dist/index.js`;
+    const pnpmPath = `/Users/test/.pnpm/global/5/node_modules/.pnpm/some-hash/node_modules/@google/onyx-cli/dist/index.js`;
     process.argv[1] = pnpmPath;
     mockedRealPathSync.mockReturnValue(pnpmPath);
     mockedExecSync.mockImplementation(() => {
@@ -214,7 +214,7 @@ describe('getInstallationInfo', () => {
     const info = getInstallationInfo(projectRoot, true);
     expect(info.packageManager).toBe(PackageManager.PNPM);
     expect(info.isGlobal).toBe(true);
-    expect(info.updateCommand).toBe('pnpm add -g @google/gemini-cli@latest');
+    expect(info.updateCommand).toBe('pnpm add -g @google/onyx-cli@latest');
     expect(info.updateMessage).toContain('Attempting to automatically update');
 
     // isAutoUpdateEnabled = false -> "Please run..."
@@ -223,7 +223,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect global yarn installation', () => {
-    const yarnPath = `/Users/test/.yarn/global/node_modules/@google/gemini-cli/dist/index.js`;
+    const yarnPath = `/Users/test/.yarn/global/node_modules/@google/onyx-cli/dist/index.js`;
     process.argv[1] = yarnPath;
     mockedRealPathSync.mockReturnValue(yarnPath);
     mockedExecSync.mockImplementation(() => {
@@ -235,7 +235,7 @@ describe('getInstallationInfo', () => {
     expect(info.packageManager).toBe(PackageManager.YARN);
     expect(info.isGlobal).toBe(true);
     expect(info.updateCommand).toBe(
-      'yarn global add @google/gemini-cli@latest',
+      'yarn global add @google/onyx-cli@latest',
     );
     expect(info.updateMessage).toContain('Attempting to automatically update');
 
@@ -245,7 +245,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect global bun installation', () => {
-    const bunPath = `/Users/test/.bun/install/global/node_modules/@google/gemini-cli/dist/index.js`;
+    const bunPath = `/Users/test/.bun/install/global/node_modules/@google/onyx-cli/dist/index.js`;
     process.argv[1] = bunPath;
     mockedRealPathSync.mockReturnValue(bunPath);
     mockedExecSync.mockImplementation(() => {
@@ -256,7 +256,7 @@ describe('getInstallationInfo', () => {
     const info = getInstallationInfo(projectRoot, true);
     expect(info.packageManager).toBe(PackageManager.BUN);
     expect(info.isGlobal).toBe(true);
-    expect(info.updateCommand).toBe('bun add -g @google/gemini-cli@latest');
+    expect(info.updateCommand).toBe('bun add -g @google/onyx-cli@latest');
     expect(info.updateMessage).toContain('Attempting to automatically update');
 
     // isAutoUpdateEnabled = false -> "Please run..."
@@ -265,7 +265,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect local installation and identify yarn from lockfile', () => {
-    const localPath = `${projectRoot}/node_modules/.bin/gemini`;
+    const localPath = `${projectRoot}/node_modules/.bin/onyx`;
     process.argv[1] = localPath;
     mockedRealPathSync.mockReturnValue(localPath);
     mockedExecSync.mockImplementation(() => {
@@ -283,7 +283,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect local installation and identify pnpm from lockfile', () => {
-    const localPath = `${projectRoot}/node_modules/.bin/gemini`;
+    const localPath = `${projectRoot}/node_modules/.bin/onyx`;
     process.argv[1] = localPath;
     mockedRealPathSync.mockReturnValue(localPath);
     mockedExecSync.mockImplementation(() => {
@@ -300,7 +300,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should detect local installation and identify bun from lockfile', () => {
-    const localPath = `${projectRoot}/node_modules/.bin/gemini`;
+    const localPath = `${projectRoot}/node_modules/.bin/onyx`;
     process.argv[1] = localPath;
     mockedRealPathSync.mockReturnValue(localPath);
     mockedExecSync.mockImplementation(() => {
@@ -317,7 +317,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should default to local npm installation if no lockfile is found', () => {
-    const localPath = `${projectRoot}/node_modules/.bin/gemini`;
+    const localPath = `${projectRoot}/node_modules/.bin/onyx`;
     process.argv[1] = localPath;
     mockedRealPathSync.mockReturnValue(localPath);
     mockedExecSync.mockImplementation(() => {
@@ -332,7 +332,7 @@ describe('getInstallationInfo', () => {
   });
 
   it('should default to global npm installation for unrecognized paths', () => {
-    const globalPath = `/usr/local/bin/gemini`;
+    const globalPath = `/usr/local/bin/onyx`;
     process.argv[1] = globalPath;
     mockedRealPathSync.mockReturnValue(globalPath);
     mockedExecSync.mockImplementation(() => {
@@ -343,7 +343,7 @@ describe('getInstallationInfo', () => {
     const info = getInstallationInfo(projectRoot, true);
     expect(info.packageManager).toBe(PackageManager.NPM);
     expect(info.isGlobal).toBe(true);
-    expect(info.updateCommand).toBe('npm install -g @google/gemini-cli@latest');
+    expect(info.updateCommand).toBe('npm install -g @google/onyx-cli@latest');
     expect(info.updateMessage).toContain('Attempting to automatically update');
 
     // isAutoUpdateEnabled = false -> "Please run..."
@@ -351,23 +351,23 @@ describe('getInstallationInfo', () => {
     expect(infoDisabled.updateMessage).toContain('Please run npm install');
   });
 
-  it('should NOT detect Homebrew if gemini-cli is installed in brew but running from npm location', () => {
+  it('should NOT detect Homebrew if onyx-cli is installed in brew but running from npm location', () => {
     Object.defineProperty(process, 'platform', {
       value: 'darwin',
     });
     // Path looks like standard global NPM
     const cliPath =
-      '/usr/local/lib/node_modules/@google/gemini-cli/dist/index.js';
+      '/usr/local/lib/node_modules/@google/onyx-cli/dist/index.js';
     process.argv[1] = cliPath;
 
     // Setup mocks
     mockedExecSync.mockImplementation((cmd) => {
       if (typeof cmd === 'string' && cmd.includes('brew list')) {
-        return Buffer.from('gemini-cli\n');
+        return Buffer.from('onyx-cli\n');
       }
       // Future proofing for the fix:
-      if (typeof cmd === 'string' && cmd.includes('brew --prefix gemini-cli')) {
-        return '/opt/homebrew/opt/gemini-cli';
+      if (typeof cmd === 'string' && cmd.includes('brew --prefix onyx-cli')) {
+        return '/opt/homebrew/opt/onyx-cli';
       }
       throw new Error(`Command failed: ${cmd}`);
     });
@@ -375,8 +375,8 @@ describe('getInstallationInfo', () => {
     mockedRealPathSync.mockImplementation((p) => {
       if (p === cliPath) return cliPath;
       // Future proofing for the fix:
-      if (p === '/opt/homebrew/opt/gemini-cli')
-        return '/opt/homebrew/Cellar/gemini-cli/1.0.0';
+      if (p === '/opt/homebrew/opt/onyx-cli')
+        return '/opt/homebrew/Cellar/onyx-cli/1.0.0';
       return String(p);
     });
 

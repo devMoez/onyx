@@ -6,7 +6,7 @@
 
 import type {
   Config,
-  GeminiCLIExtension,
+  OnyxCLIExtension,
   MCPServerConfig,
 } from '../config/config.js';
 import type { ToolRegistry } from './tool-registry.js';
@@ -207,9 +207,9 @@ export class McpClientManager {
    *
    *    - Removes all its MCP servers from the global configuration object.
    *    - Disconnects all MCP clients from their servers.
-   *    - Updates the Gemini chat configuration to load the new tools.
+   *    - Updates the Onyx chat configuration to load the new tools.
    */
-  async stopExtension(extension: GeminiCLIExtension) {
+  async stopExtension(extension: OnyxCLIExtension) {
     debugLogger.log(`Unloading extension: ${extension.name}`);
     await Promise.all(
       Object.keys(extension.mcpServers ?? {}).map((name) => {
@@ -237,9 +237,9 @@ export class McpClientManager {
    *
    *    - Adds all its MCP servers to the global configuration object.
    *    - Connects MCP clients to each server and discovers their tools.
-   *    - Updates the Gemini chat configuration to load the new tools.
+   *    - Updates the Onyx chat configuration to load the new tools.
    */
-  async startExtension(extension: GeminiCLIExtension) {
+  async startExtension(extension: OnyxCLIExtension) {
     debugLogger.log(`Loading extension: ${extension.name}`);
     await Promise.all(
       Object.entries(extension.mcpServers ?? {}).map(([name, config]) =>
@@ -562,7 +562,7 @@ export class McpClientManager {
 
   /**
    * Initiates the tool discovery process for all configured MCP servers (via
-   * gemini settings or command line arguments).
+   * onyx settings or command line arguments).
    *
    * It connects to each server, discovers its available tools, and registers
    * them with the `ToolRegistry`.

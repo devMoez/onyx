@@ -12,7 +12,7 @@ import process from 'node:process';
 import {
   CoreEvent,
   FatalConfigError,
-  GEMINI_DIR,
+  ONYX_DIR,
   getErrorMessage,
   getFsErrorMessage,
   Storage,
@@ -82,12 +82,12 @@ export const USER_SETTINGS_DIR = path.dirname(USER_SETTINGS_PATH);
 export const DEFAULT_EXCLUDED_ENV_VARS = [
   'DEBUG',
   'DEBUG_MODE',
-  'GEMINI_CLI_IDE_SERVER_STDIO_COMMAND',
-  'GEMINI_CLI_IDE_SERVER_STDIO_ARGS',
+  'ONYX_CLI_IDE_SERVER_STDIO_COMMAND',
+  'ONYX_CLI_IDE_SERVER_STDIO_ARGS',
 ];
 
 const AUTH_ENV_VAR_WHITELIST = [
-  'GEMINI_API_KEY',
+  'ONYX_API_KEY',
   'GOOGLE_API_KEY',
   'GOOGLE_CLOUD_PROJECT',
   'GOOGLE_CLOUD_LOCATION',
@@ -102,21 +102,21 @@ export function sanitizeEnvVar(value: string): string {
 }
 
 export function getSystemSettingsPath(): string {
-  if (process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH']) {
-    return process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'];
+  if (process.env['ONYX_CLI_SYSTEM_SETTINGS_PATH']) {
+    return process.env['ONYX_CLI_SYSTEM_SETTINGS_PATH'];
   }
   if (platform() === 'darwin') {
-    return '/Library/Application Support/GeminiCli/settings.json';
+    return '/Library/Application Support/OnyxCli/settings.json';
   } else if (platform() === 'win32') {
-    return 'C:\\ProgramData\\gemini-cli\\settings.json';
+    return 'C:\\ProgramData\\onyx-cli\\settings.json';
   } else {
-    return '/etc/gemini-cli/settings.json';
+    return '/etc/onyx-cli/settings.json';
   }
 }
 
 export function getSystemDefaultsPath(): string {
-  if (process.env['GEMINI_CLI_SYSTEM_DEFAULTS_PATH']) {
-    return process.env['GEMINI_CLI_SYSTEM_DEFAULTS_PATH'];
+  if (process.env['ONYX_CLI_SYSTEM_DEFAULTS_PATH']) {
+    return process.env['ONYX_CLI_SYSTEM_DEFAULTS_PATH'];
   }
   return path.join(
     path.dirname(getSystemSettingsPath()),
@@ -518,11 +518,11 @@ function findEnvFile(
 ): string | null {
   let currentDir = path.resolve(startDir);
   while (true) {
-    // prefer gemini-specific .env under GEMINI_DIR
+    // prefer onyx-specific .env under ONYX_DIR
     if (isTrusted) {
-      const geminiEnvPath = path.join(currentDir, GEMINI_DIR, '.env');
-      if (fs.existsSync(geminiEnvPath)) {
-        return geminiEnvPath;
+      const onyxEnvPath = path.join(currentDir, ONYX_DIR, '.env');
+      if (fs.existsSync(onyxEnvPath)) {
+        return onyxEnvPath;
       }
     }
     const envPath = path.join(currentDir, '.env');
@@ -533,11 +533,11 @@ function findEnvFile(
     }
     const parentDir = path.dirname(currentDir);
     if (parentDir === currentDir || !parentDir) {
-      // check .env under home as fallback, again preferring gemini-specific .env
+      // check .env under home as fallback, again preferring onyx-specific .env
       if (isTrusted) {
-        const homeGeminiEnvPath = path.join(homedir(), GEMINI_DIR, '.env');
-        if (fs.existsSync(homeGeminiEnvPath)) {
-          return homeGeminiEnvPath;
+        const homeOnyxEnvPath = path.join(homedir(), ONYX_DIR, '.env');
+        if (fs.existsSync(homeOnyxEnvPath)) {
+          return homeOnyxEnvPath;
         }
       }
       const homeEnvPath = path.join(homedir(), '.env');
@@ -553,7 +553,7 @@ function findEnvFile(
 // Internal env var used to preserve the user's original GOOGLE_CLOUD_PROJECT
 // across process restarts in Cloud Shell. This survives relaunch because child
 // processes inherit the parent's environment.
-const USER_GCP_PROJECT = '_GEMINI_USER_GCP_PROJECT';
+const USER_GCP_PROJECT = '_ONYX_USER_GCP_PROJECT';
 
 export function setUpCloudShellEnvironment(
   envFilePath: string | null,
@@ -654,7 +654,7 @@ export function loadEnvironment(
 
       const excludedVars =
         settings?.advanced?.excludedEnvVars || DEFAULT_EXCLUDED_ENV_VARS;
-      const isProjectEnvFile = !envFilePath.includes(GEMINI_DIR);
+      const isProjectEnvFile = !envFilePath.includes(ONYX_DIR);
 
       for (const key in parsedEnv) {
         if (Object.hasOwn(parsedEnv, key)) {

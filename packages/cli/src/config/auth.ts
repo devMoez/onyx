@@ -18,11 +18,11 @@ export async function validateAuthMethod(
     return null;
   }
 
-  if (authMethod === AuthType.USE_GEMINI) {
-    const key = process.env['GEMINI_API_KEY'] || (await loadApiKey());
+  if (authMethod === AuthType.USE_ONYX) {
+    const key = process.env['ONYX_API_KEY'] || (await loadApiKey());
     if (!key) {
       return (
-        'When using Gemini API, you must specify the GEMINI_API_KEY environment variable.\n' +
+        'When using Onyx API, you must specify the ONYX_API_KEY environment variable.\n' +
         'Update your environment and try again (no reload needed if using .env)!'
       );
     }

@@ -63,7 +63,7 @@ describe('deferred', () => {
       const mockHandler = vi.fn();
       setDeferredCommand({
         handler: mockHandler,
-        argv: { _: [], $0: 'gemini' } as ArgumentsCamelCase,
+        argv: { _: [], $0: 'onyx' } as ArgumentsCamelCase,
         commandName: 'mcp',
       });
 
@@ -90,7 +90,7 @@ describe('deferred', () => {
 
       expect(mockCoreEvents.emitFeedback).toHaveBeenCalledWith(
         'error',
-        'MCP is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-gemini-cli',
+        'MCP is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-onyx-cli',
       );
       expect(mockRunExitCleanup).toHaveBeenCalled();
       expect(mockExit).toHaveBeenCalledWith(ExitCodes.FATAL_CONFIG_ERROR);
@@ -110,7 +110,7 @@ describe('deferred', () => {
 
       expect(mockCoreEvents.emitFeedback).toHaveBeenCalledWith(
         'error',
-        'Extensions is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-gemini-cli',
+        'Extensions is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-onyx-cli',
       );
       expect(mockRunExitCleanup).toHaveBeenCalled();
       expect(mockExit).toHaveBeenCalledWith(ExitCodes.FATAL_CONFIG_ERROR);
@@ -130,7 +130,7 @@ describe('deferred', () => {
 
       expect(mockCoreEvents.emitFeedback).toHaveBeenCalledWith(
         'error',
-        'Agent skills is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-gemini-cli',
+        'Agent skills is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-onyx-cli',
       );
       expect(mockRunExitCleanup).toHaveBeenCalled();
       expect(mockExit).toHaveBeenCalledWith(ExitCodes.FATAL_CONFIG_ERROR);
@@ -165,7 +165,7 @@ describe('deferred', () => {
       expect(deferredModule.command).toBe(commandModule.command);
 
       // Execute the wrapper handler
-      const argv = { _: [], $0: 'gemini' } as ArgumentsCamelCase;
+      const argv = { _: [], $0: 'onyx' } as ArgumentsCamelCase;
       await deferredModule.handler(argv);
 
       // Should check that it set the deferred command, but didn't run original handler yet
@@ -205,7 +205,7 @@ describe('deferred', () => {
 
       expect(mockCoreEvents.emitFeedback).toHaveBeenCalledWith(
         'error',
-        'MCP is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-gemini-cli',
+        'MCP is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-onyx-cli',
       );
     });
 

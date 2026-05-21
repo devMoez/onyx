@@ -24,7 +24,7 @@ export async function setup() {
   if (process.platform === 'win32') {
     process.env['USERPROFILE'] = runDir;
   }
-  process.env['GEMINI_CONFIG_DIR'] = join(runDir, '.gemini');
+  process.env['ONYX_CONFIG_DIR'] = join(runDir, '.onyx');
 
   // Download ripgrep to avoid race conditions
   const available = await resolveRipgrepPath();
@@ -51,8 +51,8 @@ export async function setup() {
   }
 
   process.env['INTEGRATION_TEST_FILE_DIR'] = runDir;
-  process.env['GEMINI_CLI_INTEGRATION_TEST'] = 'true';
-  process.env['GEMINI_FORCE_FILE_STORAGE'] = 'true';
+  process.env['ONYX_CLI_INTEGRATION_TEST'] = 'true';
+  process.env['ONYX_FORCE_FILE_STORAGE'] = 'true';
   process.env['TELEMETRY_LOG_FILE'] = join(runDir, 'telemetry.log');
   process.env['VERBOSE'] = process.env['VERBOSE'] ?? 'false';
 
@@ -69,3 +69,4 @@ export async function teardown() {
     }
   }
 }
+

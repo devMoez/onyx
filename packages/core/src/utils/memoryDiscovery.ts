@@ -8,12 +8,12 @@ import * as fs from 'node:fs/promises';
 import * as fsSync from 'node:fs';
 import * as path from 'node:path';
 import {
-  getAllGeminiMdFilenames,
+  getAllOnyxMdFilenames,
   PROJECT_MEMORY_INDEX_FILENAME,
 } from '../tools/memoryTool.js';
 import { processImports } from './memoryImportProcessor.js';
 import {
-  GEMINI_DIR,
+  ONYX_DIR,
   homedir,
   isSubpath,
   normalizePath,
@@ -38,7 +38,7 @@ const logger = {
     debugLogger.error('[ERROR] [MemoryDiscovery]', ...args),
 };
 
-export interface GeminiFileContent {
+export interface OnyxFileContent {
   filePath: string;
   content: string | null;
 }
@@ -206,19 +206,19 @@ async function findProjectRoot(
   }
 }
 
-export async function readGeminiMdFiles(
+export async function readOnyxMdFiles(
   filePaths: string[],
   importFormat: 'flat' | 'tree' = 'tree',
   boundaryMarkers: readonly string[] = ['.git'],
-): Promise<GeminiFileContent[]> {
+): Promise<OnyxFileContent[]> {
   // Process files in parallel with concurrency limit to prevent EMFILE errors
   const CONCURRENT_LIMIT = 20; // Higher limit for file reads as they're typically faster
-  const results: GeminiFileContent[] = [];
+  const results: OnyxFileContent[] = [];
 
   for (let i = 0; i < filePaths.length; i += CONCURRENT_LIMIT) {
     const batch = filePaths.slice(i, i + CONCURRENT_LIMIT);
     const batchPromises = batch.map(
-      async (filePath): Promise<GeminiFileContent> => {
+      async (filePath): Promise<OnyxFileContent> => {
         try {
           const content = await fs.readFile(filePath, 'utf-8');
 
@@ -260,7 +260,7 @@ export async function readGeminiMdFiles(
               const message =
                 error instanceof Error ? error.message : String(error);
               logger.warn(
-                `Warning: Could not read ${getAllGeminiMdFilenames()} file at ${filePath}. Error: ${message}`,
+                `Warning: Could not read ${getAllOnyxMdFilenames()} file at ${filePath}. Error: ${message}`,
               );
             }
             debugLogger.debug(
@@ -293,7 +293,7 @@ export async function readGeminiMdFiles(
 }
 
 export function concatenateInstructions(
-  instructionContents: GeminiFileContent[],
+  instructionContents: OnyxFileContent[],
 ): string {
   return instructionContents
     .filter((item) => typeof item.content === 'string')
@@ -316,11 +316,11 @@ export interface MemoryLoadResult {
 
 export async function getGlobalMemoryPaths(): Promise<string[]> {
   const userHome = homedir();
-  const geminiMdFilenames = getAllGeminiMdFilenames();
+  const onyxMdFilenames = getAllOnyxMdFilenames();
 
-  const accessChecks = geminiMdFilenames.map(async (filename) => {
+  const accessChecks = onyxMdFilenames.map(async (filename) => {
     const globalPath = toAbsolutePath(
-      path.join(userHome, GEMINI_DIR, filename),
+      path.join(userHome, ONYX_DIR, filename),
     );
     try {
       await fs.access(globalPath, fsSync.constants.R_OK);
@@ -358,8 +358,8 @@ export async function getUserProjectMemoryPaths(
     // been migrated to MEMORY.md yet.
   }
 
-  const geminiMdFilenames = getAllGeminiMdFilenames();
-  const accessChecks = geminiMdFilenames.map(async (filename) => {
+  const onyxMdFilenames = getAllOnyxMdFilenames();
+  const accessChecks = onyxMdFilenames.map(async (filename) => {
     const legacyMemoryPath = toAbsolutePath(
       path.join(projectMemoryDir, filename),
     );
@@ -419,7 +419,7 @@ export async function getEnvironmentMemoryPaths(
         ? `git root: ${ceiling})`
         : `trusted root: ${ceiling} — no git root found)`,
     );
-    return findUpwardGeminiFiles(resolvedRoot, ceiling);
+    return findUpwardOnyxFiles(resolvedRoot, ceiling);
   });
 
   const pathArrays = await Promise.all(traversalPromises);
@@ -437,13 +437,13 @@ export function categorizeAndConcatenate(
     project: string[];
     userProjectMemory?: string[];
   },
-  contentsMap: Map<string, GeminiFileContent>,
+  contentsMap: Map<string, OnyxFileContent>,
 ): HierarchicalMemory {
   const getConcatenated = (pList: string[]) =>
     concatenateInstructions(
       pList
         .map((p) => contentsMap.get(p))
-        .filter((c): c is GeminiFileContent => !!c),
+        .filter((c): c is OnyxFileContent => !!c),
     );
 
   return {
@@ -460,15 +460,15 @@ export function categorizeAndConcatenate(
  * Files are ordered by directory level (root to leaf), with all filename
  * variants grouped together per directory.
  */
-async function findUpwardGeminiFiles(
+async function findUpwardOnyxFiles(
   startDir: string,
   stopDir: string,
 ): Promise<string[]> {
   const upwardPaths: string[] = [];
   let currentDir = toAbsolutePath(startDir);
   const resolvedStopDirKey = normalizePath(stopDir);
-  const geminiMdFilenames = getAllGeminiMdFilenames();
-  const globalGeminiDirKey = normalizePath(path.join(homedir(), GEMINI_DIR));
+  const onyxMdFilenames = getAllOnyxMdFilenames();
+  const globalOnyxDirKey = normalizePath(path.join(homedir(), ONYX_DIR));
 
   debugLogger.debug(
     '[DEBUG] [MemoryDiscovery] Starting upward search from',
@@ -478,12 +478,12 @@ async function findUpwardGeminiFiles(
   );
 
   while (true) {
-    if (normalizePath(currentDir) === globalGeminiDirKey) {
+    if (normalizePath(currentDir) === globalOnyxDirKey) {
       break;
     }
 
     // Parallelize checks for all filename variants in the current directory
-    const accessChecks = geminiMdFilenames.map(async (filename) => {
+    const accessChecks = onyxMdFilenames.map(async (filename) => {
       const potentialPath = toAbsolutePath(path.join(currentDir, filename));
       try {
         await fs.access(potentialPath, fsSync.constants.R_OK);
@@ -569,7 +569,7 @@ export async function loadJitSubdirectoryMemory(
   }
 
   // Traverse from the resolved directory up to the ceiling
-  const potentialPaths = await findUpwardGeminiFiles(startDir, resolvedCeiling);
+  const potentialPaths = await findUpwardOnyxFiles(startDir, resolvedCeiling);
 
   if (potentialPaths.length === 0) {
     return { files: [], fileIdentities: [] };
@@ -633,7 +633,7 @@ export async function loadJitSubdirectoryMemory(
     JSON.stringify(newPaths),
   );
 
-  const contents = await readGeminiMdFiles(newPaths, 'tree', boundaryMarkers);
+  const contents = await readOnyxMdFiles(newPaths, 'tree', boundaryMarkers);
 
   return {
     files: contents

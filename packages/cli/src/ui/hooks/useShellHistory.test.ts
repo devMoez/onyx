@@ -12,7 +12,7 @@ import { useShellHistory } from './useShellHistory.js';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as crypto from 'node:crypto';
-import { GEMINI_DIR } from '@onyx/core';
+import { ONYX_DIR } from '@onyx/core';
 
 vi.mock('node:fs/promises', () => ({
   readFile: vi.fn(),
@@ -43,12 +43,12 @@ vi.mock('@onyx/core', async (importOriginal) => {
       return '/test/home/.onyx/settings.json';
     }
     getProjectTempDir(): string {
-      return path.join('/test/home/', actual.GEMINI_DIR, 'tmp', 'mocked_hash');
+      return path.join('/test/home/', actual.ONYX_DIR, 'tmp', 'mocked_hash');
     }
     getHistoryFilePath(): string {
       return path.join(
         '/test/home/',
-        actual.GEMINI_DIR,
+        actual.ONYX_DIR,
         'tmp',
         'mocked_hash',
         'shell_history',
@@ -72,7 +72,7 @@ const MOCKED_PROJECT_HASH = 'mocked_hash';
 
 const MOCKED_HISTORY_DIR = path.join(
   MOCKED_HOME_DIR,
-  GEMINI_DIR,
+  ONYX_DIR,
   'tmp',
   MOCKED_PROJECT_HASH,
 );

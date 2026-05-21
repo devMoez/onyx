@@ -89,7 +89,7 @@ describe('<StatsDisplay />', () => {
   it('renders a table with two models correctly', async () => {
     const metrics = createTestMetrics({
       models: {
-        'gemini-2.5-pro': {
+        'onyx-2.5-pro': {
           api: { totalRequests: 3, totalErrors: 0, totalLatencyMs: 15000 },
           tokens: {
             input: 500,
@@ -102,7 +102,7 @@ describe('<StatsDisplay />', () => {
           },
           roles: {},
         },
-        'gemini-2.5-flash': {
+        'onyx-2.5-flash': {
           api: { totalRequests: 5, totalErrors: 1, totalLatencyMs: 4500 },
           tokens: {
             input: 15000,
@@ -134,7 +134,7 @@ describe('<StatsDisplay />', () => {
   it('renders role breakdown correctly under models', async () => {
     const metrics = createTestMetrics({
       models: {
-        'gemini-2.5-flash': {
+        'onyx-2.5-flash': {
           api: { totalRequests: 10, totalErrors: 0, totalLatencyMs: 10000 },
           tokens: {
             input: 1000,
@@ -182,7 +182,7 @@ describe('<StatsDisplay />', () => {
     const { lastFrame } = await renderWithMockedStats(metrics);
     const output = lastFrame();
 
-    expect(output).toContain('gemini-2.5-flash');
+    expect(output).toContain('onyx-2.5-flash');
     expect(output).toContain('10'); // Total requests
     expect(output).toContain('↳ main');
     expect(output).toContain('7'); // main requests
@@ -194,7 +194,7 @@ describe('<StatsDisplay />', () => {
   it('renders all sections when all data is present', async () => {
     const metrics = createTestMetrics({
       models: {
-        'gemini-2.5-pro': {
+        'onyx-2.5-pro': {
           api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 100 },
           tokens: {
             input: 50,
@@ -289,7 +289,7 @@ describe('<StatsDisplay />', () => {
     it('hides Efficiency section when cache is not used', async () => {
       const metrics = createTestMetrics({
         models: {
-          'gemini-2.5-pro': {
+          'onyx-2.5-pro': {
             api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 100 },
             tokens: {
               input: 100,

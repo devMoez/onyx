@@ -113,8 +113,8 @@ export function useHistory({
             });
             break;
           case 'user':
-          case 'gemini':
-          case 'gemini_content':
+          case 'onyx':
+          case 'onyx_content':
             // Core conversation recording handled by onyxChat.
             break;
           default:

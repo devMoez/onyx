@@ -54,57 +54,57 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
         },
       },
     },
-    // Because `gemini-2.5-pro` and related model configs are "user-facing"
+    // Because `onyx-2.5-pro` and related model configs are "user-facing"
     // today, i.e. they could be passed via `--model`, we have to be careful to
     // ensure these model configs can be used interactively.
     // TODO(joshualitt): Introduce internal base configs for the various models,
     // note: we will have to think carefully about names.
-    'gemini-3-pro-preview': {
+    'onyx-3-pro-preview': {
       extends: 'chat-base-3',
       modelConfig: {
-        model: 'gemini-3-pro-preview',
+        model: 'onyx-3-pro-preview',
       },
     },
-    'gemini-3-flash-preview': {
+    'onyx-3-flash-preview': {
       extends: 'chat-base-3',
       modelConfig: {
-        model: 'gemini-3-flash-preview',
+        model: 'onyx-3-flash-preview',
       },
     },
-    'gemini-3.1-pro-preview': {
+    'onyx-3.1-pro-preview': {
       extends: 'chat-base-3',
       modelConfig: {
-        model: 'gemini-3.1-pro-preview',
+        model: 'onyx-3.1-pro-preview',
       },
     },
-    'gemini-3.1-pro-preview-customtools': {
+    'onyx-3.1-pro-preview-customtools': {
       extends: 'chat-base-3',
       modelConfig: {
-        model: 'gemini-3.1-pro-preview-customtools',
+        model: 'onyx-3.1-pro-preview-customtools',
       },
     },
-    'gemini-3.1-flash-lite-preview': {
+    'onyx-3.1-flash-lite-preview': {
       extends: 'chat-base-3',
       modelConfig: {
-        model: 'gemini-3.1-flash-lite-preview',
+        model: 'onyx-3.1-flash-lite-preview',
       },
     },
-    'gemini-2.5-pro': {
+    'onyx-2.5-pro': {
       extends: 'chat-base-2.5',
       modelConfig: {
-        model: 'gemini-2.5-pro',
+        model: 'onyx-2.5-pro',
       },
     },
-    'gemini-2.5-flash': {
+    'onyx-2.5-flash': {
       extends: 'chat-base-2.5',
       modelConfig: {
-        model: 'gemini-2.5-flash',
+        model: 'onyx-2.5-flash',
       },
     },
-    'gemini-2.5-flash-lite': {
+    'onyx-2.5-flash-lite': {
       extends: 'chat-base-2.5',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'onyx-2.5-flash-lite',
       },
     },
     'gemma-4-31b-it': {
@@ -121,22 +121,22 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     },
 
     // Bases for the internal model configs.
-    'gemini-2.5-flash-base': {
+    'onyx-2.5-flash-base': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash',
+        model: 'onyx-2.5-flash',
       },
     },
-    'gemini-3-flash-base': {
+    'onyx-3-flash-base': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-3-flash-preview',
+        model: 'onyx-3-flash-preview',
       },
     },
     classifier: {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'onyx-2.5-flash-lite',
         generateContentConfig: {
           maxOutputTokens: 1024,
           thinkingConfig: {
@@ -148,7 +148,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     'prompt-completion': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'onyx-2.5-flash-lite',
         generateContentConfig: {
           temperature: 0.3,
           maxOutputTokens: 16000,
@@ -161,7 +161,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     'fast-ack-helper': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'onyx-2.5-flash-lite',
         generateContentConfig: {
           temperature: 0.2,
           maxOutputTokens: 120,
@@ -174,7 +174,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     'edit-corrector': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'onyx-2.5-flash-lite',
         generateContentConfig: {
           thinkingConfig: {
             thinkingBudget: 0,
@@ -185,7 +185,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     'summarizer-default': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'onyx-2.5-flash-lite',
         generateContentConfig: {
           maxOutputTokens: 2000,
         },
@@ -194,14 +194,14 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     'summarizer-shell': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'onyx-2.5-flash-lite',
         generateContentConfig: {
           maxOutputTokens: 2000,
         },
       },
     },
     'web-search': {
-      extends: 'gemini-3-flash-base',
+      extends: 'onyx-3-flash-base',
       modelConfig: {
         generateContentConfig: {
           tools: [{ googleSearch: {} }],
@@ -209,7 +209,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
       },
     },
     'web-fetch': {
-      extends: 'gemini-3-flash-base',
+      extends: 'onyx-3-flash-base',
       modelConfig: {
         generateContentConfig: {
           tools: [{ urlContext: {} }],
@@ -218,29 +218,29 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     },
     // TODO(joshualitt): During cleanup, make modelConfig optional.
     'web-fetch-fallback': {
-      extends: 'gemini-3-flash-base',
+      extends: 'onyx-3-flash-base',
       modelConfig: {},
     },
     'loop-detection': {
-      extends: 'gemini-3-flash-base',
+      extends: 'onyx-3-flash-base',
       modelConfig: {},
     },
     'loop-detection-double-check': {
       extends: 'base',
       modelConfig: {
-        model: 'gemini-3-pro-preview',
+        model: 'onyx-3-pro-preview',
       },
     },
     'llm-edit-fixer': {
-      extends: 'gemini-3-flash-base',
+      extends: 'onyx-3-flash-base',
       modelConfig: {},
     },
     'next-speaker-checker': {
-      extends: 'gemini-3-flash-base',
+      extends: 'onyx-3-flash-base',
       modelConfig: {},
     },
     'context-snapshotter': {
-      extends: 'gemini-3-flash-base',
+      extends: 'onyx-3-flash-base',
       modelConfig: {
         generateContentConfig: {
           thinkingConfig: {
@@ -254,42 +254,42 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     },
     'chat-compression-3-pro': {
       modelConfig: {
-        model: 'gemini-3-pro-preview',
+        model: 'onyx-3-pro-preview',
       },
     },
     'chat-compression-3-flash': {
       modelConfig: {
-        model: 'gemini-3-flash-preview',
+        model: 'onyx-3-flash-preview',
       },
     },
     'chat-compression-3.1-flash-lite': {
       modelConfig: {
-        model: 'gemini-3.1-flash-lite-preview',
+        model: 'onyx-3.1-flash-lite-preview',
       },
     },
     'chat-compression-2.5-pro': {
       modelConfig: {
-        model: 'gemini-2.5-pro',
+        model: 'onyx-2.5-pro',
       },
     },
     'chat-compression-2.5-flash': {
       modelConfig: {
-        model: 'gemini-2.5-flash',
+        model: 'onyx-2.5-flash',
       },
     },
     'chat-compression-2.5-flash-lite': {
       modelConfig: {
-        model: 'gemini-2.5-flash-lite',
+        model: 'onyx-2.5-flash-lite',
       },
     },
     'chat-compression-default': {
       modelConfig: {
-        model: 'gemini-3-pro-preview',
+        model: 'onyx-3-pro-preview',
       },
     },
     'agent-history-provider-summarizer': {
       modelConfig: {
-        model: 'gemini-3-flash-preview',
+        model: 'onyx-3-flash-preview',
       },
     },
   },
@@ -305,58 +305,58 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
   ],
   modelDefinitions: {
     // Concrete Models
-    'gemini-3.1-flash-lite-preview': {
+    'onyx-3.1-flash-lite-preview': {
       tier: 'flash-lite',
-      family: 'gemini-3',
+      family: 'onyx-3',
       isPreview: true,
       isVisible: true,
       features: { thinking: false, multimodalToolUse: true },
     },
-    'gemini-3.1-pro-preview': {
+    'onyx-3.1-pro-preview': {
       tier: 'pro',
-      family: 'gemini-3',
+      family: 'onyx-3',
       isPreview: true,
       isVisible: true,
       features: { thinking: true, multimodalToolUse: true },
     },
-    'gemini-3.1-pro-preview-customtools': {
+    'onyx-3.1-pro-preview-customtools': {
       tier: 'pro',
-      family: 'gemini-3',
+      family: 'onyx-3',
       isPreview: true,
       isVisible: false,
       features: { thinking: true, multimodalToolUse: true },
     },
-    'gemini-3-pro-preview': {
+    'onyx-3-pro-preview': {
       tier: 'pro',
-      family: 'gemini-3',
+      family: 'onyx-3',
       isPreview: true,
       isVisible: true,
       features: { thinking: true, multimodalToolUse: true },
     },
-    'gemini-3-flash-preview': {
+    'onyx-3-flash-preview': {
       tier: 'flash',
-      family: 'gemini-3',
+      family: 'onyx-3',
       isPreview: true,
       isVisible: true,
       features: { thinking: false, multimodalToolUse: true },
     },
-    'gemini-2.5-pro': {
+    'onyx-2.5-pro': {
       tier: 'pro',
-      family: 'gemini-2.5',
+      family: 'onyx-2.5',
       isPreview: false,
       isVisible: true,
       features: { thinking: false, multimodalToolUse: false },
     },
-    'gemini-2.5-flash': {
+    'onyx-2.5-flash': {
       tier: 'flash',
-      family: 'gemini-2.5',
+      family: 'onyx-2.5',
       isPreview: false,
       isVisible: true,
       features: { thinking: false, multimodalToolUse: false },
     },
-    'gemini-2.5-flash-lite': {
+    'onyx-2.5-flash-lite': {
       tier: 'flash-lite',
-      family: 'gemini-2.5',
+      family: 'onyx-2.5',
       isPreview: false,
       isVisible: true,
       features: { thinking: false, multimodalToolUse: false },
@@ -404,15 +404,15 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
       isVisible: false,
       features: { thinking: false, multimodalToolUse: false },
     },
-    'auto-gemini-3': {
+    'auto-onyx-3': {
       tier: 'auto',
-      family: 'gemini-3',
+      family: 'onyx-3',
       isPreview: true,
       isVisible: false,
     },
-    'auto-gemini-2.5': {
+    'auto-onyx-2.5': {
       tier: 'auto',
-      family: 'gemini-2.5',
+      family: 'onyx-2.5',
       isPreview: false,
       isVisible: false,
     },
@@ -425,150 +425,150 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
       default: 'gemma-4-26b-a4b-it',
     },
 
-    'gemini-3.1-pro-preview': {
-      default: 'gemini-3.1-pro-preview',
+    'onyx-3.1-pro-preview': {
+      default: 'onyx-3.1-pro-preview',
       contexts: [
-        { condition: { hasAccessToPreview: false }, target: 'gemini-2.5-pro' },
+        { condition: { hasAccessToPreview: false }, target: 'onyx-2.5-pro' },
         {
           condition: { useCustomTools: true },
-          target: 'gemini-3.1-pro-preview-customtools',
+          target: 'onyx-3.1-pro-preview-customtools',
         },
       ],
     },
-    'gemini-3.1-pro-preview-customtools': {
-      default: 'gemini-3.1-pro-preview-customtools',
+    'onyx-3.1-pro-preview-customtools': {
+      default: 'onyx-3.1-pro-preview-customtools',
       contexts: [
-        { condition: { hasAccessToPreview: false }, target: 'gemini-2.5-pro' },
+        { condition: { hasAccessToPreview: false }, target: 'onyx-2.5-pro' },
       ],
     },
-    'gemini-3-flash-preview': {
-      default: 'gemini-3-flash-preview',
+    'onyx-3-flash-preview': {
+      default: 'onyx-3-flash-preview',
       contexts: [
         {
           condition: { hasAccessToPreview: false },
-          target: 'gemini-2.5-flash',
+          target: 'onyx-2.5-flash',
         },
       ],
     },
-    'gemini-3-pro-preview': {
-      default: 'gemini-3-pro-preview',
+    'onyx-3-pro-preview': {
+      default: 'onyx-3-pro-preview',
       contexts: [
-        { condition: { hasAccessToPreview: false }, target: 'gemini-2.5-pro' },
+        { condition: { hasAccessToPreview: false }, target: 'onyx-2.5-pro' },
         {
-          condition: { useGemini3_1: true, useCustomTools: true },
-          target: 'gemini-3.1-pro-preview-customtools',
+          condition: { useOnyx3_1: true, useCustomTools: true },
+          target: 'onyx-3.1-pro-preview-customtools',
         },
         {
-          condition: { useGemini3_1: true },
-          target: 'gemini-3.1-pro-preview',
+          condition: { useOnyx3_1: true },
+          target: 'onyx-3.1-pro-preview',
         },
       ],
     },
     auto: {
-      default: 'gemini-3-pro-preview',
+      default: 'onyx-3-pro-preview',
       contexts: [
-        { condition: { hasAccessToPreview: false }, target: 'gemini-2.5-pro' },
+        { condition: { hasAccessToPreview: false }, target: 'onyx-2.5-pro' },
         {
-          condition: { useGemini3_1: true, useCustomTools: true },
-          target: 'gemini-3.1-pro-preview-customtools',
+          condition: { useOnyx3_1: true, useCustomTools: true },
+          target: 'onyx-3.1-pro-preview-customtools',
         },
         {
-          condition: { useGemini3_1: true },
-          target: 'gemini-3.1-pro-preview',
+          condition: { useOnyx3_1: true },
+          target: 'onyx-3.1-pro-preview',
         },
       ],
     },
     pro: {
-      default: 'gemini-3-pro-preview',
+      default: 'onyx-3-pro-preview',
       contexts: [
-        { condition: { hasAccessToPreview: false }, target: 'gemini-2.5-pro' },
+        { condition: { hasAccessToPreview: false }, target: 'onyx-2.5-pro' },
         {
-          condition: { useGemini3_1: true, useCustomTools: true },
-          target: 'gemini-3.1-pro-preview-customtools',
+          condition: { useOnyx3_1: true, useCustomTools: true },
+          target: 'onyx-3.1-pro-preview-customtools',
         },
         {
-          condition: { useGemini3_1: true },
-          target: 'gemini-3.1-pro-preview',
+          condition: { useOnyx3_1: true },
+          target: 'onyx-3.1-pro-preview',
         },
       ],
     },
-    'gemini-3.1-flash-lite-preview': {
-      default: 'gemini-3.1-flash-lite-preview',
+    'onyx-3.1-flash-lite-preview': {
+      default: 'onyx-3.1-flash-lite-preview',
       contexts: [
         {
-          condition: { useGemini3_1FlashLite: false },
-          target: 'gemini-2.5-flash-lite',
+          condition: { useOnyx3_1FlashLite: false },
+          target: 'onyx-2.5-flash-lite',
         },
       ],
     },
     flash: {
-      default: 'gemini-3-flash-preview',
+      default: 'onyx-3-flash-preview',
       contexts: [
         {
           condition: { hasAccessToPreview: false },
-          target: 'gemini-2.5-flash',
+          target: 'onyx-2.5-flash',
         },
       ],
     },
     'flash-lite': {
-      default: 'gemini-2.5-flash-lite',
+      default: 'onyx-2.5-flash-lite',
       contexts: [
         {
-          condition: { useGemini3_1FlashLite: true },
-          target: 'gemini-3.1-flash-lite-preview',
+          condition: { useOnyx3_1FlashLite: true },
+          target: 'onyx-3.1-flash-lite-preview',
         },
       ],
     },
-    'auto-gemini-3': {
-      default: 'gemini-3-pro-preview',
+    'auto-onyx-3': {
+      default: 'onyx-3-pro-preview',
       contexts: [
-        { condition: { hasAccessToPreview: false }, target: 'gemini-2.5-pro' },
+        { condition: { hasAccessToPreview: false }, target: 'onyx-2.5-pro' },
         {
-          condition: { useGemini3_1: true, useCustomTools: true },
-          target: 'gemini-3.1-pro-preview-customtools',
+          condition: { useOnyx3_1: true, useCustomTools: true },
+          target: 'onyx-3.1-pro-preview-customtools',
         },
         {
-          condition: { useGemini3_1: true },
-          target: 'gemini-3.1-pro-preview',
+          condition: { useOnyx3_1: true },
+          target: 'onyx-3.1-pro-preview',
         },
       ],
     },
-    'auto-gemini-2.5': {
-      default: 'gemini-2.5-pro',
+    'auto-onyx-2.5': {
+      default: 'onyx-2.5-pro',
     },
   },
   classifierIdResolutions: {
     flash: {
-      default: 'gemini-3-flash-preview',
+      default: 'onyx-3-flash-preview',
       contexts: [
         {
           condition: { hasAccessToPreview: false },
-          target: 'gemini-2.5-flash',
+          target: 'onyx-2.5-flash',
         },
         {
-          condition: { requestedModels: ['gemini-2.5-pro', 'auto-gemini-2.5'] },
-          target: 'gemini-2.5-flash',
+          condition: { requestedModels: ['onyx-2.5-pro', 'auto-onyx-2.5'] },
+          target: 'onyx-2.5-flash',
         },
       ],
     },
     pro: {
-      default: 'gemini-3-pro-preview',
+      default: 'onyx-3-pro-preview',
       contexts: [
         {
           condition: { hasAccessToPreview: false },
-          target: 'gemini-2.5-pro',
+          target: 'onyx-2.5-pro',
         },
         {
-          condition: { requestedModels: ['gemini-2.5-pro', 'auto-gemini-2.5'] },
-          target: 'gemini-2.5-pro',
+          condition: { requestedModels: ['onyx-2.5-pro', 'auto-onyx-2.5'] },
+          target: 'onyx-2.5-pro',
         },
         {
-          condition: { useGemini3_1: true, useCustomTools: true },
-          target: 'gemini-3.1-pro-preview-customtools',
+          condition: { useOnyx3_1: true, useCustomTools: true },
+          target: 'onyx-3.1-pro-preview-customtools',
         },
         {
-          condition: { useGemini3_1: true },
-          target: 'gemini-3.1-pro-preview',
+          condition: { useOnyx3_1: true },
+          target: 'onyx-3.1-pro-preview',
         },
       ],
     },
@@ -576,7 +576,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
   modelChains: {
     preview: [
       {
-        model: 'gemini-3-pro-preview',
+        model: 'onyx-3-pro-preview',
         actions: {
           terminal: 'prompt',
           transient: 'prompt',
@@ -591,7 +591,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
         },
       },
       {
-        model: 'gemini-3-flash-preview',
+        model: 'onyx-3-flash-preview',
         isLastResort: true,
         maxAttempts: 10,
         actions: {
@@ -610,7 +610,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     ],
     'auto-preview': [
       {
-        model: 'gemini-3-pro-preview',
+        model: 'onyx-3-pro-preview',
         maxAttempts: 3,
         actions: {
           terminal: 'prompt',
@@ -626,7 +626,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
         },
       },
       {
-        model: 'gemini-3-flash-preview',
+        model: 'onyx-3-flash-preview',
         isLastResort: true,
         maxAttempts: 10,
         actions: {
@@ -645,7 +645,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     ],
     default: [
       {
-        model: 'gemini-2.5-pro',
+        model: 'onyx-2.5-pro',
         actions: {
           terminal: 'prompt',
           transient: 'prompt',
@@ -660,7 +660,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
         },
       },
       {
-        model: 'gemini-2.5-flash',
+        model: 'onyx-2.5-flash',
         isLastResort: true,
         maxAttempts: 10,
         actions: {
@@ -679,7 +679,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     ],
     'auto-default': [
       {
-        model: 'gemini-2.5-pro',
+        model: 'onyx-2.5-pro',
         maxAttempts: 3,
         actions: {
           terminal: 'prompt',
@@ -695,7 +695,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
         },
       },
       {
-        model: 'gemini-2.5-flash',
+        model: 'onyx-2.5-flash',
         isLastResort: true,
         maxAttempts: 10,
         actions: {
@@ -714,7 +714,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
     ],
     lite: [
       {
-        model: 'gemini-2.5-flash-lite',
+        model: 'onyx-2.5-flash-lite',
         actions: {
           terminal: 'silent',
           transient: 'silent',
@@ -729,7 +729,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
         },
       },
       {
-        model: 'gemini-2.5-flash',
+        model: 'onyx-2.5-flash',
         actions: {
           terminal: 'silent',
           transient: 'silent',
@@ -744,7 +744,7 @@ export const DEFAULT_MODEL_CONFIGS: ModelConfigServiceConfig = {
         },
       },
       {
-        model: 'gemini-2.5-pro',
+        model: 'onyx-2.5-pro',
         isLastResort: true,
         actions: {
           terminal: 'silent',

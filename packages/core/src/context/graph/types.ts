@@ -31,7 +31,7 @@ export interface Node {
  * Concrete Nodes: The atomic, renderable pieces of data.
  * These are the actual "planks" of the Nodes of Theseus.
  *
- * Each ConcreteNode is now a 1:1 wrapper around a Gemini Part,
+ * Each ConcreteNode is now a 1:1 wrapper around a Onyx Part,
  * ensuring 100% fidelity during reconstruction.
  */
 export interface BaseConcreteNode extends Node {

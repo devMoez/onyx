@@ -26,7 +26,7 @@ describe('<ModelQuotaDisplay />', () => {
 
     const buckets = [
       {
-        modelId: 'gemini-2.5-pro',
+        modelId: 'onyx-2.5-pro',
         remainingFraction: 0.75,
         resetTime,
       },
@@ -59,12 +59,12 @@ describe('<ModelQuotaDisplay />', () => {
   it('filters models based on modelsToShow prop', async () => {
     const buckets = [
       {
-        modelId: 'gemini-2.5-pro',
+        modelId: 'onyx-2.5-pro',
         remainingFraction: 0.5,
         resetTime: new Date().toISOString(),
       },
       {
-        modelId: 'gemini-2.5-flash',
+        modelId: 'onyx-2.5-flash',
         remainingFraction: 0.8,
         resetTime: new Date().toISOString(),
       },
@@ -73,7 +73,7 @@ describe('<ModelQuotaDisplay />', () => {
     const { lastFrame } = await renderWithProviders(
       <ModelQuotaDisplay
         buckets={buckets}
-        modelsToShow={['gemini-2.5-pro']}
+        modelsToShow={['onyx-2.5-pro']}
         availableWidth={100}
       />,
       { width: 100 },

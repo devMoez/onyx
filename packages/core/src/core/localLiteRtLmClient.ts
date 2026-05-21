@@ -9,7 +9,7 @@ import type { Config } from '../config/config.js';
 import { debugLogger } from '../utils/debugLogger.js';
 
 /**
- * A client for making single, non-streaming calls to a local Gemini-compatible API
+ * A client for making single, non-streaming calls to a local Onyx-compatible API
  * and expecting a JSON response.
  */
 export class LocalLiteRtLmClient {
@@ -39,7 +39,7 @@ export class LocalLiteRtLmClient {
   }
 
   /**
-   * Sends a prompt to the local Gemini model and expects a JSON object in response.
+   * Sends a prompt to the local Onyx model and expects a JSON object in response.
    * @param contents The history and current prompt.
    * @param systemInstruction The system prompt.
    * @returns A promise that resolves to the parsed JSON object.
@@ -50,13 +50,13 @@ export class LocalLiteRtLmClient {
     reminder?: string,
     abortSignal?: AbortSignal,
   ): Promise<object> {
-    const geminiContents = contents.map((c) => ({
+    const onyxContents = contents.map((c) => ({
       role: c.role,
       parts: c.parts ? c.parts.map((p) => ({ text: p.text })) : [],
     }));
 
     if (reminder) {
-      const lastContent = geminiContents.at(-1);
+      const lastContent = onyxContents.at(-1);
       if (lastContent?.role === 'user' && lastContent.parts?.[0]?.text) {
         lastContent.parts[0].text += `\n\n${reminder}`;
       }
@@ -65,7 +65,7 @@ export class LocalLiteRtLmClient {
     try {
       const result = await this.client.models.generateContent({
         model: this.model,
-        contents: geminiContents,
+        contents: onyxContents,
         config: {
           responseMimeType: 'application/json',
           systemInstruction: systemInstruction
@@ -80,7 +80,7 @@ export class LocalLiteRtLmClient {
       const text = result.text;
       if (!text) {
         throw new Error(
-          'Invalid response from Local Gemini API: No text found',
+          'Invalid response from Local Onyx API: No text found',
         );
       }
 

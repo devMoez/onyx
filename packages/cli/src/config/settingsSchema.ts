@@ -557,7 +557,7 @@ const SETTINGS_SCHEMA = {
         requiresRestart: false,
         default: false,
         description:
-          'Show Gemini CLI model thoughts in the terminal window title during the working phase',
+          'Show Onyx CLI model thoughts in the terminal window title during the working phase',
         showInDialog: true,
       },
       dynamicWindowTitle: {
@@ -577,7 +577,7 @@ const SETTINGS_SCHEMA = {
         requiresRestart: true,
         default: true,
         description:
-          'Show a warning when running Gemini CLI in the home directory.',
+          'Show a warning when running Onyx CLI in the home directory.',
         showInDialog: true,
       },
       showCompatibilityWarnings: {
@@ -1058,7 +1058,7 @@ const SETTINGS_SCHEMA = {
         category: 'Model',
         requiresRestart: false,
         default: undefined as string | undefined,
-        description: 'The Gemini model to use for conversations.',
+        description: 'The Onyx model to use for conversations.',
         showInDialog: true,
       },
       maxSessionTurns: {
@@ -2078,7 +2078,7 @@ const SETTINGS_SCHEMA = {
         category: 'Experimental',
         requiresRestart: true,
         default: true,
-        description: 'Enable access to Gemma 4 models via Gemini API.',
+        description: 'Enable access to Gemma 4 models via Onyx API.',
         showInDialog: true,
       },
       voiceMode: {
@@ -2118,15 +2118,15 @@ const SETTINGS_SCHEMA = {
             label: 'Voice Transcription Backend',
             category: 'Experimental',
             requiresRestart: false,
-            default: 'gemini-live',
+            default: 'onyx-live',
             description: oneLine`
               The backend to use for voice transcription. Note: When using the
-              Gemini Live backend, voice recordings are sent to Google Cloud for
+              Onyx Live backend, voice recordings are sent to Google Cloud for
               transcription.
             `,
             showInDialog: true,
             options: [
-              { value: 'gemini-live', label: 'Gemini Live API (Cloud)' },
+              { value: 'onyx-live', label: 'Onyx Live API (Cloud)' },
               { value: 'whisper', label: 'Whisper (Local)' },
             ],
           },
@@ -2257,7 +2257,7 @@ const SETTINGS_SCHEMA = {
         label: 'Extension Registry URI',
         category: 'Experimental',
         requiresRestart: true,
-        default: 'https://geminicli.com/extensions.json',
+        default: 'https://onyxcli.com/extensions.json',
         description:
           'The URI (web URL or local file path) of the extension registry.',
         showInDialog: false,
@@ -2347,7 +2347,7 @@ const SETTINGS_SCHEMA = {
             requiresRestart: true,
             default: false,
             description:
-              'Enable the Gemma Model Router (experimental). Requires a local endpoint serving Gemma via the Gemini API using LiteRT-LM shim.',
+              'Enable the Gemma Model Router (experimental). Requires a local endpoint serving Gemma via the Onyx API using LiteRT-LM shim.',
             showInDialog: true,
           },
           autoStartServer: {
@@ -2357,7 +2357,7 @@ const SETTINGS_SCHEMA = {
             requiresRestart: true,
             default: false,
             description:
-              'Automatically start the LiteRT-LM server when Gemini CLI starts and the Gemma router is enabled.',
+              'Automatically start the LiteRT-LM server when Onyx CLI starts and the Gemma router is enabled.',
             showInDialog: true,
           },
           binaryPath: {
@@ -3086,7 +3086,7 @@ export const SETTINGS_SCHEMA_DEFINITIONS: Record<
       extension: {
         type: 'object',
         description:
-          'Metadata describing the Gemini CLI extension that owns this MCP server.',
+          'Metadata describing the Onyx CLI extension that owns this MCP server.',
         additionalProperties: { type: ['string', 'boolean', 'number'] },
       },
       oauth: {
@@ -3179,7 +3179,7 @@ export const SETTINGS_SCHEMA_DEFINITIONS: Record<
   },
   TelemetrySettings: {
     type: 'object',
-    description: 'Telemetry configuration for Gemini CLI.',
+    description: 'Telemetry configuration for Onyx CLI.',
     additionalProperties: false,
     properties: {
       enabled: {
@@ -3283,7 +3283,7 @@ export const SETTINGS_SCHEMA_DEFINITIONS: Record<
   CustomTheme: {
     type: 'object',
     description:
-      'Custom theme definition used for styling Gemini CLI output. Colors are provided as hex strings or named ANSI colors.',
+      'Custom theme definition used for styling Onyx CLI output. Colors are provided as hex strings or named ANSI colors.',
     additionalProperties: false,
     properties: {
       type: {
@@ -3498,8 +3498,8 @@ export const SETTINGS_SCHEMA_DEFINITIONS: Record<
             condition: {
               type: 'object',
               properties: {
-                useGemini3_1: { type: 'boolean' },
-                useGemini3_1FlashLite: { type: 'boolean' },
+                useOnyx3_1: { type: 'boolean' },
+                useOnyx3_1FlashLite: { type: 'boolean' },
                 useCustomTools: { type: 'boolean' },
                 hasAccessToPreview: { type: 'boolean' },
                 requestedModels: {

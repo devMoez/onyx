@@ -18,7 +18,7 @@ import { StandardFileSystemService } from '../services/fileSystemService.js';
 import { createMockWorkspaceContext } from '../test-utils/mockWorkspaceContext.js';
 import { WorkspaceContext } from '../utils/workspaceContext.js';
 import { createMockMessageBus } from '../test-utils/mock-message-bus.js';
-import { GEMINI_IGNORE_FILE_NAME } from '../config/constants.js';
+import { ONYX_IGNORE_FILE_NAME } from '../config/constants.js';
 
 vi.mock('../telemetry/loggers.js', () => ({
   logFileOperation: vi.fn(),
@@ -480,7 +480,7 @@ describe('ReadFileTool', () => {
     describe('with .onyxIgnore', () => {
       beforeEach(async () => {
         await fsp.writeFile(
-          path.join(tempRootDir, GEMINI_IGNORE_FILE_NAME),
+          path.join(tempRootDir, ONYX_IGNORE_FILE_NAME),
           ['foo.*', 'ignored/'].join('\n'),
         );
         const mockConfigInstance = {
@@ -617,14 +617,14 @@ describe('ReadFileTool', () => {
     });
 
     it('should return the schema from the resolver when modelId is provided', () => {
-      const modelId = 'gemini-2.0-flash';
+      const modelId = 'onyx-2.0-flash';
       const schema = tool.getSchema(modelId);
       expect(schema.name).toBe(ReadFileTool.Name);
       expect(schema.description).toMatchSnapshot();
     });
 
-    it('should return the Gemini 3 schema when a Gemini 3 modelId is provided', () => {
-      const modelId = 'gemini-3-pro-preview';
+    it('should return the Onyx 3 schema when a Onyx 3 modelId is provided', () => {
+      const modelId = 'onyx-3-pro-preview';
       const schema = tool.getSchema(modelId);
       expect(schema.name).toBe(ReadFileTool.Name);
       expect(schema.description).toMatchSnapshot();

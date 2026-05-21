@@ -23,14 +23,14 @@ Running this command will open a dialog with your options:
 
 | Option            | Description                                                    | Models                                       |
 | ----------------- | -------------------------------------------------------------- | -------------------------------------------- |
-| Auto (Gemini 3)   | Let the system choose the best Gemini 3 model for your task.   | gemini-3-pro-preview, gemini-3-flash-preview |
-| Auto (Gemini 2.5) | Let the system choose the best Gemini 2.5 model for your task. | gemini-2.5-pro, gemini-2.5-flash             |
+| Auto (Onyx 3)   | Let the system choose the best Onyx 3 model for your task.   | onyx-3-pro-preview, onyx-3-flash-preview |
+| Auto (Onyx 2.5) | Let the system choose the best Onyx 2.5 model for your task. | onyx-2.5-pro, onyx-2.5-flash             |
 | Manual            | Select a specific model.                                       | Any available model.                         |
 
 We recommend selecting one of the above **Auto** options. However, you can
 select **Manual** to select a specific model from those available.
 
-You can also use the `--model` flag to specify a particular Gemini model on
+You can also use the `--model` flag to specify a particular Onyx model on
 startup. For more details, refer to the
 [configuration documentation](../reference/configuration.md).
 

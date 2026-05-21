@@ -13,7 +13,7 @@ When to use each design sub-skill.
 | cip-design    | Corporate Identity Program (50 deliverables)    | SKILL.md + 3 references + 3 scripts  |
 | slides        | HTML presentations with Chart.js                | SKILL.md + 4 references              |
 | banner-design | Banners for social, ads, web, print (22 styles) | SKILL.md + 1 reference               |
-| icon-design   | SVG icon generation (15 styles, Gemini 3.1 Pro) | SKILL.md + 1 reference + 1 script    |
+| icon-design   | SVG icon generation (15 styles, Onyx 3.1 Pro) | SKILL.md + 1 reference + 1 script    |
 
 ## Routing by Task Type
 
@@ -53,7 +53,7 @@ When to use each design sub-skill.
 
 **→ logo-design**
 
-- Create logos with AI (Gemini Nano Banana)
+- Create logos with AI (Onyx Nano Banana)
 - Search logo styles, color palettes, industry guidelines
 - Generate design briefs
 - Explore 55+ styles (minimalist, vintage, luxury, geometric, etc.)
@@ -65,7 +65,7 @@ When to use each design sub-skill.
 - Generate CIP deliverables (business cards, letterheads, signage, vehicles,
   apparel)
 - Create CIP briefs with industry/style analysis
-- Generate mockups with/without logo (Gemini Flash/Pro)
+- Generate mockups with/without logo (Onyx Flash/Pro)
 - Render HTML presentations from CIP mockups
 
 ### Presentation Tasks
@@ -93,7 +93,7 @@ When to use each design sub-skill.
 
 **→ icon-design**
 
-- Generate SVG icons with AI (Gemini 3.1 Pro Preview)
+- Generate SVG icons with AI (Onyx 3.1 Pro Preview)
 - Batch icon variations in multiple styles
 - Multi-size export (16px, 24px, 32px, 48px)
 - 15 styles: outlined, filled, duotone, rounded, sharp, gradient, etc.

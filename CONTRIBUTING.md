@@ -86,9 +86,9 @@ You can run the review tool in two ways:
     locally before a maintainer performs a full review.
 
     **Note on Models:** By default, the script uses the latest Pro model
-    (`gemini-3.1-pro-preview`). If you do not have enough Pro quota, you can run
+    (`onyx-3.1-pro-preview`). If you do not have enough Pro quota, you can run
     it with the latest Flash model instead:
-    `./scripts/review.sh <PR_NUMBER> gemini-3-flash-preview`.
+    `./scripts/review.sh <PR_NUMBER> onyx-3-flash-preview`.
 
 2.  **Manually from within Onyx CLI:** If you already have the PR checked out
     and built, you can run the tool directly from the CLI prompt:
@@ -111,7 +111,7 @@ assign or unassign the issue as requested, provided the conditions are met
 
 Please note that you can have a maximum of 3 issues assigned to you at any given
 time and that only
-[issues labeled "help wanted"](https://github.com/google-gemini/gemini-cli/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22help%20wanted%22)
+[issues labeled "help wanted"](https://github.com/google-onyx/onyx-cli/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22help%20wanted%22)
 may be self-assigned.
 
 ### Pull request guidelines
@@ -186,7 +186,7 @@ If you are forking the repository you will be able to run the Build, Test and
 Integration test workflows. However in order to make the integration tests run
 you'll need to add a
 [GitHub Repository Secret](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository)
-with a value of `GEMINI_API_KEY` and set that to a valid API key that you have
+with a value of `ONYX_API_KEY` and set that to a valid API key that you have
 available. Your key and secret are private to your repo; no one without access
 can see your key and you cannot see any secrets related to this repo.
 
@@ -216,8 +216,8 @@ development setup of this project.
 To clone the repository:
 
 ```bash
-git clone https://github.com/google-gemini/gemini-cli.git # Or your fork's URL
-cd gemini-cli
+git clone https://github.com/google-onyx/onyx-cli.git # Or your fork's URL
+cd onyx-cli
 ```
 
 To install dependencies defined in `package.json` as well as root dependencies:
@@ -239,11 +239,11 @@ prepares the packages for execution. Refer to `scripts/build.js` and
 ### Enabling sandboxing
 
 [Sandboxing](#sandboxing) is highly recommended and requires, at a minimum,
-setting `GEMINI_SANDBOX=true` in your `~/.env` and ensuring a sandboxing
+setting `ONYX_SANDBOX=true` in your `~/.env` and ensuring a sandboxing
 provider (e.g. `macOS Seatbelt`, `docker`, or `podman`) is available. See
 [Sandboxing](#sandboxing) for details.
 
-To build both the `gemini` CLI utility and the sandbox container, run
+To build both the `onyx` CLI utility and the sandbox container, run
 `build:all` from the root directory:
 
 ```bash
@@ -261,10 +261,10 @@ command from the root directory:
 npm start
 ```
 
-If you'd like to run the source build outside of the gemini-cli folder, you can
-utilize `npm link path/to/gemini-cli/packages/cli` (see:
+If you'd like to run the source build outside of the onyx-cli folder, you can
+utilize `npm link path/to/onyx-cli/packages/cli` (see:
 [docs](https://docs.npmjs.com/cli/v9/commands/npm-link)) or
-`alias gemini="node path/to/gemini-cli/packages/cli"` to run with `gemini`
+`alias onyx="node path/to/onyx-cli/packages/cli"` to run with `onyx`
 
 ### Running tests
 
@@ -295,7 +295,7 @@ npm run test:e2e
 
 For more detailed information on the integration testing framework, please see
 the
-[Integration Tests documentation](https://geminicli.com/docs/integration-tests).
+[Integration Tests documentation](https://onyxcli.com/docs/integration-tests).
 
 ### Linting and preflight checks
 
@@ -349,7 +349,7 @@ npm run lint
 - Please adhere to the coding style, patterns, and conventions used throughout
   the existing codebase.
 - Consult
-  [GEMINI.md](https://github.com/google-gemini/gemini-cli/blob/main/GEMINI.md)
+  [ONYX.md](https://github.com/google-onyx/onyx-cli/blob/main/ONYX.md)
   (typically found in the project root) for specific instructions related to
   AI-assisted development, including conventions for React, comments, and Git
   usage.
@@ -365,7 +365,7 @@ npm run lint
     ```bash
     npm run debug
     ```
-    This command runs `node --inspect-brk dist/gemini.js` within the
+    This command runs `node --inspect-brk dist/onyx.js` within the
     `packages/cli` directory, pausing execution until a debugger attaches. You
     can then open `chrome://inspect` in your Chrome browser to connect to the
     debugger.
@@ -379,11 +379,11 @@ recommended.
 To hit a breakpoint inside the sandbox container run:
 
 ```bash
-DEBUG=1 gemini
+DEBUG=1 onyx
 ```
 
 **Note:** If you have `DEBUG=true` in a project's `.env` file, it won't affect
-gemini-cli due to automatic exclusion. Use `.gemini/.env` files for gemini-cli
+onyx-cli due to automatic exclusion. Use `.onyx/.env` files for onyx-cli
 specific debug settings.
 
 ### React DevTools
@@ -419,7 +419,7 @@ To debug the CLI's React-based UI, you can use React DevTools.
 
 #### macOS Seatbelt
 
-On macOS, `gemini` uses Seatbelt (`sandbox-exec`) under a `permissive-open`
+On macOS, `onyx` uses Seatbelt (`sandbox-exec`) under a `permissive-open`
 profile (see `packages/cli/src/utils/sandbox-macos-permissive-open.sb`) that
 restricts writes to the project folder but otherwise allows all other operations
 and outbound network traffic ("open") by default. You can switch to a
@@ -431,13 +431,13 @@ Available built-in profiles are `permissive-{open,proxied}`,
 `restrictive-{open,proxied}`, and `strict-{open,proxied}` (see below for proxied
 networking). You can also switch to a custom profile
 `SEATBELT_PROFILE=<profile>` if you also create a file
-`.gemini/sandbox-macos-<profile>.sb` under your project settings directory
-`.gemini`.
+`.onyx/sandbox-macos-<profile>.sb` under your project settings directory
+`.onyx`.
 
 #### Container-based sandboxing (all platforms)
 
 For stronger container-based sandboxing on macOS or other platforms, you can set
-`GEMINI_SANDBOX=true|docker|podman|<command>` in your environment or `.env`
+`ONYX_SANDBOX=true|docker|podman|<command>` in your environment or `.env`
 file. The specified command (or if `true` then either `docker` or `podman`) must
 be installed on the host machine. Once enabled, `npm run build:all` will build a
 minimal container ("sandbox") image and `npm start` will launch inside a fresh
@@ -452,16 +452,16 @@ as you start/stop Onyx CLI. Files created within the sandbox should be
 automatically mapped to your user/group on host machine. You can easily specify
 additional mounts, ports, or environment variables by setting
 `SANDBOX_{MOUNTS,PORTS,ENV}` as needed. You can also fully customize the sandbox
-for your projects by creating the files `.gemini/sandbox.Dockerfile` and/or
-`.gemini/sandbox.bashrc` under your project settings directory (`.gemini`) and
-running `gemini` with `BUILD_SANDBOX=1` to trigger building of your custom
+for your projects by creating the files `.onyx/sandbox.Dockerfile` and/or
+`.onyx/sandbox.bashrc` under your project settings directory (`.onyx`) and
+running `onyx` with `BUILD_SANDBOX=1` to trigger building of your custom
 sandbox.
 
 #### Proxied networking
 
 All sandboxing methods, including macOS Seatbelt using `*-proxied` profiles,
 support restricting outbound network traffic through a custom proxy server that
-can be specified as `GEMINI_SANDBOX_PROXY_COMMAND=<command>`, where `<command>`
+can be specified as `ONYX_SANDBOX_PROXY_COMMAND=<command>`, where `<command>`
 must start a proxy server that listens on `:::8877` for relevant requests. See
 `docs/examples/proxy-script.md` for a minimal proxy that only allows `HTTPS`
 connections to `example.com:443` (e.g. `curl https://example.com`) and declines
@@ -510,7 +510,7 @@ code.
 ### Documentation structure
 
 Our documentation is organized using
-[sidebar.json](https://github.com/google-gemini/gemini-cli/blob/main/docs/sidebar.json)
+[sidebar.json](https://github.com/google-onyx/onyx-cli/blob/main/docs/sidebar.json)
 as the table of contents. When adding new documentation:
 
 1. Create your markdown file **in the appropriate directory** under `/docs`.
@@ -562,9 +562,9 @@ Before submitting your documentation pull request, please:
 
 If you have questions about contributing documentation:
 
-- Check our [FAQ](https://geminicli.com/docs/resources/faq).
+- Check our [FAQ](https://onyxcli.com/docs/resources/faq).
 - Review existing documentation for examples.
-- Open [an issue](https://github.com/google-gemini/gemini-cli/issues) to discuss
+- Open [an issue](https://github.com/google-onyx/onyx-cli/issues) to discuss
   your proposed changes.
 - Reach out to the maintainers.
 

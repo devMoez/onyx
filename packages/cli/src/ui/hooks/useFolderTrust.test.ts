@@ -359,7 +359,7 @@ describe('useFolderTrust', () => {
 
     expect(emitFeedbackSpy).toHaveBeenCalledWith(
       'error',
-      'Failed to save trust settings. Exiting Gemini CLI.',
+      'Failed to save trust settings. Exiting Onyx CLI.',
     );
     expect(mockedExit).toHaveBeenCalledWith(ExitCodes.FATAL_CONFIG_ERROR);
   });

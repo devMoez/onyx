@@ -28,7 +28,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import { loadEnvironment, type Settings } from './settings.js';
-import { GEMINI_DIR, homedir as coreHomedir } from '@onyx/core';
+import { ONYX_DIR, homedir as coreHomedir } from '@onyx/core';
 
 vi.mock('node:fs');
 
@@ -44,10 +44,10 @@ describe('Environment Isolation', () => {
     vi.mocked(coreHomedir).mockReturnValue(mockHome);
     // Default to no files existing
     vi.mocked(fs.existsSync).mockReturnValue(false);
-    process.argv = ['node', 'gemini'];
+    process.argv = ['node', 'onyx'];
 
     // Clear env vars that might leak from the host environment
-    delete process.env['GEMINI_API_KEY'];
+    delete process.env['ONYX_API_KEY'];
     delete process.env['OTHER_VAR'];
   });
 
@@ -61,7 +61,7 @@ describe('Environment Isolation', () => {
     vi.mocked(fs.existsSync).mockImplementation(
       (p) => p.toString() === workspaceEnv,
     );
-    vi.mocked(fs.readFileSync).mockReturnValue('GEMINI_API_KEY=local');
+    vi.mocked(fs.readFileSync).mockReturnValue('ONYX_API_KEY=local');
 
     const settings = { advanced: { ignoreLocalEnv: false } } as Settings;
     loadEnvironment(settings, mockWorkspace, () => ({
@@ -69,8 +69,8 @@ describe('Environment Isolation', () => {
       source: 'file',
     }));
 
-    expect(process.env['GEMINI_API_KEY']).toBe('local');
-    delete process.env['GEMINI_API_KEY'];
+    expect(process.env['ONYX_API_KEY']).toBe('local');
+    delete process.env['ONYX_API_KEY'];
   });
 
   it('should ignore local .env when ignoreLocalEnv is true', () => {
@@ -83,8 +83,8 @@ describe('Environment Isolation', () => {
     });
     vi.mocked(fs.readFileSync).mockImplementation((p) => {
       const ps = p.toString();
-      if (ps === workspaceEnv) return 'GEMINI_API_KEY=local';
-      if (ps === homeEnv) return 'GEMINI_API_KEY=home';
+      if (ps === workspaceEnv) return 'ONYX_API_KEY=local';
+      if (ps === homeEnv) return 'ONYX_API_KEY=home';
       return '';
     });
 
@@ -95,16 +95,16 @@ describe('Environment Isolation', () => {
     }));
 
     // Should skip local and find home
-    expect(process.env['GEMINI_API_KEY']).toBe('home');
-    delete process.env['GEMINI_API_KEY'];
+    expect(process.env['ONYX_API_KEY']).toBe('home');
+    delete process.env['ONYX_API_KEY'];
   });
 
   it('should still load .onyx/.env even if ignoreLocalEnv is true', () => {
-    const workspaceGeminiEnv = path.join(mockWorkspace, GEMINI_DIR, '.env');
+    const workspaceOnyxEnv = path.join(mockWorkspace, ONYX_DIR, '.env');
     vi.mocked(fs.existsSync).mockImplementation(
-      (p) => p.toString() === workspaceGeminiEnv,
+      (p) => p.toString() === workspaceOnyxEnv,
     );
-    vi.mocked(fs.readFileSync).mockReturnValue('GEMINI_API_KEY=gemini-local');
+    vi.mocked(fs.readFileSync).mockReturnValue('ONYX_API_KEY=onyx-local');
 
     const settings = { advanced: { ignoreLocalEnv: true } } as Settings;
     loadEnvironment(settings, mockWorkspace, () => ({
@@ -112,8 +112,8 @@ describe('Environment Isolation', () => {
       source: 'file',
     }));
 
-    expect(process.env['GEMINI_API_KEY']).toBe('gemini-local');
-    delete process.env['GEMINI_API_KEY'];
+    expect(process.env['ONYX_API_KEY']).toBe('onyx-local');
+    delete process.env['ONYX_API_KEY'];
   });
 
   it('should respect --ignore-env flag', () => {
@@ -121,16 +121,16 @@ describe('Environment Isolation', () => {
     vi.mocked(fs.existsSync).mockImplementation(
       (p) => p.toString() === workspaceEnv,
     );
-    vi.mocked(fs.readFileSync).mockReturnValue('GEMINI_API_KEY=local');
+    vi.mocked(fs.readFileSync).mockReturnValue('ONYX_API_KEY=local');
 
-    process.argv = ['node', 'gemini', '--ignore-env'];
+    process.argv = ['node', 'onyx', '--ignore-env'];
     const settings = { advanced: { ignoreLocalEnv: false } } as Settings;
     loadEnvironment(settings, mockWorkspace, () => ({
       isTrusted: true,
       source: 'file',
     }));
 
-    expect(process.env['GEMINI_API_KEY']).toBeUndefined();
+    expect(process.env['ONYX_API_KEY']).toBeUndefined();
   });
 
   it('should allow home .env even with ignoreLocalEnv true', () => {
@@ -138,7 +138,7 @@ describe('Environment Isolation', () => {
     vi.mocked(fs.existsSync).mockImplementation(
       (p) => p.toString() === homeEnv,
     );
-    vi.mocked(fs.readFileSync).mockReturnValue('GEMINI_API_KEY=home');
+    vi.mocked(fs.readFileSync).mockReturnValue('ONYX_API_KEY=home');
 
     const settings = { advanced: { ignoreLocalEnv: true } } as Settings;
     // Running from home dir
@@ -147,8 +147,8 @@ describe('Environment Isolation', () => {
       source: 'file',
     }));
 
-    expect(process.env['GEMINI_API_KEY']).toBe('home');
-    delete process.env['GEMINI_API_KEY'];
+    expect(process.env['ONYX_API_KEY']).toBe('home');
+    delete process.env['ONYX_API_KEY'];
   });
 
   it('should skip local .env and its parents until home when ignoreLocalEnv is true', () => {
@@ -163,9 +163,9 @@ describe('Environment Isolation', () => {
     });
     vi.mocked(fs.readFileSync).mockImplementation((p) => {
       const ps = p.toString();
-      if (ps === deepEnv) return 'GEMINI_API_KEY=deep';
-      if (ps === parentEnv) return 'GEMINI_API_KEY=parent';
-      if (ps === homeEnv) return 'GEMINI_API_KEY=home';
+      if (ps === deepEnv) return 'ONYX_API_KEY=deep';
+      if (ps === parentEnv) return 'ONYX_API_KEY=parent';
+      if (ps === homeEnv) return 'ONYX_API_KEY=home';
       return '';
     });
 
@@ -175,8 +175,8 @@ describe('Environment Isolation', () => {
       source: 'file',
     }));
 
-    expect(process.env['GEMINI_API_KEY']).toBe('home');
-    delete process.env['GEMINI_API_KEY'];
+    expect(process.env['ONYX_API_KEY']).toBe('home');
+    delete process.env['ONYX_API_KEY'];
   });
 
   it('should respect trust whitelist even when loading from home .env', () => {
@@ -186,7 +186,7 @@ describe('Environment Isolation', () => {
     );
     // Include one whitelisted and one non-whitelisted variable
     vi.mocked(fs.readFileSync).mockReturnValue(
-      'GEMINI_API_KEY=home\nOTHER_VAR=secret',
+      'ONYX_API_KEY=home\nOTHER_VAR=secret',
     );
 
     const settings = { advanced: { ignoreLocalEnv: true } } as Settings;
@@ -196,9 +196,9 @@ describe('Environment Isolation', () => {
       source: 'file',
     }));
 
-    expect(process.env['GEMINI_API_KEY']).toBe('home');
+    expect(process.env['ONYX_API_KEY']).toBe('home');
     expect(process.env['OTHER_VAR']).toBeUndefined();
-    delete process.env['GEMINI_API_KEY'];
+    delete process.env['ONYX_API_KEY'];
   });
 
   it('should prioritize --ignore-env flag even if setting is false', () => {
@@ -206,16 +206,16 @@ describe('Environment Isolation', () => {
     vi.mocked(fs.existsSync).mockImplementation(
       (p) => p.toString() === workspaceEnv,
     );
-    vi.mocked(fs.readFileSync).mockReturnValue('GEMINI_API_KEY=local');
+    vi.mocked(fs.readFileSync).mockReturnValue('ONYX_API_KEY=local');
 
-    process.argv = ['node', 'gemini', '--ignore-env'];
+    process.argv = ['node', 'onyx', '--ignore-env'];
     const settings = { advanced: { ignoreLocalEnv: false } } as Settings;
     loadEnvironment(settings, mockWorkspace, () => ({
       isTrusted: true,
       source: 'file',
     }));
 
-    expect(process.env['GEMINI_API_KEY']).toBeUndefined();
+    expect(process.env['ONYX_API_KEY']).toBeUndefined();
   });
 
   it('should respect both -s and --ignore-env flags simultaneously', () => {
@@ -223,16 +223,16 @@ describe('Environment Isolation', () => {
     vi.mocked(fs.existsSync).mockImplementation(
       (p) => p.toString() === workspaceEnv,
     );
-    vi.mocked(fs.readFileSync).mockReturnValue('GEMINI_API_KEY=local');
+    vi.mocked(fs.readFileSync).mockReturnValue('ONYX_API_KEY=local');
 
-    process.argv = ['node', 'gemini', '-s', '--ignore-env'];
+    process.argv = ['node', 'onyx', '-s', '--ignore-env'];
     const settings = { advanced: { ignoreLocalEnv: false } } as Settings;
     loadEnvironment(settings, mockWorkspace, () => ({
       isTrusted: true,
       source: 'file',
     }));
 
-    expect(process.env['GEMINI_API_KEY']).toBeUndefined();
+    expect(process.env['ONYX_API_KEY']).toBeUndefined();
   });
 });
 

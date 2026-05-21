@@ -24,7 +24,7 @@ import * as glob from 'glob';
 import { createMockMessageBus } from '../test-utils/mock-message-bus.js';
 import {
   DEFAULT_FILE_FILTERING_OPTIONS,
-  GEMINI_IGNORE_FILE_NAME,
+  ONYX_IGNORE_FILE_NAME,
 } from '../config/constants.js';
 
 vi.mock('glob', { spy: true });
@@ -392,11 +392,11 @@ describe('GlobTool', () => {
 
     it('should respect .onyxIgnore files by default', async () => {
       await fs.writeFile(
-        path.join(tempRootDir, GEMINI_IGNORE_FILE_NAME),
-        'gemini-ignored_test.txt',
+        path.join(tempRootDir, ONYX_IGNORE_FILE_NAME),
+        'onyx-ignored_test.txt',
       );
       await fs.writeFile(
-        path.join(tempRootDir, 'gemini-ignored_test.txt'),
+        path.join(tempRootDir, 'onyx-ignored_test.txt'),
         'content',
       );
       await fs.writeFile(path.join(tempRootDir, 'visible_test.txt'), 'content');
@@ -407,7 +407,7 @@ describe('GlobTool', () => {
 
       expect(result.llmContent).toContain('Found 1 file(s)');
       expect(result.llmContent).toContain('visible_test.txt');
-      expect(result.llmContent).not.toContain('gemini-ignored_test.txt');
+      expect(result.llmContent).not.toContain('onyx-ignored_test.txt');
     }, 30000);
 
     it('should not respect .gitignore when respect_git_ignore is false', async () => {
@@ -428,25 +428,25 @@ describe('GlobTool', () => {
       expect(result.llmContent).toContain('ignored_test.txt');
     }, 30000);
 
-    it('should not respect .onyxIgnore when respect_gemini_ignore is false', async () => {
+    it('should not respect .onyxIgnore when respect_onyx_ignore is false', async () => {
       await fs.writeFile(
-        path.join(tempRootDir, GEMINI_IGNORE_FILE_NAME),
-        'gemini-ignored_test.txt',
+        path.join(tempRootDir, ONYX_IGNORE_FILE_NAME),
+        'onyx-ignored_test.txt',
       );
       await fs.writeFile(
-        path.join(tempRootDir, 'gemini-ignored_test.txt'),
+        path.join(tempRootDir, 'onyx-ignored_test.txt'),
         'content',
       );
 
       const params: GlobToolParams = {
-        pattern: 'gemini-ignored_test.txt',
-        respect_gemini_ignore: false,
+        pattern: 'onyx-ignored_test.txt',
+        respect_onyx_ignore: false,
       };
       const invocation = globTool.build(params);
       const result = await invocation.execute({ abortSignal });
 
       expect(result.llmContent).toContain('Found 1 file(s)');
-      expect(result.llmContent).toContain('gemini-ignored_test.txt');
+      expect(result.llmContent).toContain('onyx-ignored_test.txt');
     }, 30000);
   });
 });

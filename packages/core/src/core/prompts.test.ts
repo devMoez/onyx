@@ -15,7 +15,7 @@ import type { Config } from '../config/config.js';
 import type { AgentDefinition } from '../agents/types.js';
 import { CodebaseInvestigatorAgent } from '../agents/codebase-investigator.js';
 import { AGENT_TOOL_NAME } from '../tools/tool-names.js';
-import { GEMINI_DIR } from '../utils/paths.js';
+import { ONYX_DIR } from '../utils/paths.js';
 import { debugLogger } from '../utils/debugLogger.js';
 import {
   PREVIEW_GEMINI_MODEL,
@@ -82,8 +82,8 @@ describe('Core System Prompt (prompts.ts)', () => {
     vi.spyOn(os, 'homedir').mockReturnValue('/tmp/test-home');
 
     vi.stubEnv('SANDBOX', undefined);
-    vi.stubEnv('GEMINI_SYSTEM_MD', undefined);
-    vi.stubEnv('GEMINI_WRITE_SYSTEM_MD', undefined);
+    vi.stubEnv('ONYX_SYSTEM_MD', undefined);
+    vi.stubEnv('ONYX_WRITE_SYSTEM_MD', undefined);
     const mockRegistry = {
       getAllToolNames: vi
         .fn()
@@ -296,7 +296,7 @@ describe('Core System Prompt (prompts.ts)', () => {
   it('should use chatty system prompt for preview model', () => {
     vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_GEMINI_MODEL);
     const prompt = getCoreSystemPrompt(mockConfig);
-    expect(prompt).toContain('You are Gemini CLI, an interactive CLI agent'); // Check for core content
+    expect(prompt).toContain('You are Onyx CLI, an interactive CLI agent'); // Check for core content
     expect(prompt).toContain('- **User Hints:**');
     expect(prompt).toContain('No Chitchat:');
     expect(prompt).toMatchSnapshot();
@@ -307,7 +307,7 @@ describe('Core System Prompt (prompts.ts)', () => {
       PREVIEW_GEMINI_FLASH_MODEL,
     );
     const prompt = getCoreSystemPrompt(mockConfig);
-    expect(prompt).toContain('You are Gemini CLI, an interactive CLI agent'); // Check for core content
+    expect(prompt).toContain('You are Onyx CLI, an interactive CLI agent'); // Check for core content
     expect(prompt).toContain('No Chitchat:');
     expect(prompt).toMatchSnapshot();
   });
@@ -332,7 +332,7 @@ describe('Core System Prompt (prompts.ts)', () => {
     vi.mocked(mockConfig.getActiveModel).mockReturnValue(PREVIEW_GEMINI_MODEL);
     const prompt = getCoreSystemPrompt(mockConfig, userMemory);
     expect(prompt).not.toContain('---\n\n'); // Separator should not be present
-    expect(prompt).toContain('You are Gemini CLI, an interactive CLI agent'); // Check for core content
+    expect(prompt).toContain('You are Onyx CLI, an interactive CLI agent'); // Check for core content
     expect(prompt).toContain('No Chitchat:');
     expect(prompt).toMatchSnapshot(); // Use snapshot for base prompt structure
   });
@@ -346,7 +346,7 @@ describe('Core System Prompt (prompts.ts)', () => {
     expect(prompt).toContain('# Contextual Instructions (onyx.md)');
     expect(prompt).toContain('<loaded_context>');
     expect(prompt).toContain(memory);
-    expect(prompt).toContain('You are Gemini CLI, an interactive CLI agent'); // Ensure base prompt follows
+    expect(prompt).toContain('You are Onyx CLI, an interactive CLI agent'); // Ensure base prompt follows
     expect(prompt).toMatchSnapshot(); // Snapshot the combined prompt
   });
 
@@ -385,7 +385,7 @@ describe('Core System Prompt (prompts.ts)', () => {
     ['sandbox-exec', '# macOS Seatbelt', ['# Sandbox', '# Outside of Sandbox']],
     [
       undefined,
-      'You are Gemini CLI, an interactive CLI agent',
+      'You are Onyx CLI, an interactive CLI agent',
       ['# Sandbox', '# macOS Seatbelt'],
     ],
   ])(
@@ -756,20 +756,20 @@ describe('Core System Prompt (prompts.ts)', () => {
     expect(prompt).toMatchSnapshot();
   });
 
-  describe('GEMINI_SYSTEM_MD environment variable', () => {
+  describe('ONYX_SYSTEM_MD environment variable', () => {
     it.each(['false', '0'])(
-      'should use default prompt when GEMINI_SYSTEM_MD is "%s"',
+      'should use default prompt when ONYX_SYSTEM_MD is "%s"',
       (value) => {
-        vi.stubEnv('GEMINI_SYSTEM_MD', value);
+        vi.stubEnv('ONYX_SYSTEM_MD', value);
         const prompt = getCoreSystemPrompt(mockConfig);
         expect(fs.readFileSync).not.toHaveBeenCalled();
         expect(prompt).not.toContain('custom system prompt');
       },
     );
 
-    it('should throw error if GEMINI_SYSTEM_MD points to a non-existent file', () => {
+    it('should throw error if ONYX_SYSTEM_MD points to a non-existent file', () => {
       const customPath = '/non/existent/path/system.md';
-      vi.stubEnv('GEMINI_SYSTEM_MD', customPath);
+      vi.stubEnv('ONYX_SYSTEM_MD', customPath);
       vi.mocked(fs.existsSync).mockReturnValue(false);
       expect(() => getCoreSystemPrompt(mockConfig)).toThrow(
         `missing system prompt file '${path.resolve(customPath)}'`,
@@ -777,10 +777,10 @@ describe('Core System Prompt (prompts.ts)', () => {
     });
 
     it.each(['true', '1'])(
-      'should read from default path when GEMINI_SYSTEM_MD is "%s"',
+      'should read from default path when ONYX_SYSTEM_MD is "%s"',
       (value) => {
-        const defaultPath = path.resolve(path.join(GEMINI_DIR, 'system.md'));
-        vi.stubEnv('GEMINI_SYSTEM_MD', value);
+        const defaultPath = path.resolve(path.join(ONYX_DIR, 'system.md'));
+        vi.stubEnv('ONYX_SYSTEM_MD', value);
         vi.mocked(fs.existsSync).mockReturnValue(true);
         vi.mocked(fs.readFileSync).mockReturnValue('custom system prompt');
 
@@ -790,9 +790,9 @@ describe('Core System Prompt (prompts.ts)', () => {
       },
     );
 
-    it('should read from custom path when GEMINI_SYSTEM_MD provides one, preserving case', () => {
+    it('should read from custom path when ONYX_SYSTEM_MD provides one, preserving case', () => {
       const customPath = path.resolve('/custom/path/SyStEm.Md');
-      vi.stubEnv('GEMINI_SYSTEM_MD', customPath);
+      vi.stubEnv('ONYX_SYSTEM_MD', customPath);
       vi.mocked(fs.existsSync).mockReturnValue(true);
       vi.mocked(fs.readFileSync).mockReturnValue('custom system prompt');
 
@@ -801,12 +801,12 @@ describe('Core System Prompt (prompts.ts)', () => {
       expect(prompt).toBe('custom system prompt');
     });
 
-    it('should expand tilde in custom path when GEMINI_SYSTEM_MD is set', () => {
+    it('should expand tilde in custom path when ONYX_SYSTEM_MD is set', () => {
       const homeDir = '/Users/test';
       vi.spyOn(os, 'homedir').mockReturnValue(homeDir);
       const customPath = '~/custom/system.md';
       const expectedPath = path.join(homeDir, 'custom/system.md');
-      vi.stubEnv('GEMINI_SYSTEM_MD', customPath);
+      vi.stubEnv('ONYX_SYSTEM_MD', customPath);
       vi.mocked(fs.existsSync).mockReturnValue(true);
       vi.mocked(fs.readFileSync).mockReturnValue('custom system prompt');
 
@@ -819,21 +819,21 @@ describe('Core System Prompt (prompts.ts)', () => {
     });
   });
 
-  describe('GEMINI_WRITE_SYSTEM_MD environment variable', () => {
+  describe('ONYX_WRITE_SYSTEM_MD environment variable', () => {
     it.each(['false', '0'])(
-      'should not write to file when GEMINI_WRITE_SYSTEM_MD is "%s"',
+      'should not write to file when ONYX_WRITE_SYSTEM_MD is "%s"',
       (value) => {
-        vi.stubEnv('GEMINI_WRITE_SYSTEM_MD', value);
+        vi.stubEnv('ONYX_WRITE_SYSTEM_MD', value);
         getCoreSystemPrompt(mockConfig);
         expect(fs.writeFileSync).not.toHaveBeenCalled();
       },
     );
 
     it.each(['true', '1'])(
-      'should write to default path when GEMINI_WRITE_SYSTEM_MD is "%s"',
+      'should write to default path when ONYX_WRITE_SYSTEM_MD is "%s"',
       (value) => {
-        const defaultPath = path.resolve(path.join(GEMINI_DIR, 'system.md'));
-        vi.stubEnv('GEMINI_WRITE_SYSTEM_MD', value);
+        const defaultPath = path.resolve(path.join(ONYX_DIR, 'system.md'));
+        vi.stubEnv('ONYX_WRITE_SYSTEM_MD', value);
         getCoreSystemPrompt(mockConfig);
         expect(fs.writeFileSync).toHaveBeenCalledWith(
           defaultPath,
@@ -842,9 +842,9 @@ describe('Core System Prompt (prompts.ts)', () => {
       },
     );
 
-    it('should write to custom path when GEMINI_WRITE_SYSTEM_MD provides one', () => {
+    it('should write to custom path when ONYX_WRITE_SYSTEM_MD provides one', () => {
       const customPath = path.resolve('/custom/path/system.md');
-      vi.stubEnv('GEMINI_WRITE_SYSTEM_MD', customPath);
+      vi.stubEnv('ONYX_WRITE_SYSTEM_MD', customPath);
       getCoreSystemPrompt(mockConfig);
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         customPath,
@@ -856,14 +856,14 @@ describe('Core System Prompt (prompts.ts)', () => {
       ['~/custom/system.md', 'custom/system.md'],
       ['~', ''],
     ])(
-      'should expand tilde in custom path when GEMINI_WRITE_SYSTEM_MD is "%s"',
+      'should expand tilde in custom path when ONYX_WRITE_SYSTEM_MD is "%s"',
       (customPath, relativePath) => {
         const homeDir = '/Users/test';
         vi.spyOn(os, 'homedir').mockReturnValue(homeDir);
         const expectedPath = relativePath
           ? path.join(homeDir, relativePath)
           : homeDir;
-        vi.stubEnv('GEMINI_WRITE_SYSTEM_MD', customPath);
+        vi.stubEnv('ONYX_WRITE_SYSTEM_MD', customPath);
         getCoreSystemPrompt(mockConfig);
         expect(fs.writeFileSync).toHaveBeenCalledWith(
           path.resolve(expectedPath),

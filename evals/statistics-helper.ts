@@ -24,3 +24,4 @@ export function averageNullable(values: Array<number | null>): number | null {
   const numericValues = values.filter((value) => value !== null);
   return numericValues.length === 0 ? null : average(numericValues);
 }
+

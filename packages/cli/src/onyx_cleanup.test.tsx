@@ -134,7 +134,7 @@ vi.mock('./core/initializer.js', () => ({
     authError: null,
     themeError: null,
     shouldOpenAuthDialog: false,
-    geminiMdFileCount: 0,
+    onyxMdFileCount: 0,
   }),
 }));
 
@@ -187,15 +187,15 @@ vi.mock('./utils/sessionCleanup.js', async (importOriginal) => {
   };
 });
 
-describe('gemini.tsx main function cleanup', () => {
+describe('onyx.tsx main function cleanup', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    process.env['GEMINI_CLI_NO_RELAUNCH'] = 'true';
+    process.env['ONYX_CLI_NO_RELAUNCH'] = 'true';
     vi.stubEnv('ONYX_CLI_TRUST_WORKSPACE', 'true');
   });
 
   afterEach(() => {
-    delete process.env['GEMINI_CLI_NO_RELAUNCH'];
+    delete process.env['ONYX_CLI_NO_RELAUNCH'];
     vi.restoreAllMocks();
   });
 
@@ -239,14 +239,14 @@ describe('gemini.tsx main function cleanup', () => {
       getIdeMode: vi.fn(() => false),
       getAcpMode: vi.fn(() => true),
       getScreenReader: vi.fn(() => false),
-      getGeminiMdFileCount: vi.fn(() => 0),
+      getOnyxMdFileCount: vi.fn(() => 0),
       getProjectRoot: vi.fn(() => '/'),
       getListExtensions: vi.fn(() => false),
       getListSessions: vi.fn(() => false),
       getDeleteSession: vi.fn(() => undefined),
       getToolRegistry: vi.fn(),
       getExtensions: vi.fn(() => []),
-      getModel: vi.fn(() => 'gemini-pro'),
+      getModel: vi.fn(() => 'onyx-pro'),
       getEmbeddingModel: vi.fn(() => 'embedding-001'),
       getApprovalMode: vi.fn(() => 'default'),
       getCoreTools: vi.fn(() => []),
@@ -438,13 +438,13 @@ describe('gemini.tsx main function cleanup', () => {
       getIdeMode: vi.fn(() => false),
       getAcpMode: vi.fn(() => false),
       getScreenReader: vi.fn(() => false),
-      getGeminiMdFileCount: vi.fn(() => 0),
+      getOnyxMdFileCount: vi.fn(() => 0),
       getProjectRoot: vi.fn(() => '/'),
       getListExtensions: vi.fn(() => false),
       getListSessions: vi.fn(() => false),
       getDeleteSession: vi.fn(() => undefined),
       getExtensions: vi.fn(() => []),
-      getModel: vi.fn(() => 'gemini-pro'),
+      getModel: vi.fn(() => 'onyx-pro'),
       getEmbeddingModel: vi.fn(() => 'embedding-001'),
       getApprovalMode: vi.fn(() => 'default'),
       getCoreTools: vi.fn(() => []),

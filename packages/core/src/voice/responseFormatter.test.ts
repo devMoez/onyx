@@ -64,8 +64,8 @@ describe('formatForSpeech', () => {
     });
 
     it('should replace markdown links with link text', () => {
-      expect(formatForSpeech('[Gemini API](https://ai.google.dev)')).toBe(
-        'Gemini API',
+      expect(formatForSpeech('[Onyx API](https://ai.google.dev)')).toBe(
+        'Onyx API',
       );
     });
 

@@ -24,7 +24,7 @@ export const createMockConfig = (overrides: Partial<Config> = {}): Config =>
     isInitialized: vi.fn(() => true),
     setTerminalBackground: vi.fn(),
     storage: {
-      getProjectTempDir: vi.fn().mockReturnValue('/tmp/gemini-test'),
+      getProjectTempDir: vi.fn().mockReturnValue('/tmp/onyx-test'),
       initialize: vi.fn().mockResolvedValue(undefined),
     },
     getDebugMode: vi.fn(() => false),
@@ -62,11 +62,11 @@ export const createMockConfig = (overrides: Partial<Config> = {}): Config =>
     getOutputFormat: vi.fn(() => 'text'),
     getUsageStatisticsEnabled: vi.fn(() => true),
     getScreenReader: vi.fn(() => false),
-    getGeminiMdFileCount: vi.fn(() => 0),
+    getOnyxMdFileCount: vi.fn(() => 0),
     getDeferredCommand: vi.fn(() => undefined),
     getFileSystemService: vi.fn(() => ({})),
     clientVersion: '1.0.0',
-    getModel: vi.fn().mockReturnValue('gemini-pro'),
+    getModel: vi.fn().mockReturnValue('onyx-pro'),
     getWorkingDir: vi.fn().mockReturnValue('/mock/cwd'),
     getToolRegistry: vi.fn().mockReturnValue({
       getTools: vi.fn().mockReturnValue([]),
@@ -83,7 +83,7 @@ export const createMockConfig = (overrides: Partial<Config> = {}): Config =>
     getUserMemory: vi.fn().mockReturnValue(''),
     getSystemInstructionMemory: vi.fn().mockReturnValue(''),
     getSessionMemory: vi.fn().mockReturnValue(''),
-    getGeminiMdFilePaths: vi.fn().mockReturnValue([]),
+    getOnyxMdFilePaths: vi.fn().mockReturnValue([]),
     getShowMemoryUsage: vi.fn().mockReturnValue(false),
     getAccessibility: vi.fn().mockReturnValue({}),
     getTelemetryEnabled: vi.fn().mockReturnValue(false),
@@ -95,7 +95,7 @@ export const createMockConfig = (overrides: Partial<Config> = {}): Config =>
     getTelemetryOutfile: vi.fn().mockReturnValue(undefined),
     getTelemetryUseCollector: vi.fn().mockReturnValue(false),
     getTelemetryUseCliAuth: vi.fn().mockReturnValue(false),
-    getGeminiClient: vi.fn().mockReturnValue({
+    getOnyxClient: vi.fn().mockReturnValue({
       isInitialized: vi.fn().mockReturnValue(true),
     }),
     updateSystemInstructionIfInitialized: vi.fn().mockResolvedValue(undefined),

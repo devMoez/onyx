@@ -15,13 +15,13 @@ editing documents.
 The standard method to install and run Onyx CLI uses `npm`:
 
 ```bash
-npm install -g @google/gemini-cli
+npm install -g @google/onyx-cli
 ```
 
 Once Onyx CLI is installed, run Onyx CLI from your command line:
 
 ```bash
-gemini
+onyx
 ```
 
 For more installation options, see
@@ -35,7 +35,7 @@ cases, you can log in with your existing Google account:
 1. Run Onyx CLI after installation:
 
    ```bash
-   gemini
+   onyx
    ```
 
 2. When asked "How would you like to authenticate for this project?" select **1.
@@ -82,13 +82,13 @@ photos/photo2.png
 photos/photo3.png
 ```
 
-Give Gemini the following prompt:
+Give Onyx the following prompt:
 
 ```cli
 Rename the photos in my "photos" directory based on their contents.
 ```
 
-Result: Gemini asks for permission to rename your files.
+Result: Onyx asks for permission to rename your files.
 
 Select **Allow once** and your files are renamed:
 
@@ -112,7 +112,7 @@ Give Onyx CLI the following prompt:
 Clone the 'chalk' repository from https://github.com/chalk/chalk, read its key source files, and explain how it works.
 ```
 
-Result: Gemini performs a sequence of actions to answer your request.
+Result: Onyx performs a sequence of actions to answer your request.
 
 1.  First, it asks for permission to run `git clone` to download the repository.
 2.  Next, it finds the important source files and asks for permission to read

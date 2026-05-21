@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Icon Generation Script using Gemini 3.1 Pro Preview API
+Icon Generation Script using Onyx 3.1 Pro Preview API
 Generates SVG icons via text generation (SVG is XML text format)
 
-Model: gemini-3.1-pro-preview - best thinking, token efficiency, factual consistency
+Model: onyx-3.1-pro-preview - best thinking, token efficiency, factual consistency
 
 Usage:
     python generate.py --prompt "settings gear icon" --style outlined
@@ -53,8 +53,8 @@ except ImportError:
 
 
 # ============ CONFIGURATION ============
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-MODEL = "gemini-3.1-pro-preview"
+ONYX_API_KEY = os.environ.get("ONYX_API_KEY")
+MODEL = "onyx-3.1-pro-preview"
 
 # Icon styles with SVG-specific instructions
 ICON_STYLES = {
@@ -188,14 +188,14 @@ def apply_viewbox_size(svg_code, size):
 
 def generate_icon(prompt, style=None, category=None, name=None,
                   color=None, size=24, output_path=None, viewbox=24):
-    """Generate a single SVG icon using Gemini 3.1 Pro Preview"""
+    """Generate a single SVG icon using Onyx 3.1 Pro Preview"""
 
-    if not GEMINI_API_KEY:
-        print("Error: GEMINI_API_KEY not set")
-        print("Set it with: export GEMINI_API_KEY='your-key'")
+    if not ONYX_API_KEY:
+        print("Error: ONYX_API_KEY not set")
+        print("Set it with: export ONYX_API_KEY='your-key'")
         return None
 
-    client = genai.Client(api_key=GEMINI_API_KEY)
+    client = genai.Client(api_key=ONYX_API_KEY)
 
     # Build style instructions
     style_instructions = ""
@@ -287,11 +287,11 @@ def generate_batch(prompt, count, output_dir, style=None, color=None,
                    viewbox=24, name=None):
     """Generate multiple icon variations"""
 
-    if not GEMINI_API_KEY:
-        print("Error: GEMINI_API_KEY not set")
+    if not ONYX_API_KEY:
+        print("Error: ONYX_API_KEY not set")
         return []
 
-    client = genai.Client(api_key=GEMINI_API_KEY)
+    client = genai.Client(api_key=ONYX_API_KEY)
     os.makedirs(output_dir, exist_ok=True)
 
     # Build instructions
@@ -402,7 +402,7 @@ def generate_sizes(prompt, sizes, style=None, color=None, output_dir=None, name=
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate SVG icons using Gemini 3.1 Pro Preview"
+        description="Generate SVG icons using Onyx 3.1 Pro Preview"
     )
     parser.add_argument("--prompt", "-p", type=str, help="Icon description")
     parser.add_argument("--name", "-n", type=str, help="Icon name (for filename)")

@@ -130,11 +130,11 @@ describe('useToolScheduler', () => {
       request: { callId: 'call-1', name: 'test_tool' },
       status: CoreToolCallStatus.Executing,
       liveOutput: 'Loading...',
-      responseSubmittedToGemini: false,
+      responseSubmittedToOnyx: false,
     });
   });
 
-  it('preserves responseSubmittedToGemini flag across updates', async () => {
+  it('preserves responseSubmittedToOnyx flag across updates', async () => {
     const { result } = await renderHook(() =>
       useToolScheduler(
         vi.fn().mockResolvedValue(undefined),
@@ -176,7 +176,7 @@ describe('useToolScheduler', () => {
       markAsSubmitted(['call-1']);
     });
 
-    expect(result.current[0][0].responseSubmittedToGemini).toBe(true);
+    expect(result.current[0][0].responseSubmittedToOnyx).toBe(true);
 
     // Verify flag is preserved across updates
     act(() => {
@@ -187,7 +187,7 @@ describe('useToolScheduler', () => {
       } as ToolCallsUpdateMessage);
     });
 
-    expect(result.current[0][0].responseSubmittedToGemini).toBe(true);
+    expect(result.current[0][0].responseSubmittedToOnyx).toBe(true);
   });
 
   it('updates lastToolOutputTime when tools are executing', async () => {
@@ -372,13 +372,13 @@ describe('useToolScheduler', () => {
     act(() => {
       const [, , , setToolCalls] = result.current;
       setToolCalls((prev) =>
-        prev.map((t) => ({ ...t, responseSubmittedToGemini: true })),
+        prev.map((t) => ({ ...t, responseSubmittedToOnyx: true })),
       );
     });
 
     const [toolCalls2] = result.current;
     expect(toolCalls2).toHaveLength(2);
-    expect(toolCalls2.every((t) => t.responseSubmittedToGemini)).toBe(true);
+    expect(toolCalls2.every((t) => t.responseSubmittedToOnyx)).toBe(true);
   });
 
   it('ignores TOOL_CALLS_UPDATE from non-root schedulers when no tools await approval', async () => {

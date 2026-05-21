@@ -30,30 +30,30 @@ locations for these files:
 > JSON-aware editors can use autocomplete and validation by pointing to
 > the generated schema at `schemas/settings.schema.json` in this repository.
 > When working outside the repo, reference the hosted schema at
-> `https://raw.githubusercontent.com/google-gemini/gemini-cli/main/schemas/settings.schema.json`.
+> `https://raw.githubusercontent.com/google-onyx/onyx-cli/main/schemas/settings.schema.json`.
 
 - **System defaults file:**
-  - **Location:** `/etc/gemini-cli/system-defaults.json` (Linux),
-    `C:\ProgramData\gemini-cli\system-defaults.json` (Windows) or
-    `/Library/Application Support/GeminiCli/system-defaults.json` (macOS). The
-    path can be overridden using the `GEMINI_CLI_SYSTEM_DEFAULTS_PATH`
+  - **Location:** `/etc/onyx-cli/system-defaults.json` (Linux),
+    `C:\ProgramData\onyx-cli\system-defaults.json` (Windows) or
+    `/Library/Application Support/OnyxCli/system-defaults.json` (macOS). The
+    path can be overridden using the `ONYX_CLI_SYSTEM_DEFAULTS_PATH`
     environment variable.
   - **Scope:** Provides a base layer of system-wide default settings. These
     settings have the lowest precedence and are intended to be overridden by
     user, project, or system override settings.
 - **User settings file:**
-  - **Location:** `~/.gemini/settings.json` (where `~` is your home directory).
+  - **Location:** `~/.onyx/settings.json` (where `~` is your home directory).
   - **Scope:** Applies to all Onyx CLI sessions for the current user. User
     settings override system defaults.
 - **Project settings file:**
-  - **Location:** `.gemini/settings.json` within your project's root directory.
+  - **Location:** `.onyx/settings.json` within your project's root directory.
   - **Scope:** Applies only when running Onyx CLI from that specific project.
     Project settings override user settings and system defaults.
 - **System settings file:**
-  - **Location:** `/etc/gemini-cli/settings.json` (Linux),
-    `C:\ProgramData\gemini-cli\settings.json` (Windows) or
-    `/Library/Application Support/GeminiCli/settings.json` (macOS). The path can
-    be overridden using the `GEMINI_CLI_SYSTEM_SETTINGS_PATH` environment
+  - **Location:** `/etc/onyx-cli/settings.json` (Linux),
+    `C:\ProgramData\onyx-cli\settings.json` (Windows) or
+    `/Library/Application Support/OnyxCli/settings.json` (macOS). The path can
+    be overridden using the `ONYX_CLI_SYSTEM_SETTINGS_PATH` environment
     variable.
   - **Scope:** Applies to all Onyx CLI sessions on the system, for all users.
     System settings act as overrides, taking precedence over all other settings
@@ -61,7 +61,7 @@ locations for these files:
     controls over users' Onyx CLI setups.
 
 **Note on environment variables in settings:** String values within your
-`settings.json` and `gemini-extension.json` files can reference environment
+`settings.json` and `onyx-extension.json` files can reference environment
 variables using `$VAR_NAME`, `${VAR_NAME}`, or `${VAR_NAME:-DEFAULT_VALUE}`
 syntax. These variables will be automatically resolved when the settings are
 loaded. For example, if you have an environment variable `MY_API_TOKEN`, you
@@ -74,13 +74,13 @@ which will be loaded automatically.
 in a corporate environment, see the
 [Enterprise Configuration](../cli/enterprise.md) documentation.
 
-### The `.gemini` directory in your project
+### The `.onyx` directory in your project
 
-In addition to a project settings file, a project's `.gemini` directory can
+In addition to a project settings file, a project's `.onyx` directory can
 contain other project-specific files related to Onyx CLI's operation, such as:
 
 - [Custom sandbox profiles](#sandboxing) (for example,
-  `.gemini/sandbox-macos-custom.sb`, `.gemini/sandbox.Dockerfile`).
+  `.onyx/sandbox-macos-custom.sb`, `.onyx/sandbox.Dockerfile`).
 
 ### Available settings in `settings.json`
 
@@ -295,7 +295,7 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `false`
 
 - **`ui.hideContextSummary`** (boolean):
-  - **Description:** Hide the context summary (GEMINI.md, MCP servers) above the
+  - **Description:** Hide the context summary (ONYX.md, MCP servers) above the
     input.
   - **Default:** `false`
 
@@ -458,7 +458,7 @@ their corresponding top-level category object in your `settings.json` file.
 #### `model`
 
 - **`model.name`** (string):
-  - **Description:** The Gemini model to use for conversations.
+  - **Description:** The Onyx model to use for conversations.
   - **Default:** `undefined`
 
 - **`model.maxSessionTurns`** (number):
@@ -538,52 +538,52 @@ their corresponding top-level category object in your `settings.json` file.
           }
         }
       },
-      "gemini-3-pro-preview": {
+      "onyx-3-pro-preview": {
         "extends": "chat-base-3",
         "modelConfig": {
-          "model": "gemini-3-pro-preview"
+          "model": "onyx-3-pro-preview"
         }
       },
-      "gemini-3-flash-preview": {
+      "onyx-3-flash-preview": {
         "extends": "chat-base-3",
         "modelConfig": {
-          "model": "gemini-3-flash-preview"
+          "model": "onyx-3-flash-preview"
         }
       },
-      "gemini-3.1-pro-preview": {
+      "onyx-3.1-pro-preview": {
         "extends": "chat-base-3",
         "modelConfig": {
-          "model": "gemini-3.1-pro-preview"
+          "model": "onyx-3.1-pro-preview"
         }
       },
-      "gemini-3.1-pro-preview-customtools": {
+      "onyx-3.1-pro-preview-customtools": {
         "extends": "chat-base-3",
         "modelConfig": {
-          "model": "gemini-3.1-pro-preview-customtools"
+          "model": "onyx-3.1-pro-preview-customtools"
         }
       },
-      "gemini-3.1-flash-lite-preview": {
+      "onyx-3.1-flash-lite-preview": {
         "extends": "chat-base-3",
         "modelConfig": {
-          "model": "gemini-3.1-flash-lite-preview"
+          "model": "onyx-3.1-flash-lite-preview"
         }
       },
-      "gemini-2.5-pro": {
+      "onyx-2.5-pro": {
         "extends": "chat-base-2.5",
         "modelConfig": {
-          "model": "gemini-2.5-pro"
+          "model": "onyx-2.5-pro"
         }
       },
-      "gemini-2.5-flash": {
+      "onyx-2.5-flash": {
         "extends": "chat-base-2.5",
         "modelConfig": {
-          "model": "gemini-2.5-flash"
+          "model": "onyx-2.5-flash"
         }
       },
-      "gemini-2.5-flash-lite": {
+      "onyx-2.5-flash-lite": {
         "extends": "chat-base-2.5",
         "modelConfig": {
-          "model": "gemini-2.5-flash-lite"
+          "model": "onyx-2.5-flash-lite"
         }
       },
       "gemma-4-31b-it": {
@@ -598,22 +598,22 @@ their corresponding top-level category object in your `settings.json` file.
           "model": "gemma-4-26b-a4b-it"
         }
       },
-      "gemini-2.5-flash-base": {
+      "onyx-2.5-flash-base": {
         "extends": "base",
         "modelConfig": {
-          "model": "gemini-2.5-flash"
+          "model": "onyx-2.5-flash"
         }
       },
-      "gemini-3-flash-base": {
+      "onyx-3-flash-base": {
         "extends": "base",
         "modelConfig": {
-          "model": "gemini-3-flash-preview"
+          "model": "onyx-3-flash-preview"
         }
       },
       "classifier": {
         "extends": "base",
         "modelConfig": {
-          "model": "gemini-2.5-flash-lite",
+          "model": "onyx-2.5-flash-lite",
           "generateContentConfig": {
             "maxOutputTokens": 1024,
             "thinkingConfig": {
@@ -625,7 +625,7 @@ their corresponding top-level category object in your `settings.json` file.
       "prompt-completion": {
         "extends": "base",
         "modelConfig": {
-          "model": "gemini-2.5-flash-lite",
+          "model": "onyx-2.5-flash-lite",
           "generateContentConfig": {
             "temperature": 0.3,
             "maxOutputTokens": 16000,
@@ -638,7 +638,7 @@ their corresponding top-level category object in your `settings.json` file.
       "fast-ack-helper": {
         "extends": "base",
         "modelConfig": {
-          "model": "gemini-2.5-flash-lite",
+          "model": "onyx-2.5-flash-lite",
           "generateContentConfig": {
             "temperature": 0.2,
             "maxOutputTokens": 120,
@@ -651,7 +651,7 @@ their corresponding top-level category object in your `settings.json` file.
       "edit-corrector": {
         "extends": "base",
         "modelConfig": {
-          "model": "gemini-2.5-flash-lite",
+          "model": "onyx-2.5-flash-lite",
           "generateContentConfig": {
             "thinkingConfig": {
               "thinkingBudget": 0
@@ -662,7 +662,7 @@ their corresponding top-level category object in your `settings.json` file.
       "summarizer-default": {
         "extends": "base",
         "modelConfig": {
-          "model": "gemini-2.5-flash-lite",
+          "model": "onyx-2.5-flash-lite",
           "generateContentConfig": {
             "maxOutputTokens": 2000
           }
@@ -671,14 +671,14 @@ their corresponding top-level category object in your `settings.json` file.
       "summarizer-shell": {
         "extends": "base",
         "modelConfig": {
-          "model": "gemini-2.5-flash-lite",
+          "model": "onyx-2.5-flash-lite",
           "generateContentConfig": {
             "maxOutputTokens": 2000
           }
         }
       },
       "web-search": {
-        "extends": "gemini-3-flash-base",
+        "extends": "onyx-3-flash-base",
         "modelConfig": {
           "generateContentConfig": {
             "tools": [
@@ -690,7 +690,7 @@ their corresponding top-level category object in your `settings.json` file.
         }
       },
       "web-fetch": {
-        "extends": "gemini-3-flash-base",
+        "extends": "onyx-3-flash-base",
         "modelConfig": {
           "generateContentConfig": {
             "tools": [
@@ -702,29 +702,29 @@ their corresponding top-level category object in your `settings.json` file.
         }
       },
       "web-fetch-fallback": {
-        "extends": "gemini-3-flash-base",
+        "extends": "onyx-3-flash-base",
         "modelConfig": {}
       },
       "loop-detection": {
-        "extends": "gemini-3-flash-base",
+        "extends": "onyx-3-flash-base",
         "modelConfig": {}
       },
       "loop-detection-double-check": {
         "extends": "base",
         "modelConfig": {
-          "model": "gemini-3-pro-preview"
+          "model": "onyx-3-pro-preview"
         }
       },
       "llm-edit-fixer": {
-        "extends": "gemini-3-flash-base",
+        "extends": "onyx-3-flash-base",
         "modelConfig": {}
       },
       "next-speaker-checker": {
-        "extends": "gemini-3-flash-base",
+        "extends": "onyx-3-flash-base",
         "modelConfig": {}
       },
       "context-snapshotter": {
-        "extends": "gemini-3-flash-base",
+        "extends": "onyx-3-flash-base",
         "modelConfig": {
           "generateContentConfig": {
             "thinkingConfig": {
@@ -738,42 +738,42 @@ their corresponding top-level category object in your `settings.json` file.
       },
       "chat-compression-3-pro": {
         "modelConfig": {
-          "model": "gemini-3-pro-preview"
+          "model": "onyx-3-pro-preview"
         }
       },
       "chat-compression-3-flash": {
         "modelConfig": {
-          "model": "gemini-3-flash-preview"
+          "model": "onyx-3-flash-preview"
         }
       },
       "chat-compression-3.1-flash-lite": {
         "modelConfig": {
-          "model": "gemini-3.1-flash-lite-preview"
+          "model": "onyx-3.1-flash-lite-preview"
         }
       },
       "chat-compression-2.5-pro": {
         "modelConfig": {
-          "model": "gemini-2.5-pro"
+          "model": "onyx-2.5-pro"
         }
       },
       "chat-compression-2.5-flash": {
         "modelConfig": {
-          "model": "gemini-2.5-flash"
+          "model": "onyx-2.5-flash"
         }
       },
       "chat-compression-2.5-flash-lite": {
         "modelConfig": {
-          "model": "gemini-2.5-flash-lite"
+          "model": "onyx-2.5-flash-lite"
         }
       },
       "chat-compression-default": {
         "modelConfig": {
-          "model": "gemini-3-pro-preview"
+          "model": "onyx-3-pro-preview"
         }
       },
       "agent-history-provider-summarizer": {
         "modelConfig": {
-          "model": "gemini-3-flash-preview"
+          "model": "onyx-3-flash-preview"
         }
       }
     }
@@ -802,9 +802,9 @@ their corresponding top-level category object in your `settings.json` file.
 
     ```json
     {
-      "gemini-3.1-flash-lite-preview": {
+      "onyx-3.1-flash-lite-preview": {
         "tier": "flash-lite",
-        "family": "gemini-3",
+        "family": "onyx-3",
         "isPreview": true,
         "isVisible": true,
         "features": {
@@ -812,9 +812,9 @@ their corresponding top-level category object in your `settings.json` file.
           "multimodalToolUse": true
         }
       },
-      "gemini-3.1-pro-preview": {
+      "onyx-3.1-pro-preview": {
         "tier": "pro",
-        "family": "gemini-3",
+        "family": "onyx-3",
         "isPreview": true,
         "isVisible": true,
         "features": {
@@ -822,9 +822,9 @@ their corresponding top-level category object in your `settings.json` file.
           "multimodalToolUse": true
         }
       },
-      "gemini-3.1-pro-preview-customtools": {
+      "onyx-3.1-pro-preview-customtools": {
         "tier": "pro",
-        "family": "gemini-3",
+        "family": "onyx-3",
         "isPreview": true,
         "isVisible": false,
         "features": {
@@ -832,9 +832,9 @@ their corresponding top-level category object in your `settings.json` file.
           "multimodalToolUse": true
         }
       },
-      "gemini-3-pro-preview": {
+      "onyx-3-pro-preview": {
         "tier": "pro",
-        "family": "gemini-3",
+        "family": "onyx-3",
         "isPreview": true,
         "isVisible": true,
         "features": {
@@ -842,9 +842,9 @@ their corresponding top-level category object in your `settings.json` file.
           "multimodalToolUse": true
         }
       },
-      "gemini-3-flash-preview": {
+      "onyx-3-flash-preview": {
         "tier": "flash",
-        "family": "gemini-3",
+        "family": "onyx-3",
         "isPreview": true,
         "isVisible": true,
         "features": {
@@ -852,9 +852,9 @@ their corresponding top-level category object in your `settings.json` file.
           "multimodalToolUse": true
         }
       },
-      "gemini-2.5-pro": {
+      "onyx-2.5-pro": {
         "tier": "pro",
-        "family": "gemini-2.5",
+        "family": "onyx-2.5",
         "isPreview": false,
         "isVisible": true,
         "features": {
@@ -862,9 +862,9 @@ their corresponding top-level category object in your `settings.json` file.
           "multimodalToolUse": false
         }
       },
-      "gemini-2.5-flash": {
+      "onyx-2.5-flash": {
         "tier": "flash",
-        "family": "gemini-2.5",
+        "family": "onyx-2.5",
         "isPreview": false,
         "isVisible": true,
         "features": {
@@ -872,9 +872,9 @@ their corresponding top-level category object in your `settings.json` file.
           "multimodalToolUse": false
         }
       },
-      "gemini-2.5-flash-lite": {
+      "onyx-2.5-flash-lite": {
         "tier": "flash-lite",
-        "family": "gemini-2.5",
+        "family": "onyx-2.5",
         "isPreview": false,
         "isVisible": true,
         "features": {
@@ -941,15 +941,15 @@ their corresponding top-level category object in your `settings.json` file.
           "multimodalToolUse": false
         }
       },
-      "auto-gemini-3": {
+      "auto-onyx-3": {
         "tier": "auto",
-        "family": "gemini-3",
+        "family": "onyx-3",
         "isPreview": true,
         "isVisible": false
       },
-      "auto-gemini-2.5": {
+      "auto-onyx-2.5": {
         "tier": "auto",
-        "family": "gemini-2.5",
+        "family": "onyx-2.5",
         "isPreview": false,
         "isVisible": false
       }
@@ -971,176 +971,176 @@ their corresponding top-level category object in your `settings.json` file.
       "gemma-4-26b-a4b-it": {
         "default": "gemma-4-26b-a4b-it"
       },
-      "gemini-3.1-pro-preview": {
-        "default": "gemini-3.1-pro-preview",
+      "onyx-3.1-pro-preview": {
+        "default": "onyx-3.1-pro-preview",
         "contexts": [
           {
             "condition": {
               "hasAccessToPreview": false
             },
-            "target": "gemini-2.5-pro"
+            "target": "onyx-2.5-pro"
           },
           {
             "condition": {
               "useCustomTools": true
             },
-            "target": "gemini-3.1-pro-preview-customtools"
+            "target": "onyx-3.1-pro-preview-customtools"
           }
         ]
       },
-      "gemini-3.1-pro-preview-customtools": {
-        "default": "gemini-3.1-pro-preview-customtools",
+      "onyx-3.1-pro-preview-customtools": {
+        "default": "onyx-3.1-pro-preview-customtools",
         "contexts": [
           {
             "condition": {
               "hasAccessToPreview": false
             },
-            "target": "gemini-2.5-pro"
+            "target": "onyx-2.5-pro"
           }
         ]
       },
-      "gemini-3-flash-preview": {
-        "default": "gemini-3-flash-preview",
+      "onyx-3-flash-preview": {
+        "default": "onyx-3-flash-preview",
         "contexts": [
           {
             "condition": {
               "hasAccessToPreview": false
             },
-            "target": "gemini-2.5-flash"
+            "target": "onyx-2.5-flash"
           }
         ]
       },
-      "gemini-3-pro-preview": {
-        "default": "gemini-3-pro-preview",
+      "onyx-3-pro-preview": {
+        "default": "onyx-3-pro-preview",
         "contexts": [
           {
             "condition": {
               "hasAccessToPreview": false
             },
-            "target": "gemini-2.5-pro"
+            "target": "onyx-2.5-pro"
           },
           {
             "condition": {
-              "useGemini3_1": true,
+              "useOnyx3_1": true,
               "useCustomTools": true
             },
-            "target": "gemini-3.1-pro-preview-customtools"
+            "target": "onyx-3.1-pro-preview-customtools"
           },
           {
             "condition": {
-              "useGemini3_1": true
+              "useOnyx3_1": true
             },
-            "target": "gemini-3.1-pro-preview"
+            "target": "onyx-3.1-pro-preview"
           }
         ]
       },
       "auto": {
-        "default": "gemini-3-pro-preview",
+        "default": "onyx-3-pro-preview",
         "contexts": [
           {
             "condition": {
               "hasAccessToPreview": false
             },
-            "target": "gemini-2.5-pro"
+            "target": "onyx-2.5-pro"
           },
           {
             "condition": {
-              "useGemini3_1": true,
+              "useOnyx3_1": true,
               "useCustomTools": true
             },
-            "target": "gemini-3.1-pro-preview-customtools"
+            "target": "onyx-3.1-pro-preview-customtools"
           },
           {
             "condition": {
-              "useGemini3_1": true
+              "useOnyx3_1": true
             },
-            "target": "gemini-3.1-pro-preview"
+            "target": "onyx-3.1-pro-preview"
           }
         ]
       },
       "pro": {
-        "default": "gemini-3-pro-preview",
+        "default": "onyx-3-pro-preview",
         "contexts": [
           {
             "condition": {
               "hasAccessToPreview": false
             },
-            "target": "gemini-2.5-pro"
+            "target": "onyx-2.5-pro"
           },
           {
             "condition": {
-              "useGemini3_1": true,
+              "useOnyx3_1": true,
               "useCustomTools": true
             },
-            "target": "gemini-3.1-pro-preview-customtools"
+            "target": "onyx-3.1-pro-preview-customtools"
           },
           {
             "condition": {
-              "useGemini3_1": true
+              "useOnyx3_1": true
             },
-            "target": "gemini-3.1-pro-preview"
+            "target": "onyx-3.1-pro-preview"
           }
         ]
       },
-      "gemini-3.1-flash-lite-preview": {
-        "default": "gemini-3.1-flash-lite-preview",
+      "onyx-3.1-flash-lite-preview": {
+        "default": "onyx-3.1-flash-lite-preview",
         "contexts": [
           {
             "condition": {
-              "useGemini3_1FlashLite": false
+              "useOnyx3_1FlashLite": false
             },
-            "target": "gemini-2.5-flash-lite"
+            "target": "onyx-2.5-flash-lite"
           }
         ]
       },
       "flash": {
-        "default": "gemini-3-flash-preview",
+        "default": "onyx-3-flash-preview",
         "contexts": [
           {
             "condition": {
               "hasAccessToPreview": false
             },
-            "target": "gemini-2.5-flash"
+            "target": "onyx-2.5-flash"
           }
         ]
       },
       "flash-lite": {
-        "default": "gemini-2.5-flash-lite",
+        "default": "onyx-2.5-flash-lite",
         "contexts": [
           {
             "condition": {
-              "useGemini3_1FlashLite": true
+              "useOnyx3_1FlashLite": true
             },
-            "target": "gemini-3.1-flash-lite-preview"
+            "target": "onyx-3.1-flash-lite-preview"
           }
         ]
       },
-      "auto-gemini-3": {
-        "default": "gemini-3-pro-preview",
+      "auto-onyx-3": {
+        "default": "onyx-3-pro-preview",
         "contexts": [
           {
             "condition": {
               "hasAccessToPreview": false
             },
-            "target": "gemini-2.5-pro"
+            "target": "onyx-2.5-pro"
           },
           {
             "condition": {
-              "useGemini3_1": true,
+              "useOnyx3_1": true,
               "useCustomTools": true
             },
-            "target": "gemini-3.1-pro-preview-customtools"
+            "target": "onyx-3.1-pro-preview-customtools"
           },
           {
             "condition": {
-              "useGemini3_1": true
+              "useOnyx3_1": true
             },
-            "target": "gemini-3.1-pro-preview"
+            "target": "onyx-3.1-pro-preview"
           }
         ]
       },
-      "auto-gemini-2.5": {
-        "default": "gemini-2.5-pro"
+      "auto-onyx-2.5": {
+        "default": "onyx-2.5-pro"
       }
     }
     ```
@@ -1155,49 +1155,49 @@ their corresponding top-level category object in your `settings.json` file.
     ```json
     {
       "flash": {
-        "default": "gemini-3-flash-preview",
+        "default": "onyx-3-flash-preview",
         "contexts": [
           {
             "condition": {
               "hasAccessToPreview": false
             },
-            "target": "gemini-2.5-flash"
+            "target": "onyx-2.5-flash"
           },
           {
             "condition": {
-              "requestedModels": ["gemini-2.5-pro", "auto-gemini-2.5"]
+              "requestedModels": ["onyx-2.5-pro", "auto-onyx-2.5"]
             },
-            "target": "gemini-2.5-flash"
+            "target": "onyx-2.5-flash"
           }
         ]
       },
       "pro": {
-        "default": "gemini-3-pro-preview",
+        "default": "onyx-3-pro-preview",
         "contexts": [
           {
             "condition": {
               "hasAccessToPreview": false
             },
-            "target": "gemini-2.5-pro"
+            "target": "onyx-2.5-pro"
           },
           {
             "condition": {
-              "requestedModels": ["gemini-2.5-pro", "auto-gemini-2.5"]
+              "requestedModels": ["onyx-2.5-pro", "auto-onyx-2.5"]
             },
-            "target": "gemini-2.5-pro"
+            "target": "onyx-2.5-pro"
           },
           {
             "condition": {
-              "useGemini3_1": true,
+              "useOnyx3_1": true,
               "useCustomTools": true
             },
-            "target": "gemini-3.1-pro-preview-customtools"
+            "target": "onyx-3.1-pro-preview-customtools"
           },
           {
             "condition": {
-              "useGemini3_1": true
+              "useOnyx3_1": true
             },
-            "target": "gemini-3.1-pro-preview"
+            "target": "onyx-3.1-pro-preview"
           }
         ]
       }
@@ -1215,7 +1215,7 @@ their corresponding top-level category object in your `settings.json` file.
     {
       "preview": [
         {
-          "model": "gemini-3-pro-preview",
+          "model": "onyx-3-pro-preview",
           "actions": {
             "terminal": "prompt",
             "transient": "prompt",
@@ -1230,7 +1230,7 @@ their corresponding top-level category object in your `settings.json` file.
           }
         },
         {
-          "model": "gemini-3-flash-preview",
+          "model": "onyx-3-flash-preview",
           "isLastResort": true,
           "maxAttempts": 10,
           "actions": {
@@ -1249,7 +1249,7 @@ their corresponding top-level category object in your `settings.json` file.
       ],
       "auto-preview": [
         {
-          "model": "gemini-3-pro-preview",
+          "model": "onyx-3-pro-preview",
           "maxAttempts": 3,
           "actions": {
             "terminal": "prompt",
@@ -1265,7 +1265,7 @@ their corresponding top-level category object in your `settings.json` file.
           }
         },
         {
-          "model": "gemini-3-flash-preview",
+          "model": "onyx-3-flash-preview",
           "isLastResort": true,
           "maxAttempts": 10,
           "actions": {
@@ -1284,7 +1284,7 @@ their corresponding top-level category object in your `settings.json` file.
       ],
       "default": [
         {
-          "model": "gemini-2.5-pro",
+          "model": "onyx-2.5-pro",
           "actions": {
             "terminal": "prompt",
             "transient": "prompt",
@@ -1299,7 +1299,7 @@ their corresponding top-level category object in your `settings.json` file.
           }
         },
         {
-          "model": "gemini-2.5-flash",
+          "model": "onyx-2.5-flash",
           "isLastResort": true,
           "maxAttempts": 10,
           "actions": {
@@ -1318,7 +1318,7 @@ their corresponding top-level category object in your `settings.json` file.
       ],
       "auto-default": [
         {
-          "model": "gemini-2.5-pro",
+          "model": "onyx-2.5-pro",
           "maxAttempts": 3,
           "actions": {
             "terminal": "prompt",
@@ -1334,7 +1334,7 @@ their corresponding top-level category object in your `settings.json` file.
           }
         },
         {
-          "model": "gemini-2.5-flash",
+          "model": "onyx-2.5-flash",
           "isLastResort": true,
           "maxAttempts": 10,
           "actions": {
@@ -1353,7 +1353,7 @@ their corresponding top-level category object in your `settings.json` file.
       ],
       "lite": [
         {
-          "model": "gemini-2.5-flash-lite",
+          "model": "onyx-2.5-flash-lite",
           "actions": {
             "terminal": "silent",
             "transient": "silent",
@@ -1368,7 +1368,7 @@ their corresponding top-level category object in your `settings.json` file.
           }
         },
         {
-          "model": "gemini-2.5-flash",
+          "model": "onyx-2.5-flash",
           "actions": {
             "terminal": "silent",
             "transient": "silent",
@@ -1383,7 +1383,7 @@ their corresponding top-level category object in your `settings.json` file.
           }
         },
         {
-          "model": "gemini-2.5-pro",
+          "model": "onyx-2.5-pro",
           "isLastResort": true,
           "actions": {
             "terminal": "silent",
@@ -1487,7 +1487,7 @@ their corresponding top-level category object in your `settings.json` file.
 
 - **`context.memoryBoundaryMarkers`** (array):
   - **Description:** File or directory names that mark the boundary for
-    GEMINI.md discovery. The upward traversal stops at the first directory
+    ONYX.md discovery. The upward traversal stops at the first directory
     containing any of these markers. An empty array disables parent traversal.
   - **Default:**
 
@@ -1503,7 +1503,7 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `[]`
 
 - **`context.loadMemoryFromIncludeDirectories`** (boolean):
-  - **Description:** Controls how /memory reload loads GEMINI.md files. When
+  - **Description:** Controls how /memory reload loads ONYX.md files. When
     true, include directories are scanned; when false, only the current
     directory is used.
   - **Default:** `false`
@@ -1513,8 +1513,8 @@ their corresponding top-level category object in your `settings.json` file.
   - **Default:** `true`
   - **Requires restart:** Yes
 
-- **`context.fileFiltering.respectGeminiIgnore`** (boolean):
-  - **Description:** Respect .geminiignore files when searching.
+- **`context.fileFiltering.respectOnyxIgnore`** (boolean):
+  - **Description:** Respect .onyxignore files when searching.
   - **Default:** `true`
   - **Requires restart:** Yes
 
@@ -1537,7 +1537,7 @@ their corresponding top-level category object in your `settings.json` file.
 
 - **`context.fileFiltering.customIgnoreFilePaths`** (array):
   - **Description:** Additional ignore file paths to respect. These files take
-    precedence over .geminiignore and .gitignore. Files earlier in the array
+    precedence over .onyxignore and .gitignore. Files earlier in the array
     take precedence over files later in the array, e.g. the first file takes
     precedence over the second one.
   - **Default:** `[]`
@@ -1798,7 +1798,7 @@ their corresponding top-level category object in your `settings.json` file.
 #### `experimental`
 
 - **`experimental.gemma`** (boolean):
-  - **Description:** Enable access to Gemma 4 models via Gemini API.
+  - **Description:** Enable access to Gemma 4 models via Onyx API.
   - **Default:** `true`
   - **Requires restart:** Yes
 
@@ -1814,10 +1814,10 @@ their corresponding top-level category object in your `settings.json` file.
 
 - **`experimental.voice.backend`** (enum):
   - **Description:** The backend to use for voice transcription. Note: When
-    using the Gemini Live backend, voice recordings are sent to Google Cloud for
+    using the Onyx Live backend, voice recordings are sent to Google Cloud for
     transcription.
-  - **Default:** `"gemini-live"`
-  - **Values:** `"gemini-live"`, `"whisper"`
+  - **Default:** `"onyx-live"`
+  - **Values:** `"onyx-live"`, `"whisper"`
 
 - **`experimental.voice.whisperModel`** (enum):
   - **Description:** The Whisper model to use for local transcription.
@@ -1875,7 +1875,7 @@ their corresponding top-level category object in your `settings.json` file.
 - **`experimental.extensionRegistryURI`** (string):
   - **Description:** The URI (web URL or local file path) of the extension
     registry.
-  - **Default:** `"https://geminicli.com/extensions.json"`
+  - **Default:** `"https://onyxcli.com/extensions.json"`
   - **Requires restart:** Yes
 
 - **`experimental.extensionReloading`** (boolean):
@@ -1918,7 +1918,7 @@ their corresponding top-level category object in your `settings.json` file.
 
 - **`experimental.gemmaModelRouter.enabled`** (boolean):
   - **Description:** Enable the Gemma Model Router (experimental). Requires a
-    local endpoint serving Gemma via the Gemini API using LiteRT-LM shim.
+    local endpoint serving Gemma via the Onyx API using LiteRT-LM shim.
   - **Default:** `false`
   - **Requires restart:** Yes
 
@@ -1930,7 +1930,7 @@ their corresponding top-level category object in your `settings.json` file.
 
 - **`experimental.gemmaModelRouter.binaryPath`** (string):
   - **Description:** Custom path to the LiteRT-LM binary. Leave empty to use the
-    default location (~/.gemini/bin/litert/).
+    default location (~/.onyx/bin/litert/).
   - **Default:** `""`
   - **Requires restart:** Yes
 
@@ -2273,7 +2273,7 @@ of v0.3.0:
     "usageStatisticsEnabled": true
   },
   "model": {
-    "name": "gemini-1.5-pro-latest",
+    "name": "onyx-1.5-pro-latest",
     "maxSessionTurns": 10,
     "summarizeToolOutput": {
       "run_shell_command": {
@@ -2282,7 +2282,7 @@ of v0.3.0:
     }
   },
   "context": {
-    "fileName": ["CONTEXT.md", "GEMINI.md"],
+    "fileName": ["CONTEXT.md", "ONYX.md"],
     "includeDirectories": ["path/to/dir1", "~/path/to/dir2", "../path/to/dir3"],
     "loadFromIncludeDirectories": true,
     "fileFiltering": {
@@ -2301,7 +2301,7 @@ The CLI keeps a history of shell commands you run. To avoid conflicts between
 different projects, this history is stored in a project-specific directory
 within your user's home folder.
 
-- **Location:** `~/.gemini/tmp/<project_hash>/shell_history`
+- **Location:** `~/.onyx/tmp/<project_hash>/shell_history`
   - `<project_hash>` is a unique identifier generated from your project's root
     path.
   - The history is stored in a file named `shell_history`.
@@ -2325,49 +2325,49 @@ loading order is:
 
 **Environment variable exclusion:** Some environment variables (like `DEBUG` and
 `DEBUG_MODE`) are automatically excluded from being loaded from project `.env`
-files to prevent interference with gemini-cli behavior. Variables from
-`.gemini/.env` files are never excluded. You can customize this behavior using
+files to prevent interference with onyx-cli behavior. Variables from
+`.onyx/.env` files are never excluded. You can customize this behavior using
 the `advanced.excludedEnvVars` setting in your `settings.json` file.
 
-- **`GEMINI_API_KEY`**:
-  - Your API key for the Gemini API.
+- **`ONYX_API_KEY`**:
+  - Your API key for the Onyx API.
   - One of several available
     [authentication methods](../get-started/authentication.mdx).
   - Set this in your shell profile (for example, `~/.bashrc`, `~/.zshrc`) or an
     `.env` file.
-- **`GEMINI_MODEL`**:
-  - Specifies the default Gemini model to use.
+- **`ONYX_MODEL`**:
+  - Specifies the default Onyx model to use.
   - Overrides the hardcoded default
-  - Example: `export GEMINI_MODEL="gemini-3-flash-preview"` (Windows PowerShell:
-    `$env:GEMINI_MODEL="gemini-3-flash-preview"`)
+  - Example: `export ONYX_MODEL="onyx-3-flash-preview"` (Windows PowerShell:
+    `$env:ONYX_MODEL="onyx-3-flash-preview"`)
 - **`ONYX_CLI_TRUST_WORKSPACE`**:
   - If set to `"true"`, trusts the current workspace for the duration of the
     session, bypassing the folder trust check.
   - Useful for headless environments (for example, CI/CD pipelines).
-- **`GEMINI_CLI_TRUSTED_FOLDERS_PATH`**:
+- **`ONYX_CLI_TRUSTED_FOLDERS_PATH`**:
   - Overrides the default location for the `trustedFolders.json` file.
   - Useful if you want to store this configuration in a custom location instead
-    of the default `~/.gemini/`.
-- **`GEMINI_CLI_IDE_PID`**:
+    of the default `~/.onyx/`.
+- **`ONYX_CLI_IDE_PID`**:
   - Manually specifies the PID of the IDE process to use for integration. This
     is useful when running Onyx CLI in a standalone terminal while still
     wanting to associate it with a specific IDE instance.
   - Overrides the automatic IDE detection logic.
-- **`GEMINI_CLI_HOME`**:
+- **`ONYX_CLI_HOME`**:
   - Specifies the root directory for Onyx CLI's user-level configuration and
     storage.
   - By default, this is the user's system home directory. The CLI will create a
-    `.gemini` folder inside this directory.
+    `.onyx` folder inside this directory.
   - Useful for shared compute environments or keeping CLI state isolated.
-  - Example: `export GEMINI_CLI_HOME="/path/to/user/config"` (Windows
-    PowerShell: `$env:GEMINI_CLI_HOME="C:\path\to\user\config"`)
-- **`GEMINI_CLI_SURFACE`**:
+  - Example: `export ONYX_CLI_HOME="/path/to/user/config"` (Windows
+    PowerShell: `$env:ONYX_CLI_HOME="C:\path\to\user\config"`)
+- **`ONYX_CLI_SURFACE`**:
   - Specifies a custom label to include in the `User-Agent` header for API
     traffic reporting.
   - This is useful for tracking specific internal tools or distribution
     channels.
-  - Example: `export GEMINI_CLI_SURFACE="my-custom-tool"` (Windows PowerShell:
-    `$env:GEMINI_CLI_SURFACE="my-custom-tool"`)
+  - Example: `export ONYX_CLI_SURFACE="my-custom-tool"` (Windows PowerShell:
+    `$env:ONYX_CLI_SURFACE="my-custom-tool"`)
 - **`GOOGLE_API_KEY`**:
   - Your Google Cloud API key.
   - Required for using Vertex AI in express mode.
@@ -2393,17 +2393,17 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
     (Windows PowerShell:
     `$env:GOOGLE_APPLICATION_CREDENTIALS="C:\path\to\your\credentials.json"`)
 - **`GOOGLE_GENAI_API_VERSION`**:
-  - Specifies the API version to use for Gemini API requests.
+  - Specifies the API version to use for Onyx API requests.
   - When set, overrides the default API version used by the SDK.
   - Example: `export GOOGLE_GENAI_API_VERSION="v1"` (Windows PowerShell:
     `$env:GOOGLE_GENAI_API_VERSION="v1"`)
-- **`GOOGLE_GEMINI_BASE_URL`**:
-  - Overrides the default base URL for Gemini API requests (when using
-    `gemini-api-key` authentication).
+- **`GOOGLE_ONYX_BASE_URL`**:
+  - Overrides the default base URL for Onyx API requests (when using
+    `onyx-api-key` authentication).
   - Must be a valid URL. For security, it must use HTTPS unless pointing to
     `localhost` (or `127.0.0.1` / `[::1]`).
-  - Example: `export GOOGLE_GEMINI_BASE_URL="https://my-proxy.com"` (Windows
-    PowerShell: `$env:GOOGLE_GEMINI_BASE_URL="https://my-proxy.com"`)
+  - Example: `export GOOGLE_ONYX_BASE_URL="https://my-proxy.com"` (Windows
+    PowerShell: `$env:GOOGLE_ONYX_BASE_URL="https://my-proxy.com"`)
 - **`GOOGLE_VERTEX_BASE_URL`**:
   - Overrides the default base URL for Vertex AI API requests (when using
     `vertex-ai` authentication).
@@ -2416,31 +2416,31 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
   - Your Google Cloud Project ID for Telemetry in Google Cloud
   - Example: `export OTLP_GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_ID"` (Windows
     PowerShell: `$env:OTLP_GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_ID"`).
-- **`GEMINI_TELEMETRY_ENABLED`**:
+- **`ONYX_TELEMETRY_ENABLED`**:
   - Set to `true` or `1` to enable telemetry. Any other value is treated as
     disabling it.
   - Overrides the `telemetry.enabled` setting.
-- **`GEMINI_TELEMETRY_TRACES_ENABLED`**:
+- **`ONYX_TELEMETRY_TRACES_ENABLED`**:
   - Set to `true` or `1` to enable detailed tracing with large attributes. Any
     other value is treated as disabling it.
   - Overrides the `telemetry.traces` setting.
-- **`GEMINI_TELEMETRY_TARGET`**:
+- **`ONYX_TELEMETRY_TARGET`**:
   - Sets the telemetry target (`local` or `gcp`).
   - Overrides the `telemetry.target` setting.
-- **`GEMINI_TELEMETRY_OTLP_ENDPOINT`**:
+- **`ONYX_TELEMETRY_OTLP_ENDPOINT`**:
   - Sets the OTLP endpoint for telemetry.
   - Overrides the `telemetry.otlpEndpoint` setting.
-- **`GEMINI_TELEMETRY_OTLP_PROTOCOL`**:
+- **`ONYX_TELEMETRY_OTLP_PROTOCOL`**:
   - Sets the OTLP protocol (`grpc` or `http`).
   - Overrides the `telemetry.otlpProtocol` setting.
-- **`GEMINI_TELEMETRY_LOG_PROMPTS`**:
+- **`ONYX_TELEMETRY_LOG_PROMPTS`**:
   - Set to `true` or `1` to enable or disable logging of user prompts. Any other
     value is treated as disabling it.
   - Overrides the `telemetry.logPrompts` setting.
-- **`GEMINI_TELEMETRY_OUTFILE`**:
+- **`ONYX_TELEMETRY_OUTFILE`**:
   - Sets the file path to write telemetry to when the target is `local`.
   - Overrides the `telemetry.outfile` setting.
-- **`GEMINI_TELEMETRY_USE_COLLECTOR`**:
+- **`ONYX_TELEMETRY_USE_COLLECTOR`**:
   - Set to `true` or `1` to enable or disable using an external OTLP collector.
     Any other value is treated as disabling it.
   - Overrides the `telemetry.useCollector` setting.
@@ -2449,19 +2449,19 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
   - Required for using Vertex AI in non-express mode.
   - Example: `export GOOGLE_CLOUD_LOCATION="YOUR_PROJECT_LOCATION"` (Windows
     PowerShell: `$env:GOOGLE_CLOUD_LOCATION="YOUR_PROJECT_LOCATION"`).
-- **`GEMINI_SANDBOX`**:
+- **`ONYX_SANDBOX`**:
   - Alternative to the `sandbox` setting in `settings.json`.
   - Accepts `true`, `false`, `docker`, `podman`, or a custom command string.
-- **`GEMINI_SYSTEM_MD`**:
+- **`ONYX_SYSTEM_MD`**:
   - Replaces the built‑in system prompt with content from a Markdown file.
-  - `true`/`1`: Use project default path `./.gemini/system.md`.
+  - `true`/`1`: Use project default path `./.onyx/system.md`.
   - Any other string: Treat as a path (relative/absolute supported, `~`
     expands).
   - `false`/`0` or unset: Use the built‑in prompt. See
     [System Prompt Override](../cli/system-prompt.md).
-- **`GEMINI_WRITE_SYSTEM_MD`**:
+- **`ONYX_WRITE_SYSTEM_MD`**:
   - Writes the current built‑in system prompt to a file for review.
-  - `true`/`1`: Write to `./.gemini/system.md`. Otherwise treat the value as a
+  - `true`/`1`: Write to `./.onyx/system.md`. Otherwise treat the value as a
     path.
   - Run the CLI once with this set to generate the file.
 - **`SEATBELT_PROFILE`** (macOS specific):
@@ -2475,15 +2475,15 @@ the `advanced.excludedEnvVars` setting in your `settings.json` file.
     allows network.
   - `strict-proxied`: Same as `strict-open` but routes network through proxy.
   - `<profile_name>`: Uses a custom profile. To define a custom profile, create
-    a file named `sandbox-macos-<profile_name>.sb` in your project's `.gemini/`
-    directory (for example, `my-project/.gemini/sandbox-macos-custom.sb`).
+    a file named `sandbox-macos-<profile_name>.sb` in your project's `.onyx/`
+    directory (for example, `my-project/.onyx/sandbox-macos-custom.sb`).
 - **`DEBUG` or `DEBUG_MODE`** (often used by underlying libraries or the CLI
   itself):
   - Set to `true` or `1` to enable verbose debug logging, which can be helpful
     for troubleshooting.
   - **Note:** These variables are automatically excluded from project `.env`
-    files by default to prevent interference with gemini-cli behavior. Use
-    `.gemini/.env` files if you need to set these for gemini-cli specifically.
+    files by default to prevent interference with onyx-cli behavior. Use
+    `.onyx/.env` files if you need to set these for onyx-cli specifically.
 - **`NO_COLOR`**:
   - Set to any value to disable all color output in the CLI.
 - **`CLI_TITLE`**:
@@ -2517,7 +2517,7 @@ from the system or loaded from `.env` files.
 
 - Common system variables (for example, `PATH`, `HOME`, `USER`, `SHELL`, `TERM`,
   `LANG`).
-- Variables starting with `GEMINI_CLI_`.
+- Variables starting with `ONYX_CLI_`.
 - GitHub Action specific variables.
 
 **Configuration:**
@@ -2550,7 +2550,7 @@ for that specific session.
 - **`--allowed-tools <tool1,tool2,...>`**:
   - A comma-separated list of tool names that will bypass the confirmation
     dialog.
-  - Example: `gemini --allowed-tools "ShellTool(git status)"`
+  - Example: `onyx --allowed-tools "ShellTool(git status)"`
 - **`--approval-mode <mode>`**:
   - Sets the approval mode for tool calls. Available modes:
     - `default`: Prompt for approval on each tool call (default behavior)
@@ -2563,7 +2563,7 @@ for that specific session.
       > functional.
   - Cannot be used together with `--yolo`. Use `--approval-mode=yolo` instead of
     `--yolo` for the new unified approach.
-  - Example: `gemini --approval-mode auto_edit`
+  - Example: `onyx --approval-mode auto_edit`
 - **`--debug`** (**`-d`**):
   - Enables debug mode for this session, providing more verbose output. Open the
     debug console with F12 to see the additional logging.
@@ -2571,13 +2571,13 @@ for that specific session.
   - Delete a specific chat session by its index number or full session UUID.
   - Use `--list-sessions` first to see available sessions, their indices, and
     UUIDs.
-  - Example: `gemini --delete-session 3` or
-    `gemini --delete-session a1b2c3d4-e5f6-7890-abcd-ef1234567890`
+  - Example: `onyx --delete-session 3` or
+    `onyx --delete-session a1b2c3d4-e5f6-7890-abcd-ef1234567890`
 - **`--extensions <extension_name ...>`** (**`-e <extension_name ...>`**):
   - Specifies a list of extensions to use for the session. If not provided, all
     available extensions are used.
-  - Use the special term `gemini -e none` to disable all extensions.
-  - Example: `gemini -e my-extension -e my-other-extension`
+  - Use the special term `onyx -e none` to disable all extensions.
+  - Example: `onyx -e my-extension -e my-other-extension`
 - **`--fake-responses`**:
   - Path to a file with fake model responses for testing.
 - **`--help`** (or **`-h`**):
@@ -2595,10 +2595,10 @@ for that specific session.
   - List all available chat sessions for the current project and exit.
   - Shows session indices, dates, message counts, and preview of first user
     message.
-  - Example: `gemini --list-sessions`
+  - Example: `onyx --list-sessions`
 - **`--model <model_name>`** (**`-m <model_name>`**):
-  - Specifies the Gemini model to use for this session.
-  - Example: `npm start -- --model gemini-3-pro-preview`
+  - Specifies the Onyx model to use for this session.
+  - Example: `npm start -- --model onyx-3-pro-preview`
 - **`--output-format <format>`**:
   - **Description:** Specifies the format of the CLI output for non-interactive
     mode.
@@ -2615,15 +2615,15 @@ for that specific session.
   - Starts an interactive session with the provided prompt as the initial input.
   - The prompt is processed within the interactive session, not before it.
   - Cannot be used when piping input from stdin.
-  - Example: `gemini -i "explain this code"`
+  - Example: `onyx -i "explain this code"`
 - **`--record-responses`**:
   - Path to a file to record model responses for testing.
 - **`--resume [session_id]`** (**`-r [session_id]`**):
   - Resume a previous chat session. Use "latest" for the most recent session,
     provide a session index number, or provide a full session UUID.
   - If no session_id is provided, defaults to "latest".
-  - Example: `gemini --resume 5` or `gemini --resume latest` or
-    `gemini --resume a1b2c3d4-e5f6-7890-abcd-ef1234567890` or `gemini --resume`
+  - Example: `onyx --resume 5` or `onyx --resume latest` or
+    `onyx --resume a1b2c3d4-e5f6-7890-abcd-ef1234567890` or `onyx --resume`
   - See [Session Management](../cli/session-management.md) for more details.
 - **`--sandbox`** (**`-s`**):
   - Enables sandbox mode for this session.
@@ -2638,9 +2638,9 @@ for that specific session.
 ## Context files (hierarchical instructional context)
 
 While not strictly configuration for the CLI's _behavior_, context files
-(defaulting to `GEMINI.md` but configurable via the `context.fileName` setting)
+(defaulting to `ONYX.md` but configurable via the `context.fileName` setting)
 are crucial for configuring the _instructional context_ (also referred to as
-"memory") provided to the Gemini model. This powerful feature lets you give
+"memory") provided to the Onyx model. This powerful feature lets you give
 project-specific instructions, coding style guides, or any relevant background
 information to the AI, making its responses more tailored and accurate to your
 needs. The CLI includes UI elements, such as an indicator in the footer showing
@@ -2648,10 +2648,10 @@ the number of loaded context files, to keep you informed about the active
 context.
 
 - **Purpose:** These Markdown files contain instructions, guidelines, or context
-  that you want the Gemini model to be aware of during your interactions. The
+  that you want the Onyx model to be aware of during your interactions. The
   system is designed to manage this instructional context hierarchically.
 
-### Example context file content (for example, `GEMINI.md`)
+### Example context file content (for example, `ONYX.md`)
 
 Here's a conceptual example of what a context file at the root of a TypeScript
 project might contain:
@@ -2693,14 +2693,14 @@ you. Project-specific context files are highly encouraged to establish
 conventions and context.
 
 - **Hierarchical loading and precedence:** The CLI implements a sophisticated
-  hierarchical memory system by loading context files (for example, `GEMINI.md`)
+  hierarchical memory system by loading context files (for example, `ONYX.md`)
   from several locations. Content from files lower in this list (more specific)
   typically overrides or supplements content from files higher up (more
   general). The exact concatenation order and final context can be inspected
   using the `/memory show` command. The typical loading order is:
   1.  **Global context file:**
-      - Location: `~/.gemini/<configured-context-filename>` (for example,
-        `~/.gemini/GEMINI.md` in your user home directory).
+      - Location: `~/.onyx/<configured-context-filename>` (for example,
+        `~/.onyx/ONYX.md` in your user home directory).
       - Scope: Provides default instructions for all your projects.
   2.  **Project root and ancestors context files:**
       - Location: The CLI searches for the configured context file in the
@@ -2719,7 +2719,7 @@ conventions and context.
         component, module, or subsection of your project.
 - **Concatenation and UI indication:** The contents of all found context files
   are concatenated (with separators indicating their origin and path) and
-  provided as part of the system prompt to the Gemini model. The CLI footer
+  provided as part of the system prompt to the Onyx model. The CLI footer
   displays the count of loaded context files, giving you a quick visual cue
   about the active instructional context.
 - **Importing content:** You can modularize your context files by importing
@@ -2746,17 +2746,17 @@ file modifications) within a sandboxed environment to protect your system.
 Sandboxing is disabled by default, but you can enable it in a few ways:
 
 - Using `--sandbox` or `-s` flag.
-- Setting `GEMINI_SANDBOX` environment variable.
+- Setting `ONYX_SANDBOX` environment variable.
 - Sandbox is enabled when using `--yolo` or `--approval-mode=yolo` by default.
 
-By default, it uses a pre-built `gemini-cli-sandbox` Docker image.
+By default, it uses a pre-built `onyx-cli-sandbox` Docker image.
 
 For project-specific sandboxing needs, you can create a custom Dockerfile at
-`.gemini/sandbox.Dockerfile` in your project's root directory. This Dockerfile
+`.onyx/sandbox.Dockerfile` in your project's root directory. This Dockerfile
 can be based on the base sandbox image:
 
 ```dockerfile
-FROM gemini-cli-sandbox
+FROM onyx-cli-sandbox
 
 # Add your custom dependencies or configurations here.
 # Note: The base image runs as the non-root 'node' user.
@@ -2768,12 +2768,12 @@ FROM gemini-cli-sandbox
 # COPY ./my-config /app/my-config
 ```
 
-When `.gemini/sandbox.Dockerfile` exists, you can use `BUILD_SANDBOX`
+When `.onyx/sandbox.Dockerfile` exists, you can use `BUILD_SANDBOX`
 environment variable when running Onyx CLI to automatically build the custom
 sandbox image:
 
 ```bash
-BUILD_SANDBOX=1 gemini -s
+BUILD_SANDBOX=1 onyx -s
 ```
 
 Building a custom sandbox with `BUILD_SANDBOX` is only supported when running
@@ -2791,7 +2791,7 @@ new features.
 - **Tool calls:** We log the names of the tools that are called, whether they
   succeed or fail, and how long they take to execute. We do not collect the
   arguments passed to the tools or any data returned by them.
-- **API requests:** We log the Gemini model used for each request, the duration
+- **API requests:** We log the Onyx model used for each request, the duration
   of the request, and whether it was successful. We do not collect the content
   of the prompts or responses.
 - **Session information:** We collect information about the configuration of the
@@ -2802,7 +2802,7 @@ new features.
 - **Personally identifiable information (PII):** We do not collect any personal
   information, such as your name, email address, or API keys.
 - **Prompt and response content:** We do not log the content of your prompts or
-  the responses from the Gemini model.
+  the responses from the Onyx model.
 - **File content:** We do not log the content of any files that are read or
   written by the CLI.
 

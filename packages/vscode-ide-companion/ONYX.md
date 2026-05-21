@@ -1,6 +1,6 @@
-# Gemini CLI VS Code Companion (`gemini-cli-vscode-ide-companion`)
+# Onyx CLI VS Code Companion (`onyx-cli-vscode-ide-companion`)
 
-VS Code extension that pairs with Gemini CLI, providing direct IDE workspace
+VS Code extension that pairs with Onyx CLI, providing direct IDE workspace
 access to the CLI agent.
 
 ## Architecture
@@ -19,5 +19,5 @@ access to the CLI agent.
 
 ## Testing
 
-- Run tests: `npm test -w gemini-cli-vscode-ide-companion`
+- Run tests: `npm test -w onyx-cli-vscode-ide-companion`
 - Tests use standard Vitest patterns alongside VS Code test APIs.

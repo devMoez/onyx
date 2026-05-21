@@ -88,10 +88,10 @@ class WebSearchToolInvocation extends BaseToolInvocation<
   async execute({
     abortSignal: signal,
   }: ExecuteOptions): Promise<WebSearchToolResult> {
-    const geminiClient = this.context.geminiClient;
+    const onyxClient = this.context.onyxClient;
 
     try {
-      const response = await geminiClient.generateContent(
+      const response = await onyxClient.generateContent(
         { model: 'web-search' },
         [{ role: 'user', parts: [{ text: this.params.query }] }],
         signal,
@@ -201,7 +201,7 @@ class WebSearchToolInvocation extends BaseToolInvocation<
 }
 
 /**
- * A tool to perform web searches using Google Search via the Gemini API.
+ * A tool to perform web searches using Google Search via the Onyx API.
  */
 export class WebSearchTool extends BaseDeclarativeTool<
   WebSearchToolParams,

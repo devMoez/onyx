@@ -93,10 +93,10 @@ describe('Context Management Fidelity E2E', () => {
     const traceLog = path.join(traceDir, 'trace.log');
 
     const commonEnv = {
-      GEMINI_API_KEY: 'mock-key',
-      GEMINI_CONTEXT_TRACE_DIR: traceDir,
-      GEMINI_CONTEXT_TRACE_ENABLED: 'true',
-      GEMINI_DEBUG_LOG_FILE: path.join(rig.testDir!, 'debug.log'),
+      ONYX_API_KEY: 'mock-key',
+      ONYX_CONTEXT_TRACE_DIR: traceDir,
+      ONYX_CONTEXT_TRACE_ENABLED: 'true',
+      ONYX_DEBUG_LOG_FILE: path.join(rig.testDir!, 'debug.log'),
     };
 
     const runMocks: FakeResponse[] = [
@@ -230,3 +230,4 @@ describe('Context Management Fidelity E2E', () => {
     expect(syntheticTurnsAfter[0].content).toEqual(syntheticTurns[0].content);
   });
 });
+

@@ -6,7 +6,7 @@
 
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import {
-  GeminiEventType as ServerGeminiEventType,
+  OnyxEventType as ServerOnyxEventType,
   getErrorMessage,
   isNodeError,
   MessageSenderType,
@@ -36,7 +36,7 @@ import {
   CoreEvent,
   CoreToolCallStatus,
   buildUserSteeringHintPrompt,
-  GeminiCliOperation,
+  OnyxCliOperation,
   getPlanModeExitMessage,
   isBackgroundExecutionData,
   Kind,
@@ -49,15 +49,15 @@ import {
 import type {
   Config,
   EditorType,
-  GeminiClient,
-  ServerGeminiChatCompressedEvent,
-  ServerGeminiContentEvent as ContentEvent,
-  ServerGeminiFinishedEvent,
-  ServerGeminiStreamEvent as GeminiEvent,
+  OnyxClient,
+  ServerOnyxChatCompressedEvent,
+  ServerOnyxContentEvent as ContentEvent,
+  ServerOnyxFinishedEvent,
+  ServerOnyxStreamEvent as OnyxEvent,
   ThoughtSummary,
   ToolCallRequestInfo,
   ToolCallResponseInfo,
-  GeminiErrorEventValue,
+  OnyxErrorEventValue,
   RetryAttemptPayload,
 } from '@onyx/core';
 import { type Part, type PartListUnion, FinishReason } from '@google/genai';
@@ -189,14 +189,14 @@ function calculateStreamingState(
     }
 
     // Terminal statuses (success, error, cancelled) still count as "Responding"
-    // if the result hasn't been submitted back to Gemini yet.
+    // if the result hasn't been submitted back to Onyx yet.
     if (
       tc.status === CoreToolCallStatus.Success ||
       tc.status === CoreToolCallStatus.Error ||
       tc.status === CoreToolCallStatus.Cancelled
     ) {
       return !(tc as TrackedCompletedToolCall | TrackedCancelledToolCall)
-        .responseSubmittedToGemini;
+        .responseSubmittedToOnyx;
     }
 
     return false;
@@ -210,11 +210,11 @@ function calculateStreamingState(
 }
 
 /**
- * Manages the Gemini stream, including user input, command processing,
+ * Manages the Onyx stream, including user input, command processing,
  * API interaction, and tool call lifecycle.
  */
 export const useOnyxStream = (
-  geminiClient: GeminiClient,
+  onyxClient: OnyxClient,
   history: HistoryItem[],
   addItem: UseHistoryManagerReturn['addItem'],
   config: Config,
@@ -260,7 +260,7 @@ export const useOnyxStream = (
   const [pendingHistoryItem, pendingHistoryItemRef, setPendingHistoryItem] =
     useStateAndRef<HistoryItemWithoutId | null>(null);
 
-  const [lastGeminiActivityTime, setLastGeminiActivityTime] =
+  const [lastOnyxActivityTime, setLastOnyxActivityTime] =
     useState<number>(0);
   const [pushedToolCallIds, pushedToolCallIdsRef, setPushedToolCallIds] =
     useStateAndRef<Set<string>>(new Set());
@@ -343,10 +343,10 @@ export const useOnyxStream = (
         // Record tool calls with full metadata before sending responses.
         try {
           const currentModel =
-            config.getGeminiClient().getCurrentSequenceModel() ??
+            config.getOnyxClient().getCurrentSequenceModel() ??
             config.getModel();
           config
-            .getGeminiClient()
+            .getOnyxClient()
             .getChat()
             .recordCompletedToolCalls(
               currentModel,
@@ -404,7 +404,7 @@ export const useOnyxStream = (
     onExec,
     onDebugMessage,
     config,
-    geminiClient,
+    onyxClient,
     setShellInputFocused,
     terminalWidth,
     terminalHeight,
@@ -938,7 +938,7 @@ export const useOnyxStream = (
     },
   );
 
-  const prepareQueryForGemini = useCallback(
+  const prepareQueryForOnyx = useCallback(
     async (
       query: PartListUnion,
       userMessageTimestamp: number,
@@ -955,7 +955,7 @@ export const useOnyxStream = (
         return { queryToSend: null, shouldProceed: false };
       }
 
-      let localQueryToSendToGemini: PartListUnion | null = null;
+      let localQueryToSendToOnyx: PartListUnion | null = null;
 
       if (typeof query === 'string') {
         const trimmedQuery = query.trim();
@@ -982,9 +982,9 @@ export const useOnyxStream = (
                 await scheduleToolCalls([toolCallRequest], abortSignal);
 
                 if (postSubmitPrompt) {
-                  localQueryToSendToGemini = postSubmitPrompt;
+                  localQueryToSendToOnyx = postSubmitPrompt;
                   return {
-                    queryToSend: localQueryToSendToGemini,
+                    queryToSend: localQueryToSendToOnyx,
                     shouldProceed: true,
                   };
                 }
@@ -992,10 +992,10 @@ export const useOnyxStream = (
                 return { queryToSend: null, shouldProceed: false };
               }
               case 'submit_prompt': {
-                localQueryToSendToGemini = slashCommandResult.content;
+                localQueryToSendToOnyx = slashCommandResult.content;
 
                 return {
-                  queryToSend: localQueryToSendToGemini,
+                  queryToSend: localQueryToSendToOnyx,
                   shouldProceed: true,
                 };
               }
@@ -1037,27 +1037,27 @@ export const useOnyxStream = (
             onDebugMessage(atCommandResult.error);
             return { queryToSend: null, shouldProceed: false };
           }
-          localQueryToSendToGemini = atCommandResult.processedQuery;
+          localQueryToSendToOnyx = atCommandResult.processedQuery;
         } else {
-          // Normal query for Gemini
+          // Normal query for Onyx
           addItem(
             { type: MessageType.USER, text: trimmedQuery },
             userMessageTimestamp,
           );
-          localQueryToSendToGemini = trimmedQuery;
+          localQueryToSendToOnyx = trimmedQuery;
         }
       } else {
         // It's a function response (PartListUnion that isn't a string)
-        localQueryToSendToGemini = query;
+        localQueryToSendToOnyx = query;
       }
 
-      if (localQueryToSendToGemini === null) {
+      if (localQueryToSendToOnyx === null) {
         onDebugMessage(
-          'Query processing resulted in null, not sending to Gemini.',
+          'Query processing resulted in null, not sending to Onyx.',
         );
         return { queryToSend: null, shouldProceed: false };
       }
-      return { queryToSend: localQueryToSendToGemini, shouldProceed: true };
+      return { queryToSend: localQueryToSendToOnyx, shouldProceed: true };
     },
     [
       config,
@@ -1077,7 +1077,7 @@ export const useOnyxStream = (
   const handleContentEvent = useCallback(
     (
       eventValue: ContentEvent['value'],
-      currentGeminiMessageBuffer: string,
+      currentOnyxMessageBuffer: string,
       userMessageTimestamp: number,
     ): string => {
       setRetryStatus(null);
@@ -1085,30 +1085,30 @@ export const useOnyxStream = (
         // Prevents additional output after a user initiated cancel.
         return '';
       }
-      let newGeminiMessageBuffer = currentGeminiMessageBuffer + eventValue;
+      let newOnyxMessageBuffer = currentOnyxMessageBuffer + eventValue;
       if (
-        pendingHistoryItemRef.current?.type !== 'gemini' &&
-        pendingHistoryItemRef.current?.type !== 'gemini_content'
+        pendingHistoryItemRef.current?.type !== 'onyx' &&
+        pendingHistoryItemRef.current?.type !== 'onyx_content'
       ) {
-        // Flush any pending item before starting gemini content
+        // Flush any pending item before starting onyx content
         if (pendingHistoryItemRef.current) {
           addItem(pendingHistoryItemRef.current, userMessageTimestamp);
         }
-        setPendingHistoryItem({ type: 'gemini', text: '' });
-        newGeminiMessageBuffer = eventValue;
+        setPendingHistoryItem({ type: 'onyx', text: '' });
+        newOnyxMessageBuffer = eventValue;
       }
       // Split large messages for better rendering performance. Ideally,
       // we should maximize the amount of output sent to <Static />.
-      const splitPoint = findLastSafeSplitPoint(newGeminiMessageBuffer);
-      if (splitPoint === newGeminiMessageBuffer.length) {
+      const splitPoint = findLastSafeSplitPoint(newOnyxMessageBuffer);
+      if (splitPoint === newOnyxMessageBuffer.length) {
         // Update the existing message with accumulated content
         setPendingHistoryItem((item) => ({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-          type: item?.type as 'gemini' | 'gemini_content',
-          text: newGeminiMessageBuffer,
+          type: item?.type as 'onyx' | 'onyx_content',
+          text: newOnyxMessageBuffer,
         }));
       } else {
-        // This indicates that we need to split up this Gemini Message.
+        // This indicates that we need to split up this Onyx Message.
         // Splitting a message is primarily a performance consideration. There is a
         // <Static> component at the root of App.tsx which takes care of rendering
         // content statically or dynamically. Everything but the last message is
@@ -1116,24 +1116,24 @@ export const useOnyxStream = (
         // multiple times per-second (as streaming occurs). Prior to this change you'd
         // see heavy flickering of the terminal. This ensures that larger messages get
         // broken up so that there are more "statically" rendered.
-        const beforeText = newGeminiMessageBuffer.substring(0, splitPoint);
-        const afterText = newGeminiMessageBuffer.substring(splitPoint);
+        const beforeText = newOnyxMessageBuffer.substring(0, splitPoint);
+        const afterText = newOnyxMessageBuffer.substring(splitPoint);
         if (beforeText.length > 0) {
           addItem(
             {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
               type: pendingHistoryItemRef.current?.type as
-                | 'gemini'
-                | 'gemini_content',
+                | 'onyx'
+                | 'onyx_content',
               text: beforeText,
             },
             userMessageTimestamp,
           );
         }
-        setPendingHistoryItem({ type: 'gemini_content', text: afterText });
-        newGeminiMessageBuffer = afterText;
+        setPendingHistoryItem({ type: 'onyx_content', text: afterText });
+        newOnyxMessageBuffer = afterText;
       }
-      return newGeminiMessageBuffer;
+      return newOnyxMessageBuffer;
     },
     [addItem, pendingHistoryItemRef, setPendingHistoryItem],
   );
@@ -1196,7 +1196,7 @@ export const useOnyxStream = (
   );
 
   const handleErrorEvent = useCallback(
-    (eventValue: GeminiErrorEventValue, userMessageTimestamp: number) => {
+    (eventValue: OnyxErrorEventValue, userMessageTimestamp: number) => {
       if (pendingHistoryItemRef.current) {
         addItem(pendingHistoryItemRef.current, userMessageTimestamp);
         setPendingHistoryItem(null);
@@ -1245,7 +1245,7 @@ export const useOnyxStream = (
   );
 
   const handleFinishedEvent = useCallback(
-    (event: ServerGeminiFinishedEvent, userMessageTimestamp: number) => {
+    (event: ServerOnyxFinishedEvent, userMessageTimestamp: number) => {
       const finishReason = event.value.reason;
       if (!finishReason) {
         return;
@@ -1295,7 +1295,7 @@ export const useOnyxStream = (
 
   const handleChatCompressionEvent = useCallback(
     (
-      eventValue: ServerGeminiChatCompressedEvent['value'],
+      eventValue: ServerOnyxChatCompressedEvent['value'],
       userMessageTimestamp: number,
     ) => {
       if (pendingHistoryItemRef.current) {
@@ -1456,45 +1456,45 @@ export const useOnyxStream = (
     ],
   );
 
-  const processGeminiStreamEvents = useCallback(
+  const processOnyxStreamEvents = useCallback(
     async (
-      stream: AsyncIterable<GeminiEvent>,
+      stream: AsyncIterable<OnyxEvent>,
       userMessageTimestamp: number,
       signal: AbortSignal,
     ): Promise<StreamProcessingStatus> => {
-      let geminiMessageBuffer = '';
+      let onyxMessageBuffer = '';
       const toolCallRequests: ToolCallRequestInfo[] = [];
       for await (const event of stream) {
         if (
-          event.type !== ServerGeminiEventType.Thought &&
+          event.type !== ServerOnyxEventType.Thought &&
           thoughtRef.current !== null
         ) {
           setThought(null);
         }
 
         switch (event.type) {
-          case ServerGeminiEventType.Thought:
-            setLastGeminiActivityTime(Date.now());
+          case ServerOnyxEventType.Thought:
+            setLastOnyxActivityTime(Date.now());
             handleThoughtEvent(event.value, userMessageTimestamp);
             break;
-          case ServerGeminiEventType.Content:
-            setLastGeminiActivityTime(Date.now());
-            geminiMessageBuffer = handleContentEvent(
+          case ServerOnyxEventType.Content:
+            setLastOnyxActivityTime(Date.now());
+            onyxMessageBuffer = handleContentEvent(
               event.value,
-              geminiMessageBuffer,
+              onyxMessageBuffer,
               userMessageTimestamp,
             );
             break;
-          case ServerGeminiEventType.ToolCallRequest:
+          case ServerOnyxEventType.ToolCallRequest:
             toolCallRequests.push(event.value);
             break;
-          case ServerGeminiEventType.UserCancelled:
+          case ServerOnyxEventType.UserCancelled:
             handleUserCancelledEvent(userMessageTimestamp);
             break;
-          case ServerGeminiEventType.Error:
+          case ServerOnyxEventType.Error:
             handleErrorEvent(event.value, userMessageTimestamp);
             break;
-          case ServerGeminiEventType.AgentExecutionStopped:
+          case ServerOnyxEventType.AgentExecutionStopped:
             handleAgentExecutionStoppedEvent(
               event.value.reason,
               userMessageTimestamp,
@@ -1502,7 +1502,7 @@ export const useOnyxStream = (
               event.value.contextCleared,
             );
             break;
-          case ServerGeminiEventType.AgentExecutionBlocked:
+          case ServerOnyxEventType.AgentExecutionBlocked:
             handleAgentExecutionBlockedEvent(
               event.value.reason,
               userMessageTimestamp,
@@ -1510,38 +1510,38 @@ export const useOnyxStream = (
               event.value.contextCleared,
             );
             break;
-          case ServerGeminiEventType.ChatCompressed:
+          case ServerOnyxEventType.ChatCompressed:
             handleChatCompressionEvent(event.value, userMessageTimestamp);
             break;
-          case ServerGeminiEventType.ToolCallConfirmation:
-          case ServerGeminiEventType.ToolCallResponse:
+          case ServerOnyxEventType.ToolCallConfirmation:
+          case ServerOnyxEventType.ToolCallResponse:
             // do nothing
             break;
-          case ServerGeminiEventType.MaxSessionTurns:
+          case ServerOnyxEventType.MaxSessionTurns:
             handleMaxSessionTurnsEvent();
             break;
-          case ServerGeminiEventType.ContextWindowWillOverflow:
+          case ServerOnyxEventType.ContextWindowWillOverflow:
             handleContextWindowWillOverflowEvent(
               event.value.estimatedRequestTokenCount,
               event.value.remainingTokenCount,
             );
             break;
-          case ServerGeminiEventType.Finished:
+          case ServerOnyxEventType.Finished:
             handleFinishedEvent(event, userMessageTimestamp);
             break;
-          case ServerGeminiEventType.Citation:
+          case ServerOnyxEventType.Citation:
             handleCitationEvent(event.value, userMessageTimestamp);
             break;
-          case ServerGeminiEventType.ModelInfo:
+          case ServerOnyxEventType.ModelInfo:
             handleChatModelEvent(event.value, userMessageTimestamp);
             break;
-          case ServerGeminiEventType.LoopDetected:
+          case ServerOnyxEventType.LoopDetected:
             // handle later because we want to move pending history to history
             // before we add loop detected message to history
             loopDetectedRef.current = true;
             break;
-          case ServerGeminiEventType.Retry:
-          case ServerGeminiEventType.InvalidStream:
+          case ServerOnyxEventType.Retry:
+          case ServerOnyxEventType.InvalidStream:
             // Will add the missing logic later
             break;
           default: {
@@ -1590,8 +1590,8 @@ export const useOnyxStream = (
       runInDevTraceSpan(
         {
           operation: options?.isContinuation
-            ? GeminiCliOperation.SystemPrompt
-            : GeminiCliOperation.UserPrompt,
+            ? OnyxCliOperation.SystemPrompt
+            : OnyxCliOperation.UserPrompt,
           sessionId: config.getSessionId(),
         },
         async ({ metadata: spanMetadata }) => {
@@ -1629,7 +1629,7 @@ export const useOnyxStream = (
             prompt_id = config.getSessionId() + '########' + getPromptCount();
           }
           return promptIdContext.run(prompt_id, async () => {
-            const { queryToSend, shouldProceed } = await prepareQueryForGemini(
+            const { queryToSend, shouldProceed } = await prepareQueryForOnyx(
               query,
               userMessageTimestamp,
               abortSignal,
@@ -1666,14 +1666,14 @@ export const useOnyxStream = (
             lastPromptIdRef.current = prompt_id!;
 
             try {
-              const stream = geminiClient.sendMessageStream(
+              const stream = onyxClient.sendMessageStream(
                 queryToSend,
                 abortSignal,
                 prompt_id!,
                 undefined,
                 query,
               );
-              const processingStatus = await processGeminiStreamEvents(
+              const processingStatus = await processOnyxStreamEvents(
                 stream,
                 userMessageTimestamp,
                 abortSignal,
@@ -1698,7 +1698,7 @@ export const useOnyxStream = (
 
                     if (result.userSelection === 'disable') {
                       config
-                        .getGeminiClient()
+                        .getOnyxClient()
                         .getLoopDetectionService()
                         .disableForSession();
                       addItem({
@@ -1760,13 +1760,13 @@ export const useOnyxStream = (
     [
       streamingState,
       setModelSwitchedFromQuotaError,
-      prepareQueryForGemini,
-      processGeminiStreamEvents,
+      prepareQueryForOnyx,
+      processOnyxStreamEvents,
       pendingHistoryItemRef,
       addItem,
       setPendingHistoryItem,
       setInitError,
-      geminiClient,
+      onyxClient,
       onAuthError,
       config,
       startNewPrompt,
@@ -1787,9 +1787,9 @@ export const useOnyxStream = (
         newApprovalMode !== ApprovalMode.PLAN &&
         streamingState === StreamingState.Idle
       ) {
-        if (geminiClient) {
+        if (onyxClient) {
           try {
-            await geminiClient.addHistory({
+            await onyxClient.addHistory({
               role: 'user',
               parts: [
                 {
@@ -1859,7 +1859,7 @@ export const useOnyxStream = (
         }
       }
     },
-    [config, toolCalls, geminiClient, streamingState, addItem, onDebugMessage],
+    [config, toolCalls, onyxClient, streamingState, addItem, onDebugMessage],
   );
 
   const handleCompletedTools = useCallback(
@@ -1893,7 +1893,7 @@ export const useOnyxStream = (
       if (clientTools.length > 0) {
         markToolsAsSubmitted(clientTools.map((t) => t.request.callId));
 
-        if (geminiClient) {
+        if (onyxClient) {
           for (const tool of clientTools) {
             // Only manually record skill activations in the chat history.
             // Other client-initiated tools update context and don't strictly
@@ -1905,7 +1905,7 @@ export const useOnyxStream = (
             // Add both the call (model turn) and the result (user turn) to history.
             // Client-initiated calls are essentially "synthetic" turns that let
             // subsequent model calls understand what just happened in the UI.
-            await geminiClient.addHistory({
+            await onyxClient.addHistory({
               role: 'model',
               parts: [
                 {
@@ -1916,7 +1916,7 @@ export const useOnyxStream = (
                 },
               ],
             });
-            await geminiClient.addHistory({
+            await onyxClient.addHistory({
               role: 'user',
               parts: tool.response.responseParts,
             });
@@ -1935,23 +1935,23 @@ export const useOnyxStream = (
         }
       }
 
-      const geminiTools = completedAndReadyToSubmitTools.filter(
+      const onyxTools = completedAndReadyToSubmitTools.filter(
         (t) => !t.request.isClientInitiated,
       );
 
       if (isLowErrorVerbosity) {
         // Low-mode suppression applies only to model-initiated tool failures.
-        suppressedToolErrorCountRef.current += geminiTools.filter(
+        suppressedToolErrorCountRef.current += onyxTools.filter(
           (tc) => tc.status === CoreToolCallStatus.Error,
         ).length;
       }
 
-      if (geminiTools.length === 0) {
+      if (onyxTools.length === 0) {
         return;
       }
 
       // Check if any tool requested to stop execution immediately
-      const stopExecutionTool = geminiTools.find(
+      const stopExecutionTool = onyxTools.find(
         (tc) => tc.response.errorType === ToolErrorType.STOP_EXECUTION,
       );
 
@@ -1964,16 +1964,16 @@ export const useOnyxStream = (
         maybeAddLowVerbosityFailureNote();
         setIsResponding(false);
 
-        const callIdsToMarkAsSubmitted = geminiTools.map(
+        const callIdsToMarkAsSubmitted = onyxTools.map(
           (toolCall) => toolCall.request.callId,
         );
         markToolsAsSubmitted(callIdsToMarkAsSubmitted);
         return;
       }
 
-      // If all the tools were cancelled, don't submit a response to Gemini.
+      // If all the tools were cancelled, don't submit a response to Onyx.
       // Note: we ignore the topic tool because the user doesn't have a chance to decline it.
-      const declinableTools = geminiTools.filter(
+      const declinableTools = onyxTools.filter(
         (tc) => !isTopicTool(tc.request.name),
       );
       const allDeclinableToolsCancelled =
@@ -1982,8 +1982,8 @@ export const useOnyxStream = (
           (tc) => tc.status === CoreToolCallStatus.Cancelled,
         );
       const allToolsCancelled =
-        geminiTools.length > 0 &&
-        geminiTools.every((tc) => tc.status === CoreToolCallStatus.Cancelled);
+        onyxTools.length > 0 &&
+        onyxTools.every((tc) => tc.status === CoreToolCallStatus.Cancelled);
 
       if (allDeclinableToolsCancelled || allToolsCancelled) {
         // If the turn was cancelled via the imperative escape key flow,
@@ -1996,27 +1996,27 @@ export const useOnyxStream = (
         }
         setIsResponding(false);
 
-        if (geminiClient) {
+        if (onyxClient) {
           // We need to manually add the function responses to the history
           // so the model knows the tools were cancelled.
-          const combinedParts = geminiTools.flatMap(
+          const combinedParts = onyxTools.flatMap(
             (toolCall) => toolCall.response.responseParts,
           );
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          geminiClient.addHistory({
+          onyxClient.addHistory({
             role: 'user',
             parts: combinedParts,
           });
         }
 
-        const callIdsToMarkAsSubmitted = geminiTools.map(
+        const callIdsToMarkAsSubmitted = onyxTools.map(
           (toolCall) => toolCall.request.callId,
         );
         markToolsAsSubmitted(callIdsToMarkAsSubmitted);
         return;
       }
 
-      const responsesToSend: Part[] = geminiTools.flatMap(
+      const responsesToSend: Part[] = onyxTools.flatMap(
         (toolCall) => toolCall.response.responseParts,
       );
 
@@ -2030,11 +2030,11 @@ export const useOnyxStream = (
         }
       }
 
-      const callIdsToMarkAsSubmitted = geminiTools.map(
+      const callIdsToMarkAsSubmitted = onyxTools.map(
         (toolCall) => toolCall.request.callId,
       );
 
-      const prompt_ids = geminiTools.map(
+      const prompt_ids = onyxTools.map(
         (toolCall) => toolCall.request.prompt_id,
       );
 
@@ -2057,7 +2057,7 @@ export const useOnyxStream = (
     [
       submitQuery,
       markToolsAsSubmitted,
-      geminiClient,
+      onyxClient,
       modelSwitchedFromQuotaError,
       addItem,
       registerBackgroundTask,
@@ -2101,7 +2101,7 @@ export const useOnyxStream = (
         >(
           restorableToolCalls.map((call) => call.request),
           gitService,
-          geminiClient,
+          onyxClient,
           history,
         );
 
@@ -2127,12 +2127,12 @@ export const useOnyxStream = (
     };
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     saveRestorableToolCalls();
-  }, [toolCalls, config, onDebugMessage, gitService, history, geminiClient]);
+  }, [toolCalls, config, onDebugMessage, gitService, history, onyxClient]);
 
   const lastOutputTime = Math.max(
     lastToolOutputTime,
     lastShellOutputTime,
-    lastGeminiActivityTime,
+    lastOnyxActivityTime,
   );
 
   return {

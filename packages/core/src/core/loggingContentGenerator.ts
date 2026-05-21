@@ -25,7 +25,7 @@ import {
 } from '../telemetry/types.js';
 import type { LlmRole } from '../telemetry/llmRole.js';
 import type { Config } from '../config/config.js';
-import type { UserTierId, GeminiUserTier } from '../code_assist/types.js';
+import type { UserTierId, OnyxUserTier } from '../code_assist/types.js';
 import {
   logApiError,
   logApiRequest,
@@ -39,7 +39,7 @@ import { runInDevTraceSpan, type SpanMetadata } from '../telemetry/trace.js';
 import { debugLogger } from '../utils/debugLogger.js';
 import { isAbortError, getErrorType } from '../utils/errors.js';
 import {
-  GeminiCliOperation,
+  OnyxCliOperation,
   GEN_AI_PROMPT_NAME,
   GEN_AI_REQUEST_MODEL,
   GEN_AI_SYSTEM_INSTRUCTIONS,
@@ -164,7 +164,7 @@ export class LoggingContentGenerator implements ContentGenerator {
     return this.wrapped.userTierName;
   }
 
-  get paidTier(): GeminiUserTier | undefined {
+  get paidTier(): OnyxUserTier | undefined {
     return this.wrapped.paidTier;
   }
 
@@ -221,7 +221,7 @@ export class LoggingContentGenerator implements ContentGenerator {
       }
     }
 
-    // Case 3: Default to the public Gemini API endpoint.
+    // Case 3: Default to the public Onyx API endpoint.
     // This is used when an API key is provided but not for Vertex AI.
     return { address: `generativelanguage.googleapis.com`, port: 443 };
   }
@@ -359,7 +359,7 @@ export class LoggingContentGenerator implements ContentGenerator {
   ): Promise<GenerateContentResponse> {
     return runInDevTraceSpan(
       {
-        operation: GeminiCliOperation.LLMCall,
+        operation: OnyxCliOperation.LLMCall,
         logPrompts: this.config.getTelemetryLogPromptsEnabled(),
         tracesEnabled: this.config.getTelemetryTracesEnabled(),
         sessionId: this.config.getSessionId(),
@@ -451,7 +451,7 @@ export class LoggingContentGenerator implements ContentGenerator {
   ): Promise<AsyncGenerator<GenerateContentResponse>> {
     return runInDevTraceSpan(
       {
-        operation: GeminiCliOperation.LLMCall,
+        operation: OnyxCliOperation.LLMCall,
         logPrompts: this.config.getTelemetryLogPromptsEnabled(),
         tracesEnabled: this.config.getTelemetryTracesEnabled(),
         sessionId: this.config.getSessionId(),
@@ -607,7 +607,7 @@ export class LoggingContentGenerator implements ContentGenerator {
   ): Promise<EmbedContentResponse> {
     return runInDevTraceSpan(
       {
-        operation: GeminiCliOperation.LLMCall,
+        operation: OnyxCliOperation.LLMCall,
         logPrompts: this.config.getTelemetryLogPromptsEnabled(),
         tracesEnabled: this.config.getTelemetryTracesEnabled(),
         sessionId: this.config.getSessionId(),

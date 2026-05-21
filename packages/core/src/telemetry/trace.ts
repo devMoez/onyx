@@ -24,10 +24,10 @@ import {
   GEN_AI_OUTPUT_MESSAGES,
   SERVICE_DESCRIPTION,
   SERVICE_NAME,
-  type GeminiCliOperation,
+  type OnyxCliOperation,
 } from './constants.js';
 
-const TRACER_NAME = 'gemini-cli';
+const TRACER_NAME = 'onyx-cli';
 const TRACER_VERSION = 'v1';
 
 /**
@@ -106,7 +106,7 @@ export interface SpanMetadata {
  * @example
  * ```typescript
  * await runInDevTraceSpan(
- *   { operation: GeminiCliOperation.LLMCall, sessionId: 'my-session' },
+ *   { operation: OnyxCliOperation.LLMCall, sessionId: 'my-session' },
  *   async ({ metadata }) => {
  *     metadata.input = { foo: 'bar' };
  *     // ... do work ...
@@ -122,7 +122,7 @@ export interface SpanMetadata {
  */
 export async function runInDevTraceSpan<R>(
   opts: SpanOptions & {
-    operation: GeminiCliOperation;
+    operation: OnyxCliOperation;
     logPrompts?: boolean;
     sessionId: string;
     tracesEnabled?: boolean;

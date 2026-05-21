@@ -1,14 +1,14 @@
 # Extension reference
 
-This guide covers the `gemini extensions` commands and the structure of the
-`gemini-extension.json` configuration file.
+This guide covers the `onyx extensions` commands and the structure of the
+`onyx-extension.json` configuration file.
 
 ## Manage extensions
 
-Use the `gemini extensions` command group to manage your extensions from the
+Use the `onyx extensions` command group to manage your extensions from the
 terminal.
 
-Note that commands like `gemini extensions install` are not supported within the
+Note that commands like `onyx extensions install` are not supported within the
 CLI's interactive mode. However, you can use the `/extensions list` command to
 view installed extensions. All management operations, including updates to slash
 commands, take effect only after you restart the CLI session.
@@ -19,11 +19,11 @@ Install an extension by providing its GitHub repository URL or a local file
 path.
 
 Onyx CLI creates a copy of the extension during installation. You must run
-`gemini extensions update` to pull changes from the source. To install from
+`onyx extensions update` to pull changes from the source. To install from
 GitHub, you must have `git` installed on your machine.
 
 ```bash
-gemini extensions install <source> [--ref <ref>] [--auto-update] [--pre-release] [--consent] [--skip-settings]
+onyx extensions install <source> [--ref <ref>] [--auto-update] [--pre-release] [--consent] [--skip-settings]
 ```
 
 - `<source>`: The GitHub URL or local path of the extension.
@@ -38,7 +38,7 @@ gemini extensions install <source> [--ref <ref>] [--auto-update] [--pre-release]
 To uninstall one or more extensions, use the `uninstall` command:
 
 ```bash
-gemini extensions uninstall <name...>
+onyx extensions uninstall <name...>
 ```
 
 ### Disable an extension
@@ -47,7 +47,7 @@ Extensions are enabled globally by default. You can disable an extension
 entirely or for a specific workspace.
 
 ```bash
-gemini extensions disable <name> [--scope <scope>]
+onyx extensions disable <name> [--scope <scope>]
 ```
 
 - `<name>`: The name of the extension to disable.
@@ -58,7 +58,7 @@ gemini extensions disable <name> [--scope <scope>]
 Re-enable a disabled extension using the `enable` command:
 
 ```bash
-gemini extensions enable <name> [--scope <scope>]
+onyx extensions enable <name> [--scope <scope>]
 ```
 
 - `<name>`: The name of the extension to enable.
@@ -66,17 +66,17 @@ gemini extensions enable <name> [--scope <scope>]
 
 ### Update an extension
 
-Update an extension to the version specified in its `gemini-extension.json`
+Update an extension to the version specified in its `onyx-extension.json`
 file.
 
 ```bash
-gemini extensions update <name>
+onyx extensions update <name>
 ```
 
 To update all installed extensions at once:
 
 ```bash
-gemini extensions update --all
+onyx extensions update --all
 ```
 
 ### Create an extension from a template
@@ -84,7 +84,7 @@ gemini extensions update --all
 Create a new extension directory using a built-in template.
 
 ```bash
-gemini extensions new <path> [template]
+onyx extensions new <path> [template]
 ```
 
 - `<path>`: The directory to create.
@@ -98,15 +98,15 @@ extensions directory. This lets you test changes immediately without
 reinstalling.
 
 ```bash
-gemini extensions link <path>
+onyx extensions link <path>
 ```
 
 ## Extension format
 
-Onyx CLI loads extensions from `<home>/.gemini/extensions`. Each extension
-must have a `gemini-extension.json` file in its root directory.
+Onyx CLI loads extensions from `<home>/.onyx/extensions`. Each extension
+must have a `onyx-extension.json` file in its root directory.
 
-### `gemini-extension.json`
+### `onyx-extension.json`
 
 The manifest file defines the extension's behavior and configuration.
 
@@ -122,11 +122,11 @@ The manifest file defines the extension's behavior and configuration.
       "cwd": "${extensionPath}"
     }
   },
-  "contextFileName": "GEMINI.md",
+  "contextFileName": "ONYX.md",
   "excludeTools": ["run_shell_command"],
   "migratedTo": "https://github.com/new-owner/new-extension-repo",
   "plan": {
-    "directory": ".gemini/plans"
+    "directory": ".onyx/plans"
   }
 }
 ```
@@ -139,7 +139,7 @@ The manifest file defines the extension's behavior and configuration.
   extension directory name.
 - `version`: The version of the extension.
 - `description`: A short description of the extension. This will be displayed on
-  [geminicli.com/extensions](https://geminicli.com/extensions).
+  [onyxcli.com/extensions](https://onyxcli.com/extensions).
 - `migratedTo`: The URL of the new repository source for the extension. If this
   is set, the CLI will automatically check this new source for updates and
   migrate the extension's installation to the new source if an update is found.
@@ -157,7 +157,7 @@ The manifest file defines the extension's behavior and configuration.
     instead of putting them both in `command`.
 - `contextFileName`: The name of the file that contains the context for the
   extension. This will be used to load the context from the extension directory.
-  If this property is not used but a `GEMINI.md` file is present in your
+  If this property is not used but a `ONYX.md` file is present in your
   extension directory, then that file will be loaded.
 - `excludeTools`: An array of tool names to exclude from the model. You can also
   specify command-specific restrictions for tools that support it, like the
@@ -169,7 +169,7 @@ The manifest file defines the extension's behavior and configuration.
   - `directory`: The directory where planning artifacts are stored. This serves
     as a fallback if the user hasn't specified a plan directory in their
     settings. If not specified by either the extension or the user, the default
-    is `~/.gemini/tmp/<project>/<session-id>/plans/`.
+    is `~/.onyx/tmp/<project>/<session-id>/plans/`.
 
 When Onyx CLI starts, it loads all the extensions and merges their
 configurations. If there are any conflicts, the workspace configuration takes
@@ -207,7 +207,7 @@ To define settings, add a `settings` array to your manifest:
 To update an extension's settings:
 
 ```bash
-gemini extensions config <name> [setting] [--scope <scope>]
+onyx extensions config <name> [setting] [--scope <scope>]
 ```
 
 #### Environment variable sanitization
@@ -219,7 +219,7 @@ Extensions **will not** inherit the user's full shell environment variables.
 They will only have access to:
 
 1. Standard safe variables (e.g., `HOME`, `PATH`, `TMPDIR`).
-2. Variables explicitly declared and requested in the `gemini-extension.json`
+2. Variables explicitly declared and requested in the `onyx-extension.json`
    manifest via the `settings` array (using the `envVar` property).
 
 If your extension requires specific environment variables (like an API key,
@@ -241,7 +241,7 @@ For an extension named `gcp`:
 
 Intercept and customize CLI behavior using [hooks](../hooks/index.md). Define
 hooks in a `hooks/hooks.json` file within your extension directory. Note that
-hooks are not defined in the `gemini-extension.json` manifest.
+hooks are not defined in the `onyx-extension.json` manifest.
 
 ### Agent skills
 
@@ -301,7 +301,7 @@ required_context = ["environment"]
 ### Themes
 
 Extensions can provide custom themes to personalize the CLI UI. Themes are
-defined in the `themes` array in `gemini-extension.json`.
+defined in the `themes` array in `onyx-extension.json`.
 
 **Example**
 
@@ -351,7 +351,7 @@ the extension name (for example, `/gcp.deploy`) using a dot separator.
 
 ## Variables
 
-Onyx CLI supports variable substitution in `gemini-extension.json` and
+Onyx CLI supports variable substitution in `onyx-extension.json` and
 `hooks/hooks.json`.
 
 | Variable           | Description                                     |

@@ -15,19 +15,19 @@ import {
   getEnvironmentMemoryPaths,
   getUserProjectMemoryPaths,
   loadJitSubdirectoryMemory,
-  readGeminiMdFiles,
+  readOnyxMdFiles,
 } from './memoryDiscovery.js';
 import {
-  setGeminiMdFilename,
+  setOnyxMdFilename,
   DEFAULT_CONTEXT_FILENAME,
   PROJECT_MEMORY_INDEX_FILENAME,
 } from '../tools/memoryTool.js';
 import {
-  GEMINI_DIR,
+  ONYX_DIR,
   toAbsolutePath,
   homedir as pathsHomedir,
 } from './paths.js';
-import type { GeminiCLIExtension } from '../config/config.js';
+import type { OnyxCLIExtension } from '../config/config.js';
 import { SimpleExtensionLoader } from './extensionLoader.js';
 
 vi.mock('os', async (importOriginal) => {
@@ -87,7 +87,7 @@ describe('memoryDiscovery', () => {
   afterEach(async () => {
     vi.unstubAllEnvs();
     // Some tests set this to a different value.
-    setGeminiMdFilename(DEFAULT_CONTEXT_FILENAME);
+    setOnyxMdFilename(DEFAULT_CONTEXT_FILENAME);
     // Clean up the temporary directory to prevent resource leaks.
     // Use maxRetries option for robust cleanup without race conditions
     await fsPromises.rm(testRootDir, {
@@ -99,12 +99,12 @@ describe('memoryDiscovery', () => {
   });
 
   describe('EISDIR handling for onyx.md as a directory', () => {
-    it('readGeminiMdFiles returns null content (without throwing) when path is a directory', async () => {
+    it('readOnyxMdFiles returns null content (without throwing) when path is a directory', async () => {
       const dirAsFilePath = await createEmptyDir(
         path.join(projectRoot, DEFAULT_CONTEXT_FILENAME),
       );
 
-      const results = await readGeminiMdFiles([dirAsFilePath]);
+      const results = await readOnyxMdFiles([dirAsFilePath]);
 
       expect(results).toHaveLength(1);
       expect(results[0].filePath).toBe(dirAsFilePath);
@@ -115,7 +115,7 @@ describe('memoryDiscovery', () => {
   describe('getGlobalMemoryPaths', () => {
     it('should find global memory file if it exists', async () => {
       const globalMemoryFile = await createTestFile(
-        path.join(homedir, GEMINI_DIR, DEFAULT_CONTEXT_FILENAME),
+        path.join(homedir, ONYX_DIR, DEFAULT_CONTEXT_FILENAME),
         'Global memory content',
       );
 
@@ -197,7 +197,7 @@ describe('memoryDiscovery', () => {
         {
           isActive: true,
           contextFiles: [extFile],
-        } as GeminiCLIExtension,
+        } as OnyxCLIExtension,
       ]);
 
       const result = getExtensionMemoryPaths(loader);
@@ -215,7 +215,7 @@ describe('memoryDiscovery', () => {
         {
           isActive: false,
           contextFiles: [extFile],
-        } as GeminiCLIExtension,
+        } as OnyxCLIExtension,
       ]);
 
       const result = getExtensionMemoryPaths(loader);
@@ -321,7 +321,7 @@ describe('memoryDiscovery', () => {
         const memoryTool = await import('../tools/memoryTool.js');
         const memoryDiscovery = await import('./memoryDiscovery.js');
         vi.mocked(paths.homedir).mockReturnValue('/home/tester');
-        memoryTool.setGeminiMdFilename(['onyx.md', 'onyx.md']);
+        memoryTool.setOnyxMdFilename(['onyx.md', 'onyx.md']);
 
         const result = await memoryDiscovery.getEnvironmentMemoryPaths(
           ['/case-root'],
@@ -369,7 +369,7 @@ describe('memoryDiscovery', () => {
 
     it('should keep multiple memory files from the same directory adjacent and in order', async () => {
       // Configure multiple memory filenames
-      setGeminiMdFilename(['PRIMARY.md', 'SECONDARY.md']);
+      setOnyxMdFilename(['PRIMARY.md', 'SECONDARY.md']);
 
       const dir = await createEmptyDir(
         path.join(testRootDir, 'multi_file_dir'),
@@ -398,15 +398,15 @@ describe('memoryDiscovery', () => {
 
   describe('file identity deduplication', () => {
     it('should deduplicate files that point to the same inode (same physical file)', async () => {
-      const geminiFile = await createTestFile(
+      const onyxFile = await createTestFile(
         path.join(projectRoot, 'onyx.md'),
         'Project root memory',
       );
 
       // create hard link to simulate case-insensitive filesystem behavior
-      const geminiFileLink = path.join(projectRoot, 'onyx.md');
+      const onyxFileLink = path.join(projectRoot, 'onyx.md');
       try {
-        await fsPromises.link(geminiFile, geminiFileLink);
+        await fsPromises.link(onyxFile, onyxFileLink);
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);
@@ -420,71 +420,71 @@ describe('memoryDiscovery', () => {
         throw error;
       }
 
-      const stats1 = await fsPromises.lstat(geminiFile);
-      const stats2 = await fsPromises.lstat(geminiFileLink);
+      const stats1 = await fsPromises.lstat(onyxFile);
+      const stats2 = await fsPromises.lstat(onyxFileLink);
       expect(stats1.ino).toBe(stats2.ino);
       expect(stats1.dev).toBe(stats2.dev);
 
       const result = await deduplicatePathsByFileIdentity([
-        geminiFileLink,
-        geminiFile,
+        onyxFileLink,
+        onyxFile,
       ]);
 
       expect(result.paths).toHaveLength(1);
-      expect(result.identityMap.get(geminiFile)).toBe(
-        result.identityMap.get(geminiFileLink),
+      expect(result.identityMap.get(onyxFile)).toBe(
+        result.identityMap.get(onyxFileLink),
       );
 
       try {
-        await fsPromises.unlink(geminiFileLink);
+        await fsPromises.unlink(onyxFileLink);
       } catch {
         // ignore cleanup errors
       }
     });
 
     it('should handle case where files have different inodes (different files)', async () => {
-      const geminiFileLower = await createTestFile(
+      const onyxFileLower = await createTestFile(
         path.join(projectRoot, 'onyx.md'),
         'Lowercase file content',
       );
-      const geminiFileUpper = await createTestFile(
+      const onyxFileUpper = await createTestFile(
         path.join(projectRoot, 'onyx.md'),
         'Uppercase file content',
       );
 
-      const stats1 = await fsPromises.lstat(geminiFileLower);
-      const stats2 = await fsPromises.lstat(geminiFileUpper);
+      const stats1 = await fsPromises.lstat(onyxFileLower);
+      const stats2 = await fsPromises.lstat(onyxFileUpper);
 
       if (stats1.ino !== stats2.ino || stats1.dev !== stats2.dev) {
         const result = await deduplicatePathsByFileIdentity([
-          geminiFileLower,
-          geminiFileUpper,
+          onyxFileLower,
+          onyxFileUpper,
         ]);
 
         expect(result.paths).toHaveLength(2);
-        expect(result.paths).toContain(geminiFileLower);
-        expect(result.paths).toContain(geminiFileUpper);
+        expect(result.paths).toContain(onyxFileLower);
+        expect(result.paths).toContain(onyxFileUpper);
       }
     });
 
     it("should handle files that cannot be stat'd (missing files)", async () => {
-      const geminiFile = await createTestFile(
+      const onyxFile = await createTestFile(
         path.join(projectRoot, 'onyx.md'),
         'Valid file content',
       );
       const missingFile = path.join(projectRoot, 'missing.md');
 
       const result = await deduplicatePathsByFileIdentity([
-        geminiFile,
+        onyxFile,
         missingFile,
       ]);
 
-      expect(result.paths).toEqual([geminiFile, missingFile]);
+      expect(result.paths).toEqual([onyxFile, missingFile]);
       expect(result.identityMap.has(missingFile)).toBe(false);
     });
 
     it('should deduplicate multiple paths pointing to same file (3+ duplicates)', async () => {
-      const geminiFile = await createTestFile(
+      const onyxFile = await createTestFile(
         path.join(projectRoot, 'onyx.md'),
         'Project root memory',
       );
@@ -493,8 +493,8 @@ describe('memoryDiscovery', () => {
       const link2 = path.join(projectRoot, 'onyx.md');
 
       try {
-        await fsPromises.link(geminiFile, link1);
-        await fsPromises.link(geminiFile, link2);
+        await fsPromises.link(onyxFile, link1);
+        await fsPromises.link(onyxFile, link2);
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);
@@ -508,23 +508,23 @@ describe('memoryDiscovery', () => {
         throw error;
       }
 
-      const stats1 = await fsPromises.lstat(geminiFile);
+      const stats1 = await fsPromises.lstat(onyxFile);
       const stats2 = await fsPromises.lstat(link1);
       const stats3 = await fsPromises.lstat(link2);
       expect(stats1.ino).toBe(stats2.ino);
       expect(stats1.ino).toBe(stats3.ino);
 
       const result = await deduplicatePathsByFileIdentity([
-        geminiFile,
+        onyxFile,
         link1,
         link2,
       ]);
 
       expect(result.paths).toHaveLength(1);
-      expect(result.identityMap.get(geminiFile)).toBe(
+      expect(result.identityMap.get(onyxFile)).toBe(
         result.identityMap.get(link1),
       );
-      expect(result.identityMap.get(geminiFile)).toBe(
+      expect(result.identityMap.get(onyxFile)).toBe(
         result.identityMap.get(link2),
       );
 
@@ -618,14 +618,14 @@ describe('memoryDiscovery', () => {
       const subDir = await createEmptyDir(path.join(rootDir, 'subdir'));
       const targetFile = path.join(subDir, 'target.txt');
 
-      const geminiFile = await createTestFile(
+      const onyxFile = await createTestFile(
         path.join(subDir, 'onyx.md'),
         'JIT memory content',
       );
 
-      const geminiFileLink = path.join(subDir, 'onyx.md');
+      const onyxFileLink = path.join(subDir, 'onyx.md');
       try {
-        await fsPromises.link(geminiFile, geminiFileLink);
+        await fsPromises.link(onyxFile, onyxFileLink);
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);
@@ -639,11 +639,11 @@ describe('memoryDiscovery', () => {
         throw error;
       }
 
-      const stats1 = await fsPromises.lstat(geminiFile);
-      const stats2 = await fsPromises.lstat(geminiFileLink);
+      const stats1 = await fsPromises.lstat(onyxFile);
+      const stats2 = await fsPromises.lstat(onyxFileLink);
       expect(stats1.ino).toBe(stats2.ino);
 
-      setGeminiMdFilename(['onyx.md', 'onyx.md']);
+      setOnyxMdFilename(['onyx.md', 'onyx.md']);
 
       const result = await loadJitSubdirectoryMemory(
         targetFile,
@@ -658,7 +658,7 @@ describe('memoryDiscovery', () => {
       expect(contentMatches).toHaveLength(1);
 
       try {
-        await fsPromises.unlink(geminiFileLink);
+        await fsPromises.unlink(onyxFileLink);
       } catch {
         // ignore cleanup errors
       }

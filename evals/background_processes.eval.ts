@@ -24,10 +24,10 @@ sleep 100
 `,
     },
     setup: async (rig) => {
-      // Create .gemini directory to avoid file system error in test rig
+      // Create .onyx directory to avoid file system error in test rig
       if (rig.homeDir) {
-        const geminiDir = path.join(rig.homeDir, '.gemini');
-        fs.mkdirSync(geminiDir, { recursive: true });
+        const onyxDir = path.join(rig.homeDir, '.onyx');
+        fs.mkdirSync(onyxDir, { recursive: true });
       }
     },
     assert: async (rig, result) => {
@@ -58,10 +58,10 @@ sleep 100
     prompt:
       "Start three background processes that run 'sleep 100', 'sleep 200', and 'sleep 300' respectively. Verify that all three are currently running.",
     setup: async (rig) => {
-      // Create .gemini directory to avoid file system error in test rig
+      // Create .onyx directory to avoid file system error in test rig
       if (rig.homeDir) {
-        const geminiDir = path.join(rig.homeDir, '.gemini');
-        fs.mkdirSync(geminiDir, { recursive: true });
+        const onyxDir = path.join(rig.homeDir, '.onyx');
+        fs.mkdirSync(onyxDir, { recursive: true });
       }
     },
     assert: async (rig, result) => {
@@ -79,3 +79,4 @@ sleep 100
     },
   });
 });
+

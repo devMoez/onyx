@@ -9,7 +9,7 @@ import { type FunctionDeclaration } from '@google/genai';
 /**
  * Supported model families for tool definitions.
  */
-export type ToolFamily = 'default-legacy' | 'gemini-3';
+export type ToolFamily = 'default-legacy' | 'onyx-3';
 
 /**
  * Defines a tool's identity using a structured declaration.
@@ -51,5 +51,6 @@ export interface CoreToolSet {
   activate_skill: (skillNames: string[]) => FunctionDeclaration;
   read_mcp_resource: FunctionDeclaration;
   list_mcp_resources: FunctionDeclaration;
+  system_controller: FunctionDeclaration;
   update_topic?: FunctionDeclaration;
 }

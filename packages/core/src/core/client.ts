@@ -20,8 +20,8 @@ import {
 import {
   CompressionStatus,
   Turn,
-  GeminiEventType,
-  type ServerGeminiStreamEvent,
+  OnyxEventType,
+  type ServerOnyxStreamEvent,
   type ChatCompressionInfo,
 } from './turn.js';
 import type { Config } from '../config/config.js';
@@ -80,17 +80,17 @@ const MAX_TURNS = 100;
 
 type BeforeAgentHookReturn =
   | {
-      type: GeminiEventType.AgentExecutionStopped;
+      type: OnyxEventType.AgentExecutionStopped;
       value: { reason: string; systemMessage?: string };
     }
   | {
-      type: GeminiEventType.AgentExecutionBlocked;
+      type: OnyxEventType.AgentExecutionBlocked;
       value: { reason: string; systemMessage?: string };
     }
   | { additionalContext: string | undefined }
   | undefined;
 
-export class GeminiClient {
+export class OnyxClient {
   private chat?: onyxChat;
   private sessionTurnCount = 0;
 
@@ -194,7 +194,7 @@ export class GeminiClient {
 
     if (hookOutput?.shouldStopExecution()) {
       return {
-        type: GeminiEventType.AgentExecutionStopped,
+        type: OnyxEventType.AgentExecutionStopped,
         value: {
           reason: hookOutput.getEffectiveReason(),
           systemMessage: hookOutput.systemMessage,
@@ -204,7 +204,7 @@ export class GeminiClient {
 
     if (hookOutput?.isBlockingDecision()) {
       return {
-        type: GeminiEventType.AgentExecutionBlocked,
+        type: OnyxEventType.AgentExecutionBlocked,
         value: {
           reason: hookOutput.getEffectiveReason(),
           systemMessage: hookOutput.systemMessage,
@@ -420,7 +420,7 @@ export class GeminiClient {
     } catch (error) {
       await reportError(
         error,
-        'Error initializing Gemini chat session.',
+        'Error initializing Onyx chat session.',
         [...history],
         'startChat',
       );
@@ -605,8 +605,8 @@ export class GeminiClient {
     // including any permanent fallbacks (config.setModel) or manual overrides.
     return resolveModel(
       this.config.getActiveModel(),
-      this.config.getGemini31LaunchedSync?.() ?? false,
-      this.config.getGemini31FlashLiteLaunchedSync?.() ?? false,
+      this.config.getOnyx31LaunchedSync?.() ?? false,
+      this.config.getOnyx31FlashLiteLaunchedSync?.() ?? false,
       false,
       this.config.getHasAccessToPreviewModel?.() ?? true,
       this.config,
@@ -619,7 +619,7 @@ export class GeminiClient {
     prompt_id: string,
     boundedTurns: number,
     displayContent?: PartListUnion,
-  ): AsyncGenerator<ServerGeminiStreamEvent, Turn> {
+  ): AsyncGenerator<ServerOnyxStreamEvent, Turn> {
     // Re-initialize turn (it was empty before if in loop, or new instance)
     let turn = new Turn(this.getChat(), prompt_id);
 
@@ -628,7 +628,7 @@ export class GeminiClient {
       this.config.getMaxSessionTurns() > 0 &&
       this.sessionTurnCount > this.config.getMaxSessionTurns()
     ) {
-      yield { type: GeminiEventType.MaxSessionTurns };
+      yield { type: OnyxEventType.MaxSessionTurns };
       return turn;
     }
 
@@ -683,7 +683,7 @@ export class GeminiClient {
       const compressed = await this.tryCompressChat(prompt_id, false, signal);
 
       if (compressed.compressionStatus === CompressionStatus.COMPRESSED) {
-        yield { type: GeminiEventType.ChatCompressed, value: compressed };
+        yield { type: OnyxEventType.ChatCompressed, value: compressed };
       }
     }
 
@@ -702,14 +702,14 @@ export class GeminiClient {
 
     if (estimatedRequestTokenCount > remainingTokenCount) {
       yield {
-        type: GeminiEventType.ContextWindowWillOverflow,
+        type: OnyxEventType.ContextWindowWillOverflow,
         value: { estimatedRequestTokenCount, remainingTokenCount },
       };
       return turn;
     }
 
     // Prevent context updates from being sent while a tool call is
-    // waiting for a response. The Gemini API requires that a functionResponse
+    // waiting for a response. The Onyx API requires that a functionResponse
     // part from the user immediately follows a functionCall part from the model
     // in the conversation history . The IDE context is not discarded; it will
     // be included in the next regular message sent to the model.
@@ -740,11 +740,11 @@ export class GeminiClient {
 
     const loopResult = await this.loopDetector.turnStarted(signal);
     if (loopResult.count > 1) {
-      yield { type: GeminiEventType.LoopDetected };
+      yield { type: OnyxEventType.LoopDetected };
       return turn;
     } else if (loopResult.count === 1) {
       if (boundedTurns <= 1) {
-        yield { type: GeminiEventType.MaxSessionTurns };
+        yield { type: OnyxEventType.MaxSessionTurns };
         return turn;
       }
       return yield* this._recoverFromLoop(
@@ -787,7 +787,7 @@ export class GeminiClient {
     modelToUse = finalModel;
 
     if (!signal.aborted && !this.currentSequenceModel) {
-      yield { type: GeminiEventType.ModelInfo, value: modelToUse };
+      yield { type: OnyxEventType.ModelInfo, value: modelToUse };
     }
     this.currentSequenceModel = modelToUse;
 
@@ -807,12 +807,12 @@ export class GeminiClient {
     for await (const event of resultStream) {
       const loopResult = this.loopDetector.addAndCheck(event);
       if (loopResult.count > 1) {
-        yield { type: GeminiEventType.LoopDetected };
+        yield { type: OnyxEventType.LoopDetected };
         loopDetectedAbort = true;
         break;
       } else if (loopResult.count === 1) {
         if (boundedTurns <= 1) {
-          yield { type: GeminiEventType.MaxSessionTurns };
+          yield { type: OnyxEventType.MaxSessionTurns };
           loopDetectedAbort = true;
           break;
         }
@@ -821,7 +821,7 @@ export class GeminiClient {
       }
       yield event;
 
-      if (event.type === GeminiEventType.Finished && this.contextManager) {
+      if (event.type === OnyxEventType.Finished && this.contextManager) {
         const usageMetadata = event.value.usageMetadata;
         if (usageMetadata && usageMetadata.promptTokenCount !== undefined) {
           this.contextManager.getEnvironment().eventBus.emitTokenGroundTruth({
@@ -831,7 +831,7 @@ export class GeminiClient {
         }
       }
       this.updateTelemetryTokenCount();
-      if (event.type === GeminiEventType.Error) {
+      if (event.type === OnyxEventType.Error) {
         isError = true;
       }
     }
@@ -909,7 +909,7 @@ export class GeminiClient {
     turns: number = MAX_TURNS,
     displayContent?: PartListUnion,
     stopHookActive: boolean = false,
-  ): AsyncGenerator<ServerGeminiStreamEvent, Turn> {
+  ): AsyncGenerator<ServerOnyxStreamEvent, Turn> {
     this.config.resetTurn();
 
     const hooksEnabled = this.config.getEnableHooks();
@@ -927,7 +927,7 @@ export class GeminiClient {
       if (hookResult) {
         if (
           'type' in hookResult &&
-          hookResult.type === GeminiEventType.AgentExecutionStopped
+          hookResult.type === OnyxEventType.AgentExecutionStopped
         ) {
           // Add user message to history before returning so it's kept in the transcript
           this.getChat().addHistory(createUserContent(request));
@@ -935,7 +935,7 @@ export class GeminiClient {
           return new Turn(this.getChat(), prompt_id);
         } else if (
           'type' in hookResult &&
-          hookResult.type === GeminiEventType.AgentExecutionBlocked
+          hookResult.type === OnyxEventType.AgentExecutionBlocked
         ) {
           yield hookResult;
           return new Turn(this.getChat(), prompt_id);
@@ -980,7 +980,7 @@ export class GeminiClient {
         if (afterAgentOutput?.shouldStopExecution()) {
           const contextCleared = afterAgentOutput.shouldClearContext();
           yield {
-            type: GeminiEventType.AgentExecutionStopped,
+            type: OnyxEventType.AgentExecutionStopped,
             value: {
               reason: afterAgentOutput.getEffectiveReason(),
               systemMessage: afterAgentOutput.systemMessage,
@@ -998,7 +998,7 @@ export class GeminiClient {
           const continueReason = afterAgentOutput.getEffectiveReason();
           const contextCleared = afterAgentOutput.shouldClearContext();
           yield {
-            type: GeminiEventType.AgentExecutionBlocked,
+            type: OnyxEventType.AgentExecutionBlocked,
             value: {
               reason: continueReason,
               systemMessage: afterAgentOutput.systemMessage,
@@ -1030,7 +1030,7 @@ export class GeminiClient {
       }
     } catch (error) {
       if (signal?.aborted || isAbortError(error)) {
-        yield { type: GeminiEventType.UserCancelled };
+        yield { type: OnyxEventType.UserCancelled };
         return turn;
       }
       throw error;
@@ -1268,7 +1268,7 @@ export class GeminiClient {
     prompt_id: string,
     boundedTurns: number,
     displayContent?: PartListUnion,
-  ): AsyncGenerator<ServerGeminiStreamEvent, Turn> {
+  ): AsyncGenerator<ServerOnyxStreamEvent, Turn> {
     // Clear the detection flag so the recursive turn can proceed, but the count remains 1.
     this.loopDetector.clearDetection();
 

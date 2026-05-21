@@ -169,3 +169,4 @@ describe('browser-agent-localhost', () => {
     expect(browserCalls.length).toBeGreaterThan(0);
   });
 });
+

@@ -16,7 +16,7 @@ import { isSubpath, resolveToRealPath } from '../utils/paths.js';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import type { Config } from '../config/config.js';
-import { GEMINI_IGNORE_FILE_NAME } from '../config/constants.js';
+import { ONYX_IGNORE_FILE_NAME } from '../config/constants.js';
 import { createMockWorkspaceContext } from '../test-utils/mockWorkspaceContext.js';
 import { spawn, type ChildProcess } from 'node:child_process';
 import { PassThrough, Readable } from 'node:stream';
@@ -559,7 +559,7 @@ describe('RipGrepTool', () => {
     it('should filter out files based on FileDiscoveryService even if ripgrep returns them', async () => {
       // Create .onyxIgnore to ignore 'ignored.txt'
       await fs.writeFile(
-        path.join(tempRootDir, GEMINI_IGNORE_FILE_NAME),
+        path.join(tempRootDir, ONYX_IGNORE_FILE_NAME),
         'ignored.txt',
       );
 
@@ -1351,8 +1351,8 @@ describe('RipGrepTool', () => {
     });
 
     it('should add .onyxIgnore when enabled and patterns exist', async () => {
-      const geminiIgnorePath = path.join(tempRootDir, GEMINI_IGNORE_FILE_NAME);
-      await fs.writeFile(geminiIgnorePath, 'ignored.log');
+      const onyxIgnorePath = path.join(tempRootDir, ONYX_IGNORE_FILE_NAME);
+      await fs.writeFile(onyxIgnorePath, 'ignored.log');
 
       const configWithonyxIgnore = createMockConfig(tempRootDir);
       vi.spyOn(
@@ -1363,7 +1363,7 @@ describe('RipGrepTool', () => {
         respectonyxIgnore: true,
         customIgnoreFilePaths: [],
       });
-      const geminiIgnoreTool = new RipGrepTool(
+      const onyxIgnoreTool = new RipGrepTool(
         configWithonyxIgnore,
         createMockMessageBus(),
       );
@@ -1384,19 +1384,19 @@ describe('RipGrepTool', () => {
       );
 
       const params: RipGrepToolParams = { pattern: 'secret' };
-      const invocation = geminiIgnoreTool.build(params);
+      const invocation = onyxIgnoreTool.build(params);
       await invocation.execute({ abortSignal });
 
       expect(mockSpawn).toHaveBeenLastCalledWith(
         expect.anything(),
-        expect.arrayContaining(['--ignore-file', geminiIgnorePath]),
+        expect.arrayContaining(['--ignore-file', onyxIgnorePath]),
         expect.anything(),
       );
     });
 
     it('should skip .onyxIgnore when disabled', async () => {
-      const geminiIgnorePath = path.join(tempRootDir, GEMINI_IGNORE_FILE_NAME);
-      await fs.writeFile(geminiIgnorePath, 'ignored.log');
+      const onyxIgnorePath = path.join(tempRootDir, ONYX_IGNORE_FILE_NAME);
+      await fs.writeFile(onyxIgnorePath, 'ignored.log');
       const configWithoutonyxIgnore = createMockConfig(tempRootDir);
       vi.spyOn(
         configWithoutonyxIgnore,
@@ -1406,7 +1406,7 @@ describe('RipGrepTool', () => {
         respectonyxIgnore: false,
         customIgnoreFilePaths: [],
       });
-      const geminiIgnoreTool = new RipGrepTool(
+      const onyxIgnoreTool = new RipGrepTool(
         configWithoutonyxIgnore,
         createMockMessageBus(),
       );
@@ -1427,12 +1427,12 @@ describe('RipGrepTool', () => {
       );
 
       const params: RipGrepToolParams = { pattern: 'secret' };
-      const invocation = geminiIgnoreTool.build(params);
+      const invocation = onyxIgnoreTool.build(params);
       await invocation.execute({ abortSignal });
 
       expect(mockSpawn).toHaveBeenLastCalledWith(
         expect.anything(),
-        expect.not.arrayContaining(['--ignore-file', geminiIgnorePath]),
+        expect.not.arrayContaining(['--ignore-file', onyxIgnorePath]),
         expect.anything(),
       );
     });

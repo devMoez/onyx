@@ -38,7 +38,7 @@ export { getAllowedMemoryPatchRoots } from '../services/memoryPatchUtils.js';
 
 export function showMemory(config: Config): MessageActionReturn {
   const memoryContent = flattenMemory(config.getUserMemory());
-  const fileCount = config.getGeminiMdFileCount() || 0;
+  const fileCount = config.getOnyxMdFileCount() || 0;
   let content: string;
 
   if (memoryContent.length > 0) {
@@ -59,7 +59,7 @@ export async function refreshMemory(
 ): Promise<MessageActionReturn> {
   await config.getMemoryContextManager()?.refresh();
   const memoryContent = flattenMemory(config.getUserMemory());
-  const fileCount = config.getGeminiMdFileCount();
+  const fileCount = config.getOnyxMdFileCount();
 
   config.updateSystemInstructionIfInitialized();
   let content: string;
@@ -78,7 +78,7 @@ export async function refreshMemory(
 }
 
 export function listMemoryFiles(config: Config): MessageActionReturn {
-  const filePaths = config.getGeminiMdFilePaths() || [];
+  const filePaths = config.getOnyxMdFilePaths() || [];
   const fileCount = filePaths.length;
   let content: string;
 

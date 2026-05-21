@@ -19,7 +19,7 @@ import { removeCommand } from './remove.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as os from 'node:os';
-import { GEMINI_DIR, debugLogger } from '@onyx/core';
+import { ONYX_DIR, debugLogger } from '@onyx/core';
 
 vi.mock('fs', async (importOriginal) => {
   const actualFs = await importOriginal<typeof fs>();
@@ -117,7 +117,7 @@ describe('mcp remove command', () => {
       vi.restoreAllMocks();
 
       tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mcp-remove-test-'));
-      settingsDir = path.join(tempDir, GEMINI_DIR);
+      settingsDir = path.join(tempDir, ONYX_DIR);
       settingsPath = path.join(settingsDir, 'settings.json');
       fs.mkdirSync(settingsDir, { recursive: true });
 
@@ -225,7 +225,7 @@ describe('mcp remove command', () => {
       // Note: "model" will be migrated to "model": { "name": ... } format
       const originalContent = `{
         "model": {
-          "name": "gemini-2.5-pro"
+          "name": "onyx-2.5-pro"
         },
         "mcpServers": {
           "server1": {
@@ -250,7 +250,7 @@ describe('mcp remove command', () => {
 
       const updatedContent = fs.readFileSync(settingsPath, 'utf-8');
       expect(updatedContent).toContain('"model"');
-      expect(updatedContent).toContain('"gemini-2.5-pro"');
+      expect(updatedContent).toContain('"onyx-2.5-pro"');
       expect(updatedContent).toContain('"server2"');
       expect(updatedContent).toContain('"ui"');
       expect(updatedContent).toContain('"theme": "dark"');

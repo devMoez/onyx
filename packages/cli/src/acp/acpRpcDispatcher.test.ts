@@ -13,7 +13,7 @@ import {
   type Mock,
   type Mocked,
 } from 'vitest';
-import { GeminiAgent } from './acpRpcDispatcher.js';
+import { OnyxAgent } from './acpRpcDispatcher.js';
 import * as acp from '@agentclientprotocol/sdk';
 import {
   AuthType,
@@ -37,12 +37,12 @@ vi.mock('../config/settings.js', async (importOriginal) => {
   };
 });
 
-describe('GeminiAgent - RPC Dispatcher', () => {
+describe('OnyxAgent - RPC Dispatcher', () => {
   let mockConfig: Mocked<Config>;
   let mockSettings: Mocked<LoadedSettings>;
   let mockArgv: CliArgs;
   let mockConnection: Mocked<acp.AgentSideConnection>;
-  let agent: GeminiAgent;
+  let agent: OnyxAgent;
 
   beforeEach(() => {
     mockConfig = {
@@ -52,9 +52,9 @@ describe('GeminiAgent - RPC Dispatcher', () => {
       getFileSystemService: vi.fn(),
       setFileSystemService: vi.fn(),
       getContentGeneratorConfig: vi.fn(),
-      getActiveModel: vi.fn().mockReturnValue('gemini-pro'),
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
-      getGeminiClient: vi.fn().mockReturnValue({
+      getActiveModel: vi.fn().mockReturnValue('onyx-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
+      getOnyxClient: vi.fn().mockReturnValue({
         startChat: vi.fn().mockResolvedValue({}),
       }),
       getMessageBus: vi.fn().mockReturnValue({
@@ -64,7 +64,7 @@ describe('GeminiAgent - RPC Dispatcher', () => {
       }),
       getApprovalMode: vi.fn().mockReturnValue('default'),
       isPlanEnabled: vi.fn().mockReturnValue(true),
-      getGemini31LaunchedSync: vi.fn().mockReturnValue(false),
+      getOnyx31LaunchedSync: vi.fn().mockReturnValue(false),
       getHasAccessToPreviewModel: vi.fn().mockReturnValue(false),
       getCheckpointingEnabled: vi.fn().mockReturnValue(false),
       getDisableAlwaysAllow: vi.fn().mockReturnValue(false),
@@ -114,7 +114,7 @@ describe('GeminiAgent - RPC Dispatcher', () => {
       setValue: vi.fn(),
     }));
 
-    agent = new GeminiAgent(mockConfig, mockSettings, mockArgv, mockConnection);
+    agent = new OnyxAgent(mockConfig, mockSettings, mockArgv, mockConnection);
   });
 
   it('should initialize correctly', async () => {
@@ -134,10 +134,10 @@ describe('GeminiAgent - RPC Dispatcher', () => {
         restartRequired: 'false',
       },
     });
-    const geminiAuth = response.authMethods?.find(
-      (m) => m.id === AuthType.USE_GEMINI,
+    const onyxAuth = response.authMethods?.find(
+      (m) => m.id === AuthType.USE_ONYX,
     );
-    expect(geminiAuth?._meta).toEqual({
+    expect(onyxAuth?._meta).toEqual({
       'api-key': {
         provider: 'google',
       },
@@ -165,14 +165,14 @@ describe('GeminiAgent - RPC Dispatcher', () => {
 
   it('should authenticate correctly with api-key in _meta', async () => {
     await agent.authenticate({
-      methodId: AuthType.USE_GEMINI,
+      methodId: AuthType.USE_ONYX,
       _meta: {
         'api-key': 'test-api-key',
       },
     } as unknown as acp.AuthenticateRequest);
 
     expect(mockConfig.refreshAuth).toHaveBeenCalledWith(
-      AuthType.USE_GEMINI,
+      AuthType.USE_ONYX,
       'test-api-key',
       undefined,
       undefined,
@@ -180,7 +180,7 @@ describe('GeminiAgent - RPC Dispatcher', () => {
     expect(mockSettings.setValue).toHaveBeenCalledWith(
       SettingScope.User,
       'security.auth.selectedType',
-      AuthType.USE_GEMINI,
+      AuthType.USE_ONYX,
     );
   });
 
@@ -314,10 +314,10 @@ describe('GeminiAgent - RPC Dispatcher', () => {
 
     const result = await agent.unstable_setSessionModel({
       sessionId: 'test-session-id',
-      modelId: 'gemini-2.0-pro-exp',
+      modelId: 'onyx-2.0-pro-exp',
     });
 
-    expect(mockSession.setModel).toHaveBeenCalledWith('gemini-2.0-pro-exp');
+    expect(mockSession.setModel).toHaveBeenCalledWith('onyx-2.0-pro-exp');
     expect(result).toEqual({});
   });
 
@@ -331,7 +331,7 @@ describe('GeminiAgent - RPC Dispatcher', () => {
     await expect(
       agent.unstable_setSessionModel({
         sessionId: 'unknown',
-        modelId: 'gemini-2.0-pro-exp',
+        modelId: 'onyx-2.0-pro-exp',
       }),
     ).rejects.toThrow('Session not found: unknown');
   });

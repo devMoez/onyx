@@ -146,7 +146,7 @@ function buildMessages(userTurns: string[]): MessageRecord[] {
     {
       id: `a${index + 1}`,
       timestamp: baseTime,
-      type: 'gemini',
+      type: 'onyx',
       content: [{ text: `Acknowledged: ${index + 1}` }],
     },
   ]);
@@ -960,3 +960,4 @@ describe('Skill Extraction', () => {
     },
   });
 });
+

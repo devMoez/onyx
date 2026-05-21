@@ -93,7 +93,7 @@ describe('ChatRecordingService', () => {
       storage: {
         getProjectTempDir: vi.fn().mockReturnValue(testTempDir),
       },
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getDebugMode: vi.fn().mockReturnValue(false),
       getWorkspaceContext: vi.fn().mockReturnValue({
         getDirectories: vi.fn().mockReturnValue([]),
@@ -248,7 +248,7 @@ describe('ChatRecordingService', () => {
         type: 'user',
         content: 'Hello',
         displayContent: 'User Hello',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       const sessionFile = chatRecordingService.getConversationFilePath()!;
@@ -266,7 +266,7 @@ describe('ChatRecordingService', () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'World',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       const sessionFile = chatRecordingService.getConversationFilePath()!;
@@ -299,9 +299,9 @@ describe('ChatRecordingService', () => {
 
     it('should update the last message with token info', async () => {
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: 'Response',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       chatRecordingService.recordMessageTokens({
@@ -315,10 +315,10 @@ describe('ChatRecordingService', () => {
       const conversation = (await loadConversationRecord(
         sessionFile,
       )) as ConversationRecord;
-      const geminiMsg = conversation.messages[0] as MessageRecord & {
-        type: 'gemini';
+      const onyxMsg = conversation.messages[0] as MessageRecord & {
+        type: 'onyx';
       };
-      expect(geminiMsg.tokens).toEqual({
+      expect(onyxMsg.tokens).toEqual({
         input: 1,
         output: 2,
         total: 3,
@@ -330,9 +330,9 @@ describe('ChatRecordingService', () => {
 
     it('should queue token info if the last message already has tokens', async () => {
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: 'Response',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       chatRecordingService.recordMessageTokens({
@@ -360,13 +360,13 @@ describe('ChatRecordingService', () => {
       });
     });
 
-    it('should not write to disk when queuing tokens (no last gemini message)', async () => {
+    it('should not write to disk when queuing tokens (no last onyx message)', async () => {
       const appendFileSyncSpy = vi.mocked(fs.appendFileSync);
 
       // Clear spy call count after initialize writes the initial file
       appendFileSyncSpy.mockClear();
 
-      // No gemini message recorded yet, so tokens should only be queued
+      // No onyx message recorded yet, so tokens should only be queued
       chatRecordingService.recordMessageTokens({
         promptTokenCount: 5,
         candidatesTokenCount: 10,
@@ -390,9 +390,9 @@ describe('ChatRecordingService', () => {
 
     it('should not write to disk when queuing tokens (last message already has tokens)', async () => {
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: 'Response',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       // First recordMessageTokens updates the message and writes to disk
@@ -419,9 +419,9 @@ describe('ChatRecordingService', () => {
 
     it('should use in-memory cache and not re-read from disk on subsequent operations', async () => {
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: 'Response',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       const readFileSyncSpy = vi.mocked(fs.readFileSync);
@@ -436,9 +436,9 @@ describe('ChatRecordingService', () => {
       });
 
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: 'Another response',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       chatRecordingService.saveSummary('Test summary');
@@ -455,9 +455,9 @@ describe('ChatRecordingService', () => {
 
     it('should add new tool calls to the last message', async () => {
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: '',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       const toolCall: ToolCallRecord = {
@@ -467,24 +467,24 @@ describe('ChatRecordingService', () => {
         status: CoreToolCallStatus.AwaitingApproval,
         timestamp: new Date().toISOString(),
       };
-      chatRecordingService.recordToolCalls('gemini-pro', [toolCall]);
+      chatRecordingService.recordToolCalls('onyx-pro', [toolCall]);
 
       const sessionFile = chatRecordingService.getConversationFilePath()!;
       const conversation = (await loadConversationRecord(
         sessionFile,
       )) as ConversationRecord;
-      const geminiMsg = conversation.messages[0] as MessageRecord & {
-        type: 'gemini';
+      const onyxMsg = conversation.messages[0] as MessageRecord & {
+        type: 'onyx';
       };
-      expect(geminiMsg.toolCalls).toHaveLength(1);
-      expect(geminiMsg.toolCalls![0].name).toBe('testTool');
+      expect(onyxMsg.toolCalls).toHaveLength(1);
+      expect(onyxMsg.toolCalls![0].name).toBe('testTool');
     });
 
     it('should preserve dynamic description and NOT overwrite with generic one', async () => {
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: '',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       const dynamicDescription = 'DYNAMIC DESCRIPTION (e.g. Read file foo.txt)';
@@ -497,24 +497,24 @@ describe('ChatRecordingService', () => {
         description: dynamicDescription,
       };
 
-      chatRecordingService.recordToolCalls('gemini-pro', [toolCall]);
+      chatRecordingService.recordToolCalls('onyx-pro', [toolCall]);
 
       const sessionFile = chatRecordingService.getConversationFilePath()!;
       const conversation = (await loadConversationRecord(
         sessionFile,
       )) as ConversationRecord;
-      const geminiMsg = conversation.messages[0] as MessageRecord & {
-        type: 'gemini';
+      const onyxMsg = conversation.messages[0] as MessageRecord & {
+        type: 'onyx';
       };
 
-      expect(geminiMsg.toolCalls![0].description).toBe(dynamicDescription);
+      expect(onyxMsg.toolCalls![0].description).toBe(dynamicDescription);
     });
 
-    it('should create a new message if the last message is not from gemini', async () => {
+    it('should create a new message if the last message is not from onyx', async () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'call a tool',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       const toolCall: ToolCallRecord = {
@@ -524,25 +524,25 @@ describe('ChatRecordingService', () => {
         status: CoreToolCallStatus.AwaitingApproval,
         timestamp: new Date().toISOString(),
       };
-      chatRecordingService.recordToolCalls('gemini-pro', [toolCall]);
+      chatRecordingService.recordToolCalls('onyx-pro', [toolCall]);
 
       const sessionFile = chatRecordingService.getConversationFilePath()!;
       const conversation = (await loadConversationRecord(
         sessionFile,
       )) as ConversationRecord;
       expect(conversation.messages).toHaveLength(2);
-      expect(conversation.messages[1].type).toBe('gemini');
+      expect(conversation.messages[1].type).toBe('onyx');
       expect(
-        (conversation.messages[1] as MessageRecord & { type: 'gemini' })
+        (conversation.messages[1] as MessageRecord & { type: 'onyx' })
           .toolCalls,
       ).toHaveLength(1);
     });
 
     it('should record agentId when provided', async () => {
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: '',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       const toolCall: ToolCallRecord = {
@@ -553,17 +553,17 @@ describe('ChatRecordingService', () => {
         timestamp: new Date().toISOString(),
         agentId: 'test-agent-id',
       };
-      chatRecordingService.recordToolCalls('gemini-pro', [toolCall]);
+      chatRecordingService.recordToolCalls('onyx-pro', [toolCall]);
 
       const sessionFile = chatRecordingService.getConversationFilePath()!;
       const conversation = (await loadConversationRecord(
         sessionFile,
       )) as ConversationRecord;
-      const geminiMsg = conversation.messages[0] as MessageRecord & {
-        type: 'gemini';
+      const onyxMsg = conversation.messages[0] as MessageRecord & {
+        type: 'onyx';
       };
-      expect(geminiMsg.toolCalls).toHaveLength(1);
-      expect(geminiMsg.toolCalls![0].agentId).toBe('test-agent-id');
+      expect(onyxMsg.toolCalls).toHaveLength(1);
+      expect(onyxMsg.toolCalls![0].agentId).toBe('test-agent-id');
     });
   });
 
@@ -790,7 +790,7 @@ describe('ChatRecordingService', () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'test',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
       const conversationFile = chatRecordingService.getConversationFilePath();
       expect(conversationFile).not.toBeNull();
@@ -891,7 +891,7 @@ describe('ChatRecordingService', () => {
         model: 'm',
       });
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: 'msg2',
         model: 'm',
       });
@@ -966,7 +966,7 @@ describe('ChatRecordingService', () => {
         chatRecordingService.recordMessage({
           type: 'user',
           content: 'Hello',
-          model: 'gemini-pro',
+          model: 'onyx-pro',
         }),
       ).not.toThrow();
 
@@ -989,7 +989,7 @@ describe('ChatRecordingService', () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'First message',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       // Reset mock to track subsequent calls
@@ -999,7 +999,7 @@ describe('ChatRecordingService', () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'Second message',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       chatRecordingService.recordThought({
@@ -1027,7 +1027,7 @@ describe('ChatRecordingService', () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'Hello',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       // getConversation should return null when disabled
@@ -1050,7 +1050,7 @@ describe('ChatRecordingService', () => {
         chatRecordingService.recordMessage({
           type: 'user',
           content: 'Hello',
-          model: 'gemini-pro',
+          model: 'onyx-pro',
         }),
       ).toThrow('Permission denied');
 
@@ -1067,14 +1067,14 @@ describe('ChatRecordingService', () => {
     it('should update tool results from API history (masking sync)', async () => {
       // 1. Record an initial message and tool call
       const modelMsgId = chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: 'I will list the files.',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       const callId = 'tool-call-123';
       const originalResult = [{ text: 'a'.repeat(1000) }];
-      chatRecordingService.recordToolCalls('gemini-pro', [
+      chatRecordingService.recordToolCalls('onyx-pro', [
         {
           id: callId,
           name: 'list_files',
@@ -1124,13 +1124,13 @@ describe('ChatRecordingService', () => {
         sessionFile,
       )) as ConversationRecord;
 
-      const geminiMsg = conversation.messages[0];
-      if (geminiMsg.type !== 'gemini')
-        throw new Error('Expected gemini message');
-      expect(geminiMsg.toolCalls).toBeDefined();
-      expect(geminiMsg.toolCalls![0].id).toBe(callId);
+      const onyxMsg = conversation.messages[0];
+      if (onyxMsg.type !== 'onyx')
+        throw new Error('Expected onyx message');
+      expect(onyxMsg.toolCalls).toBeDefined();
+      expect(onyxMsg.toolCalls![0].id).toBe(callId);
       // The implementation stringifies the response object
-      const result = geminiMsg.toolCalls![0].result;
+      const result = onyxMsg.toolCalls![0].result;
       if (!Array.isArray(result)) throw new Error('Expected array result');
       const firstPart = result[0] as Part;
       expect(firstPart.functionResponse).toBeDefined();
@@ -1143,9 +1143,9 @@ describe('ChatRecordingService', () => {
     it('should preserve multi-modal sibling parts during sync', async () => {
       await chatRecordingService.initialize();
       const modelMsgId = chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: '',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       const callId = 'multi-modal-call';
@@ -1160,7 +1160,7 @@ describe('ChatRecordingService', () => {
         { inlineData: { mimeType: 'image/png', data: 'base64...' } },
       ];
 
-      chatRecordingService.recordToolCalls('gemini-pro', [
+      chatRecordingService.recordToolCalls('onyx-pro', [
         {
           id: callId,
           name: 'read_file',
@@ -1203,7 +1203,7 @@ describe('ChatRecordingService', () => {
       )) as ConversationRecord;
 
       const lastMsg = conversation.messages[0] as MessageRecord & {
-        type: 'gemini';
+        type: 'onyx';
       };
       const result = lastMsg.toolCalls![0].result as Part[];
       expect(result).toHaveLength(2);
@@ -1217,14 +1217,14 @@ describe('ChatRecordingService', () => {
     it('should handle parts appearing BEFORE the functionResponse in a content block', async () => {
       await chatRecordingService.initialize();
       const modelMsgId = chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: '',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       const callId = 'prefix-part-call';
 
-      chatRecordingService.recordToolCalls('gemini-pro', [
+      chatRecordingService.recordToolCalls('onyx-pro', [
         {
           id: callId,
           name: 'read_file',
@@ -1266,7 +1266,7 @@ describe('ChatRecordingService', () => {
       )) as ConversationRecord;
 
       const lastMsg = conversation.messages[0] as MessageRecord & {
-        type: 'gemini';
+        type: 'onyx';
       };
       const result = lastMsg.toolCalls![0].result as Part[];
       expect(result).toHaveLength(2);
@@ -1276,9 +1276,9 @@ describe('ChatRecordingService', () => {
 
     it('should not write to disk when no tool calls match', async () => {
       chatRecordingService.recordMessage({
-        type: 'gemini',
+        type: 'onyx',
         content: 'Response with no tool calls',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       const appendFileSyncSpy = vi.mocked(fs.appendFileSync);
@@ -1322,7 +1322,7 @@ describe('ChatRecordingService', () => {
       chatRecordingService.recordMessage({
         type: 'user',
         content: 'Hello after dir cleanup',
-        model: 'gemini-pro',
+        model: 'onyx-pro',
       });
 
       // mkdirSync should be called with the parent directory and recursive option
@@ -1356,7 +1356,7 @@ describe('ChatRecordingService', () => {
       // Explicit ID registration (e.g. from context processor)
       const customId = 'stable-hash-123';
       const id2 = chatRecordingService.recordSyntheticMessage(
-        'gemini',
+        'onyx',
         parts,
         customId,
       );
@@ -1369,7 +1369,7 @@ describe('ChatRecordingService', () => {
       expect(record!.messages[0].id).toBe(id1);
       expect(record!.messages[0].type).toBe('user');
       expect(record!.messages[1].id).toBe(customId);
-      expect(record!.messages[1].type).toBe('gemini');
+      expect(record!.messages[1].type).toBe('onyx');
     });
 
     it('should synchronize history turns and maintain their durable identity', async () => {

@@ -66,12 +66,12 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
   const preferredModel = config?.getModel() || GEMINI_MODEL_ALIAS_AUTO;
 
   const shouldShowPreviewModels = config?.getHasAccessToPreviewModel() ?? false;
-  const useGemini31 = config?.getGemini31LaunchedSync?.() ?? false;
-  const useGemini31FlashLite =
-    config?.getGemini31FlashLiteLaunchedSync?.() ?? false;
+  const useOnyx31 = config?.getOnyx31LaunchedSync?.() ?? false;
+  const useOnyx31FlashLite =
+    config?.getOnyx31FlashLiteLaunchedSync?.() ?? false;
   const selectedAuthType = settings.merged.security.auth.selectedType;
   const useCustomToolModel =
-    useGemini31 && selectedAuthType === AuthType.USE_GEMINI;
+    useOnyx31 && selectedAuthType === AuthType.USE_ONYX;
 
   const manualModelSelected = useMemo(() => {
     if (
@@ -130,8 +130,8 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       const allOptions = config
         .getModelConfigService()
         .getAvailableModelOptions({
-          useGemini3_1: useGemini31,
-          useGemini3_1FlashLite: useGemini31FlashLite,
+          useOnyx3_1: useOnyx31,
+          useOnyx3_1FlashLite: useOnyx31FlashLite,
           useCustomTools: useCustomToolModel,
           hasAccessToPreview: shouldShowPreviewModels,
           hasAccessToProModel,
@@ -164,7 +164,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
         title: getDisplayString(GEMINI_MODEL_ALIAS_AUTO),
         description: getAutoModelDescription(
           shouldShowPreviewModels,
-          useGemini31,
+          useOnyx31,
         ),
         key: GEMINI_MODEL_ALIAS_AUTO,
       },
@@ -183,8 +183,8 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
     config,
     shouldShowPreviewModels,
     manualModelSelected,
-    useGemini31,
-    useGemini31FlashLite,
+    useOnyx31,
+    useOnyx31FlashLite,
     useCustomToolModel,
     hasAccessToProModel,
   ]);
@@ -198,8 +198,8 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       const allOptions = config
         .getModelConfigService()
         .getAvailableModelOptions({
-          useGemini3_1: useGemini31,
-          useGemini3_1FlashLite: useGemini31FlashLite,
+          useOnyx3_1: useOnyx31,
+          useOnyx3_1FlashLite: useOnyx31FlashLite,
           useCustomTools: useCustomToolModel,
           hasAccessToPreview: shouldShowPreviewModels,
           hasAccessToProModel,
@@ -251,7 +251,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
     }
 
     if (shouldShowPreviewModels) {
-      const previewProModel = useGemini31
+      const previewProModel = useOnyx31
         ? PREVIEW_GEMINI_3_1_MODEL
         : PREVIEW_GEMINI_MODEL;
 
@@ -272,7 +272,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
         },
       ];
 
-      if (useGemini31FlashLite) {
+      if (useOnyx31FlashLite) {
         previewOptions.push({
           value: PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL,
           title: getDisplayString(PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL),
@@ -291,8 +291,8 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
     return options;
   }, [
     shouldShowPreviewModels,
-    useGemini31,
-    useGemini31FlashLite,
+    useOnyx31,
+    useOnyx31FlashLite,
     useCustomToolModel,
     hasAccessToProModel,
     config,
@@ -362,7 +362,7 @@ export function ModelDialog({ onClose }: ModelDialogProps): React.JSX.Element {
       </Box>
       <Box flexDirection="column">
         <Text color={theme.text.secondary}>
-          {'> To use a specific Gemini model on startup, use the --model flag.'}
+          {'> To use a specific Onyx model on startup, use the --model flag.'}
         </Text>
       </Box>
       <ModelQuotaDisplay

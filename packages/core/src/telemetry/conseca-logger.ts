@@ -33,15 +33,15 @@ export function logConsecaPolicyGeneration(
     if (config.getTelemetryLogPromptsEnabled()) {
       data.push(
         {
-          gemini_cli_key: EventMetadataKey.CONSECA_USER_PROMPT,
+          onyx_cli_key: EventMetadataKey.CONSECA_USER_PROMPT,
           value: safeJsonStringify(event.user_prompt),
         },
         {
-          gemini_cli_key: EventMetadataKey.CONSECA_TRUSTED_CONTENT,
+          onyx_cli_key: EventMetadataKey.CONSECA_TRUSTED_CONTENT,
           value: safeJsonStringify(event.trusted_content),
         },
         {
-          gemini_cli_key: EventMetadataKey.CONSECA_GENERATED_POLICY,
+          onyx_cli_key: EventMetadataKey.CONSECA_GENERATED_POLICY,
           value: safeJsonStringify(event.policy),
         },
       );
@@ -49,7 +49,7 @@ export function logConsecaPolicyGeneration(
 
     if (event.error) {
       data.push({
-        gemini_cli_key: EventMetadataKey.CONSECA_ERROR,
+        onyx_cli_key: EventMetadataKey.CONSECA_ERROR,
         value: event.error,
       });
     }
@@ -78,7 +78,7 @@ export function logConsecaVerdict(
   if (clearcutLogger) {
     const data: EventValue[] = [
       {
-        gemini_cli_key: EventMetadataKey.CONSECA_VERDICT_RESULT,
+        onyx_cli_key: EventMetadataKey.CONSECA_VERDICT_RESULT,
         value: safeJsonStringify(event.verdict),
       },
     ];
@@ -86,19 +86,19 @@ export function logConsecaVerdict(
     if (config.getTelemetryLogPromptsEnabled()) {
       data.push(
         {
-          gemini_cli_key: EventMetadataKey.CONSECA_USER_PROMPT,
+          onyx_cli_key: EventMetadataKey.CONSECA_USER_PROMPT,
           value: safeJsonStringify(event.user_prompt),
         },
         {
-          gemini_cli_key: EventMetadataKey.CONSECA_GENERATED_POLICY,
+          onyx_cli_key: EventMetadataKey.CONSECA_GENERATED_POLICY,
           value: safeJsonStringify(event.policy),
         },
         {
-          gemini_cli_key: EventMetadataKey.GEMINI_CLI_TOOL_CALL_NAME,
+          onyx_cli_key: EventMetadataKey.ONYX_CLI_TOOL_CALL_NAME,
           value: safeJsonStringify(event.tool_call),
         },
         {
-          gemini_cli_key: EventMetadataKey.CONSECA_VERDICT_RATIONALE,
+          onyx_cli_key: EventMetadataKey.CONSECA_VERDICT_RATIONALE,
           value: event.verdict_rationale,
         },
       );
@@ -106,7 +106,7 @@ export function logConsecaVerdict(
 
     if (event.error) {
       data.push({
-        gemini_cli_key: EventMetadataKey.CONSECA_ERROR,
+        onyx_cli_key: EventMetadataKey.CONSECA_ERROR,
         value: event.error,
       });
     }

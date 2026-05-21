@@ -262,7 +262,7 @@ describe('AgentConfigDialog', () => {
     it('should show values from agent definition as defaults', async () => {
       const definition = createMockAgentDefinition({
         modelConfig: {
-          model: 'gemini-2.0-flash',
+          model: 'onyx-2.0-flash',
           generateContentConfig: {
             temperature: 0.7,
           },
@@ -276,7 +276,7 @@ describe('AgentConfigDialog', () => {
       const { lastFrame, unmount } = await renderDialog(settings, definition);
       const frame = lastFrame();
 
-      expect(frame).toContain('gemini-2.0-flash');
+      expect(frame).toContain('onyx-2.0-flash');
       expect(frame).toContain('0.7');
       expect(frame).toContain('10');
       expect(frame).toContain('20');

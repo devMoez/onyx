@@ -136,7 +136,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
       config: this.context.config,
       promptId: this.agentId,
       parentSessionId: this.context.parentSessionId || this.context.promptId, // Always preserve the main agent session ID
-      geminiClient: this.context.geminiClient,
+      onyxClient: this.context.onyxClient,
       sandboxManager: this.context.sandboxManager,
       toolRegistry: this.toolRegistry,
       promptRegistry: this.promptRegistry,
@@ -1081,7 +1081,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
     } catch (e: unknown) {
       await reportError(
         e,
-        `Error initializing Gemini chat for agent ${this.definition.name}.`,
+        `Error initializing Onyx chat for agent ${this.definition.name}.`,
         startHistory,
         'startChat',
       );
@@ -1300,7 +1300,7 @@ export class LocalAgentExecutor<TOutput extends z.ZodTypeAny> {
       }
     }
 
-    // Ensure exactly one response per function call to satisfy the Gemini API protocol.
+    // Ensure exactly one response per function call to satisfy the Onyx API protocol.
     const toolResponseParts: Part[] = [];
     for (const [index, functionCall] of functionCalls.entries()) {
       const callId = functionCall.id ?? `${promptId}-${index}`;

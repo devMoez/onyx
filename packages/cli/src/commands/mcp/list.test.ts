@@ -55,16 +55,16 @@ vi.mock('@onyx/core', async (importOriginal) => {
     },
     Storage: Object.assign(
       vi.fn().mockImplementation((_cwd: string) => ({
-        getGlobalSettingsPath: () => '/tmp/gemini/settings.json',
-        getWorkspaceSettingsPath: () => '/tmp/gemini/workspace-settings.json',
+        getGlobalSettingsPath: () => '/tmp/onyx/settings.json',
+        getWorkspaceSettingsPath: () => '/tmp/onyx/workspace-settings.json',
         getProjectTempDir: () => '/test/home/.onyx/tmp/mocked_hash',
       })),
       {
-        getGlobalSettingsPath: () => '/tmp/gemini/settings.json',
-        getGlobalGeminiDir: () => '/tmp/gemini',
+        getGlobalSettingsPath: () => '/tmp/onyx/settings.json',
+        getGlobalOnyxDir: () => '/tmp/onyx',
       },
     ),
-    GEMINI_DIR: '.onyx',
+    ONYX_DIR: '.onyx',
     getErrorMessage: (e: unknown) =>
       e instanceof Error ? e.message : String(e),
   };

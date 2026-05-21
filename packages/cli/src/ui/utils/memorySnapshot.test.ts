@@ -58,11 +58,11 @@ describe('captureHeapSnapshot', () => {
   });
 
   it('creates the target directory and pipelines the V8 snapshot to disk', async () => {
-    const target = '/tmp/gemini-test/snapshot.heapsnapshot';
+    const target = '/tmp/onyx-test/snapshot.heapsnapshot';
 
     await captureHeapSnapshot(target);
 
-    expect(mkdirMock).toHaveBeenCalledWith('/tmp/gemini-test', {
+    expect(mkdirMock).toHaveBeenCalledWith('/tmp/onyx-test', {
       recursive: true,
     });
     expect(getHeapSnapshotMock).toHaveBeenCalledTimes(1);
@@ -78,7 +78,7 @@ describe('captureHeapSnapshot', () => {
     pipelineMock.mockRejectedValueOnce(new Error('write failed'));
 
     await expect(
-      captureHeapSnapshot('/tmp/gemini-test/fail.heapsnapshot'),
+      captureHeapSnapshot('/tmp/onyx-test/fail.heapsnapshot'),
     ).rejects.toThrow('write failed');
   });
 });

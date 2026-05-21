@@ -96,7 +96,7 @@ describe('AcpFileSystemService', () => {
         capability: true,
         path: '/home/user/.onyx/tmp/file.md',
         root: '/home/user',
-        desc: 'fallback if file is inside global gemini dir, even if root overlaps',
+        desc: 'fallback if file is inside global onyx dir, even if root overlaps',
         setup: () => {
           mockFallback.readTextFile.mockResolvedValue('content');
         },
@@ -190,7 +190,7 @@ describe('AcpFileSystemService', () => {
         capability: true,
         path: '/home/user/.onyx/tmp/file.md',
         root: '/home/user',
-        desc: 'fallback if file is inside global gemini dir, even if root overlaps',
+        desc: 'fallback if file is inside global onyx dir, even if root overlaps',
         verify: () => {
           expect(mockFallback.writeTextFile).toHaveBeenCalledWith(
             '/home/user/.onyx/tmp/file.md',

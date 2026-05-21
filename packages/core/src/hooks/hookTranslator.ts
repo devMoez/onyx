@@ -17,7 +17,7 @@ import { DEFAULT_GEMINI_FLASH_MODEL } from '../config/models.js';
 import { getResponseText } from '../utils/partUtils.js';
 
 /**
- * Decoupled LLM request format - stable across Gemini CLI versions
+ * Decoupled LLM request format - stable across Onyx CLI versions
  */
 export interface LLMRequest {
   model: string;
@@ -40,7 +40,7 @@ export interface LLMRequest {
 }
 
 /**
- * Decoupled LLM response format - stable across Gemini CLI versions
+ * Decoupled LLM response format - stable across Onyx CLI versions
  */
 export interface LLMResponse {
   text?: string;
@@ -65,7 +65,7 @@ export interface LLMResponse {
 }
 
 /**
- * Decoupled tool configuration - stable across Gemini CLI versions
+ * Decoupled tool configuration - stable across Onyx CLI versions
  */
 export interface HookToolConfig {
   mode?: 'AUTO' | 'ANY' | 'NONE';
@@ -234,7 +234,7 @@ export class HookTranslatorGenAIv1 extends HookTranslator {
     // thought, etc.) that toHookLLMRequest filtered out for the simplified
     // hook API. Without this merge, a BeforeModel hook that modifies text
     // would destroy tool call/response history and cause the model to loop
-    // (see https://github.com/google-gemini/gemini-cli/issues/25558).
+    // (see https://github.com/google-onyx/onyx-cli/issues/25558).
     //
     // If the hook returned a partial request without messages (e.g. only
     // overriding `model`), fall back to the base request's contents so the

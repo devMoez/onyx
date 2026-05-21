@@ -1,28 +1,28 @@
 substitutions:
   _IMAGE_NAME: 'development'
-  _ARTIFACT_REGISTRY_REPO: 'us-docker.pkg.dev/gemini-code-dev/gemini-cli'
+  _ARTIFACT_REGISTRY_REPO: 'us-docker.pkg.dev/onyx-code-dev/onyx-cli'
 
 steps:
   # Step 1: Install root dependencies
-  - name: 'us-west1-docker.pkg.dev/gemini-code-dev/gemini-code-containers/gemini-code-builder'
+  - name: 'us-west1-docker.pkg.dev/onyx-code-dev/onyx-code-containers/onyx-code-builder'
     id: 'Install Dependencies'
     entrypoint: 'npm'
     args: ['install']
 
   # Step 2: Authenticate for Docker
-  - name: 'us-west1-docker.pkg.dev/gemini-code-dev/gemini-code-containers/gemini-code-builder'
+  - name: 'us-west1-docker.pkg.dev/onyx-code-dev/onyx-code-containers/onyx-code-builder'
     id: 'Authenticate docker'
     entrypoint: 'npm'
     args: ['run', 'auth']
 
   # Step 3: Build workspace packages
-  - name: 'us-west1-docker.pkg.dev/gemini-code-dev/gemini-code-containers/gemini-code-builder'
+  - name: 'us-west1-docker.pkg.dev/onyx-code-dev/onyx-code-containers/onyx-code-builder'
     id: 'Build packages'
     entrypoint: 'npm'
     args: ['run', 'build:packages']
 
   # Step 4: Build Development Image
-  - name: 'us-west1-docker.pkg.dev/gemini-code-dev/gemini-code-containers/gemini-code-builder'
+  - name: 'us-west1-docker.pkg.dev/onyx-code-dev/onyx-code-containers/onyx-code-builder'
     id: 'Build Development Image'
     entrypoint: 'bash'
     env:

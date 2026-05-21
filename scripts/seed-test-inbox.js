@@ -56,7 +56,7 @@ const memoryDir = storage.getProjectMemoryTempDir();
 const inboxPrivate = path.join(memoryDir, '.inbox', 'private');
 const inboxGlobal = path.join(memoryDir, '.inbox', 'global');
 const homeDir = os.homedir();
-const globalGeminiMd = path.join(homeDir, '.onyx', 'onyx.md');
+const globalOnyxMd = path.join(homeDir, '.onyx', 'onyx.md');
 
 console.log(`\n🔧 Seeding inbox for cwd: ${cwd}`);
 console.log(`   memoryDir = ${memoryDir}\n`);
@@ -113,26 +113,26 @@ await seed(
 
 // --- 3. Canonical GLOBAL extraction.patch ---
 //     Creates ~/.onyx/onyx.md. Backs up any existing one first.
-let existingGlobalGemini = null;
+let existingGlobalOnyx = null;
 try {
-  existingGlobalGemini = await fs.readFile(globalGeminiMd, 'utf-8');
+  existingGlobalOnyx = await fs.readFile(globalOnyxMd, 'utf-8');
 } catch {
   // Doesn't exist yet — fine.
 }
-if (existingGlobalGemini !== null) {
-  const backupPath = `${globalGeminiMd}.seed-test-backup-${Date.now()}`;
-  await fs.copyFile(globalGeminiMd, backupPath);
+if (existingGlobalOnyx !== null) {
+  const backupPath = `${globalOnyxMd}.seed-test-backup-${Date.now()}`;
+  await fs.copyFile(globalOnyxMd, backupPath);
   console.log(
-    `   ℹ️  Backed up existing ${globalGeminiMd} → ${backupPath}\n` +
+    `   ℹ️  Backed up existing ${globalOnyxMd} → ${backupPath}\n` +
       `       (restore manually after testing if you wish.)\n`,
   );
-  await fs.rm(globalGeminiMd, { force: true });
+  await fs.rm(globalOnyxMd, { force: true });
 }
 await seed(
   path.join(inboxGlobal, 'extraction.patch'),
   [
     `--- /dev/null`,
-    `+++ ${globalGeminiMd}`,
+    `+++ ${globalOnyxMd}`,
     `@@ -0,0 +1,3 @@`,
     `+# Global Personal Preferences`,
     `+`,
@@ -164,12 +164,12 @@ console.log(`
      node -e "const fs=require('fs'),p=require('os').homedir()+'/.onyx/settings.json';let s={};try{s=JSON.parse(fs.readFileSync(p,'utf-8'))}catch{}s.experimental=s.experimental||{};s.experimental.autoMemory=true;fs.mkdirSync(require('path').dirname(p),{recursive:true});fs.writeFileSync(p,JSON.stringify(s,null,2))"
 
 2. Launch the just-built CLI from THIS REPO ONLY. Do NOT use any globally
-   installed "gemini" binary — it will be a stale build that doesn't know
+   installed "onyx" binary — it will be a stale build that doesn't know
    about memory patches and will silently show only skills.
 
      npm run start
 
-   (or, equivalently: node ${path.relative(cwd, REPO_ROOT)}/bundle/gemini.js)
+   (or, equivalently: node ${path.relative(cwd, REPO_ROOT)}/bundle/onyx.js)
 
    Sanity check before launching:
      node ${path.relative(cwd, path.join(REPO_ROOT, 'scripts/check-inbox.js'))}
@@ -213,7 +213,7 @@ console.log(`
 
      cat ${path.relative(cwd, memoryMd)}                    # should show new fact + pointer line
      cat ${path.relative(cwd, verifyWorkflowMd)}            # should exist
-     cat ${globalGeminiMd}                                  # should show "Prefer concise..."
+     cat ${globalOnyxMd}                                  # should show "Prefer concise..."
      ls ${path.relative(cwd, inboxPrivate)}                 # should be empty
      ls ${path.relative(cwd, inboxGlobal)}                  # should be empty
 
@@ -222,6 +222,6 @@ console.log(`
      rm -rf ${path.relative(cwd, path.join(memoryDir, '.inbox'))}
      rm -f  ${path.relative(cwd, memoryMd)}
      rm -f  ${path.relative(cwd, verifyWorkflowMd)}
-     rm -f  ${globalGeminiMd}
+     rm -f  ${globalOnyxMd}
 `);
 

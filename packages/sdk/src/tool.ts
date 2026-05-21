@@ -21,7 +21,7 @@ export { z };
 
 /**
  * An error that, when thrown from a tool's action, will be visible to the
- * Gemini model in the conversation. Useful for providing feedback to the
+ * Onyx model in the conversation. Useful for providing feedback to the
  * model about why a tool failed so it can retry or adjust its approach.
  */
 export class ModelVisibleError extends Error {
@@ -206,11 +206,11 @@ export class SdkTool<T extends z.ZodTypeAny> extends BaseDeclarativeTool<
  * @param definition - The tool's name, description, and input schema.
  * @param action - The async function to execute when the tool is invoked.
  * @returns A complete {@link Tool} object ready to be passed to
- *   {@link GeminiCliAgentOptions.tools}.
+ *   {@link OnyxCliAgentOptions.tools}.
  *
  * @example
  * ```typescript
- * import { z, tool } from '@google/gemini-cli-sdk';
+ * import { z, tool } from '@google/onyx-cli-sdk';
  *
  * const myTool = tool(
  *   {

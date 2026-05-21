@@ -14,7 +14,7 @@ import {
   ApprovalMode,
   DEFAULT_GEMINI_MODEL,
   DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
-  GeminiClient,
+  OnyxClient,
   HookSystem,
   type MessageBus,
   PolicyDecision,
@@ -50,11 +50,11 @@ export function createMockConfig(
         (this as unknown as Config).getMessageBus?.() as unknown as MessageBus
       );
     },
-    get geminiClient() {
+    get onyxClient() {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       const config = this as unknown as Config;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      return config.getGeminiClient?.() as unknown as GeminiClient;
+      return config.getOnyxClient?.() as unknown as OnyxClient;
     },
     getToolRegistry: vi.fn().mockReturnValue({
       getTool: vi.fn(),
@@ -80,8 +80,8 @@ export function createMockConfig(
       DEFAULT_TRUNCATE_TOOL_OUTPUT_THRESHOLD,
     getActiveModel: vi.fn().mockReturnValue(DEFAULT_GEMINI_MODEL),
     getDebugMode: vi.fn().mockReturnValue(false),
-    getContentGeneratorConfig: vi.fn().mockReturnValue({ model: 'gemini-pro' }),
-    getModel: vi.fn().mockReturnValue('gemini-pro'),
+    getContentGeneratorConfig: vi.fn().mockReturnValue({ model: 'onyx-pro' }),
+    getModel: vi.fn().mockReturnValue('onyx-pro'),
     getUsageStatisticsEnabled: vi.fn().mockReturnValue(false),
     setFallbackModelHandler: vi.fn(),
     initialize: vi.fn().mockResolvedValue(undefined),
@@ -125,9 +125,9 @@ export function createMockConfig(
     .fn()
     .mockReturnValue(new HookSystem(mockConfig));
 
-  mockConfig.getGeminiClient = vi
+  mockConfig.getOnyxClient = vi
     .fn()
-    .mockReturnValue(new GeminiClient(mockConfig));
+    .mockReturnValue(new OnyxClient(mockConfig));
 
   mockConfig.getPolicyEngine = vi.fn().mockReturnValue({
     check: async () => {

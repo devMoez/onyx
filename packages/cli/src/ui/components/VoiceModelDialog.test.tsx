@@ -27,7 +27,7 @@ vi.mock('@onyx/core', async () => {
 });
 
 describe('VoiceModelDialog', () => {
-  it('should display a privacy warning when Gemini Live API (Cloud) is selected', async () => {
+  it('should display a privacy warning when Onyx Live API (Cloud) is selected', async () => {
     const onClose = vi.fn();
     const { lastFrame, waitUntilReady } = await renderWithProviders(
       <VoiceModelDialog onClose={onClose} />,
@@ -36,8 +36,8 @@ describe('VoiceModelDialog', () => {
     await waitUntilReady();
 
     const frame = lastFrame();
-    expect(frame).toContain('Gemini Live API (Cloud)');
-    expect(frame).toContain('When using the Gemini Live backend');
+    expect(frame).toContain('Onyx Live API (Cloud)');
+    expect(frame).toContain('When using the Onyx Live backend');
   });
 
   it('should NOT display a privacy warning when Whisper (Local) is highlighted', async () => {
@@ -48,8 +48,8 @@ describe('VoiceModelDialog', () => {
 
     await waitUntilReady();
 
-    // Verify warning is present for default (Gemini Live)
-    expect(lastFrame()).toContain('When using the Gemini Live backend');
+    // Verify warning is present for default (Onyx Live)
+    expect(lastFrame()).toContain('When using the Onyx Live backend');
 
     // Arrow Down to highlight Whisper
     await act(async () => {
@@ -59,7 +59,7 @@ describe('VoiceModelDialog', () => {
     await waitFor(() => {
       const frame = lastFrame();
       expect(frame).toContain('Whisper (Local)');
-      expect(frame).not.toContain('When using the Gemini Live backend');
+      expect(frame).not.toContain('When using the Onyx Live backend');
     });
   });
 
@@ -75,7 +75,7 @@ describe('VoiceModelDialog', () => {
 
     await waitUntilReady();
 
-    // Select Gemini Live (it's already highlighted, just press Enter)
+    // Select Onyx Live (it's already highlighted, just press Enter)
     await act(async () => {
       stdin.write('\r');
     });
@@ -84,7 +84,7 @@ describe('VoiceModelDialog', () => {
       expect(setValueSpy).toHaveBeenCalledWith(
         SettingScope.User,
         'experimental.voice.backend',
-        'gemini-live',
+        'onyx-live',
       );
       expect(onClose).toHaveBeenCalled();
     });

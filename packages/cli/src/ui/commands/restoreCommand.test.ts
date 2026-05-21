@@ -11,7 +11,7 @@ import * as path from 'node:path';
 import { restoreCommand } from './restoreCommand.js';
 import { type CommandContext } from './types.js';
 import { createMockCommandContext } from '../../test-utils/mockCommandContext.js';
-import { GEMINI_DIR, type Config, type GitService } from '@onyx/core';
+import { ONYX_DIR, type Config, type GitService } from '@onyx/core';
 
 describe('restoreCommand', () => {
   let mockContext: CommandContext;
@@ -19,15 +19,15 @@ describe('restoreCommand', () => {
   let mockGitService: GitService;
   let mockSetHistory: ReturnType<typeof vi.fn>;
   let testRootDir: string;
-  let geminiTempDir: string;
+  let onyxTempDir: string;
   let checkpointsDir: string;
 
   beforeEach(async () => {
     testRootDir = await fs.mkdtemp(
       path.join(os.tmpdir(), 'restore-command-test-'),
     );
-    geminiTempDir = path.join(testRootDir, GEMINI_DIR);
-    checkpointsDir = path.join(geminiTempDir, 'checkpoints');
+    onyxTempDir = path.join(testRootDir, ONYX_DIR);
+    checkpointsDir = path.join(onyxTempDir, 'checkpoints');
     // The command itself creates this, but for tests it's easier to have it ready.
     // Some tests might remove it to test error paths.
     await fs.mkdir(checkpointsDir, { recursive: true });
@@ -41,9 +41,9 @@ describe('restoreCommand', () => {
       getCheckpointingEnabled: vi.fn().mockReturnValue(true),
       storage: {
         getProjectTempCheckpointsDir: vi.fn().mockReturnValue(checkpointsDir),
-        getProjectTempDir: vi.fn().mockReturnValue(geminiTempDir),
+        getProjectTempDir: vi.fn().mockReturnValue(onyxTempDir),
       },
-      geminiClient: {
+      onyxClient: {
         setHistory: mockSetHistory,
       },
       get config() {

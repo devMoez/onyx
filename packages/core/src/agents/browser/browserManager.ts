@@ -563,7 +563,7 @@ export class BrowserManager {
     // Create raw MCP SDK Client (not the wrapper McpClient)
     this.rawMcpClient = new Client(
       {
-        name: 'gemini-cli-browser-agent',
+        name: 'onyx-cli-browser-agent',
         version: '1.0.0',
       },
       {
@@ -659,7 +659,7 @@ export class BrowserManager {
     } else if (sessionMode === 'persistent') {
       // Default persistent profile lives under ~/.onyx/cli-browser-profile
       const defaultProfilePath = path.join(
-        Storage.getGlobalGeminiDir(),
+        Storage.getGlobalOnyxDir(),
         BROWSER_PROFILE_DIR,
       );
       mcpArgs.push('--userDataDir', defaultProfilePath);

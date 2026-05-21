@@ -18,16 +18,16 @@ import {
   SESSION_FILE_PREFIX,
   PREVIEW_GEMINI_FLASH_MODEL,
   getErrorMessage,
-} from '@google/gemini-cli-core';
+} from '@google/onyx-cli-core';
 
 export * from '@onyx/test-utils';
 
 /**
  * The default model used for all evaluations.
- * Can be overridden by setting the GEMINI_MODEL environment variable.
+ * Can be overridden by setting the ONYX_MODEL environment variable.
  */
 export const EVAL_MODEL =
-  process.env['GEMINI_MODEL'] || PREVIEW_GEMINI_FLASH_MODEL;
+  process.env['ONYX_MODEL'] || PREVIEW_GEMINI_FLASH_MODEL;
 
 // Indicates the consistency expectation for this test.
 // - ALWAYS_PASSES - Means that the test is expected to pass 100% of the time. These
@@ -124,10 +124,10 @@ export async function internalEvalTest(evalCase: EvalCase) {
           evalCase.sessionId ||
           `test-session-${crypto.randomUUID().slice(0, 8)}`;
 
-        // Temporarily set GEMINI_CLI_HOME so Storage writes to the same
+        // Temporarily set ONYX_CLI_HOME so Storage writes to the same
         // directory the CLI subprocess will use (rig.homeDir).
-        const originalGeminiHome = process.env['GEMINI_CLI_HOME'];
-        process.env['GEMINI_CLI_HOME'] = rig.homeDir!;
+        const originalOnyxHome = process.env['ONYX_CLI_HOME'];
+        process.env['ONYX_CLI_HOME'] = rig.homeDir!;
         try {
           const storage = new Storage(fs.realpathSync(rig.testDir!));
           await storage.initialize();
@@ -155,11 +155,11 @@ export async function internalEvalTest(evalCase: EvalCase) {
           // Storage initialization may fail in some environments; log and continue.
           console.warn('Failed to write session history:', e);
         } finally {
-          // Restore original GEMINI_CLI_HOME.
-          if (originalGeminiHome === undefined) {
-            delete process.env['GEMINI_CLI_HOME'];
+          // Restore original ONYX_CLI_HOME.
+          if (originalOnyxHome === undefined) {
+            delete process.env['ONYX_CLI_HOME'];
           } else {
-            process.env['GEMINI_CLI_HOME'] = originalGeminiHome;
+            process.env['ONYX_CLI_HOME'] = originalOnyxHome;
           }
         }
       }
@@ -171,7 +171,7 @@ export async function internalEvalTest(evalCase: EvalCase) {
         approvalMode: evalCase.approvalMode ?? 'yolo',
         timeout: evalCase.timeout,
         env: {
-          GEMINI_CLI_ACTIVITY_LOG_TARGET: activityLogFile,
+          ONYX_CLI_ACTIVITY_LOG_TARGET: activityLogFile,
           ONYX_CLI_TRUST_WORKSPACE: 'true',
         },
       });
@@ -242,7 +242,7 @@ function logReliabilityEvent(
   const reliabilityLog = {
     timestamp: new Date().toISOString(),
     testName,
-    model: process.env['GEMINI_MODEL'] || 'unknown',
+    model: process.env['ONYX_MODEL'] || 'unknown',
     attempt,
     status,
     errorCode,
@@ -288,7 +288,7 @@ export async function prepareWorkspace(
     fs.mkdirSync(path.dirname(fullPath), { recursive: true });
     fs.writeFileSync(fullPath, content);
 
-    if (filePath.startsWith('.gemini/agents/') && filePath.endsWith('.md')) {
+    if (filePath.startsWith('.onyx/agents/') && filePath.endsWith('.md')) {
       const hash = crypto.createHash('sha256').update(content).digest('hex');
       try {
         const agentDefs = await parseAgentMarkdown(fullPath, content);
@@ -311,7 +311,7 @@ export async function prepareWorkspace(
   if (Object.keys(acknowledgedAgents).length > 0) {
     const ackPath = path.join(
       homeDir,
-      '.gemini',
+      '.onyx',
       'acknowledgments',
       'agents.json',
     );
@@ -428,3 +428,4 @@ export interface EvalCase extends BaseEvalCase {
   approvalMode?: 'default' | 'auto_edit' | 'yolo' | 'plan';
   assert: (rig: TestRig, result: string) => Promise<void>;
 }
+

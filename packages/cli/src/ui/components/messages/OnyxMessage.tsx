@@ -11,14 +11,14 @@ import { theme } from '../../semantic-colors.js';
 import { SCREEN_READER_MODEL_PREFIX } from '../../textConstants.js';
 import { useUIState } from '../../contexts/UIStateContext.js';
 
-interface GeminiMessageProps {
+interface OnyxMessageProps {
   text: string;
   isPending: boolean;
   availableTerminalHeight?: number;
   terminalWidth: number;
 }
 
-export const OnyxMessage: React.FC<GeminiMessageProps> = ({
+export const OnyxMessage: React.FC<OnyxMessageProps> = ({
   text,
   isPending,
   availableTerminalHeight,

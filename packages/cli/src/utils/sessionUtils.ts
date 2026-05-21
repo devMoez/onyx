@@ -140,13 +140,13 @@ export interface SessionSelectionResult {
 }
 
 /**
- * Checks if a session has at least one user or assistant (gemini) message.
+ * Checks if a session has at least one user or assistant (onyx) message.
  * Sessions with only system messages (info, error, warning) are considered empty.
  * @param messages - The array of message records to check
  * @returns true if the session has meaningful content
  */
 export const hasUserOrAssistantMessage = (messages: MessageRecord[]): boolean =>
-  messages.some((msg) => msg.type === 'user' || msg.type === 'gemini');
+  messages.some((msg) => msg.type === 'user' || msg.type === 'onyx');
 
 /**
  * Cleans and sanitizes message content for display by:
@@ -587,7 +587,7 @@ export function convertSessionToHistoryFormats(
 
   for (const msg of messages) {
     // Add thoughts if present
-    if (msg.type === 'gemini' && msg.thoughts && msg.thoughts.length > 0) {
+    if (msg.type === 'onyx' && msg.thoughts && msg.thoughts.length > 0) {
       for (const thought of msg.thoughts) {
         uiHistory.push({
           type: 'thinking',
@@ -621,7 +621,7 @@ export function convertSessionToHistoryFormats(
         case 'warning':
           messageType = MessageType.WARNING;
           break;
-        case 'gemini':
+        case 'onyx':
           messageType = MessageType.ONYX;
           break;
         default:

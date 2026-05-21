@@ -14,8 +14,8 @@ import { env } from 'node:process';
 import stripAnsi from 'strip-ansi';
 
 // Browser agent Chrome DevTools MCP connection is flaky in Docker sandbox.
-// See: https://github.com/google-gemini/gemini-cli/issues/24382
-const isDockerSandbox = env['GEMINI_SANDBOX'] === 'docker';
+// See: https://github.com/google-onyx/onyx-cli/issues/24382
+const isDockerSandbox = env['ONYX_SANDBOX'] === 'docker';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -86,11 +86,11 @@ describe.skipIf(!chromeAvailable)('browser-policy', () => {
       });
 
       // Manually trust the folder to avoid the dialog and enable option 3
-      const geminiDir = join(rig.homeDir!, '.gemini');
-      mkdirSync(geminiDir, { recursive: true });
+      const onyxDir = join(rig.homeDir!, '.onyx');
+      mkdirSync(onyxDir, { recursive: true });
 
       // Write to trustedFolders.json
-      const trustedFoldersPath = join(geminiDir, 'trustedFolders.json');
+      const trustedFoldersPath = join(onyxDir, 'trustedFolders.json');
       const trustedFolders = {
         [rig.testDir!]: 'TRUST_FOLDER',
       };
@@ -121,7 +121,7 @@ priority = 200
 
       // Update settings.json in both project and home directories to point to the policy file
       for (const baseDir of [rig.testDir!, rig.homeDir!]) {
-        const settingsPath = join(baseDir, '.gemini', 'settings.json');
+        const settingsPath = join(baseDir, '.onyx', 'settings.json');
         if (existsSync(settingsPath)) {
           const settings = JSON.parse(readFileSync(settingsPath, 'utf-8'));
           settings.policyPaths = [policyFile];
@@ -136,7 +136,7 @@ priority = 200
       const run = await rig.runInteractive({
         approvalMode: 'default',
         env: {
-          GEMINI_CLI_INTEGRATION_TEST: 'true',
+          ONYX_CLI_INTEGRATION_TEST: 'true',
         },
       });
 
@@ -229,8 +229,8 @@ priority = 200
 
     const stdout = await rig.runCommand(['Open https://example.com'], {
       env: {
-        GEMINI_API_KEY: 'fake-key',
-        GEMINI_TELEMETRY_DISABLED: 'true',
+        ONYX_API_KEY: 'fake-key',
+        ONYX_TELEMETRY_DISABLED: 'true',
         DEV: 'true',
       },
     });
@@ -238,3 +238,4 @@ priority = 200
     expect(stdout).toContain('saved logins will be visible');
   });
 });
+

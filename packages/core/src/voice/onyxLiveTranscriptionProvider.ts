@@ -50,7 +50,7 @@ const LiveAPIResponseSchema = z.object({
 });
 
 /**
- * Connects to the Gemini Live API using raw WebSockets to support API Key authentication.
+ * Connects to the Onyx Live API using raw WebSockets to support API Key authentication.
  */
 export class onyxLiveTranscriptionProvider
   extends EventEmitter<TranscriptionEvents>
@@ -64,7 +64,7 @@ export class onyxLiveTranscriptionProvider
   }
 
   async connect(): Promise<void> {
-    const modelName = 'gemini-3.1-flash-live-preview';
+    const modelName = 'onyx-3.1-flash-live-preview';
     const baseUrl =
       'wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent';
 
@@ -75,7 +75,7 @@ export class onyxLiveTranscriptionProvider
     // NOTE: The Generative Language WebSocket API requires the API key to be passed via the 'key' query parameter.
     const url = `${baseUrl}?key=${this.apiKey}`;
     debugLogger.debug(
-      `[GeminiLiveTranscription] Connecting to model ${modelName} via raw WebSocket with API Key...`,
+      `[OnyxLiveTranscription] Connecting to model ${modelName} via raw WebSocket with API Key...`,
     );
 
     try {
@@ -100,7 +100,7 @@ export class onyxLiveTranscriptionProvider
               if (content.inputTranscription?.text) {
                 const text = content.inputTranscription.text;
                 debugLogger.debug(
-                  `[GeminiLiveTranscription] Transcription received (Cloud): "${text}"`,
+                  `[OnyxLiveTranscription] Transcription received (Cloud): "${text}"`,
                 );
                 this.currentTranscription = text;
                 this.emit('transcription', this.currentTranscription);
@@ -109,20 +109,20 @@ export class onyxLiveTranscriptionProvider
           }
         } catch (e) {
           debugLogger.error(
-            '[GeminiLiveTranscription] Error parsing message:',
+            '[OnyxLiveTranscription] Error parsing message:',
             e,
           );
         }
       });
 
       this.ws.on('error', (error) => {
-        debugLogger.error('[GeminiLiveTranscription] WebSocket Error:', error);
+        debugLogger.error('[OnyxLiveTranscription] WebSocket Error:', error);
         this.emit('error', error);
       });
 
       this.ws.on('close', (code, reason) => {
         debugLogger.debug(
-          `[GeminiLiveTranscription] Connection Closed. Code: ${code}, Reason: ${reason}`,
+          `[OnyxLiveTranscription] Connection Closed. Code: ${code}, Reason: ${reason}`,
         );
         this.emit('close');
         this.ws = null;
@@ -144,7 +144,7 @@ export class onyxLiveTranscriptionProvider
       this.currentTranscription = '';
     } catch (err) {
       debugLogger.error(
-        '[GeminiLiveTranscription] Failed to establish connection:',
+        '[OnyxLiveTranscription] Failed to establish connection:',
         err,
       );
       throw err;

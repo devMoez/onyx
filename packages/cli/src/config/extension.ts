@@ -15,11 +15,11 @@ import { INSTALL_METADATA_FILENAME } from './extensions/variables.js';
 import type { ExtensionSetting } from './extensions/extensionSettings.js';
 
 /**
- * Extension definition as written to disk in gemini-extension.json files.
+ * Extension definition as written to disk in onyx-extension.json files.
  * This should *not* be referenced outside of the logic for reading files.
  * If information is required for manipulating extensions (load, unload, update)
  * outside of the loading process that data needs to be stored on the
- * GeminiCLIExtension class defined in Core.
+ * OnyxCLIExtension class defined in Core.
  */
 export interface ExtensionConfig {
   name: string;

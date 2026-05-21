@@ -57,3 +57,4 @@ describe.skipIf(skipFlaky)('Ctrl+C exit', () => {
     await run.expectText('Agent powering down. Goodbye!', 5000);
   });
 });
+

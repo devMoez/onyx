@@ -72,7 +72,7 @@ describe('directoryCommand', () => {
     mockConfig = {
       getWorkspaceContext: () => mockWorkspaceContext,
       isRestrictiveSandbox: vi.fn().mockReturnValue(false),
-      getGeminiClient: vi.fn().mockReturnValue({
+      getOnyxClient: vi.fn().mockReturnValue({
         addDirectoryContext: vi.fn(),
         getChatRecordingService: vi.fn().mockReturnValue({
           recordDirectories: vi.fn(),
@@ -85,7 +85,7 @@ describe('directoryCommand', () => {
       getFileService: () => ({}),
       getFileFilteringOptions: () => ({ ignore: [], include: [] }),
       setUserMemory: vi.fn(),
-      setGeminiMdFileCount: vi.fn(),
+      setOnyxMdFileCount: vi.fn(),
       get config() {
         return this;
       },

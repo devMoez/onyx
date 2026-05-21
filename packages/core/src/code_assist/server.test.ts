@@ -12,7 +12,7 @@ import {
   ActionStatus,
   InitiationMethod,
   type LoadCodeAssistResponse,
-  type GeminiUserTier,
+  type OnyxUserTier,
   type SetCodeAssistGlobalUserSettingRequest,
   type CodeAssistGlobalUserSettingResponse,
 } from './types.js';
@@ -663,7 +663,7 @@ describe('CodeAssistServer', () => {
         cloudaicompanionProject: 'cloudshell-gca',
         metadata: {},
       }),
-    ).rejects.toThrow(/Access to the default Cloud Shell Gemini project/);
+    ).rejects.toThrow(/Access to the default Cloud Shell Onyx project/);
   });
 
   it('should call the listExperiments endpoint with metadata', async () => {
@@ -690,7 +690,7 @@ describe('CodeAssistServer', () => {
     const mockResponse = {
       buckets: [
         {
-          modelId: 'gemini-2.5-pro',
+          modelId: 'onyx-2.5-pro',
           tokenType: 'REQUESTS',
           remainingFraction: 0.75,
           resetTime: '2025-10-22T16:01:15Z',
@@ -778,7 +778,7 @@ describe('CodeAssistServer', () => {
     );
 
     // Initial state: server has a paidTier without availableCredits
-    (server as unknown as { paidTier: GeminiUserTier }).paidTier = {
+    (server as unknown as { paidTier: OnyxUserTier }).paidTier = {
       id: 'test-tier',
       name: 'tier',
     };

@@ -79,7 +79,7 @@ import {
 } from '@google/genai';
 import type { Config } from '../config/config.js';
 import type { AgentLoopContext } from '../config/agent-loop-context.js';
-import type { GeminiClient } from '../core/client.js';
+import type { OnyxClient } from '../core/client.js';
 import type { SandboxManager } from '../services/sandboxManager.js';
 import type { MessageBus } from '../confirmation-bus/message-bus.js';
 import { MockTool } from '../test-utils/mock-tool.js';
@@ -368,7 +368,7 @@ const createTestDefinition = <TOutput extends z.ZodTypeAny = z.ZodUnknown>(
       },
     },
     modelConfig: {
-      model: 'gemini-test-model',
+      model: 'onyx-test-model',
       generateContentConfig: {
         temperature: 0,
         topP: 1,
@@ -506,7 +506,7 @@ describe('LocalAgentExecutor', () => {
   describe('create (Initialization and Validation)', () => {
     it('should explicitly map execution context properties to prevent unintended propagation', async () => {
       const definition = createTestDefinition([LS_TOOL_NAME]);
-      const mockGeminiClient = {} as unknown as GeminiClient;
+      const mockOnyxClient = {} as unknown as OnyxClient;
       const mockSandboxManager = {} as unknown as SandboxManager;
       const extendedContext = {
         config: mockConfig,
@@ -515,7 +515,7 @@ describe('LocalAgentExecutor', () => {
         promptRegistry: mockConfig.promptRegistry,
         resourceRegistry: mockConfig.resourceRegistry,
         messageBus: mockConfig.messageBus,
-        geminiClient: mockGeminiClient,
+        onyxClient: mockOnyxClient,
         sandboxManager: mockSandboxManager,
         unintendedProperty: 'should not be here',
       } as unknown as AgentLoopContext;
@@ -542,7 +542,7 @@ describe('LocalAgentExecutor', () => {
       expect(executionContext).toBeDefined();
       expect(executionContext.config).toBe(extendedContext.config);
       expect(executionContext.promptId).toBeDefined();
-      expect(executionContext.geminiClient).toBe(extendedContext.geminiClient);
+      expect(executionContext.onyxClient).toBe(extendedContext.onyxClient);
       expect(executionContext.sandboxManager).toBe(
         extendedContext.sandboxManager,
       );
@@ -575,7 +575,7 @@ describe('LocalAgentExecutor', () => {
     it('should propagate parentSessionId from context when creating executionContext', async () => {
       const parentSessionId = 'top-level-session-id';
       const currentPromptId = 'subagent-a-id';
-      const mockGeminiClient = {} as unknown as GeminiClient;
+      const mockOnyxClient = {} as unknown as OnyxClient;
       const mockSandboxManager = {} as unknown as SandboxManager;
       const mockMessageBus = {
         derive: () => ({}),
@@ -593,7 +593,7 @@ describe('LocalAgentExecutor', () => {
         toolRegistry: mockToolRegistry,
         promptRegistry: {} as unknown as PromptRegistry,
         resourceRegistry: {} as unknown as ResourceRegistry,
-        geminiClient: mockGeminiClient,
+        onyxClient: mockOnyxClient,
         sandboxManager: mockSandboxManager,
         messageBus: mockMessageBus,
       } as unknown as AgentLoopContext;
@@ -621,7 +621,7 @@ describe('LocalAgentExecutor', () => {
 
     it('should fall back to promptId if parentSessionId is missing (top-level subagent)', async () => {
       const rootSessionId = 'root-session-id';
-      const mockGeminiClient = {} as unknown as GeminiClient;
+      const mockOnyxClient = {} as unknown as OnyxClient;
       const mockSandboxManager = {} as unknown as SandboxManager;
       const mockMessageBus = {
         derive: () => ({}),
@@ -639,7 +639,7 @@ describe('LocalAgentExecutor', () => {
         toolRegistry: mockToolRegistry,
         promptRegistry: {} as unknown as PromptRegistry,
         resourceRegistry: {} as unknown as ResourceRegistry,
-        geminiClient: mockGeminiClient,
+        onyxClient: mockOnyxClient,
         sandboxManager: mockSandboxManager,
         messageBus: mockMessageBus,
       } as unknown as AgentLoopContext;
@@ -3831,7 +3831,7 @@ describe('LocalAgentExecutor', () => {
           },
         },
         modelConfig: {
-          model: 'gemini-test-model',
+          model: 'onyx-test-model',
           generateContentConfig: { temperature: 0, topP: 1 },
         },
         runConfig: { maxTimeMinutes: 5, maxTurns: 5 },
@@ -3923,7 +3923,7 @@ describe('LocalAgentExecutor', () => {
           },
         },
         modelConfig: {
-          model: 'gemini-test-model',
+          model: 'onyx-test-model',
           generateContentConfig: { temperature: 0, topP: 1 },
         },
         runConfig: { maxTimeMinutes: 5, maxTurns: 5 },

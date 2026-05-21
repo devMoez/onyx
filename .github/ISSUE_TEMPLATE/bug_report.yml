@@ -7,7 +7,7 @@ body:
         > [!IMPORTANT]
         > Thanks for taking the time to fill out this bug report!
         >
-        > Please search **[existing issues](https://github.com/google-gemini/gemini-cli/issues)** to see if an issue already exists for the bug you encountered.
+        > Please search **[existing issues](https://github.com/google-onyx/onyx-cli/issues)** to see if an issue already exists for the bug you encountered.
 
   - type: 'textarea'
     id: 'problem'
@@ -33,7 +33,7 @@ body:
         <details>
         <summary>Client Information</summary>
 
-        Run `gemini` to enter the interactive CLI, then run the `/about` command.
+        Run `onyx` to enter the interactive CLI, then run the `/about` command.
 
         ```console
         > /about

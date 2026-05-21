@@ -208,11 +208,11 @@ describe('AlternateBufferQuittingDisplay', () => {
     unmount();
   });
 
-  it('renders with user and gemini messages', async () => {
+  it('renders with user and onyx messages', async () => {
     persistentStateMock.setData({ tipsShown: 0 });
     const history: HistoryItem[] = [
-      { id: 1, type: 'user', text: 'Hello Gemini' },
-      { id: 2, type: 'gemini', text: 'Hello User!' },
+      { id: 1, type: 'user', text: 'Hello Onyx' },
+      { id: 2, type: 'onyx', text: 'Hello User!' },
     ];
     const { lastFrame, unmount } = await renderWithProviders(
       <AlternateBufferQuittingDisplay />,
@@ -224,7 +224,7 @@ describe('AlternateBufferQuittingDisplay', () => {
         },
       },
     );
-    expect(lastFrame()).toMatchSnapshot('with_user_gemini_messages');
+    expect(lastFrame()).toMatchSnapshot('with_user_onyx_messages');
     unmount();
   });
 });

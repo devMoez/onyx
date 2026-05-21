@@ -14,7 +14,7 @@ import {
 import { ValidationRequiredError } from '../utils/googleQuotaErrors.js';
 import { CodeAssistServer } from '../code_assist/server.js';
 import type { OAuth2Client } from 'google-auth-library';
-import { UserTierId, type GeminiUserTier } from './types.js';
+import { UserTierId, type OnyxUserTier } from './types.js';
 import type { Config } from '../config/config.js';
 import {
   logOnboardingSuccess,
@@ -31,14 +31,14 @@ vi.mock('../telemetry/index.js', async (importOriginal) => {
   };
 });
 
-const mockPaidTier: GeminiUserTier = {
+const mockPaidTier: OnyxUserTier = {
   id: UserTierId.STANDARD,
   name: 'paid',
   description: 'Paid tier',
   isDefault: true,
 };
 
-const mockFreeTier: GeminiUserTier = {
+const mockFreeTier: OnyxUserTier = {
   id: UserTierId.FREE,
   name: 'free',
   description: 'Free tier',
@@ -184,7 +184,7 @@ describe('setupUser', () => {
       });
       const httpOptions = {
         headers: {
-          'User-Agent': 'GeminiCLI/1.0.0/gemini-2.0-flash (darwin; arm64)',
+          'User-Agent': 'OnyxCLI/1.0.0/onyx-2.0-flash (darwin; arm64)',
         },
       };
       await setupUser({} as OAuth2Client, mockConfig, httpOptions);

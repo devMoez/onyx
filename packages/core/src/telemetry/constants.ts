@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export const SERVICE_NAME = 'gemini-cli';
+export const SERVICE_NAME = 'onyx-cli';
 export const SERVICE_DESCRIPTION =
-  'Onyx CLI is an open-source AI agent that brings the power of Gemini directly into your terminal. It is designed to be a terminal-first, extensible, and powerful tool for developers, engineers, SREs, and beyond.';
+  'Onyx CLI is an open-source AI agent that brings the power of Onyx directly into your terminal. It is designed to be a terminal-first, extensible, and powerful tool for developers, engineers, SREs, and beyond.';
 
 // Onyx CLI specific semantic conventions
 // https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/#genai-attributes
@@ -27,8 +27,8 @@ export const GEN_AI_SYSTEM_INSTRUCTIONS = 'gen_ai.system_instructions';
 export const GEN_AI_TOOL_DEFINITIONS = 'gen_ai.tool.definitions';
 export const GEN_AI_CONVERSATION_ID = 'gen_ai.conversation.id';
 
-// Gemini CLI specific operations
-export enum GeminiCliOperation {
+// Onyx CLI specific operations
+export enum OnyxCliOperation {
   ToolCall = 'tool_call',
   LLMCall = 'llm_call',
   UserPrompt = 'user_prompt',

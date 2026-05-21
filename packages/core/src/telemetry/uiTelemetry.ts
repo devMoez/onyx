@@ -206,7 +206,7 @@ export class UiTelemetryService extends EventEmitter {
     let totalTokensInContext = 0;
 
     for (const message of conversation.messages) {
-      if (message.type === 'gemini') {
+      if (message.type === 'onyx') {
         const model = message.model || 'unknown';
         const modelMetrics = this.getOrCreateModelMetrics(model);
 
@@ -226,7 +226,7 @@ export class UiTelemetryService extends EventEmitter {
             modelMetrics.tokens.prompt - modelMetrics.tokens.cached,
           );
 
-          // The total tokens of the last Gemini message represents the context
+          // The total tokens of the last Onyx message represents the context
           // size at that point in time.
           totalTokensInContext = message.tokens.total;
         }

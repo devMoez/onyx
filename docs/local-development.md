@@ -36,7 +36,7 @@ Genkit provides a web-based UI for viewing traces and other telemetry data.
     In a separate terminal, run your Onyx CLI command:
 
     ```bash
-    gemini
+    onyx
     ```
 
 3.  **View the traces:**
@@ -59,14 +59,14 @@ You can view traces in the Jaeger UI for local development.
 
     This command configures your workspace for local telemetry and provides a
     link to the Jaeger UI (usually `http://localhost:16686`).
-    - **Collector logs:** `~/.gemini/tmp/<projectHash>/otel/collector.log`
+    - **Collector logs:** `~/.onyx/tmp/<projectHash>/otel/collector.log`
 
 2.  **Run Onyx CLI:**
 
     In a separate terminal, run your Onyx CLI command:
 
     ```bash
-    gemini
+    onyx
     ```
 
 3.  **View the traces:**
@@ -85,7 +85,7 @@ Trace for custom processing or routing.
 > [Google Cloud telemetry prerequisites](./cli/telemetry.md#prerequisites)
 > (Project ID, authentication, IAM roles, and APIs) before using this method.
 
-1.  **Configure `.gemini/settings.json`:**
+1.  **Configure `.onyx/settings.json`:**
 
     ```json
     {
@@ -108,14 +108,14 @@ Trace for custom processing or routing.
 
     The script outputs links to view traces, metrics, and logs in the Google
     Cloud Console.
-    - **Collector logs:** `~/.gemini/tmp/<projectHash>/otel/collector-gcp.log`
+    - **Collector logs:** `~/.onyx/tmp/<projectHash>/otel/collector-gcp.log`
 
 3.  **Run Onyx CLI:**
 
     In a separate terminal, run your Onyx CLI command:
 
     ```bash
-    gemini
+    onyx
     ```
 
 4.  **View logs, metrics, and traces:**
@@ -137,14 +137,14 @@ Adding traces helps you debug and understand the flow of execution. Use the
 Here is a basic example:
 
 ```typescript
-import { runInDevTraceSpan } from '@google/gemini-cli-core';
-import { GeminiCliOperation } from '@google/gemini-cli-core/lib/telemetry/constants.js';
+import { runInDevTraceSpan } from '@google/onyx-cli-core';
+import { OnyxCliOperation } from '@google/onyx-cli-core/lib/telemetry/constants.js';
 
 await runInDevTraceSpan(
   {
-    operation: GeminiCliOperation.ToolCall,
+    operation: OnyxCliOperation.ToolCall,
     attributes: {
-      [GEN_AI_AGENT_NAME]: 'gemini-cli',
+      [GEN_AI_AGENT_NAME]: 'onyx-cli',
     },
   },
   async ({ metadata }) => {
@@ -170,7 +170,7 @@ await runInDevTraceSpan(
 In this example:
 
 - `operation`: The operation type of the span, represented by the
-  `GeminiCliOperation` enum.
+  `OnyxCliOperation` enum.
 - `metadata.input`: (Optional) An object containing the input data for the
   traced operation.
 - `metadata.output`: (Optional) An object containing the output data from the

@@ -353,9 +353,9 @@ export async function initializeTelemetry(
     initializeMetrics(config);
 
     // Start memory monitoring if interval is specified via environment variable
-    const monitorInterval = process.env['GEMINI_MEMORY_MONITOR_INTERVAL'];
+    const monitorInterval = process.env['ONYX_MEMORY_MONITOR_INTERVAL'];
     debugLogger.log(
-      `[TELEMETRY] GEMINI_MEMORY_MONITOR_INTERVAL: ${monitorInterval}`,
+      `[TELEMETRY] ONYX_MEMORY_MONITOR_INTERVAL: ${monitorInterval}`,
     );
     if (monitorInterval) {
       const intervalMs = parseInt(monitorInterval, 10);

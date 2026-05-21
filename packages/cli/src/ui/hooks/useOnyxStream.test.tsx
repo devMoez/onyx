@@ -41,7 +41,7 @@ import {
   CoreToolCallStatus,
   ApprovalMode,
   AuthType,
-  GeminiEventType as ServerGeminiEventType,
+  OnyxEventType as ServerOnyxEventType,
   ToolErrorType,
   ToolConfirmationOutcome,
   MessageBusType,
@@ -51,7 +51,7 @@ import {
   CoreEvent,
   SHELL_TOOL_NAME,
   MCPDiscoveryState,
-  GeminiCliOperation,
+  OnyxCliOperation,
   getPlanModeExitMessage,
   UPDATE_TOPIC_TOOL_NAME,
 } from '@onyx/core';
@@ -79,7 +79,7 @@ const mockMessageBus = {
   unsubscribe: vi.fn(),
 };
 
-const MockedGeminiClientClass = vi.hoisted(() =>
+const MockedOnyxClientClass = vi.hoisted(() =>
   vi.fn().mockImplementation(function (this: any, _config: any) {
     // _config
     this.startChat = mockStartChat;
@@ -104,7 +104,7 @@ const MockedGeminiClientClass = vi.hoisted(() =>
     });
     this.getCurrentSequenceModel = vi
       .fn()
-      .mockReturnValue('gemini-2.0-flash-exp');
+      .mockReturnValue('onyx-2.0-flash-exp');
   }),
 );
 
@@ -157,7 +157,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
     ...actualCoreModule,
     isBackgroundExecutionData: mockIsBackgroundExecutionData,
     GitService: vi.fn(),
-    GeminiClient: MockedGeminiClientClass,
+    OnyxClient: MockedOnyxClientClass,
     UserPromptEvent: MockedUserPromptEvent,
     ValidationRequiredError: MockValidationRequiredError,
     parseAndFormatApiError: mockParseAndFormatApiError,
@@ -293,8 +293,8 @@ describe('useOnyxStream', () => {
   const mockOnCancelSubmit = vi.fn();
   const mockSetShellInputFocused = vi.fn();
 
-  const mockGetGeminiClient = vi.fn().mockImplementation(() => {
-    const clientInstance = new MockedGeminiClientClass(mockConfig);
+  const mockGetOnyxClient = vi.fn().mockImplementation(() => {
+    const clientInstance = new MockedOnyxClientClass(mockConfig);
     return clientInstance;
   });
 
@@ -305,7 +305,7 @@ describe('useOnyxStream', () => {
 
   const mockConfig: Config = {
     apiKey: 'test-api-key',
-    model: 'gemini-pro',
+    model: 'onyx-pro',
     sandbox: false,
     targetDir: '/test/dir',
     debugMode: false,
@@ -317,7 +317,7 @@ describe('useOnyxStream', () => {
     mcpServers: undefined,
     userAgent: 'test-agent',
     userMemory: '',
-    geminiMdFileCount: 0,
+    onyxMdFileCount: 0,
     alwaysSkipModificationConfirmation: false,
     vertexai: false,
     showMemoryUsage: false,
@@ -331,7 +331,7 @@ describe('useOnyxStream', () => {
     ),
     getProjectRoot: vi.fn(() => '/test/dir'),
     getCheckpointingEnabled: vi.fn(() => false),
-    getGeminiClient: mockGetGeminiClient,
+    getOnyxClient: mockGetOnyxClient,
     getMcpClientManager: () => mockMcpClientManager as any,
     getApprovalMode: vi.fn(() => ApprovalMode.DEFAULT),
     getUsageStatisticsEnabled: () => true,
@@ -341,12 +341,12 @@ describe('useOnyxStream', () => {
     setQuotaErrorOccurred: vi.fn(),
     resetBillingTurnState: vi.fn(),
     getQuotaErrorOccurred: vi.fn(() => false),
-    getModel: vi.fn(() => 'gemini-2.5-pro'),
+    getModel: vi.fn(() => 'onyx-2.5-pro'),
     getContentGeneratorConfig: vi.fn(() => ({
       model: 'test-model',
       apiKey: 'test-key',
       vertexai: false,
-      authType: AuthType.USE_GEMINI,
+      authType: AuthType.USE_ONYX,
     })),
     getContentGenerator: vi.fn(),
     isInteractive: () => false,
@@ -391,8 +391,8 @@ describe('useOnyxStream', () => {
       0, // lastToolOutputTime
     ]);
 
-    // Reset mocks for GeminiClient instance methods (startChat and sendMessageStream)
-    // The GeminiClient constructor itself is mocked at the module level.
+    // Reset mocks for OnyxClient instance methods (startChat and sendMessageStream)
+    // The OnyxClient constructor itself is mocked at the module level.
     mockStartChat.mockClear().mockResolvedValue({
       sendMessageStream: mockSendMessageStream,
     } as unknown as any); // onyxChat -> any
@@ -417,10 +417,10 @@ describe('useOnyxStream', () => {
 
   const renderTestHook = async (
     initialToolCalls: TrackedToolCall[] = [],
-    geminiClient?: any,
+    onyxClient?: any,
     loadedSettings: LoadedSettings = mockLoadedSettings,
   ) => {
-    const client = geminiClient || mockConfig.getGeminiClient();
+    const client = onyxClient || mockConfig.getOnyxClient();
     let lastToolCalls = initialToolCalls;
 
     const initialProps = {
@@ -469,7 +469,7 @@ describe('useOnyxStream', () => {
                   responseParts: [],
                   resultDisplay: 'Request cancelled.',
                 },
-                responseSubmittedToGemini: true,
+                responseSubmittedToOnyx: true,
               } as any as TrackedCancelledToolCall;
             }
             return tc;
@@ -530,7 +530,7 @@ describe('useOnyxStream', () => {
       prompt_id: 'prompt-id-1',
     },
     status: status as CoreToolCallStatus.AwaitingApproval,
-    responseSubmittedToGemini: false,
+    responseSubmittedToOnyx: false,
     confirmationDetails:
       confirmationType === 'edit'
         ? {
@@ -585,7 +585,7 @@ describe('useOnyxStream', () => {
 
     return renderHookWithProviders(() =>
       useOnyxStream(
-        new MockedGeminiClientClass(mockConfig),
+        new MockedOnyxClientClass(mockConfig),
         [],
         mockAddItem,
         mockConfig,
@@ -617,7 +617,7 @@ describe('useOnyxStream', () => {
           prompt_id: 'prompt-id-1',
         },
         status: CoreToolCallStatus.Success,
-        responseSubmittedToGemini: false,
+        responseSubmittedToOnyx: false,
         response: {
           callId: 'call1',
           responseParts: [{ text: 'tool 1 response' }],
@@ -645,7 +645,7 @@ describe('useOnyxStream', () => {
           prompt_id: 'prompt-id-1',
         },
         status: CoreToolCallStatus.Executing,
-        responseSubmittedToGemini: false,
+        responseSubmittedToOnyx: false,
         tool: {
           name: 'tool2',
           displayName: 'tool2',
@@ -680,7 +680,7 @@ describe('useOnyxStream', () => {
         prompt_id: 'prompt-id-remote',
       },
       status: CoreToolCallStatus.Executing,
-      responseSubmittedToGemini: false,
+      responseSubmittedToOnyx: false,
       tool: {
         name: 'remote_agent_call',
         displayName: 'Remote Agent',
@@ -712,7 +712,7 @@ describe('useOnyxStream', () => {
           prompt_id: 'prompt-id-2',
         },
         status: CoreToolCallStatus.Success,
-        responseSubmittedToGemini: false,
+        responseSubmittedToOnyx: false,
         response: {
           callId: 'call1',
           responseParts: toolCall1ResponseParts,
@@ -734,7 +734,7 @@ describe('useOnyxStream', () => {
           prompt_id: 'prompt-id-2',
         },
         status: CoreToolCallStatus.Error,
-        responseSubmittedToGemini: false,
+        responseSubmittedToOnyx: false,
         response: {
           callId: 'call2',
           responseParts: toolCall2ResponseParts,
@@ -762,7 +762,7 @@ describe('useOnyxStream', () => {
 
     await renderHookWithProviders(() =>
       useOnyxStream(
-        new MockedGeminiClientClass(mockConfig),
+        new MockedOnyxClientClass(mockConfig),
         [],
         mockAddItem,
         mockConfig,
@@ -821,7 +821,7 @@ describe('useOnyxStream', () => {
           prompt_id: 'prompt-id-ack',
         },
         status: 'success',
-        responseSubmittedToGemini: false,
+        responseSubmittedToOnyx: false,
         response: {
           callId: 'call1',
           responseParts: toolCallResponseParts,
@@ -839,7 +839,7 @@ describe('useOnyxStream', () => {
     mockSendMessageStream.mockReturnValue(
       (async function* () {
         yield {
-          type: ServerGeminiEventType.Content,
+          type: ServerOnyxEventType.Content,
           value: 'Applied the requested adjustment.',
         };
       })(),
@@ -862,7 +862,7 @@ describe('useOnyxStream', () => {
 
     await renderHookWithProviders(() =>
       useOnyxStream(
-        new MockedGeminiClientClass(mockConfig),
+        new MockedOnyxClientClass(mockConfig),
         [],
         mockAddItem,
         mockConfig,
@@ -910,7 +910,7 @@ describe('useOnyxStream', () => {
 
     expect(mockRunInDevTraceSpan).toHaveBeenCalledWith(
       expect.objectContaining({
-        operation: GeminiCliOperation.SystemPrompt,
+        operation: OnyxCliOperation.SystemPrompt,
       }),
       expect.any(Function),
     );
@@ -966,7 +966,7 @@ describe('useOnyxStream', () => {
           responseParts: [{ text: CoreToolCallStatus.Cancelled }],
           errorType: undefined, // FIX: Added missing property
         },
-        responseSubmittedToGemini: false,
+        responseSubmittedToOnyx: false,
         tool: {
           displayName: 'mock tool',
         },
@@ -975,7 +975,7 @@ describe('useOnyxStream', () => {
         },
       } as any,
     ];
-    const client = new MockedGeminiClientClass(mockConfig);
+    const client = new MockedOnyxClientClass(mockConfig);
 
     // Capture the onComplete callback
     let capturedOnComplete:
@@ -1072,7 +1072,7 @@ describe('useOnyxStream', () => {
         invocation: { getDescription: () => 'Updating topic' },
       } as any,
     ];
-    const client = new MockedGeminiClientClass(mockConfig);
+    const client = new MockedOnyxClientClass(mockConfig);
 
     // Capture the onComplete callback
     let capturedOnComplete:
@@ -1147,7 +1147,7 @@ describe('useOnyxStream', () => {
           error: new Error('Stop reason from hook'),
           resultDisplay: undefined,
         },
-        responseSubmittedToGemini: false,
+        responseSubmittedToOnyx: false,
         tool: {
           displayName: 'stop tool',
         },
@@ -1156,7 +1156,7 @@ describe('useOnyxStream', () => {
         } as unknown as AnyToolInvocation,
       } as unknown as TrackedCompletedToolCall,
     ];
-    const client = new MockedGeminiClientClass(mockConfig);
+    const client = new MockedOnyxClientClass(mockConfig);
 
     const { result } = await renderTestHook([], client);
 
@@ -1219,7 +1219,7 @@ describe('useOnyxStream', () => {
           error: new Error('Stop reason from hook'),
           resultDisplay: undefined,
         },
-        responseSubmittedToGemini: false,
+        responseSubmittedToOnyx: false,
         tool: {
           displayName: 'stop tool',
         },
@@ -1236,7 +1236,7 @@ describe('useOnyxStream', () => {
         ui: { errorVerbosity: 'low' },
       },
     } as LoadedSettings;
-    const client = new MockedGeminiClientClass(mockConfig);
+    const client = new MockedOnyxClientClass(mockConfig);
 
     const { result } = await renderTestHook([], client, lowVerbositySettings);
 
@@ -1301,7 +1301,7 @@ describe('useOnyxStream', () => {
         error: undefined,
         errorType: undefined, // FIX: Added missing property
       },
-      responseSubmittedToGemini: false,
+      responseSubmittedToOnyx: false,
     };
     const cancelledToolCall2: TrackedCancelledToolCall = {
       request: {
@@ -1330,10 +1330,10 @@ describe('useOnyxStream', () => {
         error: undefined,
         errorType: undefined, // FIX: Added missing property
       },
-      responseSubmittedToGemini: false,
+      responseSubmittedToOnyx: false,
     };
     const allCancelledTools = [cancelledToolCall1, cancelledToolCall2];
-    const client = new MockedGeminiClientClass(mockConfig);
+    const client = new MockedOnyxClientClass(mockConfig);
 
     let capturedOnComplete:
       | ((completedTools: TrackedToolCall[]) => Promise<void>)
@@ -1421,7 +1421,7 @@ describe('useOnyxStream', () => {
           prompt_id: 'prompt-id-4',
         },
         status: CoreToolCallStatus.Executing,
-        responseSubmittedToGemini: false,
+        responseSubmittedToOnyx: false,
         tool: {
           name: 'tool1',
           displayName: 'tool1',
@@ -1470,7 +1470,7 @@ describe('useOnyxStream', () => {
 
     const { result, rerender } = await renderHookWithProviders(() =>
       useOnyxStream(
-        new MockedGeminiClientClass(mockConfig),
+        new MockedOnyxClientClass(mockConfig),
         [],
         mockAddItem,
         mockConfig,
@@ -1607,7 +1607,7 @@ describe('useOnyxStream', () => {
 
       const { result } = await renderHookWithProviders(() =>
         useOnyxStream(
-          mockConfig.getGeminiClient(),
+          mockConfig.getOnyxClient(),
           [],
           mockAddItem,
           mockConfig,
@@ -1648,7 +1648,7 @@ describe('useOnyxStream', () => {
 
       const { result } = await renderHookWithProviders(() =>
         useOnyxStream(
-          mockConfig.getGeminiClient(),
+          mockConfig.getOnyxClient(),
           [],
           mockAddItem,
           mockConfig,
@@ -1731,7 +1731,7 @@ describe('useOnyxStream', () => {
 
       // The text should not have been updated with " Canceled"
       const lastCall = mockAddItem.mock.calls.find(
-        (call) => call[0].type === 'gemini',
+        (call) => call[0].type === 'onyx',
       );
       expect(lastCall?.[0].text).toBe('Initial');
 
@@ -1744,7 +1744,7 @@ describe('useOnyxStream', () => {
         {
           request: { callId: 'call1', name: 'tool1', args: {} },
           status: CoreToolCallStatus.Executing,
-          responseSubmittedToGemini: false,
+          responseSubmittedToOnyx: false,
           tool: {
             name: 'tool1',
             description: 'desc1',
@@ -1784,7 +1784,7 @@ describe('useOnyxStream', () => {
             prompt_id: 'prompt-id-1',
           },
           status: CoreToolCallStatus.AwaitingApproval,
-          responseSubmittedToGemini: false,
+          responseSubmittedToOnyx: false,
           tool: {
             name: 'some_tool',
             description: 'a tool',
@@ -1840,7 +1840,7 @@ describe('useOnyxStream', () => {
       const { result } = await renderHookWithDefaults();
 
       const retryPayload = {
-        model: 'gemini-2.5-pro',
+        model: 'onyx-2.5-pro',
         attempt: 2,
         maxAttempts: 3,
         delayMs: 1000,
@@ -1857,7 +1857,7 @@ describe('useOnyxStream', () => {
       const { result } = await renderTestHook();
 
       const retryPayload = {
-        model: 'gemini-2.5-pro',
+        model: 'onyx-2.5-pro',
         attempt: 2,
         maxAttempts: 3,
         delayMs: 1000,
@@ -1865,7 +1865,7 @@ describe('useOnyxStream', () => {
 
       // Start a query to make isResponding true
       const mockStream = (async function* () {
-        yield { type: ServerGeminiEventType.Content, value: 'Part 1' };
+        yield { type: ServerOnyxEventType.Content, value: 'Part 1' };
         await new Promise(() => {}); // Keep stream open
       })();
       mockSendMessageStream.mockReturnValue(mockStream);
@@ -1897,20 +1897,20 @@ describe('useOnyxStream', () => {
     it('should ignore late retry events after cancellation', async () => {
       const { result } = await renderTestHook();
       const retryPayload = {
-        model: 'gemini-2.5-pro',
+        model: 'onyx-2.5-pro',
         attempt: 2,
         maxAttempts: 3,
         delayMs: 1000,
       };
       const lateRetryPayload = {
-        model: 'gemini-2.5-pro',
+        model: 'onyx-2.5-pro',
         attempt: 3,
         maxAttempts: 3,
         delayMs: 2000,
       };
 
       const mockStream = (async function* () {
-        yield { type: ServerGeminiEventType.Content, value: 'Part 1' };
+        yield { type: ServerOnyxEventType.Content, value: 'Part 1' };
         await new Promise(() => {}); // Keep stream open
       })();
       mockSendMessageStream.mockReturnValue(mockStream);
@@ -1976,7 +1976,7 @@ describe('useOnyxStream', () => {
       });
     });
 
-    it('should stop processing and not call Gemini when a command is handled without a tool call', async () => {
+    it('should stop processing and not call Onyx when a command is handled without a tool call', async () => {
       const uiOnlyCommandResult: SlashCommandProcessorResult = {
         type: 'handled',
       };
@@ -1995,7 +1995,7 @@ describe('useOnyxStream', () => {
       });
     });
 
-    it('should call Gemini with prompt content when slash command returns a `submit_prompt` action', async () => {
+    it('should call Onyx with prompt content when slash command returns a `submit_prompt` action', async () => {
       const customCommandResult: SlashCommandProcessorResult = {
         type: 'submit_prompt',
         content: 'This is the actual prompt from the command file.',
@@ -2101,7 +2101,7 @@ describe('useOnyxStream', () => {
     it('should not call handleSlashCommand is shell mode is active', async () => {
       const { result } = await renderHookWithProviders(() =>
         useOnyxStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedOnyxClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -2131,7 +2131,7 @@ describe('useOnyxStream', () => {
     });
 
     it('should record client-initiated tool calls in onyxChat history', async () => {
-      const { result, client: mockGeminiClient } = await renderTestHook();
+      const { result, client: mockOnyxClient } = await renderTestHook();
 
       mockHandleSlashCommand.mockResolvedValue({
         type: 'schedule_tool',
@@ -2177,7 +2177,7 @@ describe('useOnyxStream', () => {
       });
 
       // Verify that the tool call and response were added to onyxChat history
-      expect(mockGeminiClient.addHistory).toHaveBeenCalledWith({
+      expect(mockOnyxClient.addHistory).toHaveBeenCalledWith({
         role: 'model',
         parts: [
           {
@@ -2188,14 +2188,14 @@ describe('useOnyxStream', () => {
           },
         ],
       });
-      expect(mockGeminiClient.addHistory).toHaveBeenCalledWith({
+      expect(mockOnyxClient.addHistory).toHaveBeenCalledWith({
         role: 'user',
         parts: completedTool.response.responseParts,
       });
     });
 
     it('should NOT record other client-initiated tool calls in history', async () => {
-      const { result, client: mockGeminiClient } = await renderTestHook();
+      const { result, client: mockOnyxClient } = await renderTestHook();
 
       mockHandleSlashCommand.mockResolvedValue({
         type: 'schedule_tool',
@@ -2241,7 +2241,7 @@ describe('useOnyxStream', () => {
       });
 
       // Verify that addHistory was NOT called
-      expect(mockGeminiClient.addHistory).not.toHaveBeenCalled();
+      expect(mockOnyxClient.addHistory).not.toHaveBeenCalled();
     });
   });
 
@@ -2265,12 +2265,12 @@ describe('useOnyxStream', () => {
         getContentGeneratorConfig: vi.fn(() => ({
           authType: mockAuthType,
         })),
-        getModel: vi.fn(() => 'gemini-2.5-pro'),
+        getModel: vi.fn(() => 'onyx-2.5-pro'),
       } as unknown as Config;
 
       const { result } = await renderHookWithProviders(() =>
         useOnyxStream(
-          new MockedGeminiClientClass(testConfig),
+          new MockedOnyxClientClass(testConfig),
           [],
           mockAddItem,
           testConfig,
@@ -2301,8 +2301,8 @@ describe('useOnyxStream', () => {
           'Rate limit exceeded',
           mockAuthType,
           undefined,
-          'gemini-2.5-pro',
-          'gemini-2.5-flash',
+          'onyx-2.5-pro',
+          'onyx-2.5-flash',
         );
       });
     });
@@ -2456,7 +2456,7 @@ describe('useOnyxStream', () => {
             prompt_id: 'prompt-id-1',
           },
           status: CoreToolCallStatus.AwaitingApproval,
-          responseSubmittedToGemini: false,
+          responseSubmittedToOnyx: false,
           // No confirmationDetails
           tool: {
             name: 'replace',
@@ -2498,7 +2498,7 @@ describe('useOnyxStream', () => {
             prompt_id: 'prompt-id-1',
           },
           status: CoreToolCallStatus.Executing,
-          responseSubmittedToGemini: false,
+          responseSubmittedToOnyx: false,
           tool: {
             name: 'write_file',
             displayName: 'write_file',
@@ -2565,11 +2565,11 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerOnyxEventType.Content,
             value: 'This is a truncated response...',
           };
           yield {
-            type: ServerGeminiEventType.Finished,
+            type: ServerOnyxEventType.Finished,
             value: { reason: 'MAX_TOKENS', usageMetadata: undefined },
           };
         })(),
@@ -2577,7 +2577,7 @@ describe('useOnyxStream', () => {
 
       const { result } = await renderHookWithProviders(() =>
         useOnyxStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedOnyxClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -2640,7 +2640,7 @@ describe('useOnyxStream', () => {
           mockSendMessageStream.mockReturnValue(
             (async function* () {
               yield {
-                type: ServerGeminiEventType.ContextWindowWillOverflow,
+                type: ServerOnyxEventType.ContextWindowWillOverflow,
                 value: {
                   estimatedRequestTokenCount: requestTokens,
                   remainingTokenCount: remainingTokens,
@@ -2671,7 +2671,7 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.ContextWindowWillOverflow,
+            type: ServerOnyxEventType.ContextWindowWillOverflow,
             value: {
               estimatedRequestTokenCount: 100,
               remainingTokenCount: 50,
@@ -2682,7 +2682,7 @@ describe('useOnyxStream', () => {
 
       const { result } = await renderHookWithProviders(() =>
         useOnyxStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedOnyxClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -2719,7 +2719,7 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.ChatCompressed,
+            type: ServerOnyxEventType.ChatCompressed,
             value: {
               originalTokenCount: 1000,
               newTokenCount: 500,
@@ -2806,11 +2806,11 @@ describe('useOnyxStream', () => {
         mockSendMessageStream.mockReturnValue(
           (async function* () {
             yield {
-              type: ServerGeminiEventType.Content,
+              type: ServerOnyxEventType.Content,
               value: `Response for ${reason}`,
             };
             yield {
-              type: ServerGeminiEventType.Finished,
+              type: ServerOnyxEventType.Finished,
               value: { reason, usageMetadata: undefined },
             };
           })(),
@@ -2890,7 +2890,7 @@ describe('useOnyxStream', () => {
 
     const { result } = await renderHookWithProviders(() =>
       useOnyxStream(
-        new MockedGeminiClientClass(mockConfig),
+        new MockedOnyxClientClass(mockConfig),
         [],
         mockAddItem,
         mockConfig,
@@ -2912,11 +2912,11 @@ describe('useOnyxStream', () => {
 
     const mockStream = (async function* () {
       yield {
-        type: ServerGeminiEventType.Content,
+        type: ServerOnyxEventType.Content,
         value: 'Rationale rationale.',
       };
       yield {
-        type: ServerGeminiEventType.ToolCallRequest,
+        type: ServerOnyxEventType.ToolCallRequest,
         value: { callId: '1', name: 'test_tool', args: {} },
       };
     })();
@@ -2926,8 +2926,8 @@ describe('useOnyxStream', () => {
       await result.current.submitQuery('test input');
     });
 
-    // Expectation: addItem:gemini (rationale) MUST happen before scheduleToolCalls_START
-    const rationaleIndex = addItemOrder.indexOf('addItem:gemini');
+    // Expectation: addItem:onyx (rationale) MUST happen before scheduleToolCalls_START
+    const rationaleIndex = addItemOrder.indexOf('addItem:onyx');
     const scheduleIndex = addItemOrder.indexOf('scheduleToolCalls_START');
     const toolGroupIndex = addItemOrder.indexOf('addItem:tool_group');
 
@@ -2961,7 +2961,7 @@ describe('useOnyxStream', () => {
 
     const { result } = await renderHookWithProviders(() =>
       useOnyxStream(
-        mockConfig.getGeminiClient(),
+        mockConfig.getOnyxClient(),
         [],
         mockAddItem,
         mockConfig,
@@ -3037,15 +3037,15 @@ describe('useOnyxStream', () => {
       },
     );
 
-    // Mock the Gemini stream to return a model response after the tool
+    // Mock the Onyx stream to return a model response after the tool
     mockSendMessageStream.mockReturnValue(
       (async function* () {
         yield {
-          type: ServerGeminiEventType.Content,
+          type: ServerOnyxEventType.Content,
           value: modelResponseContent,
         };
         yield {
-          type: ServerGeminiEventType.Finished,
+          type: ServerOnyxEventType.Finished,
           value: { reason: 'STOP' },
         };
       })(),
@@ -3090,7 +3090,7 @@ describe('useOnyxStream', () => {
       expect(mockAddItem).toHaveBeenNthCalledWith(
         3,
         expect.objectContaining({
-          type: 'gemini',
+          type: 'onyx',
           text: modelResponseContent,
         }),
         expect.any(Number),
@@ -3111,14 +3111,14 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Thought,
+            type: ServerOnyxEventType.Thought,
             value: {
               subject: 'Full thought',
               description: 'Detailed thinking',
             },
           };
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerOnyxEventType.Content,
             value: 'Response',
           };
         })(),
@@ -3126,7 +3126,7 @@ describe('useOnyxStream', () => {
 
       const { result } = await renderHookWithProviders(() =>
         useOnyxStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedOnyxClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -3162,18 +3162,18 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Thought,
+            type: ServerOnyxEventType.Thought,
             value: {
               subject: 'Assessing intent',
               description: 'Inspecting context',
             },
           };
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerOnyxEventType.Content,
             value: 'Model response content',
           };
           yield {
-            type: ServerGeminiEventType.Finished,
+            type: ServerOnyxEventType.Finished,
             value: { reason: 'STOP', usageMetadata: undefined },
           };
         })(),
@@ -3188,7 +3188,7 @@ describe('useOnyxStream', () => {
       await waitFor(() => {
         expect(mockAddItem).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: 'gemini',
+            type: 'onyx',
             text: 'Model response content',
           }),
           expect.any(Number),
@@ -3207,18 +3207,18 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Thought,
+            type: ServerOnyxEventType.Thought,
             value: {
               subject: 'Previous thought',
               description: 'Old description',
             },
           };
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerOnyxEventType.Content,
             value: 'Some response content',
           };
           yield {
-            type: ServerGeminiEventType.Finished,
+            type: ServerOnyxEventType.Finished,
             value: { reason: 'STOP', usageMetadata: undefined },
           };
         })(),
@@ -3226,7 +3226,7 @@ describe('useOnyxStream', () => {
 
       const { result } = await renderHookWithProviders(() =>
         useOnyxStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedOnyxClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -3255,7 +3255,7 @@ describe('useOnyxStream', () => {
       await waitFor(() => {
         expect(mockAddItem).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: 'gemini',
+            type: 'onyx',
             text: 'Some response content',
           }),
           expect.any(Number),
@@ -3266,11 +3266,11 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerOnyxEventType.Content,
             value: 'New response content',
           };
           yield {
-            type: ServerGeminiEventType.Finished,
+            type: ServerOnyxEventType.Finished,
             value: { reason: 'STOP', usageMetadata: undefined },
           };
         })(),
@@ -3288,7 +3288,7 @@ describe('useOnyxStream', () => {
       await waitFor(() => {
         expect(mockAddItem).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: 'gemini',
+            type: 'onyx',
             text: 'New response content',
           }),
           expect.any(Number),
@@ -3308,7 +3308,7 @@ describe('useOnyxStream', () => {
 
       const { result, rerender } = await renderHookWithProviders(() =>
         useOnyxStream(
-          mockConfig.getGeminiClient(),
+          mockConfig.getOnyxClient(),
           [],
           mockAddItem,
           mockConfig,
@@ -3370,16 +3370,16 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Thought,
+            type: ServerOnyxEventType.Thought,
             value: { subject: 'Some thought', description: 'Description' },
           };
-          yield { type: ServerGeminiEventType.UserCancelled };
+          yield { type: ServerOnyxEventType.UserCancelled };
         })(),
       );
 
       const { result } = await renderHookWithProviders(() =>
         useOnyxStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedOnyxClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -3424,11 +3424,11 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Thought,
+            type: ServerOnyxEventType.Thought,
             value: { subject: 'Some thought', description: 'Description' },
           };
           yield {
-            type: ServerGeminiEventType.Error,
+            type: ServerOnyxEventType.Error,
             value: { error: { message: 'Test error' } },
           };
         })(),
@@ -3436,7 +3436,7 @@ describe('useOnyxStream', () => {
 
       const { result } = await renderHookWithProviders(() =>
         useOnyxStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedOnyxClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -3476,12 +3476,12 @@ describe('useOnyxStream', () => {
         { message: 'Test error' },
         expect.any(String),
         undefined,
-        'gemini-2.5-pro',
-        'gemini-2.5-flash',
+        'onyx-2.5-pro',
+        'onyx-2.5-flash',
       );
     });
 
-    it('should update lastOutputTime on Gemini thought and content events', async () => {
+    it('should update lastOutputTime on Onyx thought and content events', async () => {
       vi.useFakeTimers();
       const startTime = 1000000;
       vi.setSystemTime(startTime);
@@ -3490,13 +3490,13 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Thought,
+            type: ServerOnyxEventType.Thought,
             value: { subject: 'Thinking...', description: '' },
           };
           // Advance time for the next event
           vi.advanceTimersByTime(1000);
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerOnyxEventType.Content,
             value: 'Hello',
           };
         })(),
@@ -3504,7 +3504,7 @@ describe('useOnyxStream', () => {
 
       const { result } = await renderHookWithProviders(() =>
         useOnyxStream(
-          new MockedGeminiClientClass(mockConfig),
+          new MockedOnyxClientClass(mockConfig),
           [],
           mockAddItem,
           mockConfig,
@@ -3548,8 +3548,8 @@ describe('useOnyxStream', () => {
       const mockLoopDetectionService = {
         disableForSession: vi.fn(),
       };
-      mockConfig.getGeminiClient = vi.fn().mockReturnValue({
-        ...new MockedGeminiClientClass(mockConfig),
+      mockConfig.getOnyxClient = vi.fn().mockReturnValue({
+        ...new MockedOnyxClientClass(mockConfig),
         getLoopDetectionService: () => mockLoopDetectionService,
       });
     });
@@ -3558,11 +3558,11 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerOnyxEventType.Content,
             value: 'Some content',
           };
           yield {
-            type: ServerGeminiEventType.LoopDetected,
+            type: ServerOnyxEventType.LoopDetected,
           };
         })(),
       );
@@ -3586,16 +3586,16 @@ describe('useOnyxStream', () => {
         disableForSession: vi.fn(),
       };
       const mockClient = {
-        ...new MockedGeminiClientClass(mockConfig),
+        ...new MockedOnyxClientClass(mockConfig),
         getLoopDetectionService: () => mockLoopDetectionService,
       };
-      mockConfig.getGeminiClient = vi.fn().mockReturnValue(mockClient);
+      mockConfig.getOnyxClient = vi.fn().mockReturnValue(mockClient);
 
       // Mock for the initial request
       mockSendMessageStream.mockReturnValueOnce(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.LoopDetected,
+            type: ServerOnyxEventType.LoopDetected,
           };
         })(),
       );
@@ -3604,11 +3604,11 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValueOnce(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerOnyxEventType.Content,
             value: 'Retry successful',
           };
           yield {
-            type: ServerGeminiEventType.Finished,
+            type: ServerOnyxEventType.Finished,
             value: { reason: 'STOP' },
           };
         })(),
@@ -3665,15 +3665,15 @@ describe('useOnyxStream', () => {
         disableForSession: vi.fn(),
       };
       const mockClient = {
-        ...new MockedGeminiClientClass(mockConfig),
+        ...new MockedOnyxClientClass(mockConfig),
         getLoopDetectionService: () => mockLoopDetectionService,
       };
-      mockConfig.getGeminiClient = vi.fn().mockReturnValue(mockClient);
+      mockConfig.getOnyxClient = vi.fn().mockReturnValue(mockClient);
 
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.LoopDetected,
+            type: ServerOnyxEventType.LoopDetected,
           };
         })(),
       );
@@ -3719,7 +3719,7 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValueOnce(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.LoopDetected,
+            type: ServerOnyxEventType.LoopDetected,
           };
         })(),
       );
@@ -3752,7 +3752,7 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValueOnce(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.LoopDetected,
+            type: ServerOnyxEventType.LoopDetected,
           };
         })(),
       );
@@ -3761,11 +3761,11 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValueOnce(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerOnyxEventType.Content,
             value: 'Retry successful',
           };
           yield {
-            type: ServerGeminiEventType.Finished,
+            type: ServerOnyxEventType.Finished,
             value: { reason: 'STOP' },
           };
         })(),
@@ -3813,11 +3813,11 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.Content,
+            type: ServerOnyxEventType.Content,
             value: 'Some response content',
           };
           yield {
-            type: ServerGeminiEventType.LoopDetected,
+            type: ServerOnyxEventType.LoopDetected,
           };
         })(),
       );
@@ -3832,7 +3832,7 @@ describe('useOnyxStream', () => {
       await waitFor(() => {
         expect(mockAddItem).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: 'gemini',
+            type: 'onyx',
             text: 'Some response content',
           }),
           expect.any(Number),
@@ -3851,7 +3851,7 @@ describe('useOnyxStream', () => {
         mockSendMessageStream.mockReturnValue(
           (async function* () {
             yield {
-              type: ServerGeminiEventType.Content,
+              type: ServerOnyxEventType.Content,
               value: 'First response',
             };
             // Keep the stream open
@@ -3887,16 +3887,16 @@ describe('useOnyxStream', () => {
           disableForSession: vi.fn(),
         };
         const mockClient = {
-          ...new MockedGeminiClientClass(mockConfig),
+          ...new MockedOnyxClientClass(mockConfig),
           getLoopDetectionService: () => mockLoopDetectionService,
         };
-        mockConfig.getGeminiClient = vi.fn().mockReturnValue(mockClient);
+        mockConfig.getOnyxClient = vi.fn().mockReturnValue(mockClient);
 
         // First call triggers loop detection
         mockSendMessageStream.mockReturnValueOnce(
           (async function* () {
             yield {
-              type: ServerGeminiEventType.LoopDetected,
+              type: ServerOnyxEventType.LoopDetected,
             };
           })(),
         );
@@ -3905,11 +3905,11 @@ describe('useOnyxStream', () => {
         mockSendMessageStream.mockReturnValueOnce(
           (async function* () {
             yield {
-              type: ServerGeminiEventType.Content,
+              type: ServerOnyxEventType.Content,
               value: 'Retry success',
             };
             yield {
-              type: ServerGeminiEventType.Finished,
+              type: ServerOnyxEventType.Finished,
               value: { reason: 'STOP' },
             };
           })(),
@@ -3960,7 +3960,7 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.AgentExecutionStopped,
+            type: ServerOnyxEventType.AgentExecutionStopped,
             value: {
               reason: 'hook-reason',
               systemMessage: 'Custom stop message',
@@ -3991,7 +3991,7 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.AgentExecutionStopped,
+            type: ServerOnyxEventType.AgentExecutionStopped,
             value: { reason: 'Stopped by hook' },
           };
         })(),
@@ -4019,7 +4019,7 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.AgentExecutionBlocked,
+            type: ServerOnyxEventType.AgentExecutionBlocked,
             value: {
               reason: 'hook-reason',
               systemMessage: 'Custom block message',
@@ -4049,7 +4049,7 @@ describe('useOnyxStream', () => {
       mockSendMessageStream.mockReturnValue(
         (async function* () {
           yield {
-            type: ServerGeminiEventType.AgentExecutionBlocked,
+            type: ServerOnyxEventType.AgentExecutionBlocked,
             value: { reason: 'Blocked by hook' },
           };
         })(),
@@ -4080,7 +4080,7 @@ describe('useOnyxStream', () => {
 
       mockSendMessageStream.mockReturnValue(
         (async function* () {
-          yield { type: ServerGeminiEventType.Content, value: 'test content' };
+          yield { type: ServerOnyxEventType.Content, value: 'test content' };
         })(),
       );
 
@@ -4105,7 +4105,7 @@ describe('useOnyxStream', () => {
       );
       expect(mockAddItem).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          type: 'gemini_content',
+          type: 'onyx_content',
           text: 'test content',
         }),
         expect.any(Number),
@@ -4128,7 +4128,7 @@ describe('useOnyxStream', () => {
 
       mockSendMessageStream.mockReturnValue(
         (async function* () {
-          yield { type: ServerGeminiEventType.Content, value: '   content' };
+          yield { type: ServerOnyxEventType.Content, value: '   content' };
         })(),
       );
 
@@ -4147,7 +4147,7 @@ describe('useOnyxStream', () => {
       );
       expect(mockAddItem).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          type: 'gemini_content',
+          type: 'onyx_content',
           text: 'content',
         }),
         expect.any(Number),
@@ -4162,7 +4162,7 @@ describe('useOnyxStream', () => {
 
     mockSendMessageStream.mockReturnValue(
       (async function* () {
-        yield { type: ServerGeminiEventType.Content, value: 'Response' };
+        yield { type: ServerOnyxEventType.Content, value: 'Response' };
       })(),
     );
 
@@ -4172,7 +4172,7 @@ describe('useOnyxStream', () => {
 
     const userPromptCall = mockRunInDevTraceSpan.mock.calls.find(
       (call) =>
-        call[0].operation === GeminiCliOperation.UserPrompt ||
+        call[0].operation === OnyxCliOperation.UserPrompt ||
         call[0].operation === 'UserPrompt',
     );
     expect(userPromptCall).toBeDefined();

@@ -75,12 +75,12 @@ export class InitCommand implements Command {
   private async handleSubmitPromptResult(
     result: { content: unknown },
     context: CommandContext,
-    geminiMdPath: string,
+    onyxMdPath: string,
     eventBus: ExecutionEventBus,
     taskId: string,
     contextId: string,
   ): Promise<CommandExecutionResponse> {
-    fs.writeFileSync(geminiMdPath, '', 'utf8');
+    fs.writeFileSync(onyxMdPath, '', 'utf8');
 
     if (!context.agentExecutor) {
       throw new Error('Agent executor not found in context.');
@@ -120,7 +120,7 @@ export class InitCommand implements Command {
     await agentExecutor.execute(requestContext, eventBus);
     return {
       name: this.name,
-      data: geminiMdPath,
+      data: onyxMdPath,
     };
   }
 
@@ -135,11 +135,11 @@ export class InitCommand implements Command {
       };
     }
 
-    const geminiMdPath = path.join(
+    const onyxMdPath = path.join(
       process.env['CODER_AGENT_WORKSPACE_PATH']!,
       'onyx.md',
     );
-    const result = performInit(fs.existsSync(geminiMdPath));
+    const result = performInit(fs.existsSync(onyxMdPath));
 
     const taskId = uuidv4();
     const contextId = uuidv4();
@@ -157,7 +157,7 @@ export class InitCommand implements Command {
         return this.handleSubmitPromptResult(
           result,
           context,
-          geminiMdPath,
+          onyxMdPath,
           context.eventBus,
           taskId,
           contextId,

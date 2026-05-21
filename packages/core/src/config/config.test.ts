@@ -33,7 +33,7 @@ import {
 import { FileDiscoveryService } from '../services/fileDiscoveryService.js';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-import { setGeminiMdFilename as mockSetGeminiMdFilename } from '../tools/memoryTool.js';
+import { setOnyxMdFilename as mockSetOnyxMdFilename } from '../tools/memoryTool.js';
 import {
   DEFAULT_TELEMETRY_TARGET,
   DEFAULT_OTLP_ENDPOINT,
@@ -46,7 +46,7 @@ import {
   type ContentGeneratorConfig,
   type ContentGenerator,
 } from '../core/contentGenerator.js';
-import { GeminiClient } from '../core/client.js';
+import { OnyxClient } from '../core/client.js';
 import { GitService } from '../services/gitService.js';
 import { ShellTool } from '../tools/shell.js';
 import { AgentTool } from '../agents/agent-tool.js';
@@ -146,15 +146,15 @@ vi.mock('../tools/memoryTool', async (importOriginal) => {
     await importOriginal<typeof import('../tools/memoryTool.js')>();
   return {
     ...actual,
-    setGeminiMdFilename: vi.fn(),
-    getCurrentGeminiMdFilename: vi.fn(() => 'onyx.md'),
+    setOnyxMdFilename: vi.fn(),
+    getCurrentOnyxMdFilename: vi.fn(() => 'onyx.md'),
   };
 });
 
 vi.mock('../core/contentGenerator.js');
 
 vi.mock('../core/client.js', () => ({
-  GeminiClient: vi.fn().mockImplementation(() => ({
+  OnyxClient: vi.fn().mockImplementation(() => ({
     initialize: vi.fn().mockResolvedValue(undefined),
     stripThoughtsFromHistory: vi.fn(),
     isInitialized: vi.fn().mockReturnValue(false),
@@ -278,14 +278,14 @@ describe('Server Config (config.ts)', () => {
   const MODEL = DEFAULT_GEMINI_MODEL;
   const SANDBOX: SandboxConfig = createMockSandboxConfig({
     command: 'docker',
-    image: 'gemini-cli-sandbox',
+    image: 'onyx-cli-sandbox',
   });
   const TARGET_DIR = '/path/to/target';
   const DEBUG_MODE = false;
   const QUESTION = 'test question';
   const USER_MEMORY = 'Test User Memory';
   const TELEMETRY_SETTINGS = { enabled: false };
-  const EMBEDDING_MODEL = 'gemini-embedding';
+  const EMBEDDING_MODEL = 'onyx-embedding';
   const SESSION_ID = 'test-session-id';
   const baseParams: ConfigParameters = {
     cwd: '/tmp',
@@ -681,8 +681,8 @@ describe('Server Config (config.ts)', () => {
       });
     });
 
-    describe('getGemini31LaunchedSync', () => {
-      it.each([AuthType.USE_GEMINI, AuthType.USE_VERTEX_AI, AuthType.GATEWAY])(
+    describe('getOnyx31LaunchedSync', () => {
+      it.each([AuthType.USE_ONYX, AuthType.USE_VERTEX_AI, AuthType.GATEWAY])(
         'should return true for %s',
         async (authType) => {
           const config = new Config(baseParams);
@@ -690,7 +690,7 @@ describe('Server Config (config.ts)', () => {
             authType,
           });
           await config.refreshAuth(authType);
-          expect(config.getGemini31LaunchedSync()).toBe(true);
+          expect(config.getOnyx31LaunchedSync()).toBe(true);
         },
       );
 
@@ -698,8 +698,8 @@ describe('Server Config (config.ts)', () => {
         vi.mocked(getExperiments).mockResolvedValue({
           experimentIds: [],
           flags: {
-            [ExperimentFlags.GEMINI_3_1_PRO_LAUNCHED]: {
-              flagId: ExperimentFlags.GEMINI_3_1_PRO_LAUNCHED,
+            [ExperimentFlags.ONYX_3_1_PRO_LAUNCHED]: {
+              flagId: ExperimentFlags.ONYX_3_1_PRO_LAUNCHED,
               boolValue: true,
             },
           },
@@ -712,12 +712,12 @@ describe('Server Config (config.ts)', () => {
         });
 
         await config.refreshAuth(AuthType.LOGIN_WITH_GOOGLE);
-        expect(config.getGemini31LaunchedSync()).toBe(true);
+        expect(config.getOnyx31LaunchedSync()).toBe(true);
       });
     });
 
-    describe('getGemini31FlashLiteLaunchedSync', () => {
-      it.each([AuthType.USE_GEMINI, AuthType.USE_VERTEX_AI, AuthType.GATEWAY])(
+    describe('getOnyx31FlashLiteLaunchedSync', () => {
+      it.each([AuthType.USE_ONYX, AuthType.USE_VERTEX_AI, AuthType.GATEWAY])(
         'should return true for %s',
         async (authType) => {
           const config = new Config(baseParams);
@@ -725,7 +725,7 @@ describe('Server Config (config.ts)', () => {
             authType,
           });
           await config.refreshAuth(authType);
-          expect(config.getGemini31FlashLiteLaunchedSync()).toBe(true);
+          expect(config.getOnyx31FlashLiteLaunchedSync()).toBe(true);
         },
       );
     });
@@ -776,9 +776,9 @@ describe('Server Config (config.ts)', () => {
         });
         const config = new Config(baseParams);
         vi.mocked(createContentGeneratorConfig).mockResolvedValue({
-          authType: AuthType.USE_GEMINI,
+          authType: AuthType.USE_ONYX,
         });
-        await config.refreshAuth(AuthType.USE_GEMINI);
+        await config.refreshAuth(AuthType.USE_ONYX);
         expect(config.getProModelNoAccessSync()).toBe(false);
       });
     });
@@ -839,7 +839,7 @@ describe('Server Config (config.ts)', () => {
   describe('refreshAuth', () => {
     it('should refresh auth and update config', async () => {
       const config = new Config(baseParams);
-      const authType = AuthType.USE_GEMINI;
+      const authType = AuthType.USE_ONYX;
       const mockContentConfig = {
         apiKey: 'test-key',
       };
@@ -860,7 +860,7 @@ describe('Server Config (config.ts)', () => {
       );
       // Verify that contentGeneratorConfig is updated
       expect(config.getContentGeneratorConfig()).toEqual(mockContentConfig);
-      expect(GeminiClient).toHaveBeenCalledWith(config);
+      expect(OnyxClient).toHaveBeenCalledWith(config);
     });
 
     it('should pass Vertex AI routing settings when refreshing auth', async () => {
@@ -899,7 +899,7 @@ describe('Server Config (config.ts)', () => {
           }) as Partial<ContentGeneratorConfig> as ContentGeneratorConfig,
       );
 
-      await config.refreshAuth(AuthType.USE_GEMINI);
+      await config.refreshAuth(AuthType.USE_ONYX);
 
       expect(spy).toHaveBeenCalled();
     });
@@ -914,13 +914,13 @@ describe('Server Config (config.ts)', () => {
           }) as Partial<ContentGeneratorConfig> as ContentGeneratorConfig,
       );
 
-      await config.refreshAuth(AuthType.USE_GEMINI);
+      await config.refreshAuth(AuthType.USE_ONYX);
 
       await config.refreshAuth(AuthType.LOGIN_WITH_GOOGLE);
 
       const loopContext: AgentLoopContext = config;
       expect(
-        loopContext.geminiClient.stripThoughtsFromHistory,
+        loopContext.onyxClient.stripThoughtsFromHistory,
       ).toHaveBeenCalledWith();
     });
 
@@ -934,13 +934,13 @@ describe('Server Config (config.ts)', () => {
           }) as Partial<ContentGeneratorConfig> as ContentGeneratorConfig,
       );
 
-      await config.refreshAuth(AuthType.USE_GEMINI);
+      await config.refreshAuth(AuthType.USE_ONYX);
 
       await config.refreshAuth(AuthType.USE_VERTEX_AI);
 
       const loopContext: AgentLoopContext = config;
       expect(
-        loopContext.geminiClient.stripThoughtsFromHistory,
+        loopContext.onyxClient.stripThoughtsFromHistory,
       ).toHaveBeenCalledWith();
     });
 
@@ -956,11 +956,11 @@ describe('Server Config (config.ts)', () => {
 
       await config.refreshAuth(AuthType.USE_VERTEX_AI);
 
-      await config.refreshAuth(AuthType.USE_GEMINI);
+      await config.refreshAuth(AuthType.USE_ONYX);
 
       const loopContext: AgentLoopContext = config;
       expect(
-        loopContext.geminiClient.stripThoughtsFromHistory,
+        loopContext.onyxClient.stripThoughtsFromHistory,
       ).not.toHaveBeenCalledWith();
     });
 
@@ -1024,19 +1024,19 @@ describe('Server Config (config.ts)', () => {
     expect(config.getUserMemory()).toBe('');
   });
 
-  it('Config constructor should call setGeminiMdFilename with contextFileName if provided', () => {
+  it('Config constructor should call setOnyxMdFilename with contextFileName if provided', () => {
     const contextFileName = 'CUSTOM_AGENTS.md';
     const paramsWithContextFile: ConfigParameters = {
       ...baseParams,
       contextFileName,
     };
     new Config(paramsWithContextFile);
-    expect(mockSetGeminiMdFilename).toHaveBeenCalledWith(contextFileName);
+    expect(mockSetOnyxMdFilename).toHaveBeenCalledWith(contextFileName);
   });
 
-  it('Config constructor should not call setGeminiMdFilename if contextFileName is not provided', () => {
+  it('Config constructor should not call setOnyxMdFilename if contextFileName is not provided', () => {
     new Config(baseParams); // baseParams does not have contextFileName
-    expect(mockSetGeminiMdFilename).not.toHaveBeenCalled();
+    expect(mockSetOnyxMdFilename).not.toHaveBeenCalled();
   });
 
   it('should set default file filtering settings when not provided', () => {
@@ -1409,7 +1409,7 @@ describe('Server Config (config.ts)', () => {
     it('should disable useWriteTodos for preview models', () => {
       const params: ConfigParameters = {
         ...baseParams,
-        model: 'gemini-3-pro-preview',
+        model: 'onyx-3-pro-preview',
       };
       const config = new Config(params);
       expect(config.getUseWriteTodos()).toBe(false);
@@ -1418,7 +1418,7 @@ describe('Server Config (config.ts)', () => {
     it('should NOT disable useWriteTodos for non-preview models', () => {
       const params: ConfigParameters = {
         ...baseParams,
-        model: 'gemini-2.5-pro',
+        model: 'onyx-2.5-pro',
       };
       const config = new Config(params);
       expect(config.getUseWriteTodos()).toBe(true);
@@ -2029,14 +2029,14 @@ describe('GemmaModelRouterSettings', () => {
   const MODEL = DEFAULT_GEMINI_MODEL;
   const SANDBOX: SandboxConfig = createMockSandboxConfig({
     command: 'docker',
-    image: 'gemini-cli-sandbox',
+    image: 'onyx-cli-sandbox',
   });
   const TARGET_DIR = '/path/to/target';
   const DEBUG_MODE = false;
   const QUESTION = 'test question';
   const USER_MEMORY = 'Test User Memory';
   const TELEMETRY_SETTINGS = { enabled: false };
-  const EMBEDDING_MODEL = 'gemini-embedding';
+  const EMBEDDING_MODEL = 'onyx-embedding';
   const SESSION_ID = 'test-session-id';
   const baseParams: ConfigParameters = {
     cwd: '/tmp',
@@ -2420,17 +2420,17 @@ describe('isYoloModeDisabled', () => {
 });
 
 describe('BaseLlmClient Lifecycle', () => {
-  const MODEL = 'gemini-pro';
+  const MODEL = 'onyx-pro';
   const SANDBOX: SandboxConfig = createMockSandboxConfig({
     command: 'docker',
-    image: 'gemini-cli-sandbox',
+    image: 'onyx-cli-sandbox',
   });
   const TARGET_DIR = '/path/to/target';
   const DEBUG_MODE = false;
   const QUESTION = 'test question';
   const USER_MEMORY = 'Test User Memory';
   const TELEMETRY_SETTINGS = { enabled: false };
-  const EMBEDDING_MODEL = 'gemini-embedding';
+  const EMBEDDING_MODEL = 'onyx-embedding';
   const SESSION_ID = 'test-session-id';
   const baseParams: ConfigParameters = {
     cwd: '/tmp',
@@ -2465,8 +2465,8 @@ describe('BaseLlmClient Lifecycle', () => {
 
   it('should successfully initialize BaseLlmClient after refreshAuth is called', async () => {
     const config = new Config(baseParams);
-    const authType = AuthType.USE_GEMINI;
-    const mockContentConfig = { model: 'gemini-flash', apiKey: 'test-key' };
+    const authType = AuthType.USE_ONYX;
+    const mockContentConfig = { model: 'onyx-flash', apiKey: 'test-key' };
 
     vi.mocked(createContentGeneratorConfig).mockResolvedValue(
       mockContentConfig,
@@ -2485,17 +2485,17 @@ describe('BaseLlmClient Lifecycle', () => {
 });
 
 describe('Generation Config Merging (HACK)', () => {
-  const MODEL = 'gemini-pro';
+  const MODEL = 'onyx-pro';
   const SANDBOX: SandboxConfig = createMockSandboxConfig({
     command: 'docker',
-    image: 'gemini-cli-sandbox',
+    image: 'onyx-cli-sandbox',
   });
   const TARGET_DIR = '/path/to/target';
   const DEBUG_MODE = false;
   const QUESTION = 'test question';
   const USER_MEMORY = 'Test User Memory';
   const TELEMETRY_SETTINGS = { enabled: false };
-  const EMBEDDING_MODEL = 'gemini-embedding';
+  const EMBEDDING_MODEL = 'onyx-embedding';
   const SESSION_ID = 'test-session-id';
   const baseParams: ConfigParameters = {
     cwd: '/tmp',
@@ -2612,7 +2612,7 @@ describe('Config getHooks', () => {
     targetDir: '/path/to/target',
     debugMode: false,
     sessionId: 'test-session-id',
-    model: 'gemini-pro',
+    model: 'onyx-pro',
     usageStatisticsEnabled: false,
   };
 
@@ -2695,7 +2695,7 @@ describe('Config getHooks', () => {
       const service = config.getModelAvailabilityService();
       const spy = vi.spyOn(service, 'reset');
 
-      const proModel = 'gemini-2.5-pro';
+      const proModel = 'onyx-2.5-pro';
       config.setModel(proModel);
 
       expect(config.getModel()).toBe(proModel);
@@ -2791,17 +2791,17 @@ describe('Config getHooks', () => {
 });
 
 describe('LocalLiteRtLmClient Lifecycle', () => {
-  const MODEL = 'gemini-pro';
+  const MODEL = 'onyx-pro';
   const SANDBOX: SandboxConfig = createMockSandboxConfig({
     command: 'docker',
-    image: 'gemini-cli-sandbox',
+    image: 'onyx-cli-sandbox',
   });
   const TARGET_DIR = '/path/to/target';
   const DEBUG_MODE = false;
   const QUESTION = 'test question';
   const USER_MEMORY = 'Test User Memory';
   const TELEMETRY_SETTINGS = { enabled: false };
-  const EMBEDDING_MODEL = 'gemini-embedding';
+  const EMBEDDING_MODEL = 'onyx-embedding';
   const SESSION_ID = 'test-session-id';
   const baseParams: ConfigParameters = {
     cwd: '/tmp',
@@ -2861,7 +2861,7 @@ describe('Config getExperiments', () => {
     targetDir: '/path/to/target',
     debugMode: false,
     sessionId: 'test-session-id',
-    model: 'gemini-pro',
+    model: 'onyx-pro',
     usageStatisticsEnabled: false,
   };
 
@@ -2906,7 +2906,7 @@ describe('Config setExperiments logging', () => {
     targetDir: '/path/to/target',
     debugMode: false,
     sessionId: 'test-session-id',
-    model: 'gemini-pro',
+    model: 'onyx-pro',
     usageStatisticsEnabled: false,
   };
 
@@ -3106,15 +3106,15 @@ describe('Config Quota & Preview Model Access', () => {
     targetDir: '/tmp',
     debugMode: false,
     sessionId: 'test-session',
-    model: 'gemini-pro',
+    model: 'onyx-pro',
     usageStatisticsEnabled: false,
-    embeddingModel: 'gemini-embedding',
+    embeddingModel: 'onyx-embedding',
     sandbox: {
       enabled: true,
       allowedPaths: [],
       networkAccess: false,
       command: 'docker',
-      image: 'gemini-cli-sandbox',
+      image: 'onyx-cli-sandbox',
     },
   };
 
@@ -3135,7 +3135,7 @@ describe('Config Quota & Preview Model Access', () => {
       mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
         buckets: [
           {
-            modelId: 'gemini-3-pro-preview',
+            modelId: 'onyx-3-pro-preview',
             remainingAmount: '100',
             remainingFraction: 1.0,
           },
@@ -3146,11 +3146,11 @@ describe('Config Quota & Preview Model Access', () => {
       expect(config.getHasAccessToPreviewModel()).toBe(true);
     });
 
-    it('should update hasAccessToPreviewModel to true if quota includes Gemini 3.1 preview model', async () => {
+    it('should update hasAccessToPreviewModel to true if quota includes Onyx 3.1 preview model', async () => {
       mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
         buckets: [
           {
-            modelId: 'gemini-3.1-pro-preview',
+            modelId: 'onyx-3.1-pro-preview',
             remainingAmount: '100',
             remainingFraction: 1.0,
           },
@@ -3180,19 +3180,19 @@ describe('Config Quota & Preview Model Access', () => {
       mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
         buckets: [
           {
-            modelId: 'gemini-2.5-pro',
+            modelId: 'onyx-2.5-pro',
             remainingAmount: '10',
             remainingFraction: 0.2,
           },
           {
-            modelId: 'gemini-2.5-flash',
+            modelId: 'onyx-2.5-flash',
             remainingAmount: '80',
             remainingFraction: 0.8,
           },
         ],
       });
 
-      config.setModel('auto-gemini-2.5');
+      config.setModel('auto-onyx-2.5');
       await config.refreshUserQuota();
 
       const pooled = (
@@ -3216,14 +3216,14 @@ describe('Config Quota & Preview Model Access', () => {
       mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
         buckets: [
           {
-            modelId: 'gemini-2.5-pro',
+            modelId: 'onyx-2.5-pro',
             remainingAmount: '10',
             remainingFraction: 0.2,
           },
         ],
       });
 
-      config.setModel('gemini-2.5-pro');
+      config.setModel('onyx-2.5-pro');
       await config.refreshUserQuota();
 
       expect(
@@ -3267,13 +3267,13 @@ describe('Config Quota & Preview Model Access', () => {
       mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
         buckets: [
           {
-            modelId: 'gemini-3-flash-preview',
+            modelId: 'onyx-3-flash-preview',
             remainingFraction: 0.96,
           },
         ],
       });
 
-      config.setModel('gemini-3-flash-preview');
+      config.setModel('onyx-3-flash-preview');
       mockCoreEvents.emitQuotaChanged.mockClear();
       await config.refreshUserQuota();
 
@@ -3291,13 +3291,13 @@ describe('Config Quota & Preview Model Access', () => {
       mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
         buckets: [
           {
-            modelId: 'gemini-3-pro-preview',
+            modelId: 'onyx-3-pro-preview',
             remainingFraction: 0,
           },
         ],
       });
 
-      config.setModel('gemini-3-pro-preview');
+      config.setModel('onyx-3-pro-preview');
       mockCoreEvents.emitQuotaChanged.mockClear();
       await config.refreshUserQuota();
 
@@ -3311,24 +3311,24 @@ describe('Config Quota & Preview Model Access', () => {
       mockCodeAssistServer.retrieveUserQuota.mockResolvedValue({
         buckets: [
           {
-            modelId: 'gemini-2.5-pro',
+            modelId: 'onyx-2.5-pro',
             remainingAmount: '10',
             remainingFraction: 0.2,
           },
           {
-            modelId: 'gemini-2.5-flash',
+            modelId: 'onyx-2.5-flash',
             remainingAmount: '80',
             remainingFraction: 0.8,
           },
         ],
       });
 
-      config.setModel('auto-gemini-2.5');
+      config.setModel('auto-onyx-2.5');
       await config.refreshUserQuota();
       mockCoreEvents.emitQuotaChanged.mockClear();
 
       // Switch to a specific model — should re-emit quota for that model
-      config.setModel('gemini-2.5-pro');
+      config.setModel('onyx-2.5-pro');
       expect(mockCoreEvents.emitQuotaChanged).toHaveBeenCalledWith(
         10,
         50,
@@ -3417,7 +3417,7 @@ describe('Config Quota & Preview Model Access', () => {
       const mockTierName = 'Standard Tier';
 
       vi.mocked(createContentGeneratorConfig).mockResolvedValue({
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
       } as ContentGeneratorConfig);
 
       vi.mocked(createContentGenerator).mockResolvedValue({
@@ -3425,7 +3425,7 @@ describe('Config Quota & Preview Model Access', () => {
         userTierName: mockTierName,
       } as Partial<CodeAssistServer> as CodeAssistServer);
 
-      await config.refreshAuth(AuthType.USE_GEMINI);
+      await config.refreshAuth(AuthType.USE_ONYX);
 
       expect(config.getUserTier()).toBe(mockTier);
       expect(config.getUserTierName()).toBe(mockTierName);
@@ -3548,8 +3548,8 @@ describe('Config JIT Initialization', () => {
     expect(sessionMemoryWithoutExtension).toContain('</loaded_context>');
 
     // Verify state update (delegated to MemoryContextManager)
-    expect(config.getGeminiMdFileCount()).toBe(1);
-    expect(config.getGeminiMdFilePaths()).toEqual(['/path/to/onyx.md']);
+    expect(config.getOnyxMdFileCount()).toBe(1);
+    expect(config.getOnyxMdFilePaths()).toEqual(['/path/to/onyx.md']);
   });
 
   describe('memory path access', () => {
@@ -3569,7 +3569,7 @@ describe('Config JIT Initialization', () => {
       await config.initialize();
 
       const directories = config.getWorkspaceContext().getDirectories();
-      expect(directories).not.toContain(Storage.getGlobalGeminiDir());
+      expect(directories).not.toContain(Storage.getGlobalOnyxDir());
     });
 
     it('should allow isPathAllowed to write the global ~/.onyx/onyx.md file', async () => {
@@ -3587,11 +3587,11 @@ describe('Config JIT Initialization', () => {
       config = new Config(params);
       await config.initialize();
 
-      const globalGeminiMdPath = path.join(
-        Storage.getGlobalGeminiDir(),
+      const globalOnyxMdPath = path.join(
+        Storage.getGlobalOnyxDir(),
         'onyx.md',
       );
-      expect(config.isPathAllowed(globalGeminiMdPath)).toBe(true);
+      expect(config.isPathAllowed(globalOnyxMdPath)).toBe(true);
     });
 
     it('should NOT allow isPathAllowed to write other files under ~/.onyx/ (least privilege)', async () => {
@@ -3608,7 +3608,7 @@ describe('Config JIT Initialization', () => {
       config = new Config(params);
       await config.initialize();
 
-      const globalDir = Storage.getGlobalGeminiDir();
+      const globalDir = Storage.getGlobalOnyxDir();
       expect(config.isPathAllowed(path.join(globalDir, 'settings.json'))).toBe(
         false,
       );
@@ -4172,9 +4172,9 @@ describe('Model Persistence Bug Fix (#19864)', () => {
     expect(config.getModel()).not.toBe(DEFAULT_GEMINI_MODEL_AUTO);
   });
 
-  it('should NOT reset preview model for USE_GEMINI (hasAccessToPreviewModel is set to true)', async () => {
+  it('should NOT reset preview model for USE_ONYX (hasAccessToPreviewModel is set to true)', async () => {
     const mockContentConfig = {
-      authType: AuthType.USE_GEMINI,
+      authType: AuthType.USE_ONYX,
     } as Partial<ContentGeneratorConfig> as ContentGeneratorConfig;
 
     const mockContentGenerator = {
@@ -4192,9 +4192,9 @@ describe('Model Persistence Bug Fix (#19864)', () => {
     expect(config.getModel()).toBe(PREVIEW_GEMINI_3_1_MODEL);
 
     // Call refreshAuth
-    await config.refreshAuth(AuthType.USE_GEMINI);
+    await config.refreshAuth(AuthType.USE_ONYX);
 
-    // For USE_GEMINI, hasAccessToPreviewModel should be set to true
+    // For USE_ONYX, hasAccessToPreviewModel should be set to true
     // So the model should NOT be reset
     expect(config.getModel()).toBe(PREVIEW_GEMINI_3_1_MODEL);
     expect(config.getHasAccessToPreviewModel()).toBe(true);

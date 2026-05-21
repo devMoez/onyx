@@ -18,8 +18,8 @@ policies.
     you).
 
     Some internal utility calls (such as prompt completion and classification)
-    use a silent fallback chain for `gemini-2.5-flash-lite` and will fall back
-    to `gemini-2.5-flash` and `gemini-2.5-pro` without prompting or changing the
+    use a silent fallback chain for `onyx-2.5-flash-lite` and will fall back
+    to `onyx-2.5-flash` and `onyx-2.5-pro` without prompting or changing the
     configured model.
 
 3.  **Model switch:** If approved, or if the policy allows for silent fallback,
@@ -34,11 +34,11 @@ Onyx CLI will use a locally-running **Gemma** model to make routing decisions
 reduce costs associated with hosted model usage while offering similar routing
 decision latency and quality.
 
-The easiest way to set this up is using the automated `gemini gemma setup`
+The easiest way to set this up is using the automated `onyx gemma setup`
 command.
 
 For more details on how to configure local model routing, see
-[`gemini gemma` — Local Model Routing Setup](../core/gemma-setup.md).
+[`onyx gemma` — Local Model Routing Setup](../core/gemma-setup.md).
 
 ### Model selection precedence
 
@@ -46,14 +46,14 @@ The model used by Onyx CLI is determined by the following order of precedence:
 
 1.  **`--model` command-line flag:** A model specified with the `--model` flag
     when launching the CLI will always be used.
-2.  **`GEMINI_MODEL` environment variable:** If the `--model` flag is not used,
-    the CLI will use the model specified in the `GEMINI_MODEL` environment
+2.  **`ONYX_MODEL` environment variable:** If the `--model` flag is not used,
+    the CLI will use the model specified in the `ONYX_MODEL` environment
     variable.
 3.  **`model.name` in `settings.json`:** If neither of the above are set, the
     model specified in the `model.name` property of your `settings.json` file
     will be used.
 4.  **Local model (experimental):** If the Gemma local model router is enabled
     in your `settings.json` file, the CLI will use the local Gemma model
-    (instead of Gemini models) to route the request to an appropriate model.
+    (instead of Onyx models) to route the request to an appropriate model.
 5.  **Default model:** If none of the above are set, the default model will be
     used. The default model is `auto`

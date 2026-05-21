@@ -33,7 +33,7 @@ vi.mock('../utils/paths.js', async (importOriginal) => {
 describe('Config Path Validation', () => {
   let config: Config;
   const targetDir = '/mock/workspace';
-  const globalGeminiDir = path.join(os.homedir(), '.onyx');
+  const globalOnyxDir = path.join(os.homedir(), '.onyx');
 
   beforeEach(() => {
     config = new Config({
@@ -55,13 +55,13 @@ describe('Config Path Validation', () => {
     // written to verify, and additionally double-asserts the least-privilege
     // guarantee that the allowlist does not leak access to other files
     // under ~/.onyx/.
-    const settingsPath = path.join(globalGeminiDir, 'settings.json');
+    const settingsPath = path.join(globalOnyxDir, 'settings.json');
 
     // Before adding, it should be denied
     expect(config.isPathAllowed(settingsPath)).toBe(false);
 
     // Add to workspace
-    config.getWorkspaceContext().addDirectory(globalGeminiDir);
+    config.getWorkspaceContext().addDirectory(globalOnyxDir);
 
     // Now it should be allowed
     expect(config.isPathAllowed(settingsPath)).toBe(true);

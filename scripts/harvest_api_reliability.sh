@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Gemini API Reliability Harvester
+# Onyx API Reliability Harvester
 # -------------------------------
 # This script gathers data about 500 API errors encountered during evaluation runs
 # (eval.yml) from GitHub Actions. It is used to analyze developer friction caused 
@@ -42,7 +42,7 @@ fi
 LIMIT=${2:-300}
 BRANCH=${3:-""}
 WORKFLOWS=("Testing: E2E (Chained)" "Evals: Nightly")
-DEST_DIR="$(mktemp -d -t gemini-reliability-XXXXXX)"
+DEST_DIR="$(mktemp -d -t onyx-reliability-XXXXXX)"
 MERGED_FILE="api-reliability-summary.jsonl"
 
 # Ensure cleanup on exit
@@ -104,7 +104,7 @@ fi
 
 echo -e "\n✅ Harvest Complete! Data merged into: ${MERGED_FILE}"
 echo "------------------------------------------------"
-echo "📊 Gemini API Reliability Summary (Since ${SINCE})"
+echo "📊 Onyx API Reliability Summary (Since ${SINCE})"
 echo "------------------------------------------------"
 
 # shellcheck disable=SC2312

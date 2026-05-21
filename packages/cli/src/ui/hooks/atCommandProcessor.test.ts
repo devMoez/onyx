@@ -26,7 +26,7 @@ import {
   StandardFileSystemService,
   ToolRegistry,
   COMMON_IGNORE_PATTERNS,
-  GEMINI_IGNORE_FILE_NAME,
+  ONYX_IGNORE_FILE_NAME,
   ApprovalMode,
   // DEFAULT_FILE_EXCLUDES,
   CoreToolCallStatus,
@@ -98,7 +98,7 @@ describe('handleAtCommand', () => {
       }),
       getMemoryContextManager: () => undefined,
       storage: {
-        getProjectTempDir: () => path.join(os.tmpdir(), 'gemini-cli-temp'),
+        getProjectTempDir: () => path.join(os.tmpdir(), 'onyx-cli-temp'),
       },
       isPathAllowed(this: Config, absolutePath: string): boolean {
         if (this.interactive && path.isAbsolute(absolutePath)) {
@@ -712,17 +712,17 @@ describe('handleAtCommand', () => {
     });
   });
 
-  describe('gemini-ignore filtering', () => {
-    it('should skip gemini-ignored files in @ commands', async () => {
+  describe('onyx-ignore filtering', () => {
+    it('should skip onyx-ignored files in @ commands', async () => {
       await createTestFile(
-        path.join(testRootDir, GEMINI_IGNORE_FILE_NAME),
+        path.join(testRootDir, ONYX_IGNORE_FILE_NAME),
         'build/output.js',
       );
-      const geminiIgnoredFile = await createTestFile(
+      const onyxIgnoredFile = await createTestFile(
         path.join(testRootDir, 'build', 'output.js'),
         'console.log("Hello");',
       );
-      const query = `@${geminiIgnoredFile}`;
+      const query = `@${onyxIgnoredFile}`;
 
       const result = await handleAtCommand({
         query,
@@ -737,16 +737,16 @@ describe('handleAtCommand', () => {
         processedQuery: [{ text: query }],
       });
       expect(mockOnDebugMessage).toHaveBeenCalledWith(
-        `Path ${geminiIgnoredFile} is gemini-ignored and will be skipped.`,
+        `Path ${onyxIgnoredFile} is onyx-ignored and will be skipped.`,
       );
       expect(mockOnDebugMessage).toHaveBeenCalledWith(
-        `Ignored 1 files:\nGemini-ignored: ${geminiIgnoredFile}`,
+        `Ignored 1 files:\nOnyx-ignored: ${onyxIgnoredFile}`,
       );
     });
   });
   it('should process non-ignored files when .onyxIgnore is present', async () => {
     await createTestFile(
-      path.join(testRootDir, GEMINI_IGNORE_FILE_NAME),
+      path.join(testRootDir, ONYX_IGNORE_FILE_NAME),
       'build/output.js',
     );
     const validFile = await createTestFile(
@@ -775,20 +775,20 @@ describe('handleAtCommand', () => {
     });
   });
 
-  it('should handle mixed gemini-ignored and valid files', async () => {
+  it('should handle mixed onyx-ignored and valid files', async () => {
     await createTestFile(
-      path.join(testRootDir, GEMINI_IGNORE_FILE_NAME),
+      path.join(testRootDir, ONYX_IGNORE_FILE_NAME),
       'dist/bundle.js',
     );
     const validFile = await createTestFile(
       path.join(testRootDir, 'src', 'main.ts'),
       '// Main application entry',
     );
-    const geminiIgnoredFile = await createTestFile(
+    const onyxIgnoredFile = await createTestFile(
       path.join(testRootDir, 'dist', 'bundle.js'),
       'console.log("bundle");',
     );
-    const query = `@${validFile} @${geminiIgnoredFile}`;
+    const query = `@${validFile} @${onyxIgnoredFile}`;
 
     const result = await handleAtCommand({
       query,
@@ -801,7 +801,7 @@ describe('handleAtCommand', () => {
 
     expect(result).toEqual({
       processedQuery: [
-        { text: `@${getRelativePath(validFile)} @${geminiIgnoredFile}` },
+        { text: `@${getRelativePath(validFile)} @${onyxIgnoredFile}` },
         { text: '\n--- Content from referenced files ---' },
         { text: `\nContent from @${getRelativePath(validFile)}:\n` },
         { text: '// Main application entry' },
@@ -809,10 +809,10 @@ describe('handleAtCommand', () => {
       ],
     });
     expect(mockOnDebugMessage).toHaveBeenCalledWith(
-      `Path ${geminiIgnoredFile} is gemini-ignored and will be skipped.`,
+      `Path ${onyxIgnoredFile} is onyx-ignored and will be skipped.`,
     );
     expect(mockOnDebugMessage).toHaveBeenCalledWith(
-      `Ignored 1 files:\nGemini-ignored: ${geminiIgnoredFile}`,
+      `Ignored 1 files:\nOnyx-ignored: ${onyxIgnoredFile}`,
     );
   });
 

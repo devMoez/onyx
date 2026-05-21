@@ -9,7 +9,7 @@ import {
   TestRig,
   PerfTestHarness,
   type PerfSnapshot,
-} from '@google/gemini-cli-test-utils';
+} from '@google/onyx-cli-test-utils';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -58,7 +58,7 @@ describe('CPU Performance Tests', () => {
           await rig.run({
             args: ['hello'],
             timeout: 120000,
-            env: { GEMINI_API_KEY: 'fake-perf-test-key' },
+            env: { ONYX_API_KEY: 'fake-perf-test-key' },
           });
         });
       } finally {
@@ -87,7 +87,7 @@ describe('CPU Performance Tests', () => {
         await rig.run({
           args: ['hello'],
           timeout: 120000,
-          env: { GEMINI_API_KEY: 'fake-perf-test-key' },
+          env: { ONYX_API_KEY: 'fake-perf-test-key' },
         });
 
         // Now measure CPU during idle period in the test process
@@ -122,7 +122,7 @@ describe('CPU Performance Tests', () => {
             await rig.run({
               args: ['嗨'],
               timeout: 120000,
-              env: { GEMINI_API_KEY: 'fake-perf-test-key' },
+              env: { ONYX_API_KEY: 'fake-perf-test-key' },
             });
           });
         } finally {
@@ -150,7 +150,7 @@ describe('CPU Performance Tests', () => {
 
         // Create many skill directories with SKILL.md files
         for (let i = 0; i < SKILL_COUNT; i++) {
-          const skillDir = `.gemini/skills/perf-skill-${i}`;
+          const skillDir = `.onyx/skills/perf-skill-${i}`;
           rig.mkdir(skillDir);
           rig.createFile(
             `${skillDir}/SKILL.md`,
@@ -177,7 +177,7 @@ describe('CPU Performance Tests', () => {
           await rig.run({
             args: ['hello'],
             timeout: 120000,
-            env: { GEMINI_API_KEY: 'fake-perf-test-key' },
+            env: { ONYX_API_KEY: 'fake-perf-test-key' },
           });
         });
       } finally {
@@ -209,10 +209,10 @@ describe('CPU Performance Tests', () => {
                 args: ['Generate 1M lines of output'],
                 timeout: 120000,
                 env: {
-                  GEMINI_API_KEY: 'fake-perf-test-key',
-                  GEMINI_TELEMETRY_ENABLED: 'true',
-                  GEMINI_MEMORY_MONITOR_INTERVAL: '500',
-                  GEMINI_EVENT_LOOP_MONITOR_ENABLED: 'true',
+                  ONYX_API_KEY: 'fake-perf-test-key',
+                  ONYX_TELEMETRY_ENABLED: 'true',
+                  ONYX_MEMORY_MONITOR_INTERVAL: '500',
+                  ONYX_EVENT_LOOP_MONITOR_ENABLED: 'true',
                   DEBUG: 'true',
                 },
               });
@@ -328,13 +328,13 @@ describe('CPU Performance Tests', () => {
         fakeResponsesPath: join(__dirname, 'perf.long-chat.responses'),
       });
 
-      const geminiDir = join(rig.homeDir!, '.gemini');
-      const projectTempDir = join(geminiDir, 'tmp', identifier);
+      const onyxDir = join(rig.homeDir!, '.onyx');
+      const projectTempDir = join(onyxDir, 'tmp', identifier);
       const targetChatsDir = join(projectTempDir, 'chats');
 
       mkdirSync(targetChatsDir, { recursive: true });
       writeFileSync(
-        join(geminiDir, 'projects.json'),
+        join(onyxDir, 'projects.json'),
         JSON.stringify({
           projects: { [rig.testDir!]: identifier },
         }),
@@ -360,10 +360,10 @@ describe('CPU Performance Tests', () => {
               const run = await rig.runInteractive({
                 args: ['--resume', 'latest'],
                 env: {
-                  GEMINI_API_KEY: 'fake-perf-test-key',
-                  GEMINI_TELEMETRY_ENABLED: 'true',
-                  GEMINI_MEMORY_MONITOR_INTERVAL: '500',
-                  GEMINI_EVENT_LOOP_MONITOR_ENABLED: 'true',
+                  ONYX_API_KEY: 'fake-perf-test-key',
+                  ONYX_TELEMETRY_ENABLED: 'true',
+                  ONYX_MEMORY_MONITOR_INTERVAL: '500',
+                  ONYX_EVENT_LOOP_MONITOR_ENABLED: 'true',
                   DEBUG: 'true',
                 },
               });
@@ -388,10 +388,10 @@ describe('CPU Performance Tests', () => {
           const run = await rig.runInteractive({
             args: ['--resume', 'latest'],
             env: {
-              GEMINI_API_KEY: 'fake-perf-test-key',
-              GEMINI_TELEMETRY_ENABLED: 'true',
-              GEMINI_MEMORY_MONITOR_INTERVAL: '500',
-              GEMINI_EVENT_LOOP_MONITOR_ENABLED: 'true',
+              ONYX_API_KEY: 'fake-perf-test-key',
+              ONYX_TELEMETRY_ENABLED: 'true',
+              ONYX_MEMORY_MONITOR_INTERVAL: '500',
+              ONYX_EVENT_LOOP_MONITOR_ENABLED: 'true',
               DEBUG: 'true',
             },
           });
@@ -425,10 +425,10 @@ describe('CPU Performance Tests', () => {
           const run = await rig.runInteractive({
             args: ['--resume', 'latest'],
             env: {
-              GEMINI_API_KEY: 'fake-perf-test-key',
-              GEMINI_TELEMETRY_ENABLED: 'true',
-              GEMINI_MEMORY_MONITOR_INTERVAL: '500',
-              GEMINI_EVENT_LOOP_MONITOR_ENABLED: 'true',
+              ONYX_API_KEY: 'fake-perf-test-key',
+              ONYX_TELEMETRY_ENABLED: 'true',
+              ONYX_MEMORY_MONITOR_INTERVAL: '500',
+              ONYX_EVENT_LOOP_MONITOR_ENABLED: 'true',
               DEBUG: 'true',
             },
           });
@@ -460,7 +460,7 @@ describe('CPU Performance Tests', () => {
         'long-conversation-terminal-scrolling',
         async () => {
           // Enable terminalBuffer to intentionally test CLI scrolling logic
-          const settingsPath = join(rig.homeDir!, '.gemini', 'settings.json');
+          const settingsPath = join(rig.homeDir!, '.onyx', 'settings.json');
           writeFileSync(
             settingsPath,
             JSON.stringify({
@@ -472,10 +472,10 @@ describe('CPU Performance Tests', () => {
           const run = await rig.runInteractive({
             args: ['--resume', 'latest'],
             env: {
-              GEMINI_API_KEY: 'fake-perf-test-key',
-              GEMINI_TELEMETRY_ENABLED: 'true',
-              GEMINI_MEMORY_MONITOR_INTERVAL: '500',
-              GEMINI_EVENT_LOOP_MONITOR_ENABLED: 'true',
+              ONYX_API_KEY: 'fake-perf-test-key',
+              ONYX_TELEMETRY_ENABLED: 'true',
+              ONYX_MEMORY_MONITOR_INTERVAL: '500',
+              ONYX_EVENT_LOOP_MONITOR_ENABLED: 'true',
               DEBUG: 'true',
             },
           });
@@ -561,7 +561,7 @@ describe('CPU Performance Tests', () => {
         'long-conversation-alternate-scrolling',
         async () => {
           // Enable useAlternateBuffer to intentionally test CLI scrolling logic
-          const settingsPath = join(rig.homeDir!, '.gemini', 'settings.json');
+          const settingsPath = join(rig.homeDir!, '.onyx', 'settings.json');
           writeFileSync(
             settingsPath,
             JSON.stringify({
@@ -573,10 +573,10 @@ describe('CPU Performance Tests', () => {
           const run = await rig.runInteractive({
             args: ['--resume', 'latest'],
             env: {
-              GEMINI_API_KEY: 'fake-perf-test-key',
-              GEMINI_TELEMETRY_ENABLED: 'true',
-              GEMINI_MEMORY_MONITOR_INTERVAL: '500',
-              GEMINI_EVENT_LOOP_MONITOR_ENABLED: 'true',
+              ONYX_API_KEY: 'fake-perf-test-key',
+              ONYX_TELEMETRY_ENABLED: 'true',
+              ONYX_MEMORY_MONITOR_INTERVAL: '500',
+              ONYX_EVENT_LOOP_MONITOR_ENABLED: 'true',
               DEBUG: 'true',
             },
           });

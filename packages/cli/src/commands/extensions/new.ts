@@ -63,13 +63,13 @@ async function handleNew(args: NewArgs) {
       version: '1.0.0',
     };
     await writeFile(
-      join(args.path, 'gemini-extension.json'),
+      join(args.path, 'onyx-extension.json'),
       JSON.stringify(manifest, null, 2),
     );
     debugLogger.log(`Successfully created new extension at ${args.path}.`);
   }
   debugLogger.log(
-    `You can install this using "gemini extensions link ${args.path}" to test it out.`,
+    `You can install this using "onyx extensions link ${args.path}" to test it out.`,
   );
 }
 

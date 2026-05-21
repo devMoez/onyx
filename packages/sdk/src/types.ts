@@ -7,11 +7,11 @@
 import type { Content } from '@onyx/core';
 import type { Tool } from './tool.js';
 import type { SkillReference } from './skills.js';
-import type { GeminiCliAgent } from './agent.js';
-import type { GeminiCliSession } from './session.js';
+import type { OnyxCliAgent } from './agent.js';
+import type { OnyxCliSession } from './session.js';
 
 /**
- * System instructions for a Gemini CLI agent.
+ * System instructions for a Onyx CLI agent.
  *
  * Can be either a static string or a function that receives the current
  * session context and returns a string (or a promise of one), allowing
@@ -26,9 +26,9 @@ export type SystemInstructions =
   | ((context: SessionContext) => string | Promise<string>);
 
 /**
- * Configuration options for creating a {@link GeminiCliAgent}.
+ * Configuration options for creating a {@link OnyxCliAgent}.
  */
-export interface GeminiCliAgentOptions {
+export interface OnyxCliAgentOptions {
   /**
    * System instructions that define the agent's behavior.
    * Can be a static string or a dynamic function that receives session context.
@@ -51,7 +51,7 @@ export interface GeminiCliAgentOptions {
   skills?: SkillReference[];
 
   /**
-   * The Gemini model to use for this agent.
+   * The Onyx model to use for this agent.
    * Defaults to the auto-selected model if not specified.
    */
   model?: string;
@@ -232,10 +232,10 @@ export interface SessionContext {
   /**
    * The parent agent that owns this session.
    */
-  agent: GeminiCliAgent;
+  agent: OnyxCliAgent;
 
   /**
    * The current session instance.
    */
-  session: GeminiCliSession;
+  session: OnyxCliSession;
 }

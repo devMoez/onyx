@@ -83,7 +83,7 @@ describe('App', () => {
     },
     history: [],
     pendingHistoryItems: [],
-    pendingGeminiHistoryItems: [],
+    pendingOnyxHistoryItems: [],
     bannerData: {
       defaultText: 'Mock Banner Text',
       warningText: '',
@@ -232,7 +232,7 @@ describe('App', () => {
           tools: toolCalls,
         },
       ],
-      pendingGeminiHistoryItems: [
+      pendingOnyxHistoryItems: [
         {
           type: 'tool_group',
           tools: toolCalls,

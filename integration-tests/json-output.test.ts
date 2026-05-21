@@ -61,7 +61,7 @@ describe('JSON output', () => {
     await rig.setup('json-output-auth-mismatch', {
       settings: {
         security: {
-          auth: { enforcedType: 'gemini-api-key', selectedType: '' },
+          auth: { enforcedType: 'onyx-api-key', selectedType: '' },
         },
       },
     });
@@ -106,7 +106,7 @@ describe('JSON output', () => {
     expect(payload.error.type).toBe('Error');
     expect(payload.error.code).toBe(ExitCodes.FATAL_AUTHENTICATION_ERROR);
     expect(payload.error.message).toContain(
-      "enforced authentication type is 'gemini-api-key'",
+      "enforced authentication type is 'onyx-api-key'",
     );
     expect(payload.error.message).toContain("current type is 'oauth-personal'");
     expect(payload).toHaveProperty('session_id');
@@ -162,3 +162,4 @@ describe('JSON output', () => {
     expect(parsed.session_id).not.toBe('');
   });
 });
+

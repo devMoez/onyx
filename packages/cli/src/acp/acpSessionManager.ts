@@ -70,9 +70,9 @@ export class AcpSessionManager {
 
     const authType =
       loadedSettings.merged.security.auth.selectedType ||
-      (authDetails.baseUrl || process.env['GOOGLE_GEMINI_BASE_URL']
+      (authDetails.baseUrl || process.env['GOOGLE_ONYX_BASE_URL']
         ? AuthType.GATEWAY
-        : AuthType.USE_GEMINI);
+        : AuthType.USE_ONYX);
 
     let isAuthenticated = false;
     let authErrorMessage = '';
@@ -85,14 +85,14 @@ export class AcpSessionManager {
       );
       isAuthenticated = true;
 
-      // Extra validation for Gemini API key
+      // Extra validation for Onyx API key
       const contentGeneratorConfig = config.getContentGeneratorConfig();
       if (
-        authType === AuthType.USE_GEMINI &&
+        authType === AuthType.USE_ONYX &&
         (!contentGeneratorConfig || !contentGeneratorConfig.apiKey)
       ) {
         isAuthenticated = false;
-        authErrorMessage = 'Gemini API key is missing or not configured.';
+        authErrorMessage = 'Onyx API key is missing or not configured.';
       }
     } catch (e) {
       isAuthenticated = false;
@@ -124,9 +124,9 @@ export class AcpSessionManager {
     startupProfiler.flush(config);
     startAutoMemoryIfEnabled(config);
 
-    const geminiClient = config.getGeminiClient();
+    const onyxClient = config.getOnyxClient();
 
-    const chat = await geminiClient.startChat();
+    const chat = await onyxClient.startChat();
 
     const session = new Session(
       sessionId,
@@ -179,16 +179,16 @@ export class AcpSessionManager {
 
     const clientHistory = convertSessionToClientHistory(sessionData.messages);
 
-    const geminiClient = config.getGeminiClient();
-    await geminiClient.initialize();
-    await geminiClient.resumeChat(clientHistory, {
+    const onyxClient = config.getOnyxClient();
+    await onyxClient.initialize();
+    await onyxClient.resumeChat(clientHistory, {
       conversation: sessionData,
       filePath: sessionPath,
     });
 
     const session = new Session(
       sessionId,
-      geminiClient.getChat(),
+      onyxClient.getChat(),
       config,
       this.connection,
       this.settings,
@@ -236,7 +236,7 @@ export class AcpSessionManager {
   ): Promise<Config> {
     const selectedAuthType =
       this.settings.merged.security.auth.selectedType ||
-      (authDetails.baseUrl || process.env['GOOGLE_GEMINI_BASE_URL']
+      (authDetails.baseUrl || process.env['GOOGLE_ONYX_BASE_URL']
         ? AuthType.GATEWAY
         : undefined);
 

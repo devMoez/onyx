@@ -278,14 +278,14 @@ vi.mock('./config/auth.js', () => ({
   validateAuthMethod: vi.fn().mockResolvedValue(null),
 }));
 
-describe('gemini.tsx main function', () => {
+describe('onyx.tsx main function', () => {
   let originalIsTTY: boolean | undefined;
   let initialUnhandledRejectionListeners: NodeJS.UnhandledRejectionListener[] =
     [];
 
   beforeEach(() => {
     // Store and clear sandbox-related env variables to ensure a consistent test environment
-    vi.stubEnv('GEMINI_SANDBOX', '');
+    vi.stubEnv('ONYX_SANDBOX', '');
     vi.stubEnv('SANDBOX', '');
     vi.stubEnv('SHPOOL_SESSION_NAME', '');
     vi.stubEnv('ONYX_CLI_TRUST_WORKSPACE', 'true');
@@ -413,7 +413,7 @@ describe('getNodeMemoryArgs', () => {
   beforeEach(() => {
     osTotalMemSpy = vi.spyOn(os, 'totalmem');
     v8GetHeapStatisticsSpy = vi.spyOn(v8, 'getHeapStatistics');
-    delete process.env['GEMINI_CLI_NO_RELAUNCH'];
+    delete process.env['ONYX_CLI_NO_RELAUNCH'];
 
     originalConfig = process.config;
     Object.defineProperty(process, 'config', {
@@ -433,8 +433,8 @@ describe('getNodeMemoryArgs', () => {
     });
   });
 
-  it('should return empty array if GEMINI_CLI_NO_RELAUNCH is set', () => {
-    process.env['GEMINI_CLI_NO_RELAUNCH'] = 'true';
+  it('should return empty array if ONYX_CLI_NO_RELAUNCH is set', () => {
+    process.env['ONYX_CLI_NO_RELAUNCH'] = 'true';
     expect(getNodeMemoryArgs(false)).toEqual([]);
   });
 
@@ -477,7 +477,7 @@ describe('getNodeMemoryArgs', () => {
   });
 });
 
-describe('gemini.tsx main function kitty protocol', () => {
+describe('onyx.tsx main function kitty protocol', () => {
   let originalEnvNoRelaunch: string | undefined;
   let originalIsTTY: boolean | undefined;
   let originalIsRaw: boolean | undefined;
@@ -487,8 +487,8 @@ describe('gemini.tsx main function kitty protocol', () => {
 
   beforeEach(() => {
     // Set no relaunch in tests since process spawning causing issues in tests
-    originalEnvNoRelaunch = process.env['GEMINI_CLI_NO_RELAUNCH'];
-    process.env['GEMINI_CLI_NO_RELAUNCH'] = 'true';
+    originalEnvNoRelaunch = process.env['ONYX_CLI_NO_RELAUNCH'];
+    process.env['ONYX_CLI_NO_RELAUNCH'] = 'true';
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!(process.stdin as any).setRawMode) {
@@ -508,9 +508,9 @@ describe('gemini.tsx main function kitty protocol', () => {
   afterEach(() => {
     // Restore original env variables
     if (originalEnvNoRelaunch !== undefined) {
-      process.env['GEMINI_CLI_NO_RELAUNCH'] = originalEnvNoRelaunch;
+      process.env['ONYX_CLI_NO_RELAUNCH'] = originalEnvNoRelaunch;
     } else {
-      delete process.env['GEMINI_CLI_NO_RELAUNCH'];
+      delete process.env['ONYX_CLI_NO_RELAUNCH'];
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (process.stdin as any).isTTY = originalIsTTY;
@@ -697,13 +697,13 @@ describe('gemini.tsx main function kitty protocol', () => {
       .spyOn(debugLogger, 'log')
       .mockImplementation(() => {});
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['ONYX_API_KEY'] = 'test-key';
     try {
       await main();
     } catch (e) {
       if (!(e instanceof MockProcessExitError)) throw e;
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['ONYX_API_KEY'];
     }
 
     if (flag === 'listExtensions') {
@@ -762,13 +762,13 @@ describe('gemini.tsx main function kitty protocol', () => {
       }),
     );
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['ONYX_API_KEY'] = 'test-key';
     try {
       await main();
     } catch (e) {
       if (!(e instanceof MockProcessExitError)) throw e;
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['ONYX_API_KEY'];
     }
 
     expect(start_sandbox).toHaveBeenCalled();
@@ -816,13 +816,13 @@ describe('gemini.tsx main function kitty protocol', () => {
 
     vi.spyOn(themeManager, 'setActiveTheme').mockReturnValue(false);
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['ONYX_API_KEY'] = 'test-key';
     try {
       await main();
     } catch (e) {
       if (!(e instanceof MockProcessExitError)) throw e;
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['ONYX_API_KEY'];
     }
 
     expect(debugLoggerWarnSpy).toHaveBeenCalledWith(
@@ -1037,13 +1037,13 @@ describe('gemini.tsx main function kitty protocol', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (process.stdin as any).isTTY = false;
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['ONYX_API_KEY'] = 'test-key';
     try {
       await main();
     } catch (e) {
       if (!(e instanceof MockProcessExitError)) throw e;
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['ONYX_API_KEY'];
     }
 
     expect(readStdinSpy).toHaveBeenCalled();
@@ -1089,7 +1089,7 @@ describe('resolveSessionId', () => {
       messages: [
         { type: 'info', content: 'Old info', id: '1' },
         { type: 'user', content: 'Hello', id: '2' },
-        { type: 'gemini', content: 'Hi', id: '3' },
+        { type: 'onyx', content: 'Hi', id: '3' },
         { type: 'error', content: 'Old error', id: '4' },
         { type: 'user', id: '5' }, // Missing content
         null, // Null object
@@ -1128,7 +1128,7 @@ describe('resolveSessionId', () => {
         content: 'Hello',
       });
       expect(resumedSessionData?.conversation.messages![2]).toMatchObject({
-        type: 'gemini',
+        type: 'onyx',
         content: 'Hi',
       });
 
@@ -1227,13 +1227,13 @@ describe('resolveSessionId', () => {
   });
 });
 
-describe('gemini.tsx main function exit codes', () => {
+describe('onyx.tsx main function exit codes', () => {
   let originalEnvNoRelaunch: string | undefined;
   let originalIsTTY: boolean | undefined;
 
   beforeEach(() => {
-    originalEnvNoRelaunch = process.env['GEMINI_CLI_NO_RELAUNCH'];
-    process.env['GEMINI_CLI_NO_RELAUNCH'] = 'true';
+    originalEnvNoRelaunch = process.env['ONYX_CLI_NO_RELAUNCH'];
+    process.env['ONYX_CLI_NO_RELAUNCH'] = 'true';
     vi.spyOn(process, 'exit').mockImplementation((code) => {
       throw new MockProcessExitError(code);
     });
@@ -1245,9 +1245,9 @@ describe('gemini.tsx main function exit codes', () => {
 
   afterEach(() => {
     if (originalEnvNoRelaunch !== undefined) {
-      process.env['GEMINI_CLI_NO_RELAUNCH'] = originalEnvNoRelaunch;
+      process.env['ONYX_CLI_NO_RELAUNCH'] = originalEnvNoRelaunch;
     } else {
-      delete process.env['GEMINI_CLI_NO_RELAUNCH'];
+      delete process.env['ONYX_CLI_NO_RELAUNCH'];
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (process.stdin as any).isTTY = originalIsTTY;
@@ -1383,7 +1383,7 @@ describe('gemini.tsx main function exit codes', () => {
       };
     });
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['ONYX_API_KEY'] = 'test-key';
     try {
       await main();
       expect.fail('Should have thrown MockProcessExitError');
@@ -1391,7 +1391,7 @@ describe('gemini.tsx main function exit codes', () => {
       expect(e).toBeInstanceOf(MockProcessExitError);
       expect((e as MockProcessExitError).code).toBe(42);
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['ONYX_API_KEY'];
     }
   });
 
@@ -1416,7 +1416,7 @@ describe('gemini.tsx main function exit codes', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (process.stdin as any).isTTY = true;
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['ONYX_API_KEY'] = 'test-key';
     try {
       await main();
       expect.fail('Should have thrown MockProcessExitError');
@@ -1424,7 +1424,7 @@ describe('gemini.tsx main function exit codes', () => {
       expect(e).toBeInstanceOf(MockProcessExitError);
       expect((e as MockProcessExitError).code).toBe(42);
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['ONYX_API_KEY'];
     }
   });
 
@@ -1439,7 +1439,7 @@ describe('gemini.tsx main function exit codes', () => {
       }),
     );
     vi.mocked(validateNonInteractiveAuth).mockResolvedValue(
-      AuthType.USE_GEMINI,
+      AuthType.USE_ONYX,
     );
 
     vi.mocked(loadSettings).mockReturnValue(
@@ -1461,17 +1461,17 @@ describe('gemini.tsx main function exit codes', () => {
         throw new MockProcessExitError(code);
       });
 
-    process.env['GEMINI_API_KEY'] = 'test-key';
+    process.env['ONYX_API_KEY'] = 'test-key';
     try {
       await main();
     } catch (e) {
       if (!(e instanceof MockProcessExitError)) throw e;
     } finally {
-      delete process.env['GEMINI_API_KEY'];
+      delete process.env['ONYX_API_KEY'];
       processExitSpy.mockRestore();
     }
 
-    expect(refreshAuthSpy).toHaveBeenCalledWith(AuthType.USE_GEMINI);
+    expect(refreshAuthSpy).toHaveBeenCalledWith(AuthType.USE_ONYX);
   });
 });
 
@@ -1634,7 +1634,7 @@ describe('startInteractiveUI', () => {
     accountSuspensionInfo: null,
     themeError: null,
     shouldOpenAuthDialog: false,
-    geminiMdFileCount: 0,
+    onyxMdFileCount: 0,
   };
 
   vi.mock('./ui/utils/updateCheck.js', () => ({

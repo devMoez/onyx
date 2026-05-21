@@ -32,7 +32,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
         '/mock/home/user/.onyx/settings.json';
       override getWorkspaceSettingsPath = () =>
         '/mock/workspace/.onyx/settings.json';
-      static override getGlobalGeminiDir = () => '/mock/home/user/.onyx';
+      static override getGlobalOnyxDir = () => '/mock/home/user/.onyx';
     },
   };
 });

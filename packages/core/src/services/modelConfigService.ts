@@ -61,11 +61,11 @@ export interface ModelConfigAlias {
 
 // A model definition is a mapping from a model name to a list of features
 // that the model supports. Model names can be either direct model IDs
-// (gemini-2.5-pro) or aliases (auto).
+// (onyx-2.5-pro) or aliases (auto).
 export interface ModelDefinition {
   displayName?: string;
   tier?: string; // 'pro' | 'flash' | 'flash-lite' | 'custom' | 'auto'
-  family?: string; // The gemini family, e.g. 'gemini-3' | 'gemini-2'
+  family?: string; // The onyx family, e.g. 'onyx-3' | 'onyx-2'
   isPreview?: boolean;
   // Specifies whether the model should be visible in the dialog.
   isVisible?: boolean;
@@ -75,7 +75,7 @@ export interface ModelDefinition {
     // Whether the model supports thinking.
     thinking?: boolean;
     // Whether the model supports mutlimodal function responses. This is
-    // supported in Gemini 3.
+    // supported in Onyx 3.
     multimodalToolUse?: boolean;
   };
 }
@@ -96,8 +96,8 @@ export interface ModelResolution {
 
 /** The actual state of the current session. */
 export interface ResolutionContext {
-  useGemini3_1?: boolean;
-  useGemini3_1FlashLite?: boolean;
+  useOnyx3_1?: boolean;
+  useOnyx3_1FlashLite?: boolean;
   useCustomTools?: boolean;
   hasAccessToPreview?: boolean;
   hasAccessToProModel?: boolean;
@@ -106,8 +106,8 @@ export interface ResolutionContext {
 
 /** The requirements defined in the registry. */
 export interface ResolutionCondition {
-  useGemini3_1?: boolean;
-  useGemini3_1FlashLite?: boolean;
+  useOnyx3_1?: boolean;
+  useOnyx3_1FlashLite?: boolean;
   useCustomTools?: boolean;
   hasAccessToPreview?: boolean;
   /** Matches if the current model is in this list. */
@@ -155,8 +155,8 @@ export class ModelConfigService {
   }> {
     const definitions = this.config.modelDefinitions ?? {};
     const shouldShowPreviewModels = context.hasAccessToPreview ?? false;
-    const useGemini31 = context.useGemini3_1 ?? false;
-    const useGemini31FlashLite = context.useGemini3_1FlashLite ?? false;
+    const useOnyx31 = context.useOnyx3_1 ?? false;
+    const useOnyx31FlashLite = context.useOnyx3_1FlashLite ?? false;
 
     const mainOptions = Object.entries(definitions)
       .filter(([_, m]) => {
@@ -170,10 +170,10 @@ export class ModelConfigService {
         if (id === 'auto') {
           description = getAutoModelDescription(
             shouldShowPreviewModels,
-            useGemini31,
+            useOnyx31,
           );
-        } else if (id === 'auto-gemini-3' && useGemini31) {
-          description = description.replace('gemini-3-pro', 'gemini-3.1-pro');
+        } else if (id === 'auto-onyx-3' && useOnyx31) {
+          description = description.replace('onyx-3-pro', 'onyx-3.1-pro');
         }
 
         return {
@@ -191,16 +191,16 @@ export class ModelConfigService {
         if (m.tier === 'auto') return false;
         if (context.hasAccessToProModel === false && isProModel(id))
           return false;
-        if (id === PREVIEW_GEMINI_3_1_MODEL && !useGemini31) return false;
-        if (id === PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL && !useGemini31FlashLite)
+        if (id === PREVIEW_GEMINI_3_1_MODEL && !useOnyx31) return false;
+        if (id === PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL && !useOnyx31FlashLite)
           return false;
         return true;
       })
       .map(([id, m]) => {
         const resolvedId = this.resolveModelId(id, context);
         const titleId = this.resolveModelId(id, {
-          useGemini3_1: useGemini31,
-          useGemini3_1FlashLite: useGemini31FlashLite,
+          useOnyx3_1: useOnyx31,
+          useOnyx3_1FlashLite: useOnyx31FlashLite,
         });
         return {
           modelId: resolvedId,
@@ -228,7 +228,7 @@ export class ModelConfigService {
     }
 
     // For unknown models, return an implicit custom definition to match legacy behavior.
-    if (!modelId.startsWith('gemini-')) {
+    if (!modelId.startsWith('onyx-')) {
       return {
         tier: 'custom',
         family: 'custom',
@@ -251,10 +251,10 @@ export class ModelConfigService {
       if (value === undefined) return true;
 
       switch (key) {
-        case 'useGemini3_1':
-          return value === context.useGemini3_1;
-        case 'useGemini3_1FlashLite':
-          return value === context.useGemini3_1FlashLite;
+        case 'useOnyx3_1':
+          return value === context.useOnyx3_1;
+        case 'useOnyx3_1FlashLite':
+          return value === context.useOnyx3_1FlashLite;
         case 'useCustomTools':
           return value === context.useCustomTools;
         case 'hasAccessToPreview':

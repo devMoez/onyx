@@ -5,7 +5,7 @@
 This document defines the contract for building a companion plugin to enable
 Onyx CLI's IDE mode. For VS Code, these features (native diffing, context
 awareness) are provided by the official extension
-([marketplace](https://marketplace.visualstudio.com/items?itemName=Google.gemini-cli-vscode-ide-companion)).
+([marketplace](https://marketplace.visualstudio.com/items?itemName=Google.onyx-cli-vscode-ide-companion)).
 This specification is for contributors who wish to bring similar functionality
 to other editors like JetBrains IDEs, Sublime Text, etc.
 
@@ -35,10 +35,10 @@ creating a "discovery file."
   IDE it's running in by traversing the process tree. It then looks for a
   discovery file that contains this PID in its name.
 - **File location:** The file must be created in a specific directory:
-  `os.tmpdir()/gemini/ide/`. Your plugin must create this directory if it
+  `os.tmpdir()/onyx/ide/`. Your plugin must create this directory if it
   doesn't exist.
 - **File naming convention:** The filename is critical and **MUST** follow the
-  pattern: `gemini-ide-server-${PID}-${PORT}.json`
+  pattern: `onyx-ide-server-${PID}-${PORT}.json`
   - `${PID}`: The process ID of the parent IDE process. Your plugin must
     determine this PID and include it in the filename.
   - `${PORT}`: The port your MCP server is listening on.
@@ -81,11 +81,11 @@ creating a "discovery file."
   unauthorized.
 - **Tie-breaking with environment variables (recommended):** For the most
   reliable experience, your plugin **SHOULD** both create the discovery file and
-  set the `GEMINI_CLI_IDE_SERVER_PORT` environment variable in the integrated
+  set the `ONYX_CLI_IDE_SERVER_PORT` environment variable in the integrated
   terminal. The file serves as the primary discovery mechanism, but the
   environment variable is crucial for tie-breaking. If a user has multiple IDE
   windows open for the same workspace, the CLI uses the
-  `GEMINI_CLI_IDE_SERVER_PORT` variable to identify and connect to the correct
+  `ONYX_CLI_IDE_SERVER_PORT` variable to identify and connect to the correct
   window's server.
 
 ## II. The context interface

@@ -31,7 +31,7 @@ export interface RegistryExtension {
 
 export class ExtensionRegistryClient {
   static readonly DEFAULT_REGISTRY_URL =
-    'https://geminicli.com/extensions.json';
+    'https://onyxcli.com/extensions.json';
   private static readonly FETCH_TIMEOUT_MS = 10000; // 10 seconds
 
   private static fetchPromise: Promise<RegistryExtension[]> | null = null;

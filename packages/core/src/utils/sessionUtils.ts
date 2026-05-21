@@ -26,7 +26,7 @@ function ensurePartArray(content: PartListUnion): Part[] {
 }
 
 /**
- * Converts session/conversation data into Gemini client history formats.
+ * Converts session/conversation data into Onyx client history formats.
  */
 export function convertSessionToClientHistory(
   messages: ConversationRecord['messages'],
@@ -54,7 +54,7 @@ export function convertSessionToClientHistory(
           parts: ensurePartArray(msg.content),
         },
       });
-    } else if (msg.type === 'gemini') {
+    } else if (msg.type === 'onyx') {
       const modelParts: Part[] = [];
 
       // Add thoughts if present

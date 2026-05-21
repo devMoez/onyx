@@ -14,7 +14,7 @@ import type { Config } from '../config/config.js';
 
 // Mock the memoryTool module
 vi.mock('../tools/memoryTool.js', () => ({
-  getCurrentGeminiMdFilename: vi.fn(() => 'onyx.md'),
+  getCurrentOnyxMdFilename: vi.fn(() => 'onyx.md'),
 }));
 
 describe('FileExclusions', () => {

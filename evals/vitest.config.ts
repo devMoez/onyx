@@ -24,7 +24,7 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     alias: {
-      '@google/gemini-cli-core': path.resolve(
+      '@google/onyx-cli-core': path.resolve(
         __dirname,
         '../packages/core/index.ts',
       ),
@@ -32,8 +32,9 @@ export default defineConfig({
     setupFiles: [path.resolve(__dirname, '../packages/cli/test-setup.ts')],
     server: {
       deps: {
-        inline: [/@google\/gemini-cli-core/],
+        inline: [/@google\/onyx-cli-core/],
       },
     },
   },
 });
+

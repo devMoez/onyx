@@ -55,7 +55,7 @@ describe('ExtensionManager skills validation', () => {
     vi.spyOn(coreEvents, 'emitFeedback');
     vi.spyOn(debugLogger, 'debug').mockImplementation(() => {});
 
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-test-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'onyx-test-'));
     mockHomedir.mockReturnValue(tempDir);
 
     // Create the extensions directory that ExtensionManager expects

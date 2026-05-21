@@ -77,7 +77,7 @@ describe('generalist_delegation', () => {
       'src/e.ts': 'export const e = 5;',
     },
     prompt:
-      'Please update all files in the src directory. For each file, add a comment at the top that says "Processed by Gemini".',
+      'Please update all files in the src directory. For each file, add a comment at the top that says "Processed by Onyx".',
     setup: async (rig) => {
       rig.setBreakpoint(['generalist']);
     },
@@ -167,3 +167,4 @@ describe('generalist_delegation', () => {
     },
   });
 });
+

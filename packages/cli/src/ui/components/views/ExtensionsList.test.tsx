@@ -148,7 +148,7 @@ describe('<ExtensionsList />', () => {
         },
         {
           name: 'model',
-          value: 'gemini-pro',
+          value: 'onyx-pro',
           envVar: 'MODEL',
           sensitive: false,
           scope: 'workspace' as const,
@@ -163,7 +163,7 @@ describe('<ExtensionsList />', () => {
     expect(output).toContain('settings:');
     expect(output).toContain('- sensitiveApiKey: ***');
     expect(output).toContain('- maxTokens: 1000 (User - /path/to/.env)');
-    expect(output).toContain('- model: gemini-pro (Workspace - Keychain)');
+    expect(output).toContain('- model: onyx-pro (Workspace - Keychain)');
     unmount();
   });
 });

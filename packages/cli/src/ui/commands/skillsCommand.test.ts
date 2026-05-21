@@ -499,7 +499,7 @@ describe('skillsCommand', () => {
       expect(context.ui.addItem).toHaveBeenCalledWith(
         expect.objectContaining({
           type: MessageType.ERROR,
-          text: 'Agent skills is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-gemini-cli',
+          text: 'Agent skills is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-onyx-cli',
         }),
         expect.any(Number),
       );
@@ -518,7 +518,7 @@ describe('skillsCommand', () => {
       expect(context.ui.addItem).toHaveBeenCalledWith(
         expect.objectContaining({
           type: MessageType.ERROR,
-          text: 'Agent skills is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-gemini-cli',
+          text: 'Agent skills is disabled by your administrator. To enable it, please request an update to the settings at: https://goo.gle/manage-onyx-cli',
         }),
         expect.any(Number),
       );

@@ -36,7 +36,7 @@ import {
   ROOT_SCHEDULER_ID,
   LegacyAgentSession,
   ToolErrorType,
-  geminiPartsToContentParts,
+  onyxPartsToContentParts,
   displayContentToString,
   debugLogger,
 } from '@onyx/core';
@@ -83,7 +83,7 @@ export async function runNonInteractive({
       },
     });
 
-    if (process.env['GEMINI_CLI_ACTIVITY_LOG_TARGET']) {
+    if (process.env['ONYX_CLI_ACTIVITY_LOG_TARGET']) {
       const { setupInitialActivityLogger } = await import(
         './utils/devtoolsService.js'
       );
@@ -223,7 +223,7 @@ export async function runNonInteractive({
         }
       });
 
-      const geminiClient = config.getGeminiClient();
+      const onyxClient = config.getOnyxClient();
       scheduler = new Scheduler({
         context: config,
         messageBus: config.getMessageBus(),
@@ -233,7 +233,7 @@ export async function runNonInteractive({
 
       // Initialize chat.  Resume if resume data is passed.
       if (resumedSessionData) {
-        await geminiClient.resumeChat(
+        await onyxClient.resumeChat(
           convertSessionToClientHistory(
             resumedSessionData.conversation.messages,
           ),
@@ -297,7 +297,7 @@ export async function runNonInteractive({
 
       // Create LegacyAgentSession — owns the agentic loop
       const session = new LegacyAgentSession({
-        client: geminiClient,
+        client: onyxClient,
         scheduler,
         config,
         promptId: prompt_id,
@@ -315,7 +315,7 @@ export async function runNonInteractive({
       // Start the agentic loop (runs in background)
       const { streamId } = await session.send({
         message: {
-          content: geminiPartsToContentParts(query),
+          content: onyxPartsToContentParts(query),
           displayContent: input,
         },
       });

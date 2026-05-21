@@ -7,8 +7,8 @@
 import {
   type AgentLoopContext,
   Scheduler,
-  type GeminiClient,
-  GeminiEventType,
+  type OnyxClient,
+  OnyxEventType,
   ToolConfirmationOutcome,
   ApprovalMode,
   CoreToolCallStatus,
@@ -24,8 +24,8 @@ import {
   type ToolConfirmationPayload,
   type CompletedToolCall,
   type ToolCallRequestInfo,
-  type ServerGeminiErrorEvent,
-  type ServerGeminiStreamEvent,
+  type ServerOnyxErrorEvent,
+  type ServerOnyxStreamEvent,
   type ToolCallConfirmationDetails,
   type Config,
   type UserTierId,
@@ -76,7 +76,7 @@ export class Task {
   contextId: string;
   scheduler: Scheduler;
   config: Config;
-  geminiClient: GeminiClient;
+  onyxClient: OnyxClient;
   pendingToolConfirmationDetails: Map<string, ToolCallConfirmationDetails>;
   pendingCorrelationIds: Map<string, string> = new Map();
   taskState: TaskState;
@@ -117,7 +117,7 @@ export class Task {
     this.scheduler = this.setupEventDrivenScheduler();
 
     const loopContext: AgentLoopContext = this.config;
-    this.geminiClient = loopContext.geminiClient;
+    this.onyxClient = loopContext.onyxClient;
     this.pendingToolConfirmationDetails = new Map();
     this.taskState = 'submitted';
     this.eventBus = eventBus;
@@ -143,7 +143,7 @@ export class Task {
 
   // Note: `getAllMCPServerStatuses` retrieves the status of all MCP servers for the entire
   // process. This is not scoped to the individual task but reflects the global connection
-  // state managed within the @gemini-cli/core module.
+  // state managed within the @onyx-cli/core module.
   async getMetadata(): Promise<TaskMetadata> {
     const loopContext: AgentLoopContext = this.config;
     const toolRegistry = loopContext.toolRegistry;
@@ -705,7 +705,7 @@ export class Task {
           await processRestorableToolCalls(
             restorableToolCalls,
             gitService,
-            this.geminiClient,
+            this.onyxClient,
           );
 
         if (errors.length > 0) {
@@ -792,7 +792,7 @@ export class Task {
     void this.scheduler.schedule(updatedRequests, abortSignal);
   }
 
-  async acceptAgentMessage(event: ServerGeminiStreamEvent): Promise<void> {
+  async acceptAgentMessage(event: ServerOnyxStreamEvent): Promise<void> {
     const stateChange: StateChange = {
       kind: CoderAgentEvent.StateChangeEvent,
     };
@@ -800,26 +800,26 @@ export class Task {
       'traceId' in event && event.traceId ? event.traceId : undefined;
 
     switch (event.type) {
-      case GeminiEventType.Content:
+      case OnyxEventType.Content:
         logger.info('[Task] Sending agent message content...');
         this._sendTextContent(event.value, traceId);
         break;
-      case GeminiEventType.ToolCallRequest:
+      case OnyxEventType.ToolCallRequest:
         // This is now handled by the agent loop, which collects all requests
         // and calls scheduleToolCalls once.
         logger.warn(
           '[Task] A single tool call request was passed to acceptAgentMessage. This should be handled in a batch by the agent. Ignoring.',
         );
         break;
-      case GeminiEventType.ToolCallResponse:
-        // This event type from ServerGeminiStreamEvent might be for when LLM *generates* a tool response part.
+      case OnyxEventType.ToolCallResponse:
+        // This event type from ServerOnyxStreamEvent might be for when LLM *generates* a tool response part.
         // The actual execution result comes via user message.
         logger.info(
           '[Task] Received tool call response from LLM (part of generation):',
           event.value,
         );
         break;
-      case GeminiEventType.ToolCallConfirmation:
+      case OnyxEventType.ToolCallConfirmation:
         // This is when LLM requests confirmation, not when user provides it.
         logger.info(
           '[Task] Received tool call confirmation request from LLM:',
@@ -832,7 +832,7 @@ export class Task {
         // This will be handled by the scheduler and _schedulerToolCallsUpdate will set InputRequired if needed.
         // No direct state change here, scheduler drives it.
         break;
-      case GeminiEventType.UserCancelled:
+      case OnyxEventType.UserCancelled:
         logger.info('[Task] Received user cancelled event from LLM stream.');
         this.cancelPendingTools('User cancelled via LLM stream event');
         this.setTaskStateAndPublishUpdate(
@@ -845,32 +845,32 @@ export class Task {
           traceId,
         );
         break;
-      case GeminiEventType.Thought:
+      case OnyxEventType.Thought:
         logger.info('[Task] Sending agent thought...');
         this._sendThought(event.value, traceId);
         break;
-      case GeminiEventType.Citation:
+      case OnyxEventType.Citation:
         logger.info('[Task] Received citation from LLM stream.');
         this._sendCitation(event.value);
         break;
-      case GeminiEventType.ChatCompressed:
+      case OnyxEventType.ChatCompressed:
         break;
-      case GeminiEventType.Finished:
+      case OnyxEventType.Finished:
         logger.info(`[Task ${this.id}] Agent finished its turn.`);
         break;
-      case GeminiEventType.ModelInfo:
+      case OnyxEventType.ModelInfo:
         this.modelInfo = event.value;
         break;
-      case GeminiEventType.Retry:
-      case GeminiEventType.InvalidStream:
+      case OnyxEventType.Retry:
+      case OnyxEventType.InvalidStream:
         // An invalid stream should trigger a retry, which requires no action from the user.
         break;
-      case GeminiEventType.Error:
+      case OnyxEventType.Error:
       default: {
         // Use type guard instead of unsafe type assertion
-        let errorEvent: ServerGeminiErrorEvent | undefined;
+        let errorEvent: ServerOnyxErrorEvent | undefined;
         if (
-          event.type === GeminiEventType.Error &&
+          event.type === OnyxEventType.Error &&
           event.value &&
           typeof event.value === 'object' &&
           'error' in event.value
@@ -1077,7 +1077,7 @@ export class Task {
         parts = [response];
       }
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      this.geminiClient.addHistory({
+      this.onyxClient.addHistory({
         role: 'user',
         parts,
       });
@@ -1087,7 +1087,7 @@ export class Task {
   async *sendCompletedToolsToLlm(
     completedToolCalls: CompletedToolCall[],
     aborted: AbortSignal,
-  ): AsyncGenerator<ServerGeminiStreamEvent> {
+  ): AsyncGenerator<ServerOnyxStreamEvent> {
     if (completedToolCalls.length === 0) {
       yield* (async function* () {})(); // Yield nothing
       return;
@@ -1116,7 +1116,7 @@ export class Task {
     // Set task state to working as we are about to call LLM
     this.setTaskStateAndPublishUpdate('working', stateChange);
     this.currentAgentMessageId = uuidv4();
-    yield* this.geminiClient.sendMessageStream(
+    yield* this.onyxClient.sendMessageStream(
       llmParts,
       aborted,
       completedToolCalls[0]?.request.prompt_id ?? '',
@@ -1126,7 +1126,7 @@ export class Task {
   async *acceptUserMessage(
     requestContext: RequestContext,
     aborted: AbortSignal,
-  ): AsyncGenerator<ServerGeminiStreamEvent> {
+  ): AsyncGenerator<ServerOnyxStreamEvent> {
     const userMessage = requestContext.userMessage;
     const llmParts: PartUnion[] = [];
     let anyConfirmationHandled = false;
@@ -1158,7 +1158,7 @@ export class Task {
       };
       // Set task state to working as we are about to call LLM
       this.setTaskStateAndPublishUpdate('working', stateChange);
-      yield* this.geminiClient.sendMessageStream(
+      yield* this.onyxClient.sendMessageStream(
         llmParts,
         aborted,
         this.currentPromptId,

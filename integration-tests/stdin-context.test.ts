@@ -86,9 +86,9 @@ describe.skip('stdin context', () => {
 
   it('should exit quickly if stdin stream does not end', async () => {
     /*
-      This simulates scenario where gemini gets stuck waiting for stdin.
+      This simulates scenario where onyx gets stuck waiting for stdin.
       This happens in situations where process.stdin.isTTY is false
-      even though gemini is intended to run interactively.
+      even though onyx is intended to run interactively.
     */
 
     await rig.setup('should exit quickly if stdin stream does not end');
@@ -110,3 +110,4 @@ describe.skip('stdin context', () => {
     // If this test times out, runs indefinitely, it's a regression.
   }, 3000);
 });
+

@@ -493,7 +493,7 @@ describe('SettingsSchema', () => {
       expect(enabled.requiresRestart).toBe(true);
       expect(enabled.showInDialog).toBe(true);
       expect(enabled.description).toBe(
-        'Enable the Gemma Model Router (experimental). Requires a local endpoint serving Gemma via the Gemini API using LiteRT-LM shim.',
+        'Enable the Gemma Model Router (experimental). Requires a local endpoint serving Gemma via the Onyx API using LiteRT-LM shim.',
       );
 
       const autoStartServer = gemmaModelRouter.properties.autoStartServer;
@@ -504,7 +504,7 @@ describe('SettingsSchema', () => {
       expect(autoStartServer.requiresRestart).toBe(true);
       expect(autoStartServer.showInDialog).toBe(true);
       expect(autoStartServer.description).toBe(
-        'Automatically start the LiteRT-LM server when Gemini CLI starts and the Gemma router is enabled.',
+        'Automatically start the LiteRT-LM server when Onyx CLI starts and the Gemma router is enabled.',
       );
 
       const binaryPath = gemmaModelRouter.properties.binaryPath;

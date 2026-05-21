@@ -6,7 +6,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { join } from 'node:path';
-import { TestRig, GEMINI_DIR } from './test-helper.js';
+import { TestRig, ONYX_DIR } from './test-helper.js';
 import fs from 'node:fs';
 
 describe('User Policy Regression Repro', () => {
@@ -22,13 +22,13 @@ describe('User Policy Regression Repro', () => {
     }
   });
 
-  it('should respect policies in ~/.gemini/policies/allowed-tools.toml', async () => {
+  it('should respect policies in ~/.onyx/policies/allowed-tools.toml', async () => {
     rig.setup('user-policy-test', {
       fakeResponsesPath: join(import.meta.dirname, 'user-policy.responses'),
     });
 
-    // Create ~/.gemini/policies/allowed-tools.toml
-    const userPoliciesDir = join(rig.homeDir!, GEMINI_DIR, 'policies');
+    // Create ~/.onyx/policies/allowed-tools.toml
+    const userPoliciesDir = join(rig.homeDir!, ONYX_DIR, 'policies');
     fs.mkdirSync(userPoliciesDir, { recursive: true });
     fs.writeFileSync(
       join(userPoliciesDir, 'allowed-tools.toml'),
@@ -41,10 +41,10 @@ priority = 100
       `,
     );
 
-    // Run gemini with a prompt that triggers ls -F
+    // Run onyx with a prompt that triggers ls -F
     // approvalMode: 'default' in headless mode will DENY if it hits ASK_USER
     const result = await rig.run({
-      args: ['-p', 'Run ls -F', '--model', 'gemini-3.1-pro-preview'],
+      args: ['-p', 'Run ls -F', '--model', 'onyx-3.1-pro-preview'],
       approvalMode: 'default',
     });
 
@@ -69,9 +69,9 @@ priority = 100
 
     // DO NOT create the policy file here
 
-    // Run gemini with a prompt that triggers ls -F
+    // Run onyx with a prompt that triggers ls -F
     const result = await rig.run({
-      args: ['-p', 'Run ls -F', '--model', 'gemini-3.1-pro-preview'],
+      args: ['-p', 'Run ls -F', '--model', 'onyx-3.1-pro-preview'],
       approvalMode: 'default',
     });
 
@@ -79,3 +79,4 @@ priority = 100
     expect(result).toContain('Tool "run_shell_command" not found');
   });
 });
+

@@ -9,21 +9,21 @@ import * as path from 'node:path';
 import * as os from 'node:os';
 import * as crypto from 'node:crypto';
 import type { Keychain } from './keychainTypes.js';
-import { GEMINI_DIR, homedir } from '../utils/paths.js';
+import { ONYX_DIR, homedir } from '../utils/paths.js';
 
 export class FileKeychain implements Keychain {
   private readonly tokenFilePath: string;
   private readonly encryptionKey: Buffer;
 
   constructor() {
-    const configDir = path.join(homedir(), GEMINI_DIR);
-    this.tokenFilePath = path.join(configDir, 'gemini-credentials.json');
+    const configDir = path.join(homedir(), ONYX_DIR);
+    this.tokenFilePath = path.join(configDir, 'onyx-credentials.json');
     this.encryptionKey = this.deriveEncryptionKey();
   }
 
   private deriveEncryptionKey(): Buffer {
-    const salt = `${os.hostname()}-${os.userInfo().username}-gemini-cli`;
-    return crypto.scryptSync('gemini-cli-oauth', salt, 32);
+    const salt = `${os.hostname()}-${os.userInfo().username}-onyx-cli`;
+    return crypto.scryptSync('onyx-cli-oauth', salt, 32);
   }
 
   private encrypt(text: string): string {

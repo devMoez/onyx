@@ -296,7 +296,7 @@ export class onyxChat {
     } else if (resumedSessionData) {
       // Otherwise, if resuming from disk, build from the persisted record.
       initialHistory = resumedSessionData.conversation.messages
-        .filter((m) => m.type === 'user' || m.type === 'gemini')
+        .filter((m) => m.type === 'user' || m.type === 'onyx')
         .map((m) => ({
           id: m.id,
           content: {
@@ -359,7 +359,7 @@ export class onyxChat {
    *
    * @example
    * ```ts
-   * const chat = ai.chats.create({model: 'gemini-2.0-flash'});
+   * const chat = ai.chats.create({model: 'onyx-2.0-flash'});
    * const response = await chat.sendMessageStream({
    * message: 'Why is the sky blue?'
    * });
@@ -427,7 +427,7 @@ export class onyxChat {
 
         // Turn 2: Synthetic Model Acknowledgment
         const modelId = this.chatRecordingService.recordSyntheticMessage(
-          'gemini',
+          'onyx',
           [
             {
               text: 'Binary content received. Proceeding with analysis.',
@@ -637,7 +637,7 @@ export class onyxChat {
     role: LlmRole,
   ): Promise<AsyncGenerator<GenerateContentResponse>> {
     // Last mile scrubbing to remove internal tracking properties (e.g. callIndex)
-    // before sending to the Gemini API. This whitelists only standard Gemini fields.
+    // before sending to the Onyx API. This whitelists only standard Onyx fields.
     const scrubbedHistory = this.context.config.isContextManagementEnabled()
       ? scrubHistory([...requestHistory])
       : [...requestHistory];
@@ -670,18 +670,18 @@ export class onyxChat {
     const initialActiveModel = this.context.config.getActiveModel();
 
     const apiCall = async () => {
-      const useGemini3_1 =
-        (await this.context.config.getGemini31Launched?.()) ?? false;
-      const useGemini3_1FlashLite =
-        (await this.context.config.getGemini31FlashLiteLaunched?.()) ?? false;
+      const useOnyx3_1 =
+        (await this.context.config.getOnyx31Launched?.()) ?? false;
+      const useOnyx3_1FlashLite =
+        (await this.context.config.getOnyx31FlashLiteLaunched?.()) ?? false;
       const hasAccessToPreview =
         this.context.config.getHasAccessToPreviewModel?.() ?? true;
 
       // Default to the last used model (which respects arguments/availability selection)
       let modelToUse = resolveModel(
         lastModelToUse,
-        useGemini3_1,
-        useGemini3_1FlashLite,
+        useOnyx3_1,
+        useOnyx3_1FlashLite,
         false,
         hasAccessToPreview,
         this.context.config,
@@ -692,8 +692,8 @@ export class onyxChat {
       if (this.context.config.getActiveModel() !== initialActiveModel) {
         modelToUse = resolveModel(
           this.context.config.getActiveModel(),
-          useGemini3_1,
-          useGemini3_1FlashLite,
+          useOnyx3_1,
+          useOnyx3_1FlashLite,
           false,
           hasAccessToPreview,
           this.context.config,
@@ -755,8 +755,8 @@ export class onyxChat {
         if (beforeModelResult.modifiedModel) {
           modelToUse = resolveModel(
             beforeModelResult.modifiedModel,
-            useGemini3_1,
-            useGemini3_1FlashLite,
+            useOnyx3_1,
+            useOnyx3_1FlashLite,
             false,
             hasAccessToPreview,
             this.context.config,
@@ -929,7 +929,7 @@ export class onyxChat {
       this.agentHistory.push(content);
     } else {
       const id = this.chatRecordingService.recordSyntheticMessage(
-        content.role === 'user' ? 'user' : 'gemini',
+        content.role === 'user' ? 'user' : 'onyx',
         content.parts || [],
       );
       this.agentHistory.push({ id, content });
@@ -945,7 +945,7 @@ export class onyxChat {
         return item;
       }
       const id = this.chatRecordingService.recordSyntheticMessage(
-        item.role === 'user' ? 'user' : 'gemini',
+        item.role === 'user' ? 'user' : 'onyx',
         item.parts || [],
       );
       return { id, content: item };
@@ -1269,13 +1269,13 @@ export class onyxChat {
     if (responseText || hasThoughts || hasToolCall) {
       id = this.chatRecordingService.recordMessage({
         model,
-        type: 'gemini',
+        type: 'onyx',
         content: responseText,
       });
     } else {
       // Still need a durable ID even if response is empty (e.g. only tool calls)
       id = this.chatRecordingService.recordSyntheticMessage(
-        'gemini',
+        'onyx',
         consolidatedParts,
       );
     }
@@ -1334,7 +1334,7 @@ export class onyxChat {
 
   /**
    * Records completed tool calls with full metadata.
-   * This is called by external components when tool calls complete, before sending responses to Gemini.
+   * This is called by external components when tool calls complete, before sending responses to Onyx.
    */
   recordCompletedToolCalls(
     model: string,

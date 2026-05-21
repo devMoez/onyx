@@ -18,6 +18,11 @@ export interface ListExperimentsResponse {
   debugString?: string;
 }
 
+export interface Experiments {
+  flags: Record<string, Flag>;
+  experimentIds: number[];
+}
+
 export interface Flag {
   flagId?: number;
   boolValue?: boolean;

@@ -74,7 +74,7 @@ vi.mock('../agents/registry.js', () => ({
 vi.mock('../config/storage.js', () => ({
   Storage: {
     getUserSkillsDir: vi.fn().mockReturnValue('/tmp/fake-user-skills'),
-    getGlobalGeminiDir: vi.fn().mockReturnValue('/tmp/fake-global-gemini'),
+    getGlobalOnyxDir: vi.fn().mockReturnValue('/tmp/fake-global-onyx'),
   },
 }));
 
@@ -106,7 +106,7 @@ function createConversation(
     id: String(i + 1),
     timestamp: new Date().toISOString(),
     content: [{ text: `Message ${i + 1}` }],
-    type: i % 2 === 0 ? ('user' as const) : ('gemini' as const),
+    type: i % 2 === 0 ? ('user' as const) : ('onyx' as const),
   }));
   return {
     sessionId: rest.sessionId ?? `session-${Date.now()}`,
@@ -392,7 +392,7 @@ describe('memoryService', () => {
         },
         getToolRegistry: vi.fn(),
         getMessageBus: vi.fn(),
-        getGeminiClient: vi.fn(),
+        getOnyxClient: vi.fn(),
         sandboxManager: undefined,
       } as unknown as Parameters<typeof startMemoryService>[0];
 
@@ -424,7 +424,7 @@ describe('memoryService', () => {
         },
         getToolRegistry: vi.fn(),
         getMessageBus: vi.fn(),
-        getGeminiClient: vi.fn(),
+        getOnyxClient: vi.fn(),
         sandboxManager: undefined,
       } as unknown as Parameters<typeof startMemoryService>[0];
 
@@ -477,7 +477,7 @@ describe('memoryService', () => {
         },
         getToolRegistry: vi.fn(),
         getMessageBus: vi.fn(),
-        getGeminiClient: vi.fn(),
+        getOnyxClient: vi.fn(),
         sandboxManager: undefined,
       } as unknown as Parameters<typeof startMemoryService>[0];
 
@@ -547,7 +547,7 @@ describe('memoryService', () => {
         },
         getToolRegistry: vi.fn(),
         getMessageBus: vi.fn(),
-        getGeminiClient: vi.fn(),
+        getOnyxClient: vi.fn(),
         getSkillManager: vi.fn().mockReturnValue({ getSkills: () => [] }),
         modelConfigService: {
           registerRuntimeModelConfig: vi.fn(),
@@ -587,7 +587,7 @@ describe('memoryService', () => {
       await fs.mkdir(skillsDir, { recursive: true });
       await fs.mkdir(chatsDir, { recursive: true });
       await fs.mkdir(globalMemoryDir, { recursive: true });
-      vi.mocked(Storage.getGlobalGeminiDir).mockReturnValue(globalMemoryDir);
+      vi.mocked(Storage.getGlobalOnyxDir).mockReturnValue(globalMemoryDir);
 
       const conversation = createConversation({
         sessionId: 'inbox-only-session',
@@ -636,7 +636,7 @@ describe('memoryService', () => {
         },
         getToolRegistry: vi.fn(),
         getMessageBus: vi.fn(),
-        getGeminiClient: vi.fn(),
+        getOnyxClient: vi.fn(),
         getSkillManager: vi.fn().mockReturnValue({ getSkills: () => [] }),
         modelConfigService: {
           registerRuntimeModelConfig: vi.fn(),
@@ -736,7 +736,7 @@ describe('memoryService', () => {
         },
         getToolRegistry: vi.fn(),
         getMessageBus: vi.fn(),
-        getGeminiClient: vi.fn(),
+        getOnyxClient: vi.fn(),
         getSkillManager: vi.fn().mockReturnValue({ getSkills: () => [] }),
         modelConfigService: {
           registerRuntimeModelConfig: vi.fn(),
@@ -988,7 +988,7 @@ describe('memoryService', () => {
         },
         getToolRegistry: vi.fn(),
         getMessageBus: vi.fn(),
-        getGeminiClient: vi.fn(),
+        getOnyxClient: vi.fn(),
         getSkillManager: vi.fn().mockReturnValue({ getSkills: () => [] }),
         modelConfigService: {
           registerRuntimeModelConfig: vi.fn(),
@@ -1435,7 +1435,7 @@ describe('memoryService', () => {
     it('filters out sessions with fewer than 10 user messages', async () => {
       const { buildSessionIndex } = await import('./memoryService.js');
 
-      // 2 messages total: 1 user (index 0) + 1 gemini (index 1)
+      // 2 messages total: 1 user (index 0) + 1 onyx (index 1)
       const conversation = createConversation({
         sessionId: 'short-session',
         messageCount: 2,
@@ -2129,7 +2129,7 @@ describe('memoryService', () => {
         },
         getToolRegistry: vi.fn(),
         getMessageBus: vi.fn(),
-        getGeminiClient: vi.fn(),
+        getOnyxClient: vi.fn(),
         getSkillManager: vi.fn().mockReturnValue({ getSkills: () => [] }),
         modelConfigService: {
           registerRuntimeModelConfig: vi.fn(),
@@ -2210,7 +2210,7 @@ describe('memoryService', () => {
         },
         getToolRegistry: vi.fn(),
         getMessageBus: vi.fn(),
-        getGeminiClient: vi.fn(),
+        getOnyxClient: vi.fn(),
         getSkillManager: vi.fn().mockReturnValue({ getSkills: () => [] }),
         modelConfigService: {
           registerRuntimeModelConfig: vi.fn(),

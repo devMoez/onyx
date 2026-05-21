@@ -25,15 +25,15 @@ describe('mcp-resources-integration', () => {
     await rig.setup('mcp-list-resources-test', {
       settings: {
         model: {
-          name: 'gemini-3-flash-preview',
+          name: 'onyx-3-flash-preview',
         },
       },
       fakeResponsesPath: join(__dirname, 'mcp-list-resources.responses'),
     });
 
     // Workaround for ProjectRegistry save issue
-    const userGeminiDir = join(rig.homeDir!, '.gemini');
-    fs.writeFileSync(join(userGeminiDir, 'projects.json'), '{"projects":{}}');
+    const userOnyxDir = join(rig.homeDir!, '.onyx');
+    fs.writeFileSync(join(userOnyxDir, 'projects.json'), '{"projects":{}}');
 
     // Add a dummy server to get setup done
     rig.addTestMcpServer('resource-server', {
@@ -82,7 +82,7 @@ await server.connect(transport);
 
     const output = await rig.run({
       args: 'List all available MCP resources.',
-      env: { GEMINI_API_KEY: 'dummy' },
+      env: { ONYX_API_KEY: 'dummy' },
     });
 
     const foundCall = await rig.waitForToolCall('list_mcp_resources');
@@ -94,15 +94,15 @@ await server.connect(transport);
     await rig.setup('mcp-read-resource-test', {
       settings: {
         model: {
-          name: 'gemini-3-flash-preview',
+          name: 'onyx-3-flash-preview',
         },
       },
       fakeResponsesPath: join(__dirname, 'mcp-read-resource.responses'),
     });
 
     // Workaround for ProjectRegistry save issue
-    const userGeminiDir = join(rig.homeDir!, '.gemini');
-    fs.writeFileSync(join(userGeminiDir, 'projects.json'), '{"projects":{}}');
+    const userOnyxDir = join(rig.homeDir!, '.onyx');
+    fs.writeFileSync(join(userOnyxDir, 'projects.json'), '{"projects":{}}');
 
     // Add a dummy server to get setup done
     rig.addTestMcpServer('resource-server', {
@@ -168,7 +168,7 @@ await server.connect(transport);
 
     const output = await rig.run({
       args: 'Read the MCP resource test://resource1.',
-      env: { GEMINI_API_KEY: 'dummy' },
+      env: { ONYX_API_KEY: 'dummy' },
     });
 
     const foundCall = await rig.waitForToolCall('read_mcp_resource');
@@ -176,3 +176,4 @@ await server.connect(transport);
     expect(output).toContain('content of resource 1');
   }, 60000);
 });
+

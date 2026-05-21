@@ -17,7 +17,7 @@ export interface WorktreeInfo {
 }
 
 /**
- * Service for managing Git worktrees within Gemini CLI.
+ * Service for managing Git worktrees within Onyx CLI.
  * Handles creation, cleanup, and environment setup for isolated sessions.
  */
 export class WorktreeService {
@@ -129,7 +129,7 @@ export async function createWorktree(
   return worktreePath;
 }
 
-export function isGeminiWorktree(
+export function isOnyxWorktree(
   dirPath: string,
   projectRoot: string,
 ): boolean {

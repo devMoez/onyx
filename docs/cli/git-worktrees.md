@@ -1,7 +1,7 @@
 # Git Worktrees (experimental)
 
 When working on multiple tasks at once, you can use Git worktrees to give each
-Gemini session its own copy of the codebase. Git worktrees create separate
+Onyx session its own copy of the codebase. Git worktrees create separate
 working directories that each have their own files and branch while sharing the
 same repository history. This prevents changes in one session from colliding
 with another.
@@ -14,7 +14,7 @@ Learn more about [session management](./session-management.md).
 > feedback is invaluable as we refine this feature. If you have ideas,
 > suggestions, or encounter issues:
 >
-> - [Open an issue](https://github.com/google-gemini/gemini-cli/issues/new?template=bug_report.yml) on GitHub.
+> - [Open an issue](https://github.com/google-onyx/onyx-cli/issues/new?template=bug_report.yml) on GitHub.
 > - Use the **/bug** command within Onyx CLI to file an issue.
 
 Learn more in the official Git worktree
@@ -40,21 +40,21 @@ Alternatively, add the following to your `settings.json`:
 
 ## How to use Git worktrees
 
-Use the `--worktree` (`-w`) flag to create an isolated worktree and start Gemini
+Use the `--worktree` (`-w`) flag to create an isolated worktree and start Onyx
 CLI in it.
 
 - **Start with a specific name:** The value you pass becomes both the directory
-  name (within `.gemini/worktrees/`) and the branch name.
+  name (within `.onyx/worktrees/`) and the branch name.
 
   ```bash
-  gemini --worktree feature-search
+  onyx --worktree feature-search
   ```
 
-- **Start with a random name:** If you omit the name, Gemini generates a random
+- **Start with a random name:** If you omit the name, Onyx generates a random
   one automatically (for example, `worktree-a1b2c3d4`).
 
   ```bash
-  gemini --worktree
+  onyx --worktree
   ```
 
 <!-- prettier-ignore -->
@@ -66,16 +66,16 @@ CLI in it.
 
 ## How to exit a Git worktree session
 
-When you exit a worktree session (using `/quit` or `Ctrl+C`), Gemini leaves the
+When you exit a worktree session (using `/quit` or `Ctrl+C`), Onyx leaves the
 worktree intact so your work is not lost. This includes your uncommitted changes
 (modified files, staged changes, or untracked files) and any new commits you
 have made.
 
-Gemini prioritizes a fast and safe exit: it **does not automatically delete**
+Onyx prioritizes a fast and safe exit: it **does not automatically delete**
 your worktree or branch. You are responsible for cleaning up your worktrees
 manually once you are finished with them.
 
-When you exit, Gemini displays instructions on how to resume your work or how to
+When you exit, Onyx displays instructions on how to resume your work or how to
 manually remove the worktree if you no longer need it.
 
 ## Resuming work in a Git worktree
@@ -84,8 +84,8 @@ To resume a session in a worktree, navigate to the worktree directory and start
 Onyx CLI with the `--resume` flag and the session ID:
 
 ```bash
-cd .gemini/worktrees/feature-search
-gemini --resume <session_id>
+cd .onyx/worktrees/feature-search
+onyx --resume <session_id>
 ```
 
 ## Managing Git worktrees manually
@@ -95,13 +95,13 @@ a preserved worktree, you can use Git directly:
 
 - **Clean up a preserved Git worktree:**
   ```bash
-  git worktree remove .gemini/worktrees/feature-search --force
+  git worktree remove .onyx/worktrees/feature-search --force
   git branch -D worktree-feature-search
   ```
 - **Create a Git worktree manually:**
   ```bash
   git worktree add ../project-feature-search -b feature-search
-  cd ../project-feature-search && gemini
+  cd ../project-feature-search && onyx
   ```
 
-[Open an issue]: https://github.com/google-gemini/gemini-cli/issues
+[Open an issue]: https://github.com/google-onyx/onyx-cli/issues

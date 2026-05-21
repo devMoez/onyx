@@ -61,7 +61,7 @@ describe('InitCommand', () => {
     } as unknown as ExecutionEventBus;
     command = new InitCommand();
     const mockConfig = createMockConfig({
-      getModel: () => 'gemini-pro',
+      getModel: () => 'onyx-pro',
     });
     const mockExecutorInstance = new CoderAgentExecutor();
     context = {

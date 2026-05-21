@@ -35,9 +35,9 @@ vi.mock('@onyx/core', async (importOriginal) => {
     ...actual,
     getAutoModelDescription: (
       hasAccessToPreview: boolean,
-      useGemini3_1?: boolean,
+      useOnyx3_1?: boolean,
     ) =>
-      `Auto Model Description (preview: ${hasAccessToPreview}, 3.1: ${useGemini3_1})`,
+      `Auto Model Description (preview: ${hasAccessToPreview}, 3.1: ${useOnyx3_1})`,
     getDisplayString: (val: string) => mockGetDisplayString(val),
     logModelSlashCommand: (config: Config, event: ModelSlashCommandEvent) =>
       mockLogModelSlashCommand(config, event),
@@ -46,7 +46,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
         mockModelSlashCommandEvent(model);
       }
     },
-    PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL: 'gemini-3.1-flash-lite-preview',
+    PREVIEW_GEMINI_3_1_FLASH_LITE_MODEL: 'onyx-3.1-flash-lite-preview',
   };
 });
 
@@ -55,8 +55,8 @@ describe('<ModelDialog />', () => {
   const mockGetModel = vi.fn();
   const mockOnClose = vi.fn();
   const mockGetHasAccessToPreviewModel = vi.fn();
-  const mockGetGemini31LaunchedSync = vi.fn();
-  const mockGetGemini31FlashLiteLaunchedSync = vi.fn();
+  const mockGetOnyx31LaunchedSync = vi.fn();
+  const mockGetOnyx31FlashLiteLaunchedSync = vi.fn();
   const mockGetProModelNoAccess = vi.fn();
   const mockGetProModelNoAccessSync = vi.fn();
 
@@ -65,8 +65,8 @@ describe('<ModelDialog />', () => {
     getModel: () => string;
     getHasAccessToPreviewModel: () => boolean;
     getIdeMode: () => boolean;
-    getGemini31LaunchedSync: () => boolean;
-    getGemini31FlashLiteLaunchedSync: () => boolean;
+    getOnyx31LaunchedSync: () => boolean;
+    getOnyx31FlashLiteLaunchedSync: () => boolean;
     getProModelNoAccess: () => Promise<boolean>;
     getProModelNoAccessSync: () => boolean;
     getExperimentalGemma: () => boolean;
@@ -86,8 +86,8 @@ describe('<ModelDialog />', () => {
     getModel: mockGetModel,
     getHasAccessToPreviewModel: mockGetHasAccessToPreviewModel,
     getIdeMode: () => false,
-    getGemini31LaunchedSync: mockGetGemini31LaunchedSync,
-    getGemini31FlashLiteLaunchedSync: mockGetGemini31FlashLiteLaunchedSync,
+    getOnyx31LaunchedSync: mockGetOnyx31LaunchedSync,
+    getOnyx31FlashLiteLaunchedSync: mockGetOnyx31FlashLiteLaunchedSync,
     getProModelNoAccess: mockGetProModelNoAccess,
     getProModelNoAccessSync: mockGetProModelNoAccessSync,
     getExperimentalGemma: () => false,
@@ -99,8 +99,8 @@ describe('<ModelDialog />', () => {
     vi.resetAllMocks();
     mockGetModel.mockReturnValue(GEMINI_MODEL_ALIAS_AUTO);
     mockGetHasAccessToPreviewModel.mockReturnValue(false);
-    mockGetGemini31LaunchedSync.mockReturnValue(false);
-    mockGetGemini31FlashLiteLaunchedSync.mockReturnValue(false);
+    mockGetOnyx31LaunchedSync.mockReturnValue(false);
+    mockGetOnyx31FlashLiteLaunchedSync.mockReturnValue(false);
     mockGetProModelNoAccess.mockResolvedValue(false);
     mockGetProModelNoAccessSync.mockReturnValue(false);
 
@@ -146,7 +146,7 @@ describe('<ModelDialog />', () => {
     mockGetProModelNoAccessSync.mockReturnValue(true);
     mockGetProModelNoAccess.mockResolvedValue(true);
     mockGetHasAccessToPreviewModel.mockReturnValue(true);
-    mockGetGemini31FlashLiteLaunchedSync.mockReturnValue(true);
+    mockGetOnyx31FlashLiteLaunchedSync.mockReturnValue(true);
     mockGetDisplayString.mockImplementation((val: string) => val);
 
     const { lastFrame, unmount } = await renderComponent();
@@ -378,8 +378,8 @@ describe('<ModelDialog />', () => {
       unmount();
     });
 
-    it('shows Gemini 3 models in manual view when Gemini 3.1 is NOT launched', async () => {
-      mockGetGemini31LaunchedSync.mockReturnValue(false);
+    it('shows Onyx 3 models in manual view when Onyx 3.1 is NOT launched', async () => {
+      mockGetOnyx31LaunchedSync.mockReturnValue(false);
       const { lastFrame, stdin, waitUntilReady, unmount } =
         await renderComponent();
 
@@ -399,8 +399,8 @@ describe('<ModelDialog />', () => {
       unmount();
     });
 
-    it('shows Gemini 3.1 models in manual view when Gemini 3.1 IS launched', async () => {
-      mockGetGemini31LaunchedSync.mockReturnValue(true);
+    it('shows Onyx 3.1 models in manual view when Onyx 3.1 IS launched', async () => {
+      mockGetOnyx31LaunchedSync.mockReturnValue(true);
       const { lastFrame, stdin, waitUntilReady, unmount } =
         await renderComponent(mockConfig as Config, AuthType.USE_VERTEX_AI);
 
@@ -420,11 +420,11 @@ describe('<ModelDialog />', () => {
       unmount();
     });
 
-    it('uses custom tools model when Gemini 3.1 IS launched and auth is Gemini API Key', async () => {
-      mockGetGemini31LaunchedSync.mockReturnValue(true);
+    it('uses custom tools model when Onyx 3.1 IS launched and auth is Onyx API Key', async () => {
+      mockGetOnyx31LaunchedSync.mockReturnValue(true);
       const { stdin, waitUntilReady, unmount } = await renderComponent(
         mockConfig as Config,
-        AuthType.USE_GEMINI,
+        AuthType.USE_ONYX,
       );
 
       // Go to manual view
@@ -437,7 +437,7 @@ describe('<ModelDialog />', () => {
       });
       await waitUntilReady();
 
-      // Select Gemini 3.1 (first item in preview section)
+      // Select Onyx 3.1 (first item in preview section)
       await act(async () => {
         stdin.write('\r');
       });
@@ -456,7 +456,7 @@ describe('<ModelDialog />', () => {
       mockGetProModelNoAccessSync.mockReturnValue(false);
       mockGetProModelNoAccess.mockResolvedValue(false);
       mockGetHasAccessToPreviewModel.mockReturnValue(true);
-      mockGetGemini31FlashLiteLaunchedSync.mockReturnValue(true);
+      mockGetOnyx31FlashLiteLaunchedSync.mockReturnValue(true);
       const { lastFrame, stdin, waitUntilReady, unmount } =
         await renderComponent();
 

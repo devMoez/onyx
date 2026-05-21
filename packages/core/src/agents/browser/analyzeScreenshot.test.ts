@@ -37,7 +37,7 @@ function createMockBrowserManager(
 function createMockConfig(
   generateContentResult?: unknown,
   generateContentError?: Error,
-  modelName: string = 'gemini-2.5-computer-use-preview-10-2025',
+  modelName: string = 'onyx-2.5-computer-use-preview-10-2025',
 ): Config {
   const generateContent = generateContentError
     ? vi.fn().mockRejectedValue(generateContentError)
@@ -113,7 +113,7 @@ describe('analyzeScreenshot', () => {
       const contentGenerator = config.getContentGenerator();
       expect(contentGenerator.generateContent).toHaveBeenCalledWith(
         expect.objectContaining({
-          model: 'gemini-2.5-computer-use-preview-10-2025',
+          model: 'onyx-2.5-computer-use-preview-10-2025',
           config: expect.objectContaining({
             tools: [
               {
@@ -157,7 +157,7 @@ describe('analyzeScreenshot', () => {
 
     it('omits computerUse tools for non-computer-use models', async () => {
       const browserManager = createMockBrowserManager();
-      const config = createMockConfig(undefined, undefined, 'gemini-2.0-flash');
+      const config = createMockConfig(undefined, undefined, 'onyx-2.0-flash');
       const tool = createAnalyzeScreenshotTool(
         browserManager,
         config,
@@ -172,7 +172,7 @@ describe('analyzeScreenshot', () => {
       const contentGenerator = config.getContentGenerator();
       expect(contentGenerator.generateContent).toHaveBeenCalledWith(
         expect.objectContaining({
-          model: 'gemini-2.0-flash',
+          model: 'onyx-2.0-flash',
           config: expect.not.objectContaining({
             tools: expect.anything(),
           }),

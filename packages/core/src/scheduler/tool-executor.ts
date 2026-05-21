@@ -38,7 +38,7 @@ import {
 } from './types.js';
 import type { PartListUnion, Part } from '@google/genai';
 import {
-  GeminiCliOperation,
+  OnyxCliOperation,
   GEN_AI_TOOL_CALL_ID,
   GEN_AI_TOOL_DESCRIPTION,
   GEN_AI_TOOL_NAME,
@@ -83,7 +83,7 @@ export class ToolExecutor {
 
     return runInDevTraceSpan(
       {
-        operation: GeminiCliOperation.ToolCall,
+        operation: OnyxCliOperation.ToolCall,
         logPrompts: this.config.getTelemetryLogPromptsEnabled(),
         tracesEnabled: this.config.getTelemetryTracesEnabled(),
         sessionId: this.config.getSessionId(),
@@ -204,7 +204,7 @@ export class ToolExecutor {
     if (this.config.isContextManagementEnabled()) {
       const distiller = new ToolOutputDistillationService(
         this.config,
-        this.context.geminiClient,
+        this.context.onyxClient,
         this.context.promptId,
       );
       return distiller.distill(call.request.name, call.request.callId, content);

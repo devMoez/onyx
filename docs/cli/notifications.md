@@ -10,7 +10,7 @@ tool call.
 > may need to be enabled under `/settings`.
 
 Notifications are particularly useful when running long-running tasks or using
-[Plan Mode](./plan-mode.md), letting you switch to other windows while Gemini
+[Plan Mode](./plan-mode.md), letting you switch to other windows while Onyx
 CLI works in the background.
 
 ## Requirements

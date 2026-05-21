@@ -21,7 +21,7 @@ describe('Core System Prompt Substitution', () => {
   let mockConfig: Config;
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.stubEnv('GEMINI_SYSTEM_MD', 'true');
+    vi.stubEnv('ONYX_SYSTEM_MD', 'true');
     mockConfig = {
       get config() {
         return this;
@@ -50,7 +50,7 @@ describe('Core System Prompt Substitution', () => {
       isInteractiveShellEnabled: vi.fn().mockReturnValue(true),
       isAgentsEnabled: vi.fn().mockReturnValue(false),
       getModel: vi.fn().mockReturnValue('auto'),
-      getActiveModel: vi.fn().mockReturnValue('gemini-1.5-pro'),
+      getActiveModel: vi.fn().mockReturnValue('onyx-1.5-pro'),
       getAgentRegistry: vi.fn().mockReturnValue({
         getDirectoryContext: vi.fn().mockReturnValue('Mock Agent Directory'),
         getAllDefinitions: vi.fn().mockReturnValue([]),
@@ -64,7 +64,7 @@ describe('Core System Prompt Substitution', () => {
       isTrackerEnabled: vi.fn().mockReturnValue(false),
       isModelSteeringEnabled: vi.fn().mockReturnValue(false),
       getHasAccessToPreviewModel: vi.fn().mockReturnValue(true),
-      getGemini31LaunchedSync: vi.fn().mockReturnValue(true),
+      getOnyx31LaunchedSync: vi.fn().mockReturnValue(true),
     } as unknown as Config;
   });
 

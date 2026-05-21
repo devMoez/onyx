@@ -85,3 +85,4 @@ test('formats log correctly', () => {
     },
   });
 });
+

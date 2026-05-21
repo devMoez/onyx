@@ -52,7 +52,7 @@ import {
   type IdeInfo,
   type IdeContext,
   type UserTierId,
-  type GeminiUserTier,
+  type OnyxUserTier,
   type UserFeedbackPayload,
   type HookSystemMessagePayload,
   type AgentDefinition,
@@ -60,7 +60,7 @@ import {
   IdeClient,
   ideContextStore,
   getErrorMessage,
-  getAllGeminiMdFilenames,
+  getAllOnyxMdFilenames,
   AuthType,
   clearCachedCredentialFile,
   type ResumedSessionData,
@@ -233,7 +233,7 @@ export const AppContainer = (props: AppContainerProps) => {
     useContext(InkAppContext);
   const recordingFilenameRef = useRef<string | null>(null);
   const historyManager = useHistory({
-    chatRecordingService: config.getGeminiClient()?.getChatRecordingService(),
+    chatRecordingService: config.getOnyxClient()?.getChatRecordingService(),
   });
 
   useMemoryMonitor(historyManager);
@@ -449,7 +449,7 @@ export const AppContainer = (props: AppContainerProps) => {
       ? { remaining, limit, resetTime }
       : undefined;
   });
-  const [paidTier, setPaidTier] = useState<GeminiUserTier | undefined>(
+  const [paidTier, setPaidTier] = useState<OnyxUserTier | undefined>(
     undefined,
   );
 
@@ -497,9 +497,9 @@ export const AppContainer = (props: AppContainerProps) => {
 
       if (result) {
         const additionalContext = result.getAdditionalContext();
-        const geminiClient = config.getGeminiClient();
-        if (additionalContext && geminiClient) {
-          await geminiClient.addHistory({
+        const onyxClient = config.getOnyxClient();
+        if (additionalContext && onyxClient) {
+          await onyxClient.addHistory({
             role: 'user',
             parts: [
               { text: `<hook_context>${additionalContext}</hook_context>` },
@@ -769,16 +769,16 @@ export const AppContainer = (props: AppContainerProps) => {
   // TODO: Consider handling other auth types that should also skip the blocking screen
   const isAuthenticating =
     authState === AuthState.Unauthenticated &&
-    settings.merged.security.auth.selectedType !== AuthType.USE_GEMINI;
+    settings.merged.security.auth.selectedType !== AuthType.USE_ONYX;
 
   // Session browser and resume functionality
-  const isGeminiClientInitialized = config.getGeminiClient()?.isInitialized();
+  const isOnyxClientInitialized = config.getOnyxClient()?.isInitialized();
 
   const { loadHistoryForResume, isResuming } = useSessionResume({
     config,
     historyManager,
     refreshStatic,
-    isGeminiClientInitialized,
+    isOnyxClientInitialized,
     setQuittingMessages,
     resumedSessionData,
     isAuthenticating,
@@ -864,7 +864,7 @@ export const AppContainer = (props: AppContainerProps) => {
 
         await saveApiKey(apiKey);
         await reloadApiKey();
-        await config.refreshAuth(AuthType.USE_GEMINI);
+        await config.refreshAuth(AuthType.USE_ONYX);
         setAuthState(AuthState.Authenticated);
       } catch (e) {
         onAuthError(
@@ -904,10 +904,10 @@ export const AppContainer = (props: AppContainerProps) => {
       settings.merged.security.auth.selectedType &&
       !settings.merged.security.auth.useExternal
     ) {
-      // We skip validation for Gemini API key here because it might be stored
+      // We skip validation for Onyx API key here because it might be stored
       // in the keychain, which we can't check synchronously.
       // The useAuth hook handles validation for this case.
-      if (settings.merged.security.auth.selectedType === AuthType.USE_GEMINI) {
+      if (settings.merged.security.auth.selectedType === AuthType.USE_ONYX) {
         return;
       }
 
@@ -1077,7 +1077,7 @@ export const AppContainer = (props: AppContainerProps) => {
       await config.getMemoryContextManager()?.refresh();
       config.updateSystemInstructionIfInitialized();
       const flattenedMemory = flattenMemory(config.getUserMemory());
-      const fileCount = config.getGeminiMdFileCount();
+      const fileCount = config.getOnyxMdFileCount();
 
       historyManager.addItem(
         {
@@ -1191,7 +1191,7 @@ export const AppContainer = (props: AppContainerProps) => {
       })
     : // eslint-disable-next-line react-hooks/rules-of-hooks
       useOnyxStream(
-        config.getGeminiClient(),
+        config.getOnyxClient(),
         historyManager.history,
         historyManager.addItem,
         config,
@@ -1216,7 +1216,7 @@ export const AppContainer = (props: AppContainerProps) => {
     streamingState,
     submitQuery,
     initError,
-    pendingHistoryItems: pendingGeminiHistoryItems,
+    pendingHistoryItems: pendingOnyxHistoryItems,
     thought,
     cancelOngoingRequest,
     pendingToolCalls,
@@ -1234,8 +1234,8 @@ export const AppContainer = (props: AppContainerProps) => {
   } = activeStream;
 
   const pendingHistoryItems = useMemo(
-    () => [...pendingSlashCommandHistoryItems, ...pendingGeminiHistoryItems],
-    [pendingSlashCommandHistoryItems, pendingGeminiHistoryItems],
+    () => [...pendingSlashCommandHistoryItems, ...pendingOnyxHistoryItems],
+    [pendingSlashCommandHistoryItems, pendingOnyxHistoryItems],
   );
 
   toggleBackgroundTasksRef.current = toggleBackgroundTasks;
@@ -1580,12 +1580,12 @@ export const AppContainer = (props: AppContainerProps) => {
       ? Array.isArray(fromSettings)
         ? fromSettings
         : [fromSettings]
-      : getAllGeminiMdFilenames();
+      : getAllOnyxMdFilenames();
   }, [settings.merged.context.fileName]);
   // Initial prompt handling
   const initialPrompt = useMemo(() => config.getQuestion(), [config]);
   const initialPromptSubmitted = useRef(false);
-  const geminiClient = config.getGeminiClient();
+  const onyxClient = config.getOnyxClient();
 
   useEffect(() => {
     if (
@@ -1597,7 +1597,7 @@ export const AppContainer = (props: AppContainerProps) => {
       !isThemeDialogOpen &&
       !isEditorDialogOpen &&
       !showPrivacyNotice &&
-      geminiClient?.isInitialized?.()
+      onyxClient?.isInitialized?.()
     ) {
       void handleFinalSubmit(initialPrompt);
       initialPromptSubmitted.current = true;
@@ -1611,7 +1611,7 @@ export const AppContainer = (props: AppContainerProps) => {
     isThemeDialogOpen,
     isEditorDialogOpen,
     showPrivacyNotice,
-    geminiClient,
+    onyxClient,
   ]);
 
   const [idePromptAnswered, setIdePromptAnswered] = useState(false);
@@ -2114,7 +2114,7 @@ export const AppContainer = (props: AppContainerProps) => {
       lastTitleRef.current = paddedTitle;
       stdout.write(`\x1b]0;${paddedTitle}\x07`);
     }
-    // Note: We don't need to reset the window title on exit because Gemini CLI is already doing that elsewhere
+    // Note: We don't need to reset the window title on exit because Onyx CLI is already doing that elsewhere
   }, [
     streamingState,
     thought,
@@ -2368,12 +2368,12 @@ export const AppContainer = (props: AppContainerProps) => {
     [pendingHistoryItems],
   );
 
-  const [geminiMdFileCount, setGeminiMdFileCount] = useState<number>(
-    config.getGeminiMdFileCount(),
+  const [onyxMdFileCount, setOnyxMdFileCount] = useState<number>(
+    config.getOnyxMdFileCount(),
   );
   useEffect(() => {
     const handleMemoryChanged = (result: MemoryChangedPayload) => {
-      setGeminiMdFileCount(result.fileCount);
+      setOnyxMdFileCount(result.fileCount);
     };
     coreEvents.on(CoreEvent.MemoryChanged, handleMemoryChanged);
     return () => {
@@ -2486,10 +2486,10 @@ export const AppContainer = (props: AppContainerProps) => {
       confirmUpdateExtensionRequests,
       loopDetectionConfirmationRequest,
       permissionConfirmationRequest,
-      geminiMdFileCount,
+      onyxMdFileCount,
       streamingState,
       initError,
-      pendingGeminiHistoryItems,
+      pendingOnyxHistoryItems,
       thought,
       isInputActive,
       isVoiceModeEnabled,
@@ -2599,10 +2599,10 @@ export const AppContainer = (props: AppContainerProps) => {
       confirmUpdateExtensionRequests,
       loopDetectionConfirmationRequest,
       permissionConfirmationRequest,
-      geminiMdFileCount,
+      onyxMdFileCount,
       streamingState,
       initError,
-      pendingGeminiHistoryItems,
+      pendingOnyxHistoryItems,
       thought,
       isInputActive,
       isVoiceModeEnabled,

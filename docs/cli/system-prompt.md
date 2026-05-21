@@ -1,12 +1,12 @@
-# System Prompt Override (GEMINI_SYSTEM_MD)
+# System Prompt Override (ONYX_SYSTEM_MD)
 
 The core system instructions that guide Onyx CLI can be completely replaced
 with your own Markdown file. This feature is controlled via the
-`GEMINI_SYSTEM_MD` environment variable.
+`ONYX_SYSTEM_MD` environment variable.
 
 ## Overview
 
-The `GEMINI_SYSTEM_MD` variable instructs the CLI to use an external Markdown
+The `ONYX_SYSTEM_MD` variable instructs the CLI to use an external Markdown
 file for its system prompt, completely overriding the built-in default. This is
 a full replacement, not a merge. If you use a custom file, none of the original
 core instructions will apply unless you include them yourself.
@@ -23,22 +23,22 @@ project-specific behavior or create a customized persona.
 ## How to enable
 
 You can set the environment variable temporarily in your shell, or persist it
-via a `.gemini/.env` file. See
+via a `.onyx/.env` file. See
 [Persisting Environment Variables](../get-started/authentication.mdx#persisting-environment-variables).
 
-- Use the project default path (`.gemini/system.md`):
-  - `GEMINI_SYSTEM_MD=true` or `GEMINI_SYSTEM_MD=1`
-  - The CLI reads `./.gemini/system.md` (relative to your current project
+- Use the project default path (`.onyx/system.md`):
+  - `ONYX_SYSTEM_MD=true` or `ONYX_SYSTEM_MD=1`
+  - The CLI reads `./.onyx/system.md` (relative to your current project
     directory).
 
 - Use a custom file path:
-  - `GEMINI_SYSTEM_MD=/absolute/path/to/my-system.md`
+  - `ONYX_SYSTEM_MD=/absolute/path/to/my-system.md`
   - Relative paths are supported and resolved from the current working
     directory.
   - Tilde expansion is supported (for example, `~/my-system.md`).
 
 - Disable the override (use built‑in prompt):
-  - `GEMINI_SYSTEM_MD=false` or `GEMINI_SYSTEM_MD=0` or unset the variable.
+  - `ONYX_SYSTEM_MD=false` or `ONYX_SYSTEM_MD=0` or unset the variable.
 
 If the override is enabled but the target file does not exist, the CLI will
 error with: `missing system prompt file '<path>'`.
@@ -46,16 +46,16 @@ error with: `missing system prompt file '<path>'`.
 ## Quick examples
 
 - One‑off session using a project file:
-  - `GEMINI_SYSTEM_MD=1 gemini`
-- Persist for a project using `.gemini/.env`:
-  - Create `.gemini/system.md`, then add to `.gemini/.env`:
-    - `GEMINI_SYSTEM_MD=1`
+  - `ONYX_SYSTEM_MD=1 onyx`
+- Persist for a project using `.onyx/.env`:
+  - Create `.onyx/system.md`, then add to `.onyx/.env`:
+    - `ONYX_SYSTEM_MD=1`
 - Use a custom file under your home directory:
-  - `GEMINI_SYSTEM_MD=~/prompts/system.md gemini`
+  - `ONYX_SYSTEM_MD=~/prompts/system.md onyx`
 
 ## UI indicator
 
-When `GEMINI_SYSTEM_MD` is active, the CLI shows a `|⌐■_■|` indicator in the UI
+When `ONYX_SYSTEM_MD` is active, the CLI shows a `|⌐■_■|` indicator in the UI
 to signal custom system‑prompt mode.
 
 ## Variable Substitution
@@ -96,32 +96,32 @@ Before overriding, export the current default prompt so you can review required
 safety and workflow rules.
 
 - Write the built‑in prompt to the project default path:
-  - `GEMINI_WRITE_SYSTEM_MD=1 gemini`
+  - `ONYX_WRITE_SYSTEM_MD=1 onyx`
 - Or write to a custom path:
-  - `GEMINI_WRITE_SYSTEM_MD=~/prompts/DEFAULT_SYSTEM.md gemini`
+  - `ONYX_WRITE_SYSTEM_MD=~/prompts/DEFAULT_SYSTEM.md onyx`
 
 This creates the file and writes the current built‑in system prompt to it.
 
-## Best practices: system.md vs GEMINI.md
+## Best practices: system.md vs ONYX.md
 
 - system.md (firmware):
   - Non‑negotiable operational rules: safety, tool‑use protocols, approvals, and
     mechanics that keep the CLI reliable.
   - Stable across tasks and projects (or per project when needed).
-- GEMINI.md (strategy):
+- ONYX.md (strategy):
   - Persona, goals, methodologies, and project/domain context.
   - Evolves per task; relies on system.md for safe execution.
 
 Keep system.md minimal but complete for safety and tool operation. Keep
-GEMINI.md focused on high‑level guidance and project specifics.
+ONYX.md focused on high‑level guidance and project specifics.
 
 ## Troubleshooting
 
 - Error: `missing system prompt file '…'`
   - Ensure the referenced path exists and is readable.
-  - For `GEMINI_SYSTEM_MD=1|true`, create `./.gemini/system.md` in your project.
+  - For `ONYX_SYSTEM_MD=1|true`, create `./.onyx/system.md` in your project.
 - Override not taking effect
-  - Confirm the variable is loaded (use `.gemini/.env` or export in your shell).
+  - Confirm the variable is loaded (use `.onyx/.env` or export in your shell).
   - Paths are resolved from the current working directory; try an absolute path.
 - Restore defaults
-  - Unset `GEMINI_SYSTEM_MD` or set it to `0`/`false`.
+  - Unset `ONYX_SYSTEM_MD` or set it to `0`/`false`.

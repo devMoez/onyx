@@ -27,81 +27,81 @@ import { AuthType } from '../core/contentGenerator.js';
 import { getCommonAttributes } from './telemetryAttributes.js';
 import { sanitizeHookName } from './sanitize.js';
 
-const EVENT_CHAT_COMPRESSION = 'gemini_cli.chat_compression';
-const TOOL_CALL_COUNT = 'gemini_cli.tool.call.count';
-const TOOL_CALL_LATENCY = 'gemini_cli.tool.call.latency';
-const API_REQUEST_COUNT = 'gemini_cli.api.request.count';
-const API_REQUEST_LATENCY = 'gemini_cli.api.request.latency';
-const TOKEN_USAGE = 'gemini_cli.token.usage';
-const SESSION_COUNT = 'gemini_cli.session.count';
-const FILE_OPERATION_COUNT = 'gemini_cli.file.operation.count';
-const LINES_CHANGED = 'gemini_cli.lines.changed';
-const INVALID_CHUNK_COUNT = 'gemini_cli.chat.invalid_chunk.count';
-const CONTENT_RETRY_COUNT = 'gemini_cli.chat.content_retry.count';
+const EVENT_CHAT_COMPRESSION = 'onyx_cli.chat_compression';
+const TOOL_CALL_COUNT = 'onyx_cli.tool.call.count';
+const TOOL_CALL_LATENCY = 'onyx_cli.tool.call.latency';
+const API_REQUEST_COUNT = 'onyx_cli.api.request.count';
+const API_REQUEST_LATENCY = 'onyx_cli.api.request.latency';
+const TOKEN_USAGE = 'onyx_cli.token.usage';
+const SESSION_COUNT = 'onyx_cli.session.count';
+const FILE_OPERATION_COUNT = 'onyx_cli.file.operation.count';
+const LINES_CHANGED = 'onyx_cli.lines.changed';
+const INVALID_CHUNK_COUNT = 'onyx_cli.chat.invalid_chunk.count';
+const CONTENT_RETRY_COUNT = 'onyx_cli.chat.content_retry.count';
 const CONTENT_RETRY_FAILURE_COUNT =
-  'gemini_cli.chat.content_retry_failure.count';
-const NETWORK_RETRY_COUNT = 'gemini_cli.network_retry.count';
-const MODEL_ROUTING_LATENCY = 'gemini_cli.model_routing.latency';
-const MODEL_ROUTING_FAILURE_COUNT = 'gemini_cli.model_routing.failure.count';
+  'onyx_cli.chat.content_retry_failure.count';
+const NETWORK_RETRY_COUNT = 'onyx_cli.network_retry.count';
+const MODEL_ROUTING_LATENCY = 'onyx_cli.model_routing.latency';
+const MODEL_ROUTING_FAILURE_COUNT = 'onyx_cli.model_routing.failure.count';
 const MODEL_SLASH_COMMAND_CALL_COUNT =
-  'gemini_cli.slash_command.model.call_count';
-const EVENT_HOOK_CALL_COUNT = 'gemini_cli.hook_call.count';
-const EVENT_HOOK_CALL_LATENCY = 'gemini_cli.hook_call.latency';
-const KEYCHAIN_AVAILABILITY_COUNT = 'gemini_cli.keychain.availability.count';
-const TOKEN_STORAGE_TYPE_COUNT = 'gemini_cli.token_storage.type.count';
-const OVERAGE_OPTION_COUNT = 'gemini_cli.overage_option.count';
-const CREDIT_PURCHASE_COUNT = 'gemini_cli.credit_purchase.count';
-const EVENT_ONBOARDING_START = 'gemini_cli.onboarding.start';
-const EVENT_ONBOARDING_SUCCESS = 'gemini_cli.onboarding.success';
-const EVENT_ONBOARDING_DURATION_MS = 'gemini_cli.onboarding.duration';
+  'onyx_cli.slash_command.model.call_count';
+const EVENT_HOOK_CALL_COUNT = 'onyx_cli.hook_call.count';
+const EVENT_HOOK_CALL_LATENCY = 'onyx_cli.hook_call.latency';
+const KEYCHAIN_AVAILABILITY_COUNT = 'onyx_cli.keychain.availability.count';
+const TOKEN_STORAGE_TYPE_COUNT = 'onyx_cli.token_storage.type.count';
+const OVERAGE_OPTION_COUNT = 'onyx_cli.overage_option.count';
+const CREDIT_PURCHASE_COUNT = 'onyx_cli.credit_purchase.count';
+const EVENT_ONBOARDING_START = 'onyx_cli.onboarding.start';
+const EVENT_ONBOARDING_SUCCESS = 'onyx_cli.onboarding.success';
+const EVENT_ONBOARDING_DURATION_MS = 'onyx_cli.onboarding.duration';
 
 // Agent Metrics
-const AGENT_RUN_COUNT = 'gemini_cli.agent.run.count';
-const AGENT_DURATION_MS = 'gemini_cli.agent.duration';
-const AGENT_TURNS = 'gemini_cli.agent.turns';
-const AGENT_RECOVERY_ATTEMPT_COUNT = 'gemini_cli.agent.recovery_attempt.count';
+const AGENT_RUN_COUNT = 'onyx_cli.agent.run.count';
+const AGENT_DURATION_MS = 'onyx_cli.agent.duration';
+const AGENT_TURNS = 'onyx_cli.agent.turns';
+const AGENT_RECOVERY_ATTEMPT_COUNT = 'onyx_cli.agent.recovery_attempt.count';
 const AGENT_RECOVERY_ATTEMPT_DURATION =
-  'gemini_cli.agent.recovery_attempt.duration';
+  'onyx_cli.agent.recovery_attempt.duration';
 
 // Browser Agent Metrics
 const BROWSER_AGENT_CONNECTION_DURATION =
-  'gemini_cli.browser_agent.connection.duration';
+  'onyx_cli.browser_agent.connection.duration';
 const BROWSER_AGENT_CONNECTION_FAILURE_COUNT =
-  'gemini_cli.browser_agent.connection.failure.count';
+  'onyx_cli.browser_agent.connection.failure.count';
 const BROWSER_AGENT_TOOLS_DISCOVERED =
-  'gemini_cli.browser_agent.tools.discovered';
+  'onyx_cli.browser_agent.tools.discovered';
 const BROWSER_AGENT_TOOLS_MISSING_SEMANTIC =
-  'gemini_cli.browser_agent.tools.missing_semantic';
-const BROWSER_AGENT_VISION_STATUS = 'gemini_cli.browser_agent.vision.status';
-const BROWSER_AGENT_TASK_OUTCOME = 'gemini_cli.browser_agent.task.outcome';
-const BROWSER_AGENT_TASK_DURATION = 'gemini_cli.browser_agent.task.duration';
+  'onyx_cli.browser_agent.tools.missing_semantic';
+const BROWSER_AGENT_VISION_STATUS = 'onyx_cli.browser_agent.vision.status';
+const BROWSER_AGENT_TASK_OUTCOME = 'onyx_cli.browser_agent.task.outcome';
+const BROWSER_AGENT_TASK_DURATION = 'onyx_cli.browser_agent.task.duration';
 const BROWSER_AGENT_CLEANUP_DURATION =
-  'gemini_cli.browser_agent.cleanup.duration';
+  'onyx_cli.browser_agent.cleanup.duration';
 const BROWSER_AGENT_CLEANUP_FAILURE_COUNT =
-  'gemini_cli.browser_agent.cleanup.failure.count';
+  'onyx_cli.browser_agent.cleanup.failure.count';
 
 // OpenTelemetry GenAI Semantic Convention Metrics
 const GEN_AI_CLIENT_TOKEN_USAGE = 'gen_ai.client.token.usage';
 const GEN_AI_CLIENT_OPERATION_DURATION = 'gen_ai.client.operation.duration';
 
 // Performance Monitoring Metrics
-const STARTUP_TIME = 'gemini_cli.startup.duration';
-const MEMORY_USAGE = 'gemini_cli.memory.usage';
-const CPU_USAGE = 'gemini_cli.cpu.usage';
-const EVENT_LOOP_DELAY = 'gemini_cli.event_loop.delay';
-const TOOL_QUEUE_DEPTH = 'gemini_cli.tool.queue.depth';
-const TOOL_EXECUTION_BREAKDOWN = 'gemini_cli.tool.execution.breakdown';
-const TOKEN_EFFICIENCY = 'gemini_cli.token.efficiency';
-const API_REQUEST_BREAKDOWN = 'gemini_cli.api.request.breakdown';
-const PERFORMANCE_SCORE = 'gemini_cli.performance.score';
-const REGRESSION_DETECTION = 'gemini_cli.performance.regression';
+const STARTUP_TIME = 'onyx_cli.startup.duration';
+const MEMORY_USAGE = 'onyx_cli.memory.usage';
+const CPU_USAGE = 'onyx_cli.cpu.usage';
+const EVENT_LOOP_DELAY = 'onyx_cli.event_loop.delay';
+const TOOL_QUEUE_DEPTH = 'onyx_cli.tool.queue.depth';
+const TOOL_EXECUTION_BREAKDOWN = 'onyx_cli.tool.execution.breakdown';
+const TOKEN_EFFICIENCY = 'onyx_cli.token.efficiency';
+const API_REQUEST_BREAKDOWN = 'onyx_cli.api.request.breakdown';
+const PERFORMANCE_SCORE = 'onyx_cli.performance.score';
+const REGRESSION_DETECTION = 'onyx_cli.performance.regression';
 const REGRESSION_PERCENTAGE_CHANGE =
-  'gemini_cli.performance.regression.percentage_change';
-const BASELINE_COMPARISON = 'gemini_cli.performance.baseline.comparison';
-const FLICKER_FRAME_COUNT = 'gemini_cli.ui.flicker.count';
-const SLOW_RENDER_LATENCY = 'gemini_cli.ui.slow_render.latency';
-const EXIT_FAIL_COUNT = 'gemini_cli.exit.fail.count';
-const PLAN_EXECUTION_COUNT = 'gemini_cli.plan.execution.count';
+  'onyx_cli.performance.regression.percentage_change';
+const BASELINE_COMPARISON = 'onyx_cli.performance.baseline.comparison';
+const FLICKER_FRAME_COUNT = 'onyx_cli.ui.flicker.count';
+const SLOW_RENDER_LATENCY = 'onyx_cli.ui.slow_render.latency';
+const EXIT_FAIL_COUNT = 'onyx_cli.exit.fail.count';
+const PLAN_EXECUTION_COUNT = 'onyx_cli.plan.execution.count';
 
 const baseMetricDefinition = {
   getCommonAttributes,
@@ -1132,7 +1132,7 @@ export function recordModelRoutingMetrics(
     // GCP metric labels have a maximum string size of 1024 characters.
     // Apply strict truncation only in CI workflows to avoid masking data for normal users.
     const isStrictTelemetry =
-      process.env['GEMINI_STRICT_TELEMETRY_LIMITS'] === 'true';
+      process.env['ONYX_STRICT_TELEMETRY_LIMITS'] === 'true';
     attributes['routing.reasoning'] =
       isStrictTelemetry && event.reasoning.length > 1000
         ? event.reasoning.substring(0, 1000) + '...'
@@ -1150,7 +1150,7 @@ export function recordModelRoutingMetrics(
 
   if (event.failed) {
     const isStrictTelemetry =
-      process.env['GEMINI_STRICT_TELEMETRY_LIMITS'] === 'true';
+      process.env['ONYX_STRICT_TELEMETRY_LIMITS'] === 'true';
     modelRoutingFailureCounter.add(1, {
       ...attributes,
       'routing.error_message':
@@ -1284,7 +1284,7 @@ function getGenAiProvider(authType?: string): GenAiProviderName {
     case AuthType.COMPUTE_ADC:
     case AuthType.LOGIN_WITH_GOOGLE:
       return GenAiProviderName.GCP_VERTEX_AI;
-    case AuthType.USE_GEMINI:
+    case AuthType.USE_ONYX:
     default:
       return GenAiProviderName.GCP_GEN_AI;
   }

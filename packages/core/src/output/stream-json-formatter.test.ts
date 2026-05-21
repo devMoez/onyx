@@ -40,7 +40,7 @@ describe('StreamJsonFormatter', () => {
         type: JsonStreamEventType.INIT,
         timestamp: '2025-10-10T12:00:00.000Z',
         session_id: 'test-session-123',
-        model: 'gemini-2.0-flash-exp',
+        model: 'onyx-2.0-flash-exp',
       };
 
       const result = formatter.formatEvent(event);
@@ -213,7 +213,7 @@ describe('StreamJsonFormatter', () => {
         type: JsonStreamEventType.INIT,
         timestamp: '2025-10-10T12:00:00.000Z',
         session_id: 'test-session',
-        model: 'gemini-2.0-flash-exp',
+        model: 'onyx-2.0-flash-exp',
       };
 
       formatter.emitEvent(event);
@@ -227,7 +227,7 @@ describe('StreamJsonFormatter', () => {
         type: JsonStreamEventType.INIT,
         timestamp: '2025-10-10T12:00:00.000Z',
         session_id: 'test-session',
-        model: 'gemini-2.0-flash-exp',
+        model: 'onyx-2.0-flash-exp',
       };
 
       const event2: MessageEvent = {
@@ -276,7 +276,7 @@ describe('StreamJsonFormatter', () => {
 
     it('should aggregate token counts from single model', () => {
       const metrics = createMockMetrics();
-      metrics.models['gemini-2.0-flash'] = {
+      metrics.models['onyx-2.0-flash'] = {
         api: {
           totalRequests: 1,
           totalErrors: 0,
@@ -307,7 +307,7 @@ describe('StreamJsonFormatter', () => {
         duration_ms: 1200,
         tool_calls: 2,
         models: {
-          'gemini-2.0-flash': {
+          'onyx-2.0-flash': {
             total_tokens: 80,
             input_tokens: 50,
             output_tokens: 30,
@@ -320,7 +320,7 @@ describe('StreamJsonFormatter', () => {
 
     it('should aggregate token counts from multiple models', () => {
       const metrics = createMockMetrics();
-      metrics.models['gemini-pro'] = {
+      metrics.models['onyx-pro'] = {
         api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 1000 },
         tokens: {
           input: 50,
@@ -333,7 +333,7 @@ describe('StreamJsonFormatter', () => {
         },
         roles: {},
       };
-      metrics.models['gemini-ultra'] = {
+      metrics.models['onyx-ultra'] = {
         api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 2000 },
         tokens: {
           input: 100,
@@ -359,14 +359,14 @@ describe('StreamJsonFormatter', () => {
         duration_ms: 3000,
         tool_calls: 5,
         models: {
-          'gemini-pro': {
+          'onyx-pro': {
             total_tokens: 80,
             input_tokens: 50,
             output_tokens: 30,
             cached: 0,
             input: 50,
           },
-          'gemini-ultra': {
+          'onyx-ultra': {
             total_tokens: 170,
             input_tokens: 100,
             output_tokens: 70,
@@ -379,7 +379,7 @@ describe('StreamJsonFormatter', () => {
 
     it('should aggregate cached token counts correctly', () => {
       const metrics = createMockMetrics();
-      metrics.models['gemini-pro'] = {
+      metrics.models['onyx-pro'] = {
         api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 1000 },
         tokens: {
           input: 20, // 50 prompt - 30 cached
@@ -404,7 +404,7 @@ describe('StreamJsonFormatter', () => {
         duration_ms: 1200,
         tool_calls: 0,
         models: {
-          'gemini-pro': {
+          'onyx-pro': {
             total_tokens: 80,
             input_tokens: 50,
             output_tokens: 30,
@@ -519,7 +519,7 @@ describe('StreamJsonFormatter', () => {
           type: JsonStreamEventType.INIT,
           timestamp: '2025-10-10T12:00:00.000Z',
           session_id: 'test',
-          model: 'gemini-2.0-flash',
+          model: 'onyx-2.0-flash',
         } as InitEvent,
         {
           type: JsonStreamEventType.MESSAGE,

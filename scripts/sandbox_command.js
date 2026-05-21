@@ -25,7 +25,7 @@ import os from 'node:os';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import dotenv from 'dotenv';
-import { GEMINI_DIR } from '@onyx/core';
+import { ONYX_DIR } from '@onyx/core';
 
 const argv = yargs(hideBin(process.argv)).option('q', {
   alias: 'quiet',
@@ -33,16 +33,14 @@ const argv = yargs(hideBin(process.argv)).option('q', {
   default: false,
 }).argv;
 
-const ONYX_DIR = '.onyx';
-
-// ... (rest of code)
+// ONYX_DIR is imported from @onyx/core above.
 
 const homedir = () => process.env['ONYX_CLI_HOME'] || os.homedir();
 
-let onyxSandbox = process.env.GEMINI_SANDBOX;
+let onyxSandbox = process.env.ONYX_SANDBOX;
 
 if (!onyxSandbox) {
-  const userSettingsFile = join(homedir(), GEMINI_DIR, 'settings.json');
+  const userSettingsFile = join(homedir(), ONYX_DIR, 'settings.json');
   if (existsSync(userSettingsFile)) {
     const settings = JSON.parse(
       stripJsonComments(readFileSync(userSettingsFile, 'utf-8')),
@@ -56,10 +54,10 @@ if (!onyxSandbox) {
 if (!onyxSandbox) {
   let currentDir = process.cwd();
   while (true) {
-    const geminiEnv = join(currentDir, ONYX_DIR, '.env');
+    const onyxEnv = join(currentDir, ONYX_DIR, '.env');
     const regularEnv = join(currentDir, '.env');
-    if (existsSync(geminiEnv)) {
-      dotenv.config({ path: geminiEnv, quiet: true });
+    if (existsSync(onyxEnv)) {
+      dotenv.config({ path: onyxEnv, quiet: true });
       break;
     } else if (existsSync(regularEnv)) {
       dotenv.config({ path: regularEnv, quiet: true });
@@ -71,7 +69,7 @@ if (!onyxSandbox) {
     }
     currentDir = parentDir;
   }
-  onyxSandbox = process.env.GEMINI_SANDBOX;
+  onyxSandbox = process.env.ONYX_SANDBOX;
 }
 
 onyxSandbox = (onyxSandbox || '').toLowerCase();
@@ -102,7 +100,7 @@ if (['1', 'true'].includes(onyxSandbox)) {
     command = 'podman';
   } else {
     console.error(
-      'ERROR: install docker or podman or specify command in GEMINI_SANDBOX',
+      'ERROR: install docker or podman or specify command in ONYX_SANDBOX',
     );
     process.exit(1);
   }
@@ -111,7 +109,7 @@ if (['1', 'true'].includes(onyxSandbox)) {
     command = onyxSandbox;
   } else {
     console.error(
-      `ERROR: missing sandbox command '${onyxSandbox}' (from GEMINI_SANDBOX)`,
+      `ERROR: missing sandbox command '${onyxSandbox}' (from ONYX_SANDBOX)`,
     );
     process.exit(1);
   }

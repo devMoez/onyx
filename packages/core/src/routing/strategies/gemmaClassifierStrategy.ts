@@ -211,13 +211,13 @@ ${formattedHistory}
       const latencyMs = Date.now() - startTime;
 
       const [
-        useGemini3_1,
-        useGemini3_1FlashLite,
+        useOnyx3_1,
+        useOnyx3_1FlashLite,
         useCustomToolModel,
         hasAccessToPreview,
       ] = await Promise.all([
-        config.getGemini31Launched(),
-        config.getGemini31FlashLiteLaunched(),
+        config.getOnyx31Launched(),
+        config.getOnyx31FlashLiteLaunched(),
         config.getUseCustomToolModel(),
         config.getHasAccessToPreviewModel?.() ?? true,
       ]);
@@ -225,8 +225,8 @@ ${formattedHistory}
       const selectedModel = resolveClassifierModel(
         context.requestedModel ?? config.getModel(),
         routerResponse.model_choice,
-        useGemini3_1,
-        useGemini3_1FlashLite,
+        useOnyx3_1,
+        useOnyx3_1FlashLite,
         useCustomToolModel,
         hasAccessToPreview,
         config,

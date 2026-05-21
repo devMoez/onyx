@@ -13,18 +13,18 @@ import {
   loadConversationRecord,
 } from '@onyx/core';
 
-import { GeminiCliSession } from './session.js';
-import type { GeminiCliAgentOptions } from './types.js';
+import { OnyxCliSession } from './session.js';
+import type { OnyxCliAgentOptions } from './types.js';
 
 /**
- * The main entry point for the Gemini CLI SDK.
+ * The main entry point for the Onyx CLI SDK.
  *
  * An agent encapsulates configuration (instructions, tools, skills, model)
  * and can create new sessions or resume existing ones.
  *
  * @example
  * ```typescript
- * const agent = new GeminiCliAgent({
+ * const agent = new OnyxCliAgent({
  *   instructions: 'You are a helpful coding assistant.',
  *   tools: [myTool],
  * });
@@ -37,10 +37,10 @@ import type { GeminiCliAgentOptions } from './types.js';
  * }
  * ```
  */
-export class GeminiCliAgent {
-  private options: GeminiCliAgentOptions;
+export class OnyxCliAgent {
+  private options: OnyxCliAgentOptions;
 
-  constructor(options: GeminiCliAgentOptions) {
+  constructor(options: OnyxCliAgentOptions) {
     this.options = options;
   }
 
@@ -49,11 +49,11 @@ export class GeminiCliAgent {
    *
    * @param options - Optional session configuration. Pass `{ sessionId }` to
    *   use a specific session ID; otherwise a new one is generated.
-   * @returns A new {@link GeminiCliSession} instance.
+   * @returns A new {@link OnyxCliSession} instance.
    */
-  session(options?: { sessionId?: string }): GeminiCliSession {
+  session(options?: { sessionId?: string }): OnyxCliSession {
     const sessionId = options?.sessionId || createSessionId();
-    return new GeminiCliSession(this.options, sessionId, this);
+    return new OnyxCliSession(this.options, sessionId, this);
   }
 
   /**
@@ -63,10 +63,10 @@ export class GeminiCliAgent {
    * so the agent can continue the conversation.
    *
    * @param sessionId - The ID of the session to resume.
-   * @returns A {@link GeminiCliSession} with the prior conversation loaded.
+   * @returns A {@link OnyxCliSession} with the prior conversation loaded.
    * @throws {Error} If no sessions exist or the specified ID is not found.
    */
-  async resumeSession(sessionId: string): Promise<GeminiCliSession> {
+  async resumeSession(sessionId: string): Promise<OnyxCliSession> {
     const cwd = this.options.cwd || process.cwd();
     const storage = new Storage(cwd);
     await storage.initialize();
@@ -115,7 +115,7 @@ export class GeminiCliAgent {
       filePath,
     };
 
-    return new GeminiCliSession(
+    return new OnyxCliSession(
       this.options,
       conversation.sessionId,
       this,

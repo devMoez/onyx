@@ -13,7 +13,7 @@ import {
   type Mocked,
   type Mock,
 } from 'vitest';
-import { GeminiAgent } from './acpRpcDispatcher.js';
+import { OnyxAgent } from './acpRpcDispatcher.js';
 import * as acp from '@agentclientprotocol/sdk';
 import {
   ApprovalMode,
@@ -70,12 +70,12 @@ vi.mock('@onyx/core', async (importOriginal) => {
   };
 });
 
-describe('GeminiAgent Session Resume', () => {
+describe('OnyxAgent Session Resume', () => {
   let mockConfig: Mocked<Config>;
   let mockSettings: Mocked<LoadedSettings>;
   let mockArgv: CliArgs;
   let mockConnection: Mocked<acp.AgentSideConnection>;
-  let agent: GeminiAgent;
+  let agent: OnyxAgent;
 
   beforeEach(() => {
     mockConfig = {
@@ -83,7 +83,7 @@ describe('GeminiAgent Session Resume', () => {
       initialize: vi.fn().mockResolvedValue(undefined),
       getFileSystemService: vi.fn(),
       setFileSystemService: vi.fn(),
-      getGeminiClient: vi.fn().mockReturnValue({
+      getOnyxClient: vi.fn().mockReturnValue({
         initialize: vi.fn().mockResolvedValue(undefined),
         resumeChat: vi.fn().mockResolvedValue(undefined),
         getChat: vi.fn().mockReturnValue({}),
@@ -102,9 +102,9 @@ describe('GeminiAgent Session Resume', () => {
       getApprovalMode: vi.fn().mockReturnValue('default'),
       isAutoMemoryEnabled: vi.fn().mockReturnValue(false),
       isPlanEnabled: vi.fn().mockReturnValue(true),
-      getModel: vi.fn().mockReturnValue('gemini-pro'),
+      getModel: vi.fn().mockReturnValue('onyx-pro'),
       getHasAccessToPreviewModel: vi.fn().mockReturnValue(false),
-      getGemini31LaunchedSync: vi.fn().mockReturnValue(false),
+      getOnyx31LaunchedSync: vi.fn().mockReturnValue(false),
       getCheckpointingEnabled: vi.fn().mockReturnValue(false),
       toolRegistry: {
         getTool: vi.fn().mockReturnValue({ kind: 'read' }),
@@ -127,7 +127,7 @@ describe('GeminiAgent Session Resume', () => {
 
     (loadCliConfig as Mock).mockResolvedValue(mockConfig);
 
-    agent = new GeminiAgent(mockConfig, mockSettings, mockArgv, mockConnection);
+    agent = new OnyxAgent(mockConfig, mockSettings, mockArgv, mockConnection);
   });
 
   it('should advertise loadSession capability', async () => {
@@ -144,7 +144,7 @@ describe('GeminiAgent Session Resume', () => {
       messages: [
         { type: 'user', content: [{ text: 'Hello' }] },
         {
-          type: 'gemini',
+          type: 'onyx',
           content: [{ text: 'Hi there' }],
           thoughts: [{ subject: 'Thinking', description: 'about greeting' }],
           toolCalls: [
@@ -158,7 +158,7 @@ describe('GeminiAgent Session Resume', () => {
           ],
         },
         {
-          type: 'gemini',
+          type: 'onyx',
           content: [{ text: 'Trying a write' }],
           toolCalls: [
             {
@@ -225,12 +225,12 @@ describe('GeminiAgent Session Resume', () => {
       },
       models: {
         availableModels: expect.any(Array) as unknown,
-        currentModelId: 'gemini-pro',
+        currentModelId: 'onyx-pro',
       },
     });
 
     // Verify resumeChat received the correct arguments
-    expect(mockConfig.getGeminiClient().resumeChat).toHaveBeenCalledWith(
+    expect(mockConfig.getOnyxClient().resumeChat).toHaveBeenCalledWith(
       mockClientHistory,
       expect.objectContaining({
         conversation: sessionData,

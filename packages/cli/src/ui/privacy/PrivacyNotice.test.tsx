@@ -43,7 +43,7 @@ describe('PrivacyNotice', () => {
 
   it.each([
     {
-      authType: 'gemini-api-key' as AuthType,
+      authType: 'onyx-api-key' as AuthType,
       expectedComponent: 'OnyxPrivacyNotice',
     },
     {

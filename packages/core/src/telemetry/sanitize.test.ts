@@ -29,7 +29,7 @@ function createMockConfig(logPromptsEnabled: boolean): Config {
     getSessionId: () => 'test-session-id',
     getExperiments: () => undefined,
     getExperimentsAsync: async () => undefined,
-    getModel: () => 'gemini-1.5-flash',
+    getModel: () => 'onyx-1.5-flash',
     isInteractive: () => true,
     getUserEmail: () => undefined,
     getContentGeneratorConfig: () => undefined,
@@ -359,10 +359,10 @@ describe('Telemetry Sanitization', () => {
         const event = new HookCallEvent(
           'BeforeModel',
           HookType.Command,
-          '$GEMINI_PROJECT_DIR/.onyx/hooks/add-context.sh',
+          '$ONYX_PROJECT_DIR/.onyx/hooks/add-context.sh',
           {
             llm_request: {
-              model: 'gemini-1.5-flash',
+              model: 'onyx-1.5-flash',
               messages: [{ role: 'user', content: 'Hello' }],
             },
           },
@@ -386,7 +386,7 @@ describe('Telemetry Sanitization', () => {
 
         // In enterprise mode, everything is logged
         expect(attributes['hook_name']).toBe(
-          '$GEMINI_PROJECT_DIR/.onyx/hooks/add-context.sh',
+          '$ONYX_PROJECT_DIR/.onyx/hooks/add-context.sh',
         );
         expect(attributes['hook_input']).toBeDefined();
         expect(attributes['hook_output']).toBeDefined();
@@ -399,10 +399,10 @@ describe('Telemetry Sanitization', () => {
         const event = new HookCallEvent(
           'BeforeModel',
           HookType.Command,
-          '$GEMINI_PROJECT_DIR/.onyx/hooks/add-context.sh',
+          '$ONYX_PROJECT_DIR/.onyx/hooks/add-context.sh',
           {
             llm_request: {
-              model: 'gemini-1.5-flash',
+              model: 'onyx-1.5-flash',
               messages: [{ role: 'user', content: 'Hello' }],
             },
           },

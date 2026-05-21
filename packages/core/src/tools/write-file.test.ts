@@ -33,7 +33,7 @@ import path from 'node:path';
 import { isSubpath } from '../utils/paths.js';
 import fs from 'node:fs';
 import os from 'node:os';
-import { GeminiClient } from '../core/client.js';
+import { OnyxClient } from '../core/client.js';
 import type { BaseLlmClient } from '../core/baseLlmClient.js';
 import { ensureCorrectFileContent } from '../utils/editCorrector.js';
 import { StandardFileSystemService } from '../services/fileSystemService.js';
@@ -44,8 +44,8 @@ import {
   getMockMessageBusInstance,
 } from '../test-utils/mock-message-bus.js';
 
-const rootDir = path.resolve(os.tmpdir(), 'gemini-cli-test-root');
-const plansDir = path.resolve(os.tmpdir(), 'gemini-cli-test-plans');
+const rootDir = path.resolve(os.tmpdir(), 'onyx-cli-test-root');
+const plansDir = path.resolve(os.tmpdir(), 'onyx-cli-test-plans');
 
 // --- MOCKS ---
 vi.mock('../core/client.js');
@@ -55,7 +55,7 @@ vi.mock('../ide/ide-client.js', () => ({
     getInstance: vi.fn(),
   },
 }));
-let mockGeminiClientInstance: Mocked<GeminiClient>;
+let mockOnyxClientInstance: Mocked<OnyxClient>;
 let mockBaseLlmClientInstance: Mocked<BaseLlmClient>;
 let mockConfig: Config;
 const mockEnsureCorrectFileContent = vi.fn<typeof ensureCorrectFileContent>();
@@ -79,7 +79,7 @@ const mockConfigInternal = {
   getProjectRoot: () => rootDir,
   getApprovalMode: vi.fn(() => ApprovalMode.DEFAULT),
   setApprovalMode: vi.fn(),
-  getGeminiClient: vi.fn(), // Initialize as a plain mock function
+  getOnyxClient: vi.fn(), // Initialize as a plain mock function
   getBaseLlmClient: vi.fn(), // Initialize as a plain mock function
   getFileSystemService: () => fsService,
   getIdeMode: vi.fn(() => false),
@@ -97,8 +97,8 @@ const mockConfigInternal = {
   getUserAgent: () => 'test-agent',
   getUserMemory: () => '',
   setUserMemory: vi.fn(),
-  getGeminiMdFileCount: () => 0,
-  setGeminiMdFileCount: vi.fn(),
+  getOnyxMdFileCount: () => 0,
+  setOnyxMdFileCount: vi.fn(),
   getToolRegistry: () =>
     ({
       registerTool: vi.fn(),
@@ -174,11 +174,11 @@ describe('WriteFileTool', () => {
       },
     } as unknown as Config;
 
-    // Setup GeminiClient mock
-    mockGeminiClientInstance = new (vi.mocked(GeminiClient))(
+    // Setup OnyxClient mock
+    mockOnyxClientInstance = new (vi.mocked(OnyxClient))(
       mockConfig,
-    ) as Mocked<GeminiClient>;
-    vi.mocked(GeminiClient).mockImplementation(() => mockGeminiClientInstance);
+    ) as Mocked<OnyxClient>;
+    vi.mocked(OnyxClient).mockImplementation(() => mockOnyxClientInstance);
 
     // Setup BaseLlmClient mock
     mockBaseLlmClientInstance = {
@@ -190,8 +190,8 @@ describe('WriteFileTool', () => {
     );
 
     // Now that mock instances are initialized, set the mock implementations for config getters
-    mockConfigInternal.getGeminiClient.mockReturnValue(
-      mockGeminiClientInstance,
+    mockConfigInternal.getOnyxClient.mockReturnValue(
+      mockOnyxClientInstance,
     );
     mockConfigInternal.getBaseLlmClient.mockReturnValue(
       mockBaseLlmClientInstance,
@@ -363,21 +363,21 @@ describe('WriteFileTool', () => {
       expect(result.error).toBeUndefined();
     });
 
-    it('should set aggressiveUnescape to false for gemini-3 models', async () => {
-      const filePath = path.join(rootDir, 'gemini3_file.txt');
+    it('should set aggressiveUnescape to false for onyx-3 models', async () => {
+      const filePath = path.join(rootDir, 'onyx3_file.txt');
       const proposedContent = 'Proposed new content.';
       const abortSignal = new AbortController().signal;
 
-      const mockGemini3Config = {
+      const mockOnyx3Config = {
         // eslint-disable-next-line @typescript-eslint/no-misused-spread
         ...mockConfig,
-        getActiveModel: () => 'gemini-3.0-pro',
+        getActiveModel: () => 'onyx-3.0-pro',
       } as unknown as Config;
 
       mockEnsureCorrectFileContent.mockResolvedValue('Corrected new content.');
 
       await getCorrectedFileContent(
-        mockGemini3Config,
+        mockOnyx3Config,
         filePath,
         proposedContent,
         abortSignal,

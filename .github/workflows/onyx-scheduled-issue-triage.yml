@@ -1,4 +1,4 @@
-name: '📋 Gemini Scheduled Issue Triage'
+name: '📋 Onyx Scheduled Issue Triage'
 
 on:
   schedule:
@@ -21,7 +21,7 @@ jobs:
   triage-issues:
     timeout-minutes: 60
     if: |-
-      ${{ github.repository == 'google-gemini/gemini-cli' }}
+      ${{ github.repository == 'google-onyx/onyx-cli' }}
     runs-on: 'ubuntu-latest'
     steps:
       - name: 'Checkout'
@@ -119,7 +119,7 @@ jobs:
         if: |-
           steps.get_issue_from_event.outputs.has_issues == 'true' || steps.find_issues.outputs.has_issues == 'true'
         run: |
-          cat << 'EOF' > gemini_exp.json
+          cat << 'EOF' > onyx_exp.json
           {
             "flags": [
               {
@@ -149,23 +149,23 @@ jobs:
       - name: 'Run Standard Triage Analysis'
         if: |-
           steps.get_issue_from_event.outputs.has_issues == 'true' || steps.find_issues.outputs.has_standard_issues == 'true'
-        uses: 'google-github-actions/run-gemini-cli@a3bf79042542528e91937b3a3a6fbc4967ee3c31' # ratchet:google-github-actions/run-gemini-cli@v0
-        id: 'gemini_standard_issue_analysis'
+        uses: 'google-github-actions/run-onyx-cli@a3bf79042542528e91937b3a3a6fbc4967ee3c31' # ratchet:google-github-actions/run-onyx-cli@v0
+        id: 'onyx_standard_issue_analysis'
         env:
           GITHUB_TOKEN: '' # Do not pass any auth token here since this runs on untrusted inputs
           REPOSITORY: '${{ github.repository }}'
           AVAILABLE_LABELS: '${{ steps.get_labels.outputs.available_labels }}'
           ONYX_CLI_TRUST_WORKSPACE: 'true'
-          GEMINI_EXP: 'gemini_exp.json'
-          GEMINI_STRICT_TELEMETRY_LIMITS: 'true'
+          ONYX_EXP: 'onyx_exp.json'
+          ONYX_STRICT_TELEMETRY_LIMITS: 'true'
         with:
           gcp_workload_identity_provider: '${{ vars.GCP_WIF_PROVIDER }}'
           gcp_project_id: '${{ vars.GOOGLE_CLOUD_PROJECT }}'
           gcp_location: '${{ vars.GOOGLE_CLOUD_LOCATION }}'
           gcp_service_account: '${{ vars.SERVICE_ACCOUNT_EMAIL }}'
-          gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
+          onyx_api_key: '${{ secrets.ONYX_API_KEY }}'
           use_vertex_ai: '${{ vars.GOOGLE_GENAI_USE_VERTEXAI }}'
-          use_gemini_code_assist: '${{ vars.GOOGLE_GENAI_USE_GCA }}'
+          use_onyx_code_assist: '${{ vars.GOOGLE_GENAI_USE_GCA }}'
           settings: |-
             {
               "maxSessionTurns": 25,
@@ -234,7 +234,7 @@ jobs:
 
             Categorization Guidelines (Priority):
             P0 - Urgent Blocking Issues:
-              - Definition: Critical failures breaking core functionality for a large portion of users. Examples: CLI fails to launch globally, core commands (gemini run) crash on valid input, unhandled promise rejections on boot, critical security vulnerability.
+              - Definition: Critical failures breaking core functionality for a large portion of users. Examples: CLI fails to launch globally, core commands (onyx run) crash on valid input, unhandled promise rejections on boot, critical security vulnerability.
               - Note: You must apply status/manual-triage instead of priority/p0.
             P1 - Critical but Workable:
               - Definition: Severe issues without a reasonable workaround, significantly degrading the developer experience but not globally blocking. Examples: Specific tools failing consistently (e.g., `web_search` returns 500s), persistent PTY streaming hangs, memory leaks leading to OOM after short use.
@@ -261,28 +261,28 @@ jobs:
       - name: 'Stop Telemetry Collector'
         if: |-
           steps.find_issues.outputs.has_effort_issues == 'true'
-        run: 'docker rm -f gemini-telemetry-collector || true'
+        run: 'docker rm -f onyx-telemetry-collector || true'
 
       - name: 'Run Effort Triage Analysis'
         if: |-
           steps.find_issues.outputs.has_effort_issues == 'true'
-        uses: 'google-github-actions/run-gemini-cli@a3bf79042542528e91937b3a3a6fbc4967ee3c31' # ratchet:google-github-actions/run-gemini-cli@v0
-        id: 'gemini_effort_issue_analysis'
+        uses: 'google-github-actions/run-onyx-cli@a3bf79042542528e91937b3a3a6fbc4967ee3c31' # ratchet:google-github-actions/run-onyx-cli@v0
+        id: 'onyx_effort_issue_analysis'
         env:
           GITHUB_TOKEN: '' # Do not pass any auth token here since this runs on untrusted inputs
           REPOSITORY: '${{ github.repository }}'
           AVAILABLE_LABELS: '${{ steps.get_labels.outputs.available_labels }}'
           ONYX_CLI_TRUST_WORKSPACE: 'true'
-          GEMINI_EXP: 'gemini_exp.json'
-          GEMINI_STRICT_TELEMETRY_LIMITS: 'true'
+          ONYX_EXP: 'onyx_exp.json'
+          ONYX_STRICT_TELEMETRY_LIMITS: 'true'
         with:
           gcp_workload_identity_provider: '${{ vars.GCP_WIF_PROVIDER }}'
           gcp_project_id: '${{ vars.GOOGLE_CLOUD_PROJECT }}'
           gcp_location: '${{ vars.GOOGLE_CLOUD_LOCATION }}'
           gcp_service_account: '${{ vars.SERVICE_ACCOUNT_EMAIL }}'
-          gemini_api_key: '${{ secrets.GEMINI_API_KEY }}'
+          onyx_api_key: '${{ secrets.ONYX_API_KEY }}'
           use_vertex_ai: '${{ vars.GOOGLE_GENAI_USE_VERTEXAI }}'
-          use_gemini_code_assist: '${{ vars.GOOGLE_GENAI_USE_GCA }}'
+          use_onyx_code_assist: '${{ vars.GOOGLE_GENAI_USE_GCA }}'
           settings: |-
             {
               "maxSessionTurns": 25,
@@ -381,12 +381,12 @@ jobs:
 
       - name: 'Apply Standard Labels to Issues'
         if: |-
-          ${{ steps.gemini_standard_issue_analysis.outcome == 'success' &&
-              steps.gemini_standard_issue_analysis.outputs.summary != '[]' &&
-              steps.gemini_standard_issue_analysis.outputs.summary != '' }}
+          ${{ steps.onyx_standard_issue_analysis.outcome == 'success' &&
+              steps.onyx_standard_issue_analysis.outputs.summary != '[]' &&
+              steps.onyx_standard_issue_analysis.outputs.summary != '' }}
         env:
           REPOSITORY: '${{ github.repository }}'
-          LABELS_OUTPUT: '${{ steps.gemini_standard_issue_analysis.outputs.summary }}'
+          LABELS_OUTPUT: '${{ steps.onyx_standard_issue_analysis.outputs.summary }}'
           SUPPRESS_COMMENT: 'true'
         uses: 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea'
         with:
@@ -397,12 +397,12 @@ jobs:
 
       - name: 'Apply Effort Labels to Issues'
         if: |-
-          ${{ steps.gemini_effort_issue_analysis.outcome == 'success' &&
-              steps.gemini_effort_issue_analysis.outputs.summary != '[]' &&
-              steps.gemini_effort_issue_analysis.outputs.summary != '' }}
+          ${{ steps.onyx_effort_issue_analysis.outcome == 'success' &&
+              steps.onyx_effort_issue_analysis.outputs.summary != '[]' &&
+              steps.onyx_effort_issue_analysis.outputs.summary != '' }}
         env:
           REPOSITORY: '${{ github.repository }}'
-          LABELS_OUTPUT: '${{ steps.gemini_effort_issue_analysis.outputs.summary }}'
+          LABELS_OUTPUT: '${{ steps.onyx_effort_issue_analysis.outputs.summary }}'
         uses: 'actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea'
         with:
           github-token: '${{ steps.generate_token.outputs.token }}'

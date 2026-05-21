@@ -31,7 +31,7 @@ describe('inputBlocker', () => {
       expect(mockBrowserManager.callTool).toHaveBeenCalledWith(
         'evaluate_script',
         {
-          function: expect.stringContaining('__gemini_input_blocker'),
+          function: expect.stringContaining('__onyx_input_blocker'),
         },
         undefined,
         true,
@@ -64,7 +64,7 @@ describe('inputBlocker', () => {
 
       const call = vi.mocked(mockBrowserManager.callTool).mock.calls[0];
       const args = call[1] as { function: string };
-      expect(args.function).toContain('Gemini CLI is controlling this browser');
+      expect(args.function).toContain('Onyx CLI is controlling this browser');
     });
 
     it('should set aria-hidden to prevent accessibility tree pollution', async () => {
@@ -94,7 +94,7 @@ describe('inputBlocker', () => {
         1,
         'evaluate_script',
         expect.objectContaining({
-          function: expect.stringContaining('__gemini_input_blocker'),
+          function: expect.stringContaining('__onyx_input_blocker'),
         }),
         undefined,
         true,
@@ -103,7 +103,7 @@ describe('inputBlocker', () => {
         2,
         'evaluate_script',
         expect.objectContaining({
-          function: expect.stringContaining('__gemini_input_blocker'),
+          function: expect.stringContaining('__onyx_input_blocker'),
         }),
         undefined,
         true,
@@ -118,7 +118,7 @@ describe('inputBlocker', () => {
       expect(mockBrowserManager.callTool).toHaveBeenCalledWith(
         'evaluate_script',
         {
-          function: expect.stringContaining('__gemini_input_blocker'),
+          function: expect.stringContaining('__onyx_input_blocker'),
         },
         undefined,
         true,
@@ -164,7 +164,7 @@ describe('inputBlocker', () => {
         1,
         'evaluate_script',
         expect.objectContaining({
-          function: expect.stringContaining('__gemini_input_blocker'),
+          function: expect.stringContaining('__onyx_input_blocker'),
         }),
         undefined,
         true,
@@ -173,7 +173,7 @@ describe('inputBlocker', () => {
         2,
         'evaluate_script',
         expect.objectContaining({
-          function: expect.stringContaining('__gemini_input_blocker'),
+          function: expect.stringContaining('__onyx_input_blocker'),
         }),
         undefined,
         true,

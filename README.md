@@ -1,15 +1,15 @@
 # Onyx CLI
 
-[![Onyx CLI CI](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml)
-[![Onyx CLI E2E (Chained)](https://github.com/google-gemini/gemini-cli/actions/workflows/chained_e2e.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/chained_e2e.yml)
+[![Onyx CLI CI](https://github.com/google-onyx/onyx-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/google-onyx/onyx-cli/actions/workflows/ci.yml)
+[![Onyx CLI E2E (Chained)](https://github.com/google-onyx/onyx-cli/actions/workflows/chained_e2e.yml/badge.svg)](https://github.com/google-onyx/onyx-cli/actions/workflows/chained_e2e.yml)
 [![Version](https://img.shields.io/npm/v/@onyx/cli)](https://www.npmjs.com/package/@onyx/cli)
-[![License](https://img.shields.io/github/license/google-gemini/gemini-cli)](https://github.com/google-gemini/gemini-cli/blob/main/LICENSE)
-[![View Code Wiki](https://assets.codewiki.google/readme-badge/static.svg)](https://codewiki.google/github.com/google-gemini/gemini-cli?utm_source=badge&utm_medium=github&utm_campaign=github.com/google-gemini/gemini-cli)
+[![License](https://img.shields.io/github/license/google-onyx/onyx-cli)](https://github.com/google-onyx/onyx-cli/blob/main/LICENSE)
+[![View Code Wiki](https://assets.codewiki.google/readme-badge/static.svg)](https://codewiki.google/github.com/google-onyx/onyx-cli?utm_source=badge&utm_medium=github&utm_campaign=github.com/google-onyx/onyx-cli)
 
-![Onyx CLI Screenshot](/docs/assets/gemini-screenshot.png)
+![Onyx CLI Screenshot](/docs/assets/onyx-screenshot.png)
 
-Onyx CLI is an open-source AI agent that brings the power of Gemini directly
-into your terminal. It provides lightweight access to Gemini, giving you the
+Onyx CLI is an open-source AI agent that brings the power of Onyx directly
+into your terminal. It provides lightweight access to Onyx, giving you the
 most direct path from your prompt to our model.
 
 Learn all about Onyx CLI in our [documentation](https://onyxcli.com/docs/).
@@ -18,7 +18,7 @@ Learn all about Onyx CLI in our [documentation](https://onyxcli.com/docs/).
 
 - **🎯 Free tier**: 60 requests/min and 1,000 requests/day with personal Google
   account.
-- **🧠 Powerful Gemini 3 models**: Access to improved reasoning and 1M token
+- **🧠 Powerful Onyx 3 models**: Access to improved reasoning and 1M token
   context window.
 - **🔧 Built-in tools**: Google Search grounding, file operations, shell
   commands, web fetching.
@@ -124,7 +124,7 @@ npm install -g @onyx/cli@nightly
 ### Advanced Capabilities
 
 - Ground your queries with built-in
-  [Google Search](https://ai.google.dev/gemini-api/docs/grounding) for real-time
+  [Google Search](https://ai.google.dev/onyx-api/docs/grounding) for real-time
   information
 - Conversation checkpointing to save and resume complex sessions
 - Custom context files (ONYX.md) to tailor behavior for your projects
@@ -149,15 +149,15 @@ Choose the authentication method that best fits your needs:
 
 ### Option 1: Sign in with Google (OAuth login using your Google Account)
 
-**✨ Best for:** Individual developers as well as anyone who has a Gemini Code
+**✨ Best for:** Individual developers as well as anyone who has a Onyx Code
 Assist License. (see
-[quota limits and terms of service](https://cloud.google.com/gemini/docs/quotas)
+[quota limits and terms of service](https://cloud.google.com/onyx/docs/quotas)
 for details)
 
 **Benefits:**
 
 - **Free tier**: 60 requests/min and 1,000 requests/day
-- **Gemini 3 models** with 1M token context window
+- **Onyx 3 models** with 1M token context window
 - **No API key management** - just sign in with your Google account
 - **Automatic updates** to latest models
 
@@ -175,19 +175,19 @@ export GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_ID"
 onyx
 ```
 
-### Option 2: Gemini API Key
+### Option 2: Onyx API Key
 
 **✨ Best for:** Developers who need specific model control or paid tier access
 
 **Benefits:**
 
-- **Free tier**: 1000 requests/day with Gemini 3 (mix of flash and pro)
-- **Model selection**: Choose specific Gemini models
+- **Free tier**: 1000 requests/day with Onyx 3 (mix of flash and pro)
+- **Model selection**: Choose specific Onyx models
 - **Usage-based billing**: Upgrade for higher limits when needed
 
 ```bash
 # Get your key from https://aistudio.google.com/apikey
-export GEMINI_API_KEY="YOUR_API_KEY"
+export ONYX_API_KEY="YOUR_API_KEY"
 onyx
 ```
 
@@ -230,7 +230,7 @@ onyx --include-directories ../lib,../docs
 #### Use specific model
 
 ```bash
-onyx -m gemini-2.5-flash
+onyx -m onyx-2.5-flash
 ```
 
 #### Non-interactive mode for scripts
@@ -268,8 +268,8 @@ onyx
 #### Analyze existing code
 
 ```bash
-git clone https://github.com/google-gemini/gemini-cli
-cd gemini-cli
+git clone https://github.com/google-onyx/onyx-cli
+cd onyx-cli
 onyx
 > Give me a summary of all of the changes that went in yesterday
 ```
@@ -366,7 +366,7 @@ encourage the community to:
 See our [Contributing Guide](./CONTRIBUTING.md) for development setup, coding
 standards, and how to submit pull requests.
 
-Check our [Official Roadmap](https://github.com/orgs/google-gemini/projects/11)
+Check our [Official Roadmap](https://github.com/orgs/google-onyx/projects/11)
 for planned features and priorities.
 
 ## 📖 Resources
@@ -377,9 +377,9 @@ for planned features and priorities.
 - **[Changelog](https://www.onyxcli.com/docs/changelogs)** - See recent notable
   updates.
 - **[NPM Package](https://www.npmjs.com/package/@onyx/cli)** - Package registry.
-- **[GitHub Issues](https://github.com/google-gemini/onyx-cli/issues)** - Report
+- **[GitHub Issues](https://github.com/google-onyx/onyx-cli/issues)** - Report
   bugs or request features.
-- **[Security Advisories](https://github.com/google-gemini/onyx-cli/security/advisories)** -
+- **[Security Advisories](https://github.com/google-onyx/onyx-cli/security/advisories)** -
   Security updates.
 
 ### Uninstall
@@ -395,11 +395,11 @@ removal instructions.
 - **Security**: [Security Policy](SECURITY.md)
 
 <p align="left">
- <a href="https://www.star-history.com/google-gemini/onyx-cli">
+ <a href="https://www.star-history.com/google-onyx/onyx-cli">
   <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=google-gemini/onyx-cli&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=google-gemini/onyx-cli" />
-   <img alt="Star History Rank" src="https://api.star-history.com/badge?repo=google-gemini/onyx-cli" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=google-onyx/onyx-cli&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=google-onyx/onyx-cli" />
+   <img alt="Star History Rank" src="https://api.star-history.com/badge?repo=google-onyx/onyx-cli" />
   </picture>
  </a>
 </p>

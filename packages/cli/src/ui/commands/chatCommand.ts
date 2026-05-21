@@ -36,19 +36,19 @@ const getSavedChatTags = async (
   mtSortDesc: boolean,
 ): Promise<ChatDetail[]> => {
   const cfg = context.services.agentContext?.config;
-  const geminiDir = cfg?.storage?.getProjectTempDir();
-  if (!geminiDir) {
+  const onyxDir = cfg?.storage?.getProjectTempDir();
+  if (!onyxDir) {
     return [];
   }
   try {
     const file_head = 'checkpoint-';
     const file_tail = '.json';
-    const files = await fsPromises.readdir(geminiDir);
+    const files = await fsPromises.readdir(onyxDir);
     const chatDetails: ChatDetail[] = [];
 
     for (const file of files) {
       if (file.startsWith(file_head) && file.endsWith(file_tail)) {
-        const filePath = path.join(geminiDir, file);
+        const filePath = path.join(onyxDir, file);
         const stats = await fsPromises.stat(filePath);
         const tagName = file.slice(file_head.length, -file_tail.length);
         chatDetails.push({
@@ -127,7 +127,7 @@ const saveCommand: SlashCommand = {
       }
     }
 
-    const chat = context.services.agentContext?.geminiClient?.getChat();
+    const chat = context.services.agentContext?.onyxClient?.getChat();
     if (!chat) {
       return {
         type: 'message',
@@ -288,7 +288,7 @@ const shareCommand: SlashCommand = {
   action: async (context, args): Promise<MessageActionReturn> => {
     let filePathArg = args.trim();
     if (!filePathArg) {
-      filePathArg = `gemini-conversation-${Date.now()}.json`;
+      filePathArg = `onyx-conversation-${Date.now()}.json`;
     }
 
     const filePath = path.resolve(filePathArg);
@@ -301,7 +301,7 @@ const shareCommand: SlashCommand = {
       };
     }
 
-    const chat = context.services.agentContext?.geminiClient?.getChat();
+    const chat = context.services.agentContext?.onyxClient?.getChat();
     if (!chat) {
       return {
         type: 'message',

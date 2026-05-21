@@ -19,7 +19,7 @@ export class EventLoopMonitor {
 
   start(config: Config, intervalMs: number = 10000): void {
     const isEnabled =
-      process.env['GEMINI_EVENT_LOOP_MONITOR_ENABLED'] === 'true';
+      process.env['ONYX_EVENT_LOOP_MONITOR_ENABLED'] === 'true';
     if (!isEnabled || !isPerformanceMonitoringActive() || this.isRunning) {
       return;
     }

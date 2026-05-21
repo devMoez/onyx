@@ -65,13 +65,13 @@ export function applySubstitutions(
   prompt: string,
   context: AgentLoopContext,
   skillsPrompt: string,
-  isGemini3: boolean = false,
+  isOnyx3: boolean = false,
 ): string {
   let result = prompt;
 
   result = result.replace(/\${AgentSkills}/g, skillsPrompt);
 
-  const activeSnippets = isGemini3 ? snippets : legacySnippets;
+  const activeSnippets = isOnyx3 ? snippets : legacySnippets;
   const subAgentsContent = activeSnippets.renderSubAgents(
     context.config
       .getAgentRegistry()
@@ -107,7 +107,7 @@ export function applySubstitutions(
  * Checks if a specific prompt section is enabled via environment variables.
  */
 export function isSectionEnabled(key: string): boolean {
-  const envVar = process.env[`GEMINI_PROMPT_${key.toUpperCase()}`];
+  const envVar = process.env[`ONYX_PROMPT_${key.toUpperCase()}`];
   const lowerEnvVar = envVar?.trim().toLowerCase();
   return lowerEnvVar !== '0' && lowerEnvVar !== 'false';
 }

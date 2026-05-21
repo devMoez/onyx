@@ -12,7 +12,7 @@ sending routing decisions to a hosted model).
 <!-- prettier-ignore -->
 > [!IMPORTANT]
 > **Recommended:** We now provide a fully automated setup command. We recommend
-> using the [`gemini gemma` Setup Guide](./gemma-setup.md) instead of following
+> using the [`onyx gemma` Setup Guide](./gemma-setup.md) instead of following
 > these manual steps.
 
 This feature can help reduce costs associated with hosted model usage while
@@ -22,7 +22,7 @@ offering similar routing decision latency and quality.
 
 Using a Gemma model for routing decisions requires that an implementation of a
 Gemma model be running locally on your machine, served behind an HTTP endpoint
-and accessed via the Gemini API. If you cannot use the `gemini gemma setup`
+and accessed via the Onyx API. If you cannot use the `onyx gemma setup`
 command, follow these manual steps:
 
 ### Download the LiteRT-LM runtime

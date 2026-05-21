@@ -34,11 +34,11 @@ $env:GITHUB_PERSONAL_ACCESS_TOKEN="github_pat_..."
 
 ## How to configure Onyx CLI
 
-You tell Gemini about new servers by editing your `settings.json`.
+You tell Onyx about new servers by editing your `settings.json`.
 
-1.  Open `~/.gemini/settings.json` (or the project-specific
-    `.gemini/settings.json`).
-2.  Add the `mcpServers` block. This tells Gemini: "Run this docker container
+1.  Open `~/.onyx/settings.json` (or the project-specific
+    `.onyx/settings.json`).
+2.  Add the `mcpServers` block. This tells Onyx: "Run this docker container
     and talk to it."
 
 ```json
@@ -86,7 +86,7 @@ don't need to learn special commands; just ask in natural language.
 
 ### Scenario: Listing pull requests
 
-**Prompt:** `List the open PRs in the google/gemini-cli repository.`
+**Prompt:** `List the open PRs in the google/onyx-cli repository.`
 
 The agent will:
 

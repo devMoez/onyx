@@ -11,7 +11,7 @@ import * as path from 'node:path';
 import { createExtension } from '../../test-utils/createExtension.js';
 import { useExtensionUpdates } from './useExtensionUpdates.js';
 import {
-  GEMINI_DIR,
+  ONYX_DIR,
   loadAgentsFromDirectory,
   loadSkillsFromDir,
 } from '@onyx/core';
@@ -68,14 +68,14 @@ describe('useExtensionUpdates', () => {
     });
     vi.mocked(loadSkillsFromDir).mockResolvedValue([]);
     tempHomeDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'gemini-cli-test-home-'),
+      path.join(os.tmpdir(), 'onyx-cli-test-home-'),
     );
     vi.mocked(os.homedir).mockReturnValue(tempHomeDir);
     tempWorkspaceDir = fs.mkdtempSync(
-      path.join(tempHomeDir, 'gemini-cli-test-workspace-'),
+      path.join(tempHomeDir, 'onyx-cli-test-workspace-'),
     );
     vi.spyOn(process, 'cwd').mockReturnValue(tempWorkspaceDir);
-    userExtensionsDir = path.join(tempHomeDir, GEMINI_DIR, 'extensions');
+    userExtensionsDir = path.join(tempHomeDir, ONYX_DIR, 'extensions');
     fs.mkdirSync(userExtensionsDir, { recursive: true });
     vi.mocked(checkForAllExtensionUpdates).mockReset();
     vi.mocked(updateExtension).mockReset();

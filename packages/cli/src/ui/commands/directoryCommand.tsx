@@ -57,12 +57,12 @@ async function finishAddingDirectories(
   }
 
   if (added.length > 0) {
-    const gemini = config.geminiClient;
-    if (gemini) {
-      await gemini.addDirectoryContext();
+    const onyx = config.onyxClient;
+    if (onyx) {
+      await onyx.addDirectoryContext();
 
       // Persist directories to session file for resume support
-      const chatRecordingService = gemini.getChatRecordingService();
+      const chatRecordingService = onyx.getChatRecordingService();
       const workspaceContext = config.getWorkspaceContext();
       chatRecordingService?.recordDirectories(
         workspaceContext.getDirectories(),

@@ -32,7 +32,7 @@ AI-generated code changes directly within your editor.
   - Any text you have selected (up to a 16KB limit; longer selections will be
     truncated).
 
-- **Native diffing:** When Gemini suggests code modifications, you can view the
+- **Native diffing:** When Onyx suggests code modifications, you can view the
   changes directly within your IDE's native diff viewer. This lets you review,
   edit, and accept or reject the suggested changes seamlessly.
 
@@ -73,10 +73,10 @@ This will find the correct extension for your IDE and install it.
 You can also install the extension directly from a marketplace.
 
 - **For Visual Studio Code:** Install from the
-  [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=google.gemini-cli-vscode-ide-companion).
+  [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=google.onyx-cli-vscode-ide-companion).
 - **For VS Code forks:** To support forks of VS Code, the extension is also
   published on the
-  [Open VSX Registry](https://open-vsx.org/extension/google/gemini-cli-vscode-ide-companion).
+  [Open VSX Registry](https://open-vsx.org/extension/google/onyx-cli-vscode-ide-companion).
   Follow your editor's instructions for installing extensions from this
   registry.
 
@@ -126,7 +126,7 @@ recently opened files it is aware of.
 
 #### Working with diffs
 
-When you ask Gemini to modify a file, it can open a diff view directly in your
+When you ask Onyx to modify a file, it can open a diff view directly in your
 editor.
 
 **To accept a diff**, you can perform any of the following actions:
@@ -229,7 +229,7 @@ If you are using Onyx CLI within a sandbox, be aware of the following:
 - **Message:**
   `🔴 Disconnected: Failed to connect to IDE companion extension in [IDE Name]. Please ensure the extension is running. To install the extension, run /ide install.`
   - **Cause:** Onyx CLI could not find the necessary environment variables
-    (`GEMINI_CLI_IDE_WORKSPACE_PATH` or `GEMINI_CLI_IDE_SERVER_PORT`) to connect
+    (`ONYX_CLI_IDE_WORKSPACE_PATH` or `ONYX_CLI_IDE_SERVER_PORT`) to connect
     to the IDE. This usually means the IDE companion extension is not running or
     did not initialize correctly.
   - **Solution:**
@@ -248,19 +248,19 @@ If you are using Onyx CLI within a sandbox, be aware of the following:
 
 If automatic IDE detection fails, or if you are running Onyx CLI in a
 standalone terminal and want to manually associate it with a specific IDE
-instance, you can set the `GEMINI_CLI_IDE_PID` environment variable to the
+instance, you can set the `ONYX_CLI_IDE_PID` environment variable to the
 process ID (PID) of your IDE.
 
 **macOS/Linux**
 
 ```bash
-export GEMINI_CLI_IDE_PID=12345
+export ONYX_CLI_IDE_PID=12345
 ```
 
 **Windows (PowerShell)**
 
 ```powershell
-$env:GEMINI_CLI_IDE_PID=12345
+$env:ONYX_CLI_IDE_PID=12345
 ```
 
 When this variable is set, Onyx CLI will skip automatic detection and attempt

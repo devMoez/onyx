@@ -52,7 +52,7 @@ export function AuthDialog({
             key: AuthType.COMPUTE_ADC,
           },
         ]
-      : process.env['GEMINI_CLI_USE_COMPUTE_ADC'] === 'true'
+      : process.env['ONYX_CLI_USE_COMPUTE_ADC'] === 'true'
         ? [
             {
               label: 'Use metadata server application default credentials',
@@ -62,9 +62,9 @@ export function AuthDialog({
           ]
         : []),
     {
-      label: 'Use Gemini API Key',
-      value: AuthType.USE_GEMINI,
-      key: AuthType.USE_GEMINI,
+      label: 'Use Onyx API Key',
+      value: AuthType.USE_ONYX,
+      key: AuthType.USE_ONYX,
     },
     {
       label: 'Vertex AI',
@@ -80,7 +80,7 @@ export function AuthDialog({
   }
 
   let defaultAuthType = null;
-  const defaultAuthTypeEnv = process.env['GEMINI_DEFAULT_AUTH_TYPE'];
+  const defaultAuthTypeEnv = process.env['ONYX_DEFAULT_AUTH_TYPE'];
   if (
     defaultAuthTypeEnv &&
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
@@ -99,8 +99,8 @@ export function AuthDialog({
       return item.value === defaultAuthType;
     }
 
-    if (process.env['GEMINI_API_KEY']) {
-      return item.value === AuthType.USE_GEMINI;
+    if (process.env['ONYX_API_KEY']) {
+      return item.value === AuthType.USE_ONYX;
     }
 
     return item.value === AuthType.LOGIN_WITH_GOOGLE;
@@ -137,10 +137,10 @@ export function AuthDialog({
           return;
         }
 
-        if (authType === AuthType.USE_GEMINI) {
+        if (authType === AuthType.USE_ONYX) {
           // Always show the API key input dialog so the user can
           // explicitly enter or confirm their key, regardless of
-          // whether GEMINI_API_KEY env var or a stored key exists.
+          // whether ONYX_API_KEY env var or a stored key exists.
           setAuthState(AuthState.AwaitingApiKeyInput);
           return;
         }
@@ -248,7 +248,7 @@ export function AuthDialog({
         </Box>
         <Box marginTop={1}>
           <Text color={theme.text.link}>
-            {'https://geminicli.com/docs/resources/tos-privacy/'}
+            {'https://onyxcli.com/docs/resources/tos-privacy/'}
           </Text>
         </Box>
       </Box>

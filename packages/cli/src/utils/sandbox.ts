@@ -23,7 +23,7 @@ import {
   coreEvents,
   debugLogger,
   FatalSandboxError,
-  GEMINI_DIR,
+  ONYX_DIR,
   homedir,
 } from '@onyx/core';
 import { ConsolePatcher } from '../ui/utils/ConsolePatcher.js';
@@ -76,8 +76,8 @@ export async function start_sandbox(
       if (!BUILTIN_SEATBELT_PROFILES.includes(profile)) {
         const safeProfile = path.basename(profile);
         const fileName = `sandbox-macos-${safeProfile}.sb`;
-        const userProfileFile = path.join(homedir(), GEMINI_DIR, fileName);
-        const projectProfileFile = path.join(GEMINI_DIR, fileName);
+        const userProfileFile = path.join(homedir(), ONYX_DIR, fileName);
+        const projectProfileFile = path.join(ONYX_DIR, fileName);
         profileFile = fs.existsSync(userProfileFile)
           ? userProfileFile
           : projectProfileFile;
@@ -163,8 +163,8 @@ export async function start_sandbox(
           ...finalArgv.map((arg) => quote([arg])),
         ].join(' '),
       );
-      // start and set up proxy if GEMINI_SANDBOX_PROXY_COMMAND is set
-      const proxyCommand = process.env['GEMINI_SANDBOX_PROXY_COMMAND'];
+      // start and set up proxy if ONYX_SANDBOX_PROXY_COMMAND is set
+      const proxyCommand = process.env['ONYX_SANDBOX_PROXY_COMMAND'];
       let proxyProcess: ChildProcess | undefined = undefined;
       let sandboxProcess: ChildProcess | undefined = undefined;
       const sandboxEnv = { ...process.env };
@@ -248,11 +248,11 @@ export async function start_sandbox(
 
     debugLogger.log(`hopping into sandbox (command: ${command}) ...`);
 
-    // determine full path for gemini-cli to distinguish linked vs installed setting
+    // determine full path for onyx-cli to distinguish linked vs installed setting
     const gcPath = process.argv[1] ? fs.realpathSync(process.argv[1]) : '';
 
     const projectSandboxDockerfile = path.join(
-      GEMINI_DIR,
+      ONYX_DIR,
       'sandbox.Dockerfile',
     );
     const isCustomProjectSandbox = fs.existsSync(projectSandboxDockerfile);
@@ -264,14 +264,14 @@ export async function start_sandbox(
     const workdir = path.resolve(process.cwd());
     const containerWorkdir = getContainerPath(workdir);
 
-    // if BUILD_SANDBOX is set, then call scripts/build_sandbox.js under gemini-cli repo
+    // if BUILD_SANDBOX is set, then call scripts/build_sandbox.js under onyx-cli repo
     //
-    // note this can only be done with binary linked from gemini-cli repo
+    // note this can only be done with binary linked from onyx-cli repo
     if (process.env['BUILD_SANDBOX']) {
-      if (!gcPath.includes('gemini-cli/packages/')) {
+      if (!gcPath.includes('onyx-cli/packages/')) {
         throw new FatalSandboxError(
-          'Cannot build sandbox using installed gemini binary; ' +
-            'run `npm link ./packages/cli` under gemini-cli repo to switch to linked binary.',
+          'Cannot build sandbox using installed onyx binary; ' +
+            'run `npm link ./packages/cli` under onyx-cli repo to switch to linked binary.',
         );
       } else {
         debugLogger.log('building sandbox ...');
@@ -279,7 +279,7 @@ export async function start_sandbox(
         // if project folder has sandbox.Dockerfile under project settings folder, use that
         let buildArgs = '';
         const projectSandboxDockerfile = path.join(
-          GEMINI_DIR,
+          ONYX_DIR,
           'sandbox.Dockerfile',
         );
         if (isCustomProjectSandbox) {
@@ -292,7 +292,7 @@ export async function start_sandbox(
             stdio: 'inherit',
             env: {
               ...process.env,
-              GEMINI_SANDBOX: command, // in case sandbox is enabled via flags (see config.ts under cli package)
+              ONYX_SANDBOX: command, // in case sandbox is enabled via flags (see config.ts under cli package)
             },
           },
         );
@@ -303,8 +303,8 @@ export async function start_sandbox(
     if (!(await ensureSandboxImageIsPresent(command, image, cliConfig))) {
       const remedy =
         image === LOCAL_DEV_SANDBOX_IMAGE_NAME
-          ? 'Try running `npm run build:all` or `npm run build:sandbox` under the gemini-cli repo to build it locally, or check the image name and your network connection.'
-          : 'Please check the image name, your network connection, or notify gemini-cli-dev@google.com if the issue persists.';
+          ? 'Try running `npm run build:all` or `npm run build:sandbox` under the onyx-cli repo to build it locally, or check the image name and your network connection.'
+          : 'Please check the image name, your network connection, or notify onyx-cli-dev@google.com if the issue persists.';
       throw new FatalSandboxError(
         `Sandbox image '${image}' is missing or could not be pulled. ${remedy}`,
       );
@@ -347,12 +347,12 @@ export async function start_sandbox(
     // note user/home changes inside sandbox and we mount at BOTH paths for consistency
     const userHomeDirOnHost = homedir();
     const userSettingsDirInSandbox = getContainerPath(
-      `/home/node/${GEMINI_DIR}`,
+      `/home/node/${ONYX_DIR}`,
     );
     if (!fs.existsSync(userHomeDirOnHost)) {
       fs.mkdirSync(userHomeDirOnHost, { recursive: true });
     }
-    const userSettingsDirOnHost = path.join(userHomeDirOnHost, GEMINI_DIR);
+    const userSettingsDirOnHost = path.join(userHomeDirOnHost, ONYX_DIR);
     if (!fs.existsSync(userSettingsDirOnHost)) {
       fs.mkdirSync(userSettingsDirOnHost, { recursive: true });
     }
@@ -451,8 +451,8 @@ export async function start_sandbox(
 
     // copy proxy environment variables, replacing localhost with SANDBOX_PROXY_NAME
     // copy as both upper-case and lower-case as is required by some utilities
-    // GEMINI_SANDBOX_PROXY_COMMAND implies HTTPS_PROXY unless HTTP_PROXY is set
-    const proxyCommand = process.env['GEMINI_SANDBOX_PROXY_COMMAND'];
+    // ONYX_SANDBOX_PROXY_COMMAND implies HTTPS_PROXY unless HTTP_PROXY is set
+    const proxyCommand = process.env['ONYX_SANDBOX_PROXY_COMMAND'];
 
     if (proxyCommand) {
       let proxy =
@@ -501,9 +501,9 @@ export async function start_sandbox(
     // CLI starts cannot race on the same sequential name.
     const imageName = parseImageName(image);
     const isIntegrationTest =
-      process.env['GEMINI_CLI_INTEGRATION_TEST'] === 'true';
+      process.env['ONYX_CLI_INTEGRATION_TEST'] === 'true';
     const containerNamePrefix = isIntegrationTest
-      ? 'gemini-cli-integration-test'
+      ? 'onyx-cli-integration-test'
       : imageName;
     const containerName = `${containerNamePrefix}-${randomBytes(6).toString(
       'hex',
@@ -511,27 +511,27 @@ export async function start_sandbox(
     debugLogger.log(`ContainerName: ${containerName}`);
     args.push('--name', containerName, '--hostname', containerName);
 
-    // copy GEMINI_CLI_TEST_VAR for integration tests
-    if (process.env['GEMINI_CLI_TEST_VAR']) {
+    // copy ONYX_CLI_TEST_VAR for integration tests
+    if (process.env['ONYX_CLI_TEST_VAR']) {
       args.push(
         '--env',
-        `GEMINI_CLI_TEST_VAR=${process.env['GEMINI_CLI_TEST_VAR']}`,
+        `ONYX_CLI_TEST_VAR=${process.env['ONYX_CLI_TEST_VAR']}`,
       );
     }
 
-    // copy GEMINI_API_KEY(s)
-    if (process.env['GEMINI_API_KEY']) {
-      args.push('--env', `GEMINI_API_KEY=${process.env['GEMINI_API_KEY']}`);
+    // copy ONYX_API_KEY(s)
+    if (process.env['ONYX_API_KEY']) {
+      args.push('--env', `ONYX_API_KEY=${process.env['ONYX_API_KEY']}`);
     }
     if (process.env['GOOGLE_API_KEY']) {
       args.push('--env', `GOOGLE_API_KEY=${process.env['GOOGLE_API_KEY']}`);
     }
 
-    // copy GOOGLE_GEMINI_BASE_URL and GOOGLE_VERTEX_BASE_URL
-    if (process.env['GOOGLE_GEMINI_BASE_URL']) {
+    // copy GOOGLE_ONYX_BASE_URL and GOOGLE_VERTEX_BASE_URL
+    if (process.env['GOOGLE_ONYX_BASE_URL']) {
       args.push(
         '--env',
-        `GOOGLE_GEMINI_BASE_URL=${process.env['GOOGLE_GEMINI_BASE_URL']}`,
+        `GOOGLE_ONYX_BASE_URL=${process.env['GOOGLE_ONYX_BASE_URL']}`,
       );
     }
     if (process.env['GOOGLE_VERTEX_BASE_URL']) {
@@ -573,9 +573,9 @@ export async function start_sandbox(
       );
     }
 
-    // copy GEMINI_MODEL
-    if (process.env['GEMINI_MODEL']) {
-      args.push('--env', `GEMINI_MODEL=${process.env['GEMINI_MODEL']}`);
+    // copy ONYX_MODEL
+    if (process.env['ONYX_MODEL']) {
+      args.push('--env', `ONYX_MODEL=${process.env['ONYX_MODEL']}`);
     }
 
     // copy TERM and COLORTERM to try to maintain terminal setup
@@ -588,8 +588,8 @@ export async function start_sandbox(
 
     // Pass through IDE mode environment variables
     for (const envVar of [
-      'GEMINI_CLI_IDE_SERVER_PORT',
-      'GEMINI_CLI_IDE_WORKSPACE_PATH',
+      'ONYX_CLI_IDE_SERVER_PORT',
+      'ONYX_CLI_IDE_WORKSPACE_PATH',
       'TERM_PROGRAM',
     ]) {
       if (process.env[envVar]) {
@@ -606,7 +606,7 @@ export async function start_sandbox(
         ?.toLowerCase()
         .startsWith(workdir.toLowerCase())
     ) {
-      const sandboxVenvPath = path.resolve(GEMINI_DIR, 'sandbox.venv');
+      const sandboxVenvPath = path.resolve(ONYX_DIR, 'sandbox.venv');
       if (!fs.existsSync(sandboxVenvPath)) {
         fs.mkdirSync(sandboxVenvPath, { recursive: true });
       }
@@ -662,7 +662,7 @@ export async function start_sandbox(
     let userFlag = '';
     const finalEntrypoint = entrypoint(workdir, cliArgs);
 
-    if (process.env['GEMINI_CLI_INTEGRATION_TEST'] === 'true') {
+    if (process.env['ONYX_CLI_INTEGRATION_TEST'] === 'true') {
       args.push('--user', 'root');
       userFlag = '--user root';
     } else if (await shouldUseCurrentUserInSandbox()) {
@@ -675,10 +675,10 @@ export async function start_sandbox(
 
       // Instead of passing --user to the main sandbox container, we let it
       // start as root, then create a user with the host's UID/GID, and
-      // finally switch to that user to run the gemini process. This is
+      // finally switch to that user to run the onyx process. This is
       // necessary on Linux to ensure the user exists within the
       // container's /etc/passwd file, which is required by os.userInfo().
-      const username = 'gemini';
+      const username = 'onyx';
       const homeDir = getContainerPath(homedir());
       const quotedHomeDir = quote([homeDir]);
 
@@ -721,7 +721,7 @@ export async function start_sandbox(
     // push container entrypoint (including args)
     args.push(...finalEntrypoint);
 
-    // start and set up proxy if GEMINI_SANDBOX_PROXY_COMMAND is set
+    // start and set up proxy if ONYX_SANDBOX_PROXY_COMMAND is set
     let proxyProcess: ChildProcess | undefined = undefined;
     let sandboxProcess: ChildProcess | undefined = undefined;
 
@@ -833,16 +833,16 @@ export async function start_sandbox(
 
 // Helper function to start a sandbox using LXC/LXD.
 // Unlike Docker/Podman, LXC does not launch a transient container from an
-// image. The user creates and manages their own LXC container; Gemini runs
+// image. The user creates and manages their own LXC container; Onyx runs
 // inside it via `lxc exec`. The container name is stored in config.image
-// (default: "gemini-sandbox"). The workspace is bind-mounted into the
+// (default: "onyx-sandbox"). The workspace is bind-mounted into the
 // container at the same absolute path.
 async function start_lxc_sandbox(
   config: SandboxConfig,
   nodeArgs: string[] = [],
   cliArgs: string[] = [],
 ): Promise<number> {
-  const containerName = config.image || 'gemini-sandbox';
+  const containerName = config.image || 'onyx-sandbox';
   const workdir = path.resolve(process.cwd());
 
   debugLogger.log(
@@ -919,7 +919,7 @@ async function start_lxc_sandbox(
   try {
     // Bind-mount the working directory into the container at the same path.
     // Using "lxc config device add" is idempotent when the device name matches.
-    const workspaceDeviceName = `gemini-workspace-${randomBytes(4).toString(
+    const workspaceDeviceName = `onyx-workspace-${randomBytes(4).toString(
       'hex',
     )}`;
     devicesToRemove.push(workspaceDeviceName);
@@ -948,7 +948,7 @@ async function start_lxc_sandbox(
     if (config.allowedPaths) {
       for (const hostPath of config.allowedPaths) {
         if (hostPath && path.isAbsolute(hostPath) && fs.existsSync(hostPath)) {
-          const allowedDeviceName = `gemini-allowed-${randomBytes(4).toString(
+          const allowedDeviceName = `onyx-allowed-${randomBytes(4).toString(
             'hex',
           )}`;
           devicesToRemove.push(allowedDeviceName);
@@ -984,20 +984,20 @@ async function start_lxc_sandbox(
     // Build the environment variable arguments for `lxc exec`.
     const envArgs: string[] = [];
     const envVarsToForward: Record<string, string | undefined> = {
-      GEMINI_API_KEY: process.env['GEMINI_API_KEY'],
+      ONYX_API_KEY: process.env['ONYX_API_KEY'],
       GOOGLE_API_KEY: process.env['GOOGLE_API_KEY'],
-      GOOGLE_GEMINI_BASE_URL: process.env['GOOGLE_GEMINI_BASE_URL'],
+      GOOGLE_ONYX_BASE_URL: process.env['GOOGLE_ONYX_BASE_URL'],
       GOOGLE_VERTEX_BASE_URL: process.env['GOOGLE_VERTEX_BASE_URL'],
       GOOGLE_GENAI_USE_VERTEXAI: process.env['GOOGLE_GENAI_USE_VERTEXAI'],
       GOOGLE_GENAI_USE_GCA: process.env['GOOGLE_GENAI_USE_GCA'],
       GOOGLE_CLOUD_PROJECT: process.env['GOOGLE_CLOUD_PROJECT'],
       GOOGLE_CLOUD_LOCATION: process.env['GOOGLE_CLOUD_LOCATION'],
-      GEMINI_MODEL: process.env['GEMINI_MODEL'],
+      ONYX_MODEL: process.env['ONYX_MODEL'],
       TERM: process.env['TERM'],
       COLORTERM: process.env['COLORTERM'],
-      GEMINI_CLI_IDE_SERVER_PORT: process.env['GEMINI_CLI_IDE_SERVER_PORT'],
-      GEMINI_CLI_IDE_WORKSPACE_PATH:
-        process.env['GEMINI_CLI_IDE_WORKSPACE_PATH'],
+      ONYX_CLI_IDE_SERVER_PORT: process.env['ONYX_CLI_IDE_SERVER_PORT'],
+      ONYX_CLI_IDE_WORKSPACE_PATH:
+        process.env['ONYX_CLI_IDE_WORKSPACE_PATH'],
       TERM_PROGRAM: process.env['TERM_PROGRAM'],
     };
     for (const [key, value] of Object.entries(envVarsToForward)) {

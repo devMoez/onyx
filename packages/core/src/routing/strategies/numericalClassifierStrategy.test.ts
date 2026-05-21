@@ -62,12 +62,12 @@ describe('NumericalClassifierStrategy', () => {
       getNumericalRoutingEnabled: vi.fn().mockResolvedValue(true),
       getResolvedClassifierThreshold: vi.fn().mockResolvedValue(90),
       getClassifierThreshold: vi.fn().mockResolvedValue(undefined),
-      getGemini31Launched: vi.fn().mockResolvedValue(false),
-      getGemini31FlashLiteLaunched: vi.fn().mockResolvedValue(false),
+      getOnyx31Launched: vi.fn().mockResolvedValue(false),
+      getOnyx31FlashLiteLaunched: vi.fn().mockResolvedValue(false),
       getUseCustomToolModel: vi.fn().mockImplementation(async () => {
-        const launched = await mockConfig.getGemini31Launched();
+        const launched = await mockConfig.getOnyx31Launched();
         const authType = mockConfig.getContentGeneratorConfig().authType;
-        return launched && authType === AuthType.USE_GEMINI;
+        return launched && authType === AuthType.USE_ONYX;
       }),
       getContentGeneratorConfig: vi.fn().mockReturnValue({
         authType: AuthType.LOGIN_WITH_GOOGLE,
@@ -102,7 +102,7 @@ describe('NumericalClassifierStrategy', () => {
     expect(mockBaseLlmClient.generateJson).not.toHaveBeenCalled();
   });
 
-  it('should return null if the model is not a Gemini 3 model', async () => {
+  it('should return null if the model is not a Onyx 3 model', async () => {
     vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_GEMINI_MODEL_AUTO);
 
     const decision = await strategy.route(
@@ -116,7 +116,7 @@ describe('NumericalClassifierStrategy', () => {
     expect(mockBaseLlmClient.generateJson).not.toHaveBeenCalled();
   });
 
-  it('should return null if the model is explicitly a Gemini 2 model', async () => {
+  it('should return null if the model is explicitly a Onyx 2 model', async () => {
     vi.mocked(mockConfig.getModel).mockReturnValue(DEFAULT_GEMINI_MODEL);
 
     const decision = await strategy.route(
@@ -731,9 +731,9 @@ describe('NumericalClassifierStrategy', () => {
     );
   });
 
-  describe('Gemini 3.1 and Custom Tools Routing', () => {
-    it('should route to PREVIEW_GEMINI_3_1_MODEL when Gemini 3.1 is launched', async () => {
-      vi.mocked(mockConfig.getGemini31Launched).mockResolvedValue(true);
+  describe('Onyx 3.1 and Custom Tools Routing', () => {
+    it('should route to PREVIEW_GEMINI_3_1_MODEL when Onyx 3.1 is launched', async () => {
+      vi.mocked(mockConfig.getOnyx31Launched).mockResolvedValue(true);
       const mockApiResponse = {
         complexity_reasoning: 'Complex task',
         complexity_score: 95,
@@ -751,10 +751,10 @@ describe('NumericalClassifierStrategy', () => {
 
       expect(decision?.model).toBe(PREVIEW_GEMINI_3_1_MODEL);
     });
-    it('should route to PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL when Gemini 3.1 is launched and auth is USE_GEMINI', async () => {
-      vi.mocked(mockConfig.getGemini31Launched).mockResolvedValue(true);
+    it('should route to PREVIEW_GEMINI_3_1_CUSTOM_TOOLS_MODEL when Onyx 3.1 is launched and auth is USE_ONYX', async () => {
+      vi.mocked(mockConfig.getOnyx31Launched).mockResolvedValue(true);
       vi.mocked(mockConfig.getContentGeneratorConfig).mockReturnValue({
-        authType: AuthType.USE_GEMINI,
+        authType: AuthType.USE_ONYX,
       });
       const mockApiResponse = {
         complexity_reasoning: 'Complex task',
@@ -775,7 +775,7 @@ describe('NumericalClassifierStrategy', () => {
     });
 
     it('should NOT route to custom tools model when auth is USE_VERTEX_AI', async () => {
-      vi.mocked(mockConfig.getGemini31Launched).mockResolvedValue(true);
+      vi.mocked(mockConfig.getOnyx31Launched).mockResolvedValue(true);
       vi.mocked(mockConfig.getContentGeneratorConfig).mockReturnValue({
         authType: AuthType.USE_VERTEX_AI,
       });

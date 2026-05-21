@@ -8,7 +8,7 @@ import {
   CoreToolCallStatus,
   AuthType,
   EditTool,
-  GeminiClient,
+  OnyxClient,
   ToolConfirmationOutcome,
   ToolErrorType,
   ToolRegistry,
@@ -21,7 +21,7 @@ import {
 } from '../index.js';
 import { OutputFormat } from '../output/types.js';
 import { logs } from '@opentelemetry/api-logs';
-import type { Config, GeminiCLIExtension } from '../config/config.js';
+import type { Config, OnyxCLIExtension } from '../config/config.js';
 import { ApprovalMode } from '../policy/types.js';
 import {
   logApiError,
@@ -232,7 +232,7 @@ describe('loggers', () => {
         [
           { name: 'ext-one', id: 'id-one' },
           { name: 'ext-two', id: 'id-two' },
-        ] as GeminiCLIExtension[],
+        ] as OnyxCLIExtension[],
       getMcpClientManager: () => ({
         getMcpServers: () => ({
           'test-server': {
@@ -991,7 +991,7 @@ describe('loggers', () => {
         getExperiments: () => undefined,
         getExperimentsAsync: async () => undefined,
         getContentGeneratorConfig: () => ({
-          authType: AuthType.USE_GEMINI,
+          authType: AuthType.USE_ONYX,
         }),
       } as Config;
 
@@ -1094,11 +1094,11 @@ describe('loggers', () => {
           },
         ],
         generate_content_config: {},
-        model: 'gemini-1.0-pro',
+        model: 'onyx-1.0-pro',
       };
 
       const event = new ApiRequestEvent(
-        'gemini-1.0-pro',
+        'onyx-1.0-pro',
         promptDetails,
         'Request with hidden prompt',
       );
@@ -1113,7 +1113,7 @@ describe('loggers', () => {
 
       // Assert on the body
       expect(semanticLogCall.body).toBe(
-        'GenAI operation request details from gemini-1.0-pro.',
+        'GenAI operation request details from onyx-1.0-pro.',
       );
 
       // Assert on specific attributes
@@ -1121,7 +1121,7 @@ describe('loggers', () => {
       expect(attributes['event.name']).toBe(
         'gen_ai.client.inference.operation.details',
       );
-      expect(attributes['gen_ai.request.model']).toBe('gemini-1.0-pro');
+      expect(attributes['gen_ai.request.model']).toBe('onyx-1.0-pro');
       expect(attributes['gen_ai.provider.name']).toBe('gcp.vertex_ai');
       // Ensure prompt messages are NOT included
       expect(attributes['gen_ai.input.messages']).toBeUndefined();
@@ -1142,7 +1142,7 @@ describe('loggers', () => {
         getExperimentsAsync: async () => undefined,
         getUsageStatisticsEnabled: () => true,
         getContentGeneratorConfig: () => ({
-          authType: AuthType.USE_GEMINI,
+          authType: AuthType.USE_ONYX,
         }),
       } as Config;
 
@@ -1284,7 +1284,7 @@ describe('loggers', () => {
     const cfg1 = {
       getSessionId: () => 'test-session-id',
       getTargetDir: () => 'target-dir',
-      getGeminiClient: () => mockGeminiClient,
+      getOnyxClient: () => mockOnyxClient,
     } as Config;
     const cfg2 = {
       getSessionId: () => 'test-session-id',
@@ -1322,11 +1322,11 @@ describe('loggers', () => {
     (cfg2 as unknown as { config: Config; promptId: string }).promptId =
       'test-prompt-id';
 
-    const mockGeminiClient = new GeminiClient(cfg2);
+    const mockOnyxClient = new OnyxClient(cfg2);
     const mockConfig = {
       getSessionId: () => 'test-session-id',
       getTargetDir: () => 'target-dir',
-      getGeminiClient: () => mockGeminiClient,
+      getOnyxClient: () => mockOnyxClient,
       getUsageStatisticsEnabled: () => true,
       getTelemetryEnabled: () => true,
       getTelemetryLogPromptsEnabled: () => true,
@@ -2208,7 +2208,7 @@ describe('loggers', () => {
 
     it('should log the event to Clearcut and OTEL, and record metrics', () => {
       const event = new ModelRoutingEvent(
-        'gemini-pro',
+        'onyx-pro',
         'default',
         100,
         'test-reason',
@@ -2224,7 +2224,7 @@ describe('loggers', () => {
       ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
-        body: 'Model routing decision. Model: gemini-pro, Source: default',
+        body: 'Model routing decision. Model: onyx-pro, Source: default',
         attributes: {
           'session.id': 'test-session-id',
           'user.email': 'test-user@example.com',
@@ -2244,7 +2244,7 @@ describe('loggers', () => {
 
     it('should log the event with numerical routing fields', () => {
       const event = new ModelRoutingEvent(
-        'gemini-pro',
+        'onyx-pro',
         'NumericalClassifier (Strict)',
         150,
         '[Score: 90 / Threshold: 80] reasoning',
@@ -2262,7 +2262,7 @@ describe('loggers', () => {
       ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
-        body: 'Model routing decision. Model: gemini-pro, Source: NumericalClassifier (Strict)',
+        body: 'Model routing decision. Model: onyx-pro, Source: NumericalClassifier (Strict)',
         attributes: {
           'session.id': 'test-session-id',
           'user.email': 'test-user@example.com',
@@ -2279,7 +2279,7 @@ describe('loggers', () => {
       vi.spyOn(sdk, 'isTelemetrySdkInitialized').mockReturnValue(false);
       vi.spyOn(sdk, 'bufferTelemetryEvent').mockImplementation(() => {});
       const event = new ModelRoutingEvent(
-        'gemini-pro',
+        'onyx-pro',
         'default',
         100,
         'test-reason',

@@ -30,7 +30,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
     refreshMemory: vi.fn(async (config) => {
       await config.getMemoryContextManager()?.refresh();
       const memoryContent = original.flattenMemory(config.getUserMemory());
-      const fileCount = config.getGeminiMdFileCount() || 0;
+      const fileCount = config.getOnyxMdFileCount() || 0;
       return {
         type: 'message',
         messageType: 'info',
@@ -70,17 +70,17 @@ describe('memoryCommand', () => {
   describe('/memory show', () => {
     let showCommand: SlashCommand;
     let mockGetUserMemory: Mock;
-    let mockGetGeminiMdFileCount: Mock;
+    let mockGetOnyxMdFileCount: Mock;
 
     beforeEach(() => {
       showCommand = getSubCommand('show');
 
       mockGetUserMemory = vi.fn();
-      mockGetGeminiMdFileCount = vi.fn();
+      mockGetOnyxMdFileCount = vi.fn();
 
       vi.mocked(showMemory).mockImplementation((config) => {
         const memoryContent = flattenMemory(config.getUserMemory());
-        const fileCount = config.getGeminiMdFileCount() || 0;
+        const fileCount = config.getOnyxMdFileCount() || 0;
         let content;
         if (memoryContent.length > 0) {
           content = `Current memory content from ${fileCount} file(s):\n\n---\n${memoryContent}\n---`;
@@ -99,7 +99,7 @@ describe('memoryCommand', () => {
           agentContext: {
             config: {
               getUserMemory: mockGetUserMemory,
-              getGeminiMdFileCount: mockGetGeminiMdFileCount,
+              getOnyxMdFileCount: mockGetOnyxMdFileCount,
               getExtensionLoader: () => new SimpleExtensionLoader([]),
             },
           },
@@ -111,7 +111,7 @@ describe('memoryCommand', () => {
       if (!showCommand.action) throw new Error('Command has no action');
 
       mockGetUserMemory.mockReturnValue('');
-      mockGetGeminiMdFileCount.mockReturnValue(0);
+      mockGetOnyxMdFileCount.mockReturnValue(0);
 
       await showCommand.action(mockContext, '');
 
@@ -130,7 +130,7 @@ describe('memoryCommand', () => {
       const memoryContent = 'This is a test memory.';
 
       mockGetUserMemory.mockReturnValue(memoryContent);
-      mockGetGeminiMdFileCount.mockReturnValue(1);
+      mockGetOnyxMdFileCount.mockReturnValue(1);
 
       await showCommand.action(mockContext, '');
 
@@ -147,21 +147,21 @@ describe('memoryCommand', () => {
   describe('/memory reload', () => {
     let reloadCommand: SlashCommand;
     let mockSetUserMemory: Mock;
-    let mockSetGeminiMdFileCount: Mock;
-    let mockSetGeminiMdFilePaths: Mock;
+    let mockSetOnyxMdFileCount: Mock;
+    let mockSetOnyxMdFilePaths: Mock;
     let mockContextManagerRefresh: Mock;
 
     beforeEach(() => {
       reloadCommand = getSubCommand('reload');
       mockSetUserMemory = vi.fn();
-      mockSetGeminiMdFileCount = vi.fn();
-      mockSetGeminiMdFilePaths = vi.fn();
+      mockSetOnyxMdFileCount = vi.fn();
+      mockSetOnyxMdFilePaths = vi.fn();
       mockContextManagerRefresh = vi.fn().mockResolvedValue(undefined);
 
       const mockConfig = {
         setUserMemory: mockSetUserMemory,
-        setGeminiMdFileCount: mockSetGeminiMdFileCount,
-        setGeminiMdFilePaths: mockSetGeminiMdFilePaths,
+        setOnyxMdFileCount: mockSetOnyxMdFileCount,
+        setOnyxMdFilePaths: mockSetOnyxMdFilePaths,
         getWorkingDir: () => '/test/dir',
         getDebugMode: () => false,
         getFileService: () => ({}) as FileDiscoveryService,
@@ -183,7 +183,7 @@ describe('memoryCommand', () => {
           refresh: mockContextManagerRefresh,
         }),
         getUserMemory: vi.fn().mockReturnValue(''),
-        getGeminiMdFileCount: vi.fn().mockReturnValue(0),
+        getOnyxMdFileCount: vi.fn().mockReturnValue(0),
       };
 
       mockContext = createMockCommandContext({
@@ -209,7 +209,7 @@ describe('memoryCommand', () => {
       if (!config) throw new Error('Config is undefined');
 
       vi.mocked(config.getUserMemory).mockReturnValue('JIT Memory Content');
-      vi.mocked(config.getGeminiMdFileCount).mockReturnValue(3);
+      vi.mocked(config.getOnyxMdFileCount).mockReturnValue(3);
 
       await reloadCommand.action(mockContext, '');
 
@@ -289,8 +289,8 @@ describe('memoryCommand', () => {
 
       expect(mockRefreshMemory).toHaveBeenCalledOnce();
       expect(mockSetUserMemory).not.toHaveBeenCalled();
-      expect(mockSetGeminiMdFileCount).not.toHaveBeenCalled();
-      expect(mockSetGeminiMdFilePaths).not.toHaveBeenCalled();
+      expect(mockSetOnyxMdFileCount).not.toHaveBeenCalled();
+      expect(mockSetOnyxMdFilePaths).not.toHaveBeenCalled();
 
       expect(mockContext.ui.addItem).toHaveBeenCalledWith(
         {
@@ -326,13 +326,13 @@ describe('memoryCommand', () => {
 
   describe('/memory list', () => {
     let listCommand: SlashCommand;
-    let mockGetGeminiMdfilePaths: Mock;
+    let mockGetOnyxMdfilePaths: Mock;
 
     beforeEach(() => {
       listCommand = getSubCommand('list');
-      mockGetGeminiMdfilePaths = vi.fn();
+      mockGetOnyxMdfilePaths = vi.fn();
       vi.mocked(listMemoryFiles).mockImplementation((config) => {
-        const filePaths = config.getGeminiMdFilePaths() || [];
+        const filePaths = config.getOnyxMdFilePaths() || [];
         const fileCount = filePaths.length;
         let content;
         if (fileCount > 0) {
@@ -350,7 +350,7 @@ describe('memoryCommand', () => {
         services: {
           agentContext: {
             config: {
-              getGeminiMdFilePaths: mockGetGeminiMdfilePaths,
+              getOnyxMdFilePaths: mockGetOnyxMdfilePaths,
             },
           },
         },
@@ -360,7 +360,7 @@ describe('memoryCommand', () => {
     it('should display a message if no onyx.md files are found', async () => {
       if (!listCommand.action) throw new Error('Command has no action');
 
-      mockGetGeminiMdfilePaths.mockReturnValue([]);
+      mockGetOnyxMdfilePaths.mockReturnValue([]);
 
       await listCommand.action(mockContext, '');
 
@@ -377,7 +377,7 @@ describe('memoryCommand', () => {
       if (!listCommand.action) throw new Error('Command has no action');
 
       const filePaths = ['/path/one/onyx.md', '/path/two/onyx.md'];
-      mockGetGeminiMdfilePaths.mockReturnValue(filePaths);
+      mockGetOnyxMdfilePaths.mockReturnValue(filePaths);
 
       await listCommand.action(mockContext, '');
 

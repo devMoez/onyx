@@ -123,7 +123,7 @@ describe('ExtensionRegistryClient', () => {
     expect(result.total).toBe(3);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock).toHaveBeenCalledWith(
-      'https://geminicli.com/extensions.json',
+      'https://onyxcli.com/extensions.json',
       10000,
     );
   });

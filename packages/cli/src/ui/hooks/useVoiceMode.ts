@@ -125,7 +125,7 @@ export function useVoiceMode({
 
     const apiKey =
       config.getContentGeneratorConfig()?.apiKey ||
-      process.env['GEMINI_API_KEY'] ||
+      process.env['ONYX_API_KEY'] ||
       '';
 
     const startAsync = async () => {
@@ -162,11 +162,11 @@ export function useVoiceMode({
       if (cleanupIfStopped()) return;
 
       const voiceBackend =
-        settings.experimental.voice?.backend ?? 'gemini-live';
+        settings.experimental.voice?.backend ?? 'onyx-live';
 
-      if (!apiKey && voiceBackend === 'gemini-live') {
+      if (!apiKey && voiceBackend === 'onyx-live') {
         setQueueErrorMessage(
-          'Cloud voice mode requires a GEMINI_API_KEY. Please set it in your environment or ~/.onyx/.env.',
+          'Cloud voice mode requires a ONYX_API_KEY. Please set it in your environment or ~/.onyx/.env.',
         );
         setIsRecording(false);
         isRecordingRef.current = false;
@@ -176,7 +176,7 @@ export function useVoiceMode({
         return;
       }
 
-      if (voiceBackend === 'gemini-live') {
+      if (voiceBackend === 'onyx-live') {
         recorderRef.current = new AudioRecorder();
       }
 
@@ -257,10 +257,10 @@ export function useVoiceMode({
         setIsConnecting(false);
 
         const currentVoiceBackend =
-          settings.experimental.voice?.backend ?? 'gemini-live';
+          settings.experimental.voice?.backend ?? 'onyx-live';
 
         recorderRef.current?.on('data', (chunk) => {
-          if (currentVoiceBackend === 'gemini-live') {
+          if (currentVoiceBackend === 'onyx-live') {
             currentService.sendAudioChunk(chunk);
           }
         });

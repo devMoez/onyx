@@ -14,7 +14,7 @@ import { checkForExtensionUpdate } from './github.js';
 import {
   debugLogger,
   getErrorMessage,
-  type GeminiCLIExtension,
+  type OnyxCLIExtension,
   IntegrityDataStatus,
 } from '@onyx/core';
 import * as fs from 'node:fs';
@@ -28,7 +28,7 @@ export interface ExtensionUpdateInfo {
 }
 
 export async function updateExtension(
-  extension: GeminiCLIExtension,
+  extension: OnyxCLIExtension,
   extensionManager: ExtensionManager,
   currentState: ExtensionUpdateState,
   dispatchExtensionStateUpdate: (action: ExtensionUpdateAction) => void,
@@ -104,7 +104,7 @@ export async function updateExtension(
     const previousExtensionConfig = await extensionManager.loadExtensionConfig(
       extension.path,
     );
-    let updatedExtension: GeminiCLIExtension;
+    let updatedExtension: OnyxCLIExtension;
     try {
       updatedExtension = await extensionManager.installOrUpdateExtension(
         installMetadata,
@@ -150,7 +150,7 @@ export async function updateExtension(
 }
 
 export async function updateAllUpdatableExtensions(
-  extensions: GeminiCLIExtension[],
+  extensions: OnyxCLIExtension[],
   extensionsState: Map<string, ExtensionUpdateStatus>,
   extensionManager: ExtensionManager,
   dispatch: (action: ExtensionUpdateAction) => void,
@@ -183,7 +183,7 @@ export interface ExtensionUpdateCheckResult {
 }
 
 export async function checkForAllExtensionUpdates(
-  extensions: GeminiCLIExtension[],
+  extensions: OnyxCLIExtension[],
   extensionManager: ExtensionManager,
   dispatch: (action: ExtensionUpdateAction) => void,
 ): Promise<void> {

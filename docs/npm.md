@@ -1,22 +1,22 @@
 # Package overview
 
-This monorepo contains two main packages: `@google/gemini-cli` and
-`@google/gemini-cli-core`.
+This monorepo contains two main packages: `@google/onyx-cli` and
+`@google/onyx-cli-core`.
 
-## `@google/gemini-cli`
+## `@google/onyx-cli`
 
 This is the main package for Onyx CLI. It is responsible for the user
 interface, command parsing, and all other user-facing functionality.
 
 When this package is published, it is bundled into a single executable file.
 This bundle includes all of the package's dependencies, including
-`@google/gemini-cli-core`. This means that whether a user installs the package
-with `npm install -g @google/gemini-cli` or runs it directly with
-`npx @google/gemini-cli`, they are using this single, self-contained executable.
+`@google/onyx-cli-core`. This means that whether a user installs the package
+with `npm install -g @google/onyx-cli` or runs it directly with
+`npx @google/onyx-cli`, they are using this single, self-contained executable.
 
-## `@google/gemini-cli-core`
+## `@google/onyx-cli-core`
 
-This package contains the core logic for interacting with the Gemini API. It is
+This package contains the core logic for interacting with the Onyx API. It is
 responsible for making API requests, handling authentication, and managing the
 local cache.
 
@@ -59,4 +59,4 @@ package that should be managed as part of the workspace.
 - **Simplified script execution**: You can run scripts in any package from the
   root of the project using the `--workspace` flag. For example, to run the
   `build` script in the `cli` package, you can run
-  `npm run build --workspace @google/gemini-cli`.
+  `npm run build --workspace @google/onyx-cli`.

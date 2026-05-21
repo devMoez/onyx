@@ -18,7 +18,7 @@ export const PARAM_DIR_PATH = 'dir_path';
 export const PARAM_PATTERN = 'pattern';
 export const PARAM_CASE_SENSITIVE = 'case_sensitive';
 export const PARAM_RESPECT_GIT_IGNORE = 'respect_git_ignore';
-export const PARAM_RESPECT_GEMINI_IGNORE = 'respect_gemini_ignore';
+export const PARAM_RESPECT_ONYX_IGNORE = 'respect_onyx_ignore';
 export const PARAM_FILE_FILTERING_OPTIONS = 'file_filtering_options';
 export const PARAM_DESCRIPTION = 'description';
 
@@ -80,6 +80,9 @@ export const TODOS_ITEM_PARAM_STATUS = 'status';
 
 // -- web_fetch --
 export const WEB_FETCH_TOOL_NAME = 'web_fetch';
+
+// -- system_controller --
+export const SYSTEM_CONTROLLER_TOOL_NAME = 'system_controller';
 export const WEB_FETCH_PARAM_PROMPT = 'prompt';
 
 // -- read_many_files --

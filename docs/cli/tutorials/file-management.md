@@ -57,7 +57,7 @@ You know there's a `UserProfile` component, but you don't know where it lives.
 `Find the file that defines the UserProfile component.`
 ```
 
-Gemini uses the `glob` or `list_directory` tools to search your project
+Onyx uses the `glob` or `list_directory` tools to search your project
 structure. It will return the specific path (for example,
 `src/components/UserProfile.tsx`), which you can then use with `@` in your next
 turn.
@@ -117,16 +117,16 @@ Onyx CLI uses the `run_shell_command` tool to execute your test runner (for
 example, `npm test` or `jest`). This ensures the changes didn't break existing
 functionality.
 
-## Advanced: Controlling what Gemini sees
+## Advanced: Controlling what Onyx sees
 
 By default, Onyx CLI respects your `.gitignore` file. It won't read or search
 through `node_modules`, build artifacts, or other ignored paths.
 
 If you have sensitive files (like `.env`) or large assets that you want to keep
 hidden from the AI _without_ ignoring them in Git, you can create a
-`.geminiignore` file in your project root.
+`.onyxignore` file in your project root.
 
-**Example `.geminiignore`:**
+**Example `.onyxignore`:**
 
 ```text
 .env

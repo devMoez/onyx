@@ -135,7 +135,7 @@ export function getNodeMemoryArgs(isDebugMode: boolean): string[] {
     );
   }
 
-  if (process.env['GEMINI_CLI_NO_RELAUNCH']) {
+  if (process.env['ONYX_CLI_NO_RELAUNCH']) {
     return [];
   }
 
@@ -228,13 +228,13 @@ export async function resolveSessionId(
       const isoNow = new Date(now).toISOString();
 
       // Filter out old system/info messages that are specific to the previous run
-      // and only keep actual conversation messages (user/gemini).
+      // and only keep actual conversation messages (user/onyx).
       // Best effort parse: ensure message is an object and has required fields.
       sessionData.messages = (sessionData.messages || []).filter(
         (m) =>
           typeof m === 'object' &&
           m !== null &&
-          (m.type === 'user' || m.type === 'gemini') &&
+          (m.type === 'user' || m.type === 'onyx') &&
           m.content !== undefined,
       );
 
@@ -435,7 +435,7 @@ export async function main() {
   ) {
     coreEvents.emitFeedback(
       'warning',
-      'Warning: --allowed-tools cli argument and tools.allowed in settings.json are deprecated and will be removed in 1.0: Migrate to Policy Engine: https://geminicli.com/docs/core/policy-engine/',
+      'Warning: --allowed-tools cli argument and tools.allowed in settings.json are deprecated and will be removed in 1.0: Migrate to Policy Engine: https://onyxcli.com/docs/core/policy-engine/',
     );
   }
 
@@ -445,7 +445,7 @@ export async function main() {
   ) {
     coreEvents.emitFeedback(
       'warning',
-      'Warning: tools.exclude in settings.json is deprecated and will be removed in 1.0. Migrate to Policy Engine: https://geminicli.com/docs/core/policy-engine/',
+      'Warning: tools.exclude in settings.json is deprecated and will be removed in 1.0. Migrate to Policy Engine: https://onyxcli.com/docs/core/policy-engine/',
     );
   }
 
@@ -486,7 +486,7 @@ export async function main() {
   ) {
     if (
       process.env['CLOUD_SHELL'] === 'true' ||
-      process.env['GEMINI_CLI_USE_COMPUTE_ADC'] === 'true'
+      process.env['ONYX_CLI_USE_COMPUTE_ADC'] === 'true'
     ) {
       settings.setValue(
         SettingScope.User,
@@ -841,7 +841,7 @@ export async function main() {
 
     if (!input) {
       debugLogger.error(
-        `No input provided via stdin. Input can be provided by piping data into gemini or using the --prompt option.`,
+        `No input provided via stdin. Input can be provided by piping data into onyx or using the --prompt option.`,
       );
       await runExitCleanup();
       process.exit(ExitCodes.FATAL_INPUT_ERROR);

@@ -12,7 +12,7 @@ binary files.
 
 ## List your extension in the gallery
 
-The [Onyx CLI extension gallery](https://geminicli.com/extensions/browse/)
+The [Onyx CLI extension gallery](https://onyxcli.com/extensions/browse/)
 automatically indexes public extensions to help users discover your work. You
 don't need to submit an issue or email us to list your extension.
 
@@ -20,10 +20,10 @@ To have your extension automatically discovered and listed:
 
 1.  **Use a public repository:** Ensure your extension is hosted in a public
     GitHub repository.
-2.  **Add the GitHub topic:** Add the `gemini-cli-extension` topic to your
+2.  **Add the GitHub topic:** Add the `onyx-cli-extension` topic to your
     repository's **About** section. Our crawler uses this topic to find new
     extensions.
-3.  **Place the manifest at the root:** Ensure your `gemini-extension.json` file
+3.  **Place the manifest at the root:** Ensure your `onyx-extension.json` file
     is in the absolute root of the repository or the release archive.
 
 Our system crawls tagged repositories daily. Once you tag your repository, your
@@ -33,13 +33,13 @@ extension will appear in the gallery if it passes validation.
 
 Releasing through Git is the most flexible option. Create a public Git
 repository and provide the URL to your users. They can then install your
-extension using `gemini extensions install <your-repo-uri>`.
+extension using `onyx extensions install <your-repo-uri>`.
 
 Users can optionally depend on a specific branch, tag, or commit using the
 `--ref` argument. For example:
 
 ```bash
-gemini extensions install <your-repo-uri> --ref=stable
+onyx extensions install <your-repo-uri> --ref=stable
 ```
 
 Whenever you push commits to the referenced branch, the CLI prompts users to
@@ -105,7 +105,7 @@ Use these values for the placeholders:
 
 #### Archive structure
 
-Archives must be fully contained extensions. The `gemini-extension.json` file
+Archives must be fully contained extensions. The `onyx-extension.json` file
 must be at the root of the archive. The rest of the layout should match a
 standard extension structure.
 
@@ -157,12 +157,12 @@ jobs:
 ## Migrate an extension repository
 
 If you move your extension to a new repository or rename it, use the
-`migratedTo` property in `gemini-extension.json` to seamlessly transition your
+`migratedTo` property in `onyx-extension.json` to seamlessly transition your
 users.
 
 1.  **Create the new repository:** Set up your extension in its new location.
 2.  **Update the old repository:** In your original repository, update the
-    `gemini-extension.json` file to include the `migratedTo` property pointing
+    `onyx-extension.json` file to include the `migratedTo` property pointing
     to the new repository URL, and increment the version number.
     ```json
     {
@@ -185,7 +185,7 @@ the latest version.
 
 ### Sync manifest and tags
 
-For GitHub releases, always ensure the `version` in `gemini-extension.json`
+For GitHub releases, always ensure the `version` in `onyx-extension.json`
 matches your GitHub release tag. While the CLI uses tags for update detection,
 it displays the manifest version in the UI. Keeping them in sync prevents
 confusion.
@@ -205,7 +205,7 @@ The CLI uses different strategies depending on the installation type:
   directory's manifest with the installed version.
 
 To verify an extension's installation type, inspect the `type` field in the
-metadata file at `~/.gemini/extensions/<name>/.gemini-extension-install.json`.
+metadata file at `~/.onyx/extensions/<name>/.onyx-extension-install.json`.
 
 </details>
 

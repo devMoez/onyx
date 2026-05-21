@@ -22,7 +22,7 @@ import {
   type ConversationInteraction,
   type StreamingLatency,
   type RecordCodeAssistMetricsRequest,
-  type GeminiUserTier,
+  type OnyxUserTier,
   type Credits,
 } from './types.js';
 import type {
@@ -82,7 +82,7 @@ export class CodeAssistServer implements ContentGenerator {
     readonly sessionId?: string,
     readonly userTier?: UserTierId,
     readonly userTierName?: string,
-    readonly paidTier?: GeminiUserTier,
+    readonly paidTier?: OnyxUserTier,
     readonly config?: Config,
   ) {}
 
@@ -278,7 +278,7 @@ export class CodeAssistServer implements ContentGenerator {
         req.cloudaicompanionProject === 'cloudshell-gca'
       ) {
         throw new Error(
-          'Access to the default Cloud Shell Gemini project was denied.\n' +
+          'Access to the default Cloud Shell Onyx project was denied.\n' +
             'Please set your own Google Cloud project by running:\n' +
             'gcloud config set project [PROJECT_ID]\n' +
             'or setting export GOOGLE_CLOUD_PROJECT=...',
@@ -298,7 +298,7 @@ export class CodeAssistServer implements ContentGenerator {
       metadata: {
         ideType: 'IDE_UNSPECIFIED',
         platform: 'PLATFORM_UNSPECIFIED',
-        pluginType: 'GEMINI',
+        pluginType: 'ONYX',
         duetProject: this.projectId,
       },
       mode: 'HEALTH_CHECK',

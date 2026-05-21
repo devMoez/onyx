@@ -109,7 +109,7 @@ describe('ask_user', () => {
   // Regression test for issue #20177: Ensure the agent does not use \`ask_user\` to
   // confirm shell commands. Fixed via prompt refinements and tool definition
   // updates to clarify that shell command confirmation is handled by the UI.
-  // See fix: https://github.com/google-gemini/gemini-cli/pull/20504
+  // See fix: https://github.com/google-onyx/onyx-cli/pull/20504
   askUserEvalTest('USUALLY_PASSES', {
     suiteName: 'default',
     suiteType: 'behavioral',
@@ -141,3 +141,4 @@ describe('ask_user', () => {
     },
   });
 });
+

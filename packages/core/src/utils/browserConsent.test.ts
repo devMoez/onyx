@@ -19,7 +19,7 @@ vi.mock('node:fs/promises', () => ({
 // Mock Storage to return a predictable directory
 vi.mock('../config/storage.js', () => ({
   Storage: {
-    getGlobalGeminiDir: vi.fn(),
+    getGlobalOnyxDir: vi.fn(),
   },
 }));
 
@@ -28,7 +28,7 @@ import { getBrowserConsentIfNeeded } from './browserConsent.js';
 describe('browserConsent', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.mocked(Storage.getGlobalGeminiDir).mockReturnValue('/mock/.onyx');
+    vi.mocked(Storage.getGlobalOnyxDir).mockReturnValue('/mock/.onyx');
   });
 
   afterEach(() => {

@@ -23,7 +23,7 @@ export const StatusDisplay: React.FC<StatusDisplayProps> = ({
   const settings = useSettings();
   const config = useConfig();
 
-  if (process.env['GEMINI_SYSTEM_MD']) {
+  if (process.env['ONYX_SYSTEM_MD']) {
     return <Text color={theme.status.error}>|⌐■_■|</Text>;
   }
 
@@ -31,7 +31,7 @@ export const StatusDisplay: React.FC<StatusDisplayProps> = ({
     return (
       <ContextSummaryDisplay
         ideContext={uiState.ideContextState}
-        geminiMdFileCount={uiState.geminiMdFileCount}
+        onyxMdFileCount={uiState.onyxMdFileCount}
         contextFileNames={uiState.contextFileNames}
         mcpServers={config.getMcpClientManager()?.getMcpServers() ?? {}}
         blockedMcpServers={

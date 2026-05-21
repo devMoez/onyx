@@ -2,19 +2,19 @@
 .env
 .env~
 
-# gemini-cli settings
-# We want to keep the .gemini in the root of the repo and ignore any .gemini
-# in subdirectories. In our root .gemini we want to allow for version control
+# onyx-cli settings
+# We want to keep the .onyx in the root of the repo and ignore any .onyx
+# in subdirectories. In our root .onyx we want to allow for version control
 # for subcommands.
-**/.gemini/
-!/.gemini/
-.gemini/*
-!.gemini/config.yaml
-!.gemini/commands/
-!.gemini/skills/
-!.gemini/settings.json
+**/.onyx/
+!/.onyx/
+.onyx/*
+!.onyx/config.yaml
+!.onyx/commands/
+!.onyx/skills/
+!.onyx/settings.json
 
-# Note: .gemini-clipboard/ is NOT in gitignore so Gemini can access pasted images
+# Note: .onyx-clipboard/ is NOT in gitignore so Onyx can access pasted images
 
 # Dependency directory
 node_modules
@@ -57,10 +57,10 @@ gha-creds-*.json
 
 # Log files
 patch_output.log
-gemini-debug.log
+onyx-debug.log
 
 .genkit
-.gemini-clipboard/
+.onyx-clipboard/
 .eslintcache
 evals/logs/
 
@@ -68,4 +68,4 @@ temp_agents/
 
 # conductor extension and planning directories
 conductor/
-packages/core/src/sandbox/windows/GeminiSandbox.exe
+packages/core/src/sandbox/windows/OnyxSandbox.exe

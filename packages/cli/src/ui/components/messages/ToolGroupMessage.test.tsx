@@ -62,7 +62,7 @@ describe('<ToolGroupMessage />', () => {
   });
 
   const baseMockConfig = makeFakeConfig({
-    model: 'gemini-pro',
+    model: 'onyx-pro',
     targetDir: os.tmpdir(),
     debugMode: false,
     folderTrust: false,

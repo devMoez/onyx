@@ -21,7 +21,7 @@ vi.mock('@onyx/core', async (importOriginal) => {
   return {
     ...actual,
     recordFlickerFrame: vi.fn(),
-    GEMINI_DIR: '.onyx',
+    ONYX_DIR: '.onyx',
   };
 });
 vi.mock('ink', async (importOriginal) => {

@@ -7,7 +7,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { Ignore, loadIgnoreRules } from './ignore.js';
 import { createTmpDir, cleanupTmpDir } from '@onyx/test-utils';
-import { GEMINI_IGNORE_FILE_NAME } from '../../config/constants.js';
+import { ONYX_IGNORE_FILE_NAME } from '../../config/constants.js';
 import { FileDiscoveryService } from '../../services/fileDiscoveryService.js';
 
 describe('Ignore', () => {
@@ -93,7 +93,7 @@ describe('loadIgnoreRules', () => {
 
   it('should load rules from .onyxIgnore', async () => {
     tmpDir = await createTmpDir({
-      [GEMINI_IGNORE_FILE_NAME]: '*.log',
+      [ONYX_IGNORE_FILE_NAME]: '*.log',
     });
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: false,
@@ -109,7 +109,7 @@ describe('loadIgnoreRules', () => {
     tmpDir = await createTmpDir({
       '.git': {},
       '.gitignore': '*.log',
-      [GEMINI_IGNORE_FILE_NAME]: '*.txt',
+      [ONYX_IGNORE_FILE_NAME]: '*.txt',
     });
     const service = new FileDiscoveryService(tmpDir, {
       respectGitIgnore: true,

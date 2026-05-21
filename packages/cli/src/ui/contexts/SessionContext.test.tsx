@@ -86,7 +86,7 @@ describe('SessionStatsContext', () => {
 
     const newMetrics: SessionMetrics = {
       models: {
-        'gemini-pro': {
+        'onyx-pro': {
           api: {
             totalRequests: 1,
             totalErrors: 0,
@@ -171,7 +171,7 @@ describe('SessionStatsContext', () => {
 
     const metrics: SessionMetrics = {
       models: {
-        'gemini-pro': {
+        'onyx-pro': {
           api: { totalRequests: 1, totalErrors: 0, totalLatencyMs: 100 },
           tokens: {
             input: 10,
@@ -214,7 +214,7 @@ describe('SessionStatsContext', () => {
     const newMetrics = {
       ...metrics,
       models: {
-        'gemini-pro': {
+        'onyx-pro': {
           api: { totalRequests: 2, totalErrors: 0, totalLatencyMs: 200 },
           tokens: {
             input: 20,

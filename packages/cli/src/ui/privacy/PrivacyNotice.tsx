@@ -25,7 +25,7 @@ const PrivacyNoticeText = ({
   const authType = config.getContentGeneratorConfig()?.authType;
 
   switch (authType) {
-    case AuthType.USE_GEMINI:
+    case AuthType.USE_ONYX:
       return <OnyxPrivacyNotice onExit={onExit} />;
     case AuthType.USE_VERTEX_AI:
       return <CloudPaidPrivacyNotice onExit={onExit} />;

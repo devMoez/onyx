@@ -262,7 +262,7 @@ export function createMockContextConfig(
   const defaultConfig = {
     isContextManagementEnabled: vi.fn().mockReturnValue(true),
     storage: {
-      getProjectTempDir: vi.fn().mockReturnValue('/tmp/gemini-test'),
+      getProjectTempDir: vi.fn().mockReturnValue('/tmp/onyx-test'),
     },
     getBaseLlmClient: vi.fn().mockReturnValue(
       llmClientOverride || {
@@ -305,7 +305,7 @@ export function setupContextComponentTest(
     'test prompt-id',
     'test-session',
     '/tmp',
-    '/tmp/gemini-test',
+    '/tmp/onyx-test',
     tracer,
     1,
     eventBus,

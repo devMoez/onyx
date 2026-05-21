@@ -1,4 +1,4 @@
-name: '🔄 Gemini Scheduled Lifecycle Manager'
+name: '🔄 Onyx Scheduled Lifecycle Manager'
 
 on:
   schedule:
@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   manage-lifecycle:
-    if: "github.repository == 'google-gemini/gemini-cli'"
+    if: "github.repository == 'google-onyx/onyx-cli'"
     runs-on: 'ubuntu-latest'
     steps:
       - name: 'Generate GitHub App Token'
@@ -43,5 +43,5 @@ jobs:
         with:
           github-token: '${{ steps.generate_token.outputs.token }}'
           script: |
-            const script = require('./.github/scripts/gemini-lifecycle-manager.cjs');
+            const script = require('./.github/scripts/onyx-lifecycle-manager.cjs');
             await script({github, context, core});

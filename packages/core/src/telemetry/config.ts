@@ -57,16 +57,16 @@ export async function resolveTelemetrySettings(options: {
 
   const enabled =
     argv.telemetry ??
-    parseBooleanEnvFlag(env['GEMINI_TELEMETRY_ENABLED']) ??
+    parseBooleanEnvFlag(env['ONYX_TELEMETRY_ENABLED']) ??
     settings.enabled;
 
   const traces =
-    parseBooleanEnvFlag(env['GEMINI_TELEMETRY_TRACES_ENABLED']) ??
+    parseBooleanEnvFlag(env['ONYX_TELEMETRY_TRACES_ENABLED']) ??
     settings.traces;
 
   const rawTarget =
     argv.telemetryTarget ??
-    env['GEMINI_TELEMETRY_TARGET'] ??
+    env['ONYX_TELEMETRY_TARGET'] ??
     (settings.target as string | TelemetryTarget | undefined);
   const target = parseTelemetryTargetValue(rawTarget);
   if (rawTarget !== undefined && target === undefined) {
@@ -79,13 +79,13 @@ export async function resolveTelemetrySettings(options: {
 
   const otlpEndpoint =
     argv.telemetryOtlpEndpoint ??
-    env['GEMINI_TELEMETRY_OTLP_ENDPOINT'] ??
+    env['ONYX_TELEMETRY_OTLP_ENDPOINT'] ??
     env['OTEL_EXPORTER_OTLP_ENDPOINT'] ??
     settings.otlpEndpoint;
 
   const rawProtocol =
     argv.telemetryOtlpProtocol ??
-    env['GEMINI_TELEMETRY_OTLP_PROTOCOL'] ??
+    env['ONYX_TELEMETRY_OTLP_PROTOCOL'] ??
     settings.otlpProtocol;
   const otlpProtocol = (['grpc', 'http'] as const).find(
     (p) => p === rawProtocol,
@@ -100,16 +100,16 @@ export async function resolveTelemetrySettings(options: {
 
   const logPrompts =
     argv.telemetryLogPrompts ??
-    parseBooleanEnvFlag(env['GEMINI_TELEMETRY_LOG_PROMPTS']) ??
+    parseBooleanEnvFlag(env['ONYX_TELEMETRY_LOG_PROMPTS']) ??
     settings.logPrompts;
 
   const outfile =
     argv.telemetryOutfile ??
-    env['GEMINI_TELEMETRY_OUTFILE'] ??
+    env['ONYX_TELEMETRY_OUTFILE'] ??
     settings.outfile;
 
   const useCollector =
-    parseBooleanEnvFlag(env['GEMINI_TELEMETRY_USE_COLLECTOR']) ??
+    parseBooleanEnvFlag(env['ONYX_TELEMETRY_USE_COLLECTOR']) ??
     settings.useCollector;
 
   return {
@@ -122,7 +122,7 @@ export async function resolveTelemetrySettings(options: {
     outfile,
     useCollector,
     useCliAuth:
-      parseBooleanEnvFlag(env['GEMINI_TELEMETRY_USE_CLI_AUTH']) ??
+      parseBooleanEnvFlag(env['ONYX_TELEMETRY_USE_CLI_AUTH']) ??
       settings.useCliAuth,
   };
 }

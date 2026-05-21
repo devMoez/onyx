@@ -45,9 +45,9 @@ describe('ExtensionManager agents loading', () => {
     vi.stubEnv('ANTIGRAVITY_CLI_ALIAS', '');
     vi.spyOn(debugLogger, 'warn').mockImplementation(() => {});
 
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gemini-test-agents-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'onyx-test-agents-'));
     mockHomedir.mockReturnValue(tempDir);
-    vi.stubEnv('GEMINI_CLI_HOME', tempDir);
+    vi.stubEnv('ONYX_CLI_HOME', tempDir);
 
     // Create the extensions directory that ExtensionManager expects
     extensionsDir = path.join(tempDir, '.onyx', EXTENSIONS_DIRECTORY_NAME);

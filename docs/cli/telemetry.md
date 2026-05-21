@@ -32,21 +32,21 @@ The observability system provides:
 
 ## Configuration
 
-You control telemetry behavior through the `.gemini/settings.json` file.
+You control telemetry behavior through the `.onyx/settings.json` file.
 Environment variables can override these settings.
 
 | Setting        | Environment Variable              | Description                                         | Values            | Default                 |
 | -------------- | --------------------------------- | --------------------------------------------------- | ----------------- | ----------------------- |
-| `enabled`      | `GEMINI_TELEMETRY_ENABLED`        | Enable or disable telemetry                         | `true`/`false`    | `false`                 |
-| `traces`       | `GEMINI_TELEMETRY_TRACES_ENABLED` | Enable detailed attribute tracing                   | `true`/`false`    | `false`                 |
-| `target`       | `GEMINI_TELEMETRY_TARGET`         | Where to send telemetry data                        | `"gcp"`/`"local"` | `"local"`               |
-| `otlpEndpoint` | `GEMINI_TELEMETRY_OTLP_ENDPOINT`  | OTLP collector endpoint                             | URL string        | `http://localhost:4317` |
-| `otlpProtocol` | `GEMINI_TELEMETRY_OTLP_PROTOCOL`  | OTLP transport protocol                             | `"grpc"`/`"http"` | `"grpc"`                |
-| `outfile`      | `GEMINI_TELEMETRY_OUTFILE`        | Save telemetry to file (overrides `otlpEndpoint`)   | file path         | -                       |
-| `logPrompts`   | `GEMINI_TELEMETRY_LOG_PROMPTS`    | Include prompts in telemetry logs                   | `true`/`false`    | `true`                  |
-| `useCollector` | `GEMINI_TELEMETRY_USE_COLLECTOR`  | Use external OTLP collector (advanced)              | `true`/`false`    | `false`                 |
-| `useCliAuth`   | `GEMINI_TELEMETRY_USE_CLI_AUTH`   | Use CLI credentials for telemetry (GCP target only) | `true`/`false`    | `false`                 |
-| -              | `GEMINI_CLI_SURFACE`              | Optional custom label for traffic reporting         | string            | -                       |
+| `enabled`      | `ONYX_TELEMETRY_ENABLED`        | Enable or disable telemetry                         | `true`/`false`    | `false`                 |
+| `traces`       | `ONYX_TELEMETRY_TRACES_ENABLED` | Enable detailed attribute tracing                   | `true`/`false`    | `false`                 |
+| `target`       | `ONYX_TELEMETRY_TARGET`         | Where to send telemetry data                        | `"gcp"`/`"local"` | `"local"`               |
+| `otlpEndpoint` | `ONYX_TELEMETRY_OTLP_ENDPOINT`  | OTLP collector endpoint                             | URL string        | `http://localhost:4317` |
+| `otlpProtocol` | `ONYX_TELEMETRY_OTLP_PROTOCOL`  | OTLP transport protocol                             | `"grpc"`/`"http"` | `"grpc"`                |
+| `outfile`      | `ONYX_TELEMETRY_OUTFILE`        | Save telemetry to file (overrides `otlpEndpoint`)   | file path         | -                       |
+| `logPrompts`   | `ONYX_TELEMETRY_LOG_PROMPTS`    | Include prompts in telemetry logs                   | `true`/`false`    | `true`                  |
+| `useCollector` | `ONYX_TELEMETRY_USE_COLLECTOR`  | Use external OTLP collector (advanced)              | `true`/`false`    | `false`                 |
+| `useCliAuth`   | `ONYX_TELEMETRY_USE_CLI_AUTH`   | Use CLI credentials for telemetry (GCP target only) | `true`/`false`    | `false`                 |
+| -              | `ONYX_CLI_SURFACE`              | Optional custom label for traffic reporting         | string            | -                       |
 
 **Note on boolean environment variables:** For boolean settings like `enabled`,
 setting the environment variable to `true` or `1` enables the feature.
@@ -114,7 +114,7 @@ You must complete several setup steps before enabling Google Cloud telemetry.
         ```
     * **Method B: CLI Auth** (Direct export only): Simplest method for local
       users. Onyx CLI uses the same OAuth credentials you used for login. To
-      enable this, set `useCliAuth: true` in your `.gemini/settings.json`:
+      enable this, set `useCliAuth: true` in your `.onyx/settings.json`:
 
       ```json
       {
@@ -151,7 +151,7 @@ You must complete several setup steps before enabling Google Cloud telemetry.
 We recommend using direct export to send telemetry directly to Google Cloud
 services.
 
-1.  Enable telemetry in `.gemini/settings.json`:
+1.  Enable telemetry in `.onyx/settings.json`:
     ```json
     {
       "telemetry": {
@@ -197,25 +197,25 @@ Find this dashboard under **Google Cloud Monitoring Dashboard Templates** as
 ![Onyx CLI Monitoring Dashboard Logs](/docs/assets/monitoring-dashboard-logs.png)
 
 To learn more, see
-[Instant insights: Onyx CLI’s pre-configured monitoring dashboards](https://cloud.google.com/blog/topics/developers-practitioners/instant-insights-gemini-clis-new-pre-configured-monitoring-dashboards/).
+[Instant insights: Onyx CLI’s pre-configured monitoring dashboards](https://cloud.google.com/blog/topics/developers-practitioners/instant-insights-onyx-clis-new-pre-configured-monitoring-dashboards/).
 
 ## Local telemetry
 
 You can capture telemetry data locally for development and debugging. We
 recommend using file-based output for local development.
 
-1.  Enable telemetry in `.gemini/settings.json`:
+1.  Enable telemetry in `.onyx/settings.json`:
     ```json
     {
       "telemetry": {
         "enabled": true,
         "target": "local",
-        "outfile": ".gemini/telemetry.log"
+        "outfile": ".onyx/telemetry.log"
       }
     }
     ```
 2.  Run Onyx CLI and send prompts.
-3.  View logs and metrics in `.gemini/telemetry.log`.
+3.  View logs and metrics in `.onyx/telemetry.log`.
 
 For advanced local telemetry setups (such as Jaeger or Genkit), see the
 [Local development guide](../local-development.md#viewing-traces).
@@ -224,7 +224,7 @@ For advanced local telemetry setups (such as Jaeger or Genkit), see the
 
 Onyx CLI includes identifiers in its `User-Agent` header to help you
 differentiate and report on API traffic from different environments (for
-example, identifying calls from Gemini Code Assist versus a standard terminal).
+example, identifying calls from Onyx Code Assist versus a standard terminal).
 
 ### Automatic identification
 
@@ -234,35 +234,35 @@ a "surface" tag in the parenthetical metadata.
 
 | Environment                         | User-Agent Prefix            | Surface Tag |
 | :---------------------------------- | :--------------------------- | :---------- |
-| **Gemini Code Assist (Agent Mode)** | `GeminiCLI-a2a-server`       | `vscode`    |
-| **Zed (via ACP)**                   | `GeminiCLI-acp-zed`          | `zed`       |
-| **XCode (via ACP)**                 | `GeminiCLI-acp-xcode`        | `xcode`     |
-| **IntelliJ IDEA (via ACP)**         | `GeminiCLI-acp-intellijidea` | `jetbrains` |
-| **Standard Terminal**               | `GeminiCLI`                  | `terminal`  |
+| **Onyx Code Assist (Agent Mode)** | `OnyxCLI-a2a-server`       | `vscode`    |
+| **Zed (via ACP)**                   | `OnyxCLI-acp-zed`          | `zed`       |
+| **XCode (via ACP)**                 | `OnyxCLI-acp-xcode`        | `xcode`     |
+| **IntelliJ IDEA (via ACP)**         | `OnyxCLI-acp-intellijidea` | `jetbrains` |
+| **Standard Terminal**               | `OnyxCLI`                  | `terminal`  |
 
 **Example User-Agent:**
-`GeminiCLI-a2a-server/0.34.0/gemini-pro (linux; x64; vscode)`
+`OnyxCLI-a2a-server/0.34.0/onyx-pro (linux; x64; vscode)`
 
 ### Custom identification
 
 You can provide a custom identifier for your own scripts or automation by
-setting the `GEMINI_CLI_SURFACE` environment variable. This is useful for
+setting the `ONYX_CLI_SURFACE` environment variable. This is useful for
 tracking specific internal tools or distribution channels in your GCP logs.
 
 **macOS/Linux**
 
 ```bash
-export GEMINI_CLI_SURFACE="my-custom-tool"
+export ONYX_CLI_SURFACE="my-custom-tool"
 ```
 
 **Windows (PowerShell)**
 
 ```powershell
-$env:GEMINI_CLI_SURFACE="my-custom-tool"
+$env:ONYX_CLI_SURFACE="my-custom-tool"
 ```
 
 When set, the value appears at the end of the `User-Agent` parenthetical:
-`GeminiCLI/0.34.0/gemini-pro (linux; x64; my-custom-tool)`
+`OnyxCLI/0.34.0/onyx-pro (linux; x64; my-custom-tool)`
 
 ## Logs, metrics, and traces
 
@@ -281,7 +281,7 @@ across several categories.
 
 Session logs capture startup configuration and prompt submissions.
 
-##### `gemini_cli.config`
+##### `onyx_cli.config`
 
 Emitted at startup with the CLI configuration.
 
@@ -317,7 +317,7 @@ Emitted at startup with the CLI configuration.
 
 </details>
 
-##### `gemini_cli.user_prompt`
+##### `onyx_cli.user_prompt`
 
 Emitted when you submit a prompt.
 
@@ -378,7 +378,7 @@ Logs when you execute a plan and switch from plan mode to active execution.
 
 Tool logs capture executions, truncation, and edit behavior.
 
-##### `gemini_cli.tool_call`
+##### `onyx_cli.tool_call`
 
 Emitted for each tool (function) call.
 
@@ -409,7 +409,7 @@ Emitted for each tool (function) call.
 
 </details>
 
-##### `gemini_cli.tool_output_truncated`
+##### `onyx_cli.tool_output_truncated`
 
 Logs when tool output is truncated.
 
@@ -425,7 +425,7 @@ Logs when tool output is truncated.
 
 </details>
 
-##### `gemini_cli.edit_strategy`
+##### `onyx_cli.edit_strategy`
 
 Records the chosen edit strategy.
 
@@ -436,7 +436,7 @@ Records the chosen edit strategy.
 
 </details>
 
-##### `gemini_cli.edit_correction`
+##### `onyx_cli.edit_correction`
 
 Records the result of an edit correction.
 
@@ -476,7 +476,7 @@ Provides detailed GenAI operation data aligned with OpenTelemetry conventions.
 
 File logs track operations performed by tools.
 
-##### `gemini_cli.file_operation`
+##### `onyx_cli.file_operation`
 
 Emitted for each file creation, read, or update.
 
@@ -494,11 +494,11 @@ Emitted for each file creation, read, or update.
 
 #### API
 
-API logs capture requests, responses, and errors from Gemini API.
+API logs capture requests, responses, and errors from Onyx API.
 
-##### `gemini_cli.api_request`
+##### `onyx_cli.api_request`
 
-Request sent to Gemini API.
+Request sent to Onyx API.
 
 <details>
 <summary>Attributes</summary>
@@ -510,9 +510,9 @@ Request sent to Gemini API.
 
 </details>
 
-##### `gemini_cli.api_response`
+##### `onyx_cli.api_response`
 
-Response received from Gemini API.
+Response received from Onyx API.
 
 <details>
 <summary>Attributes</summary>
@@ -533,7 +533,7 @@ Response received from Gemini API.
 
 </details>
 
-##### `gemini_cli.api_error`
+##### `onyx_cli.api_error`
 
 Logs when an API request fails.
 
@@ -551,7 +551,7 @@ Logs when an API request fails.
 
 </details>
 
-##### `gemini_cli.malformed_json_response`
+##### `onyx_cli.malformed_json_response`
 
 Logs when a JSON response cannot be parsed.
 
@@ -566,7 +566,7 @@ Logs when a JSON response cannot be parsed.
 
 These logs track how Onyx CLI selects and routes requests to models.
 
-##### `gemini_cli.slash_command`
+##### `onyx_cli.slash_command`
 
 Logs slash command execution.
 
@@ -579,7 +579,7 @@ Logs slash command execution.
 
 </details>
 
-##### `gemini_cli.slash_command.model`
+##### `onyx_cli.slash_command.model`
 
 Logs model selection via slash command.
 
@@ -590,7 +590,7 @@ Logs model selection via slash command.
 
 </details>
 
-##### `gemini_cli.model_routing`
+##### `onyx_cli.model_routing`
 
 Records model router decisions and reasoning.
 
@@ -611,7 +611,7 @@ Records model router decisions and reasoning.
 
 These logs track chat context compression and streaming chunk errors.
 
-##### `gemini_cli.chat_compression`
+##### `onyx_cli.chat_compression`
 
 Logs chat context compression events.
 
@@ -623,7 +623,7 @@ Logs chat context compression events.
 
 </details>
 
-##### `gemini_cli.chat.invalid_chunk`
+##### `onyx_cli.chat.invalid_chunk`
 
 Logs invalid chunks received in a stream.
 
@@ -634,7 +634,7 @@ Logs invalid chunks received in a stream.
 
 </details>
 
-##### `gemini_cli.chat.content_retry`
+##### `onyx_cli.chat.content_retry`
 
 Logs retries due to content errors.
 
@@ -648,7 +648,7 @@ Logs retries due to content errors.
 
 </details>
 
-##### `gemini_cli.chat.content_retry_failure`
+##### `onyx_cli.chat.content_retry_failure`
 
 Logs when all content retries fail.
 
@@ -662,7 +662,7 @@ Logs when all content retries fail.
 
 </details>
 
-##### `gemini_cli.conversation_finished`
+##### `onyx_cli.conversation_finished`
 
 Logs when a conversation session ends.
 
@@ -678,7 +678,7 @@ Logs when a conversation session ends.
 
 Resilience logs record fallback mechanisms and recovery attempts.
 
-##### `gemini_cli.flash_fallback`
+##### `onyx_cli.flash_fallback`
 
 Logs switch to a flash model fallback.
 
@@ -689,7 +689,7 @@ Logs switch to a flash model fallback.
 
 </details>
 
-##### `gemini_cli.ripgrep_fallback`
+##### `onyx_cli.ripgrep_fallback`
 
 Logs fallback to standard grep.
 
@@ -700,7 +700,7 @@ Logs fallback to standard grep.
 
 </details>
 
-##### `gemini_cli.web_fetch_fallback_attempt`
+##### `onyx_cli.web_fetch_fallback_attempt`
 
 Logs web-fetch fallback attempts.
 
@@ -711,7 +711,7 @@ Logs web-fetch fallback attempts.
 
 </details>
 
-##### `gemini_cli.agent.recovery_attempt`
+##### `onyx_cli.agent.recovery_attempt`
 
 Logs attempts to recover from agent errors.
 
@@ -729,7 +729,7 @@ Logs attempts to recover from agent errors.
 
 Extension logs track lifecycle events and settings changes.
 
-##### `gemini_cli.extension_install`
+##### `onyx_cli.extension_install`
 
 Logs when you install an extension.
 
@@ -743,7 +743,7 @@ Logs when you install an extension.
 
 </details>
 
-##### `gemini_cli.extension_uninstall`
+##### `onyx_cli.extension_uninstall`
 
 Logs when you uninstall an extension.
 
@@ -755,7 +755,7 @@ Logs when you uninstall an extension.
 
 </details>
 
-##### `gemini_cli.extension_enable`
+##### `onyx_cli.extension_enable`
 
 Logs when you enable an extension.
 
@@ -767,7 +767,7 @@ Logs when you enable an extension.
 
 </details>
 
-##### `gemini_cli.extension_disable`
+##### `onyx_cli.extension_disable`
 
 Logs when you disable an extension.
 
@@ -783,7 +783,7 @@ Logs when you disable an extension.
 
 Agent logs track the lifecycle of agent executions.
 
-##### `gemini_cli.agent.start`
+##### `onyx_cli.agent.start`
 
 Logs when an agent run begins.
 
@@ -795,7 +795,7 @@ Logs when an agent run begins.
 
 </details>
 
-##### `gemini_cli.agent.finish`
+##### `onyx_cli.agent.finish`
 
 Logs when an agent run completes.
 
@@ -814,7 +814,7 @@ Logs when an agent run completes.
 
 IDE logs capture connectivity events for the IDE companion.
 
-##### `gemini_cli.ide_connection`
+##### `onyx_cli.ide_connection`
 
 Logs IDE companion connections.
 
@@ -843,7 +843,7 @@ Logs terminal control sequence overflows.
 
 #### Miscellaneous
 
-##### `gemini_cli.rewind`
+##### `onyx_cli.rewind`
 
 Logs when the conversation state is rewound.
 
@@ -854,7 +854,7 @@ Logs when the conversation state is rewound.
 
 </details>
 
-##### `gemini_cli.conseca.verdict`
+##### `onyx_cli.conseca.verdict`
 
 Logs security verdicts from ConSeca.
 
@@ -868,7 +868,7 @@ Logs security verdicts from ConSeca.
 
 </details>
 
-##### `gemini_cli.hook_call`
+##### `onyx_cli.hook_call`
 
 Logs execution of lifecycle hooks.
 
@@ -882,7 +882,7 @@ Logs execution of lifecycle hooks.
 
 </details>
 
-##### `gemini_cli.tool_output_masking`
+##### `onyx_cli.tool_output_masking`
 
 Logs when tool output is masked for privacy.
 
@@ -896,7 +896,7 @@ Logs when tool output is masked for privacy.
 
 </details>
 
-##### `gemini_cli.keychain.availability`
+##### `onyx_cli.keychain.availability`
 
 Logs keychain availability checks.
 
@@ -905,7 +905,7 @@ Logs keychain availability checks.
 
 - `available` (boolean)
 
-##### `gemini_cli.startup_stats`
+##### `onyx_cli.startup_stats`
 
 Logs detailed startup performance statistics.
 
@@ -931,7 +931,7 @@ Onyx CLI exports several custom metrics.
 
 ##### Sessions
 
-##### `gemini_cli.session.count`
+##### `onyx_cli.session.count`
 
 Incremented once per CLI startup.
 
@@ -939,10 +939,10 @@ Incremented once per CLI startup.
 
 Tracks onboarding flow from authentication to the user
 
-- `gemini_cli.onboarding.start` (Counter, Int): Incremented when the
+- `onyx_cli.onboarding.start` (Counter, Int): Incremented when the
   authentication flow begins.
 
-- `gemini_cli.onboarding.success` (Counter, Int): Incremented when the user
+- `onyx_cli.onboarding.success` (Counter, Int): Incremented when the user
 onboarding flow completes successfully.
 <details>
 <summary>Attributes (Success)</summary>
@@ -951,7 +951,7 @@ onboarding flow completes successfully.
 
 ##### Tools
 
-##### `gemini_cli.tool.call.count`
+##### `onyx_cli.tool.call.count`
 
 Counts tool calls.
 
@@ -965,7 +965,7 @@ Counts tool calls.
 
 </details>
 
-##### `gemini_cli.tool.call.latency`
+##### `onyx_cli.tool.call.latency`
 
 Measures tool call latency (in ms).
 
@@ -978,7 +978,7 @@ Measures tool call latency (in ms).
 
 ##### API
 
-##### `gemini_cli.api.request.count`
+##### `onyx_cli.api.request.count`
 
 Counts all API requests.
 
@@ -991,7 +991,7 @@ Counts all API requests.
 
 </details>
 
-##### `gemini_cli.api.request.latency`
+##### `onyx_cli.api.request.latency`
 
 Measures API request latency (in ms).
 
@@ -1004,7 +1004,7 @@ Measures API request latency (in ms).
 
 ##### Token usage
 
-##### `gemini_cli.token.usage`
+##### `onyx_cli.token.usage`
 
 Counts input, output, thought, cache, and tool tokens.
 
@@ -1018,7 +1018,7 @@ Counts input, output, thought, cache, and tool tokens.
 
 ##### Files
 
-##### `gemini_cli.file.operation.count`
+##### `onyx_cli.file.operation.count`
 
 Counts file operations.
 
@@ -1033,7 +1033,7 @@ Counts file operations.
 
 </details>
 
-##### `gemini_cli.lines.changed`
+##### `onyx_cli.lines.changed`
 
 Counts added or removed lines.
 
@@ -1047,7 +1047,7 @@ Counts added or removed lines.
 
 ##### Chat and streaming
 
-##### `gemini_cli.chat_compression`
+##### `onyx_cli.chat_compression`
 
 Counts compression operations.
 
@@ -1059,21 +1059,21 @@ Counts compression operations.
 
 </details>
 
-##### `gemini_cli.chat.invalid_chunk.count`
+##### `onyx_cli.chat.invalid_chunk.count`
 
 Counts invalid stream chunks.
 
-##### `gemini_cli.chat.content_retry.count`
+##### `onyx_cli.chat.content_retry.count`
 
 Counts content error retries.
 
-##### `gemini_cli.chat.content_retry_failure.count`
+##### `onyx_cli.chat.content_retry_failure.count`
 
 Counts requests where all retries failed.
 
 ##### Model routing
 
-##### `gemini_cli.slash_command.model.call_count`
+##### `onyx_cli.slash_command.model.call_count`
 
 Counts model selections.
 
@@ -1084,7 +1084,7 @@ Counts model selections.
 
 </details>
 
-##### `gemini_cli.model_routing.latency`
+##### `onyx_cli.model_routing.latency`
 
 Measures routing decision latency.
 
@@ -1097,7 +1097,7 @@ Measures routing decision latency.
 
 </details>
 
-##### `gemini_cli.model_routing.failure.count`
+##### `onyx_cli.model_routing.failure.count`
 
 Counts routing failures.
 
@@ -1112,7 +1112,7 @@ Counts routing failures.
 
 ##### Agent runs
 
-##### `gemini_cli.agent.run.count`
+##### `onyx_cli.agent.run.count`
 
 Counts agent runs.
 
@@ -1124,7 +1124,7 @@ Counts agent runs.
 
 </details>
 
-##### `gemini_cli.agent.duration`
+##### `onyx_cli.agent.duration`
 
 Measures agent run duration.
 
@@ -1135,7 +1135,7 @@ Measures agent run duration.
 
 </details>
 
-##### `gemini_cli.agent.turns`
+##### `onyx_cli.agent.turns`
 
 Counts turns per agent run.
 
@@ -1148,7 +1148,7 @@ Counts turns per agent run.
 
 ##### Approval mode
 
-##### `gemini_cli.plan.execution.count`
+##### `onyx_cli.plan.execution.count`
 
 Counts plan executions.
 
@@ -1161,7 +1161,7 @@ Counts plan executions.
 
 ##### UI
 
-##### `gemini_cli.ui.flicker.count`
+##### `onyx_cli.ui.flicker.count`
 
 Counts terminal flicker events.
 
@@ -1169,7 +1169,7 @@ Counts terminal flicker events.
 
 Onyx CLI provides detailed performance metrics for advanced monitoring.
 
-##### `gemini_cli.startup.duration`
+##### `onyx_cli.startup.duration`
 
 Measures startup time by phase.
 
@@ -1181,7 +1181,7 @@ Measures startup time by phase.
 
 </details>
 
-##### `gemini_cli.memory.usage`
+##### `onyx_cli.memory.usage`
 
 Measures heap and RSS memory.
 
@@ -1193,7 +1193,7 @@ Measures heap and RSS memory.
 
 </details>
 
-##### `gemini_cli.cpu.usage`
+##### `onyx_cli.cpu.usage`
 
 Measures CPU usage percentage.
 
@@ -1204,11 +1204,11 @@ Measures CPU usage percentage.
 
 </details>
 
-##### `gemini_cli.tool.queue.depth`
+##### `onyx_cli.tool.queue.depth`
 
 Measures tool execution queue depth.
 
-##### `gemini_cli.tool.execution.breakdown`
+##### `onyx_cli.tool.execution.breakdown`
 
 Breaks down tool time by phase.
 
@@ -1240,7 +1240,7 @@ traces to debug tool interactions and optimize performance.
 > [!NOTE]
 > Detailed trace attributes (like full prompts and tool outputs) are disabled by default
 > to minimize overhead. You must explicitly set `telemetry.traces` to `true` (or set
-> `GEMINI_TELEMETRY_TRACES_ENABLED=true`) to capture them.
+> `ONYX_TELEMETRY_TRACES_ENABLED=true`) to capture them.
 
 Every trace captures rich metadata via standard span attributes.
 
@@ -1250,7 +1250,7 @@ Every trace captures rich metadata via standard span attributes.
 - `gen_ai.operation.name`: High-level operation (for example, `tool_call`,
   `llm_call`, `user_prompt`, `system_prompt`, `agent_call`, or
   `schedule_tool_calls`).
-- `gen_ai.agent.name`: Set to `gemini-cli`.
+- `gen_ai.agent.name`: Set to `onyx-cli`.
 - `gen_ai.agent.description`: The service agent description.
 - `gen_ai.input.messages`: Input data or metadata.
 - `gen_ai.output.messages`: Output data or results.

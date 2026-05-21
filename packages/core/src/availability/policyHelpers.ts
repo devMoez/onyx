@@ -25,7 +25,7 @@ import {
   DEFAULT_GEMINI_MODEL,
   PREVIEW_GEMINI_MODEL_AUTO,
   isAutoModel,
-  isGemini3Model,
+  isOnyx3Model,
   resolveModel,
 } from '../config/models.js';
 import { normalizeModelId } from '../utils/modelUtils.js';
@@ -51,20 +51,20 @@ export function resolvePolicyChain(
   const configuredModel = normalizeModelId(config.getModel());
 
   let chain: ModelPolicyChain | undefined;
-  const useGemini31 = config.getGemini31LaunchedSync?.() ?? false;
-  const useGemini31FlashLite =
-    config.getGemini31FlashLiteLaunchedSync?.() ?? false;
+  const useOnyx31 = config.getOnyx31LaunchedSync?.() ?? false;
+  const useOnyx31FlashLite =
+    config.getOnyx31FlashLiteLaunchedSync?.() ?? false;
   const useCustomToolModel = config.getUseCustomToolModelSync?.() ?? false;
   const hasAccessToPreview = config.getHasAccessToPreviewModel?.() ?? false;
 
   // Capture the original family intent before any normalization or early downgrade.
-  const isOriginallyGemini3 = isGemini3Model(modelFromConfig, config);
+  const isOriginallyOnyx3 = isOnyx3Model(modelFromConfig, config);
 
   const resolvedModel = normalizeModelId(
     resolveModel(
       modelFromConfig,
-      useGemini31,
-      useGemini31FlashLite,
+      useOnyx31,
+      useOnyx31FlashLite,
       useCustomToolModel,
       hasAccessToPreview,
       config,
@@ -75,22 +75,22 @@ export function resolvePolicyChain(
     : false;
   const isAutoConfigured = isAutoModel(configuredModel, config);
 
-  // We always wrap around for Gemini 3 chains to ensure maximum availability
+  // We always wrap around for Onyx 3 chains to ensure maximum availability
   // between models in the same family (e.g. fallback to Pro if Flash is exhausted).
   const effectiveWrapsAround =
-    wrapsAround || isAutoPreferred || isAutoConfigured || isOriginallyGemini3;
+    wrapsAround || isAutoPreferred || isAutoConfigured || isOriginallyOnyx3;
 
   // --- DYNAMIC PATH ---
   if (config.getExperimentalDynamicModelConfiguration?.() === true) {
     const context = {
-      useGemini3_1: useGemini31,
-      useGemini3_1FlashLite: useGemini31FlashLite,
+      useOnyx3_1: useOnyx31,
+      useOnyx3_1FlashLite: useOnyx31FlashLite,
       useCustomTools: useCustomToolModel,
     };
 
     if (resolvedModel === DEFAULT_GEMINI_FLASH_LITE_MODEL) {
       chain = config.modelConfigService.resolveChain('lite', context);
-    } else if (isOriginallyGemini3 || isAutoPreferred || isAutoConfigured) {
+    } else if (isOriginallyOnyx3 || isAutoPreferred || isAutoConfigured) {
       // 1. Try to find a chain specifically for the current configured alias
       if (
         isAutoConfigured &&
@@ -106,7 +106,7 @@ export function resolvePolicyChain(
         const isAutoSelection = isAutoPreferred || isAutoConfigured;
         const previewEnabled =
           hasAccessToPreview &&
-          (isGemini3Model(resolvedModel, config) ||
+          (isOnyx3Model(resolvedModel, config) ||
             normalizedPreferredModel === PREVIEW_GEMINI_MODEL_AUTO ||
             configuredModel === PREVIEW_GEMINI_MODEL_AUTO);
         const autoPrefix = isAutoSelection ? 'auto-' : '';
@@ -127,30 +127,30 @@ export function resolvePolicyChain(
 
     if (resolvedModel === DEFAULT_GEMINI_FLASH_LITE_MODEL) {
       chain = getFlashLitePolicyChain();
-    } else if (isOriginallyGemini3 || isAutoPreferred || isAutoConfigured) {
+    } else if (isOriginallyOnyx3 || isAutoPreferred || isAutoConfigured) {
       const isAutoSelection = isAutoPreferred || isAutoConfigured;
       if (hasAccessToPreview) {
         const previewEnabled =
-          isOriginallyGemini3 ||
+          isOriginallyOnyx3 ||
           normalizedPreferredModel === PREVIEW_GEMINI_MODEL_AUTO ||
           configuredModel === PREVIEW_GEMINI_MODEL_AUTO;
         chain = getModelPolicyChain({
           previewEnabled,
           isAutoSelection,
           userTier: config.getUserTier(),
-          useGemini31,
-          useGemini31FlashLite,
+          useOnyx31,
+          useOnyx31FlashLite,
           useCustomToolModel,
         });
       } else {
-        // User requested Gemini 3 but has no access. Proactively downgrade
-        // to the stable Gemini 2.5 chain.
+        // User requested Onyx 3 but has no access. Proactively downgrade
+        // to the stable Onyx 2.5 chain.
         chain = getModelPolicyChain({
           previewEnabled: false,
           isAutoSelection,
           userTier: config.getUserTier(),
-          useGemini31,
-          useGemini31FlashLite,
+          useOnyx31,
+          useOnyx31FlashLite,
           useCustomToolModel,
         });
       }

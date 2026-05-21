@@ -314,7 +314,7 @@ export class AgentHistoryProvider {
       return [{ role: 'user', parts: [{ text: summaryText }] }];
     }
 
-    // To ensure strict user/model alternating roles required by the Gemini API,
+    // To ensure strict user/model alternating roles required by the Onyx API,
     // we merge the summary into the first retained message if it's from the 'user'.
     const firstRetainedMessage = messagesToKeep[0];
     if (firstRetainedMessage.role === 'user') {

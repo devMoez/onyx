@@ -7,7 +7,7 @@
 import {
   type Config,
   type FallbackIntent,
-  type GeminiUserTier,
+  type OnyxUserTier,
   type OverageOption,
   getG1CreditBalance,
   shouldAutoUseCredits,
@@ -36,7 +36,7 @@ import type {
 
 interface CreditsFlowArgs {
   config: Config;
-  paidTier: GeminiUserTier;
+  paidTier: OnyxUserTier;
   overageStrategy: 'ask' | 'always' | 'never';
   failedModel: string;
   fallbackModel: string;

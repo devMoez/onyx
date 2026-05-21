@@ -28,7 +28,7 @@ To start Onyx CLI directly in Plan Mode by default:
 
 To launch Onyx CLI in Plan Mode once:
 
-1. Use `gemini --approval-mode=plan` when launching Onyx CLI.
+1. Use `onyx --approval-mode=plan` when launching Onyx CLI.
 
 ### Enter Plan Mode manually
 
@@ -75,7 +75,7 @@ Onyx CLI takes action.
       implementation immediately: **Yes, automatically accept edits** or **Yes,
       manually accept edits**.
     - **Iterate:** If the plan needs adjustments, provide feedback in the input
-      box or [edit the plan file directly](#collaborative-plan-editing). Gemini
+      box or [edit the plan file directly](#collaborative-plan-editing). Onyx
       CLI will refine the strategy and update the plan.
     - **Cancel:** You can cancel your plan with `Esc`.
 
@@ -136,7 +136,7 @@ These are the only allowed tools:
 - **Planning (Write):**
   [`write_file`](../tools/file-system.md#3-write_file-writefile) and
   [`replace`](../tools/file-system.md#6-replace-edit) only allowed for `.md`
-  files in the `~/.gemini/tmp/<project>/<session-id>/plans/` directory or your
+  files in the `~/.onyx/tmp/<project>/<session-id>/plans/` directory or your
   [custom plans directory](#custom-plan-directory-and-policies).
 - **Skills:** [`activate_skill`](../cli/skills.md) (allows loading specialized
   instructions and resources in a read-only manner)
@@ -173,7 +173,7 @@ Plan Mode's default tool restrictions are managed by the
 [policy engine](../reference/policy-engine.md) and defined in the built-in
 [`plan.toml`] file. The built-in policy (Tier 1) enforces the read-only state,
 but you can customize these rules by creating your own policies in your
-`~/.gemini/policies/` directory (Tier 2).
+`~/.onyx/policies/` directory (Tier 2).
 
 #### Global vs. mode-specific rules
 
@@ -209,7 +209,7 @@ By default, read-only MCP tools require user confirmation in Plan Mode. You can
 use `toolAnnotations` and the `mcpName` wildcard to customize this behavior for
 your specific environment.
 
-`~/.gemini/policies/mcp-read-only.toml`
+`~/.onyx/policies/mcp-read-only.toml`
 
 ```toml
 [[rule]]
@@ -229,7 +229,7 @@ For more information on how the policy engine works, see the
 This rule lets you check the repository status and see changes while in Plan
 Mode.
 
-`~/.gemini/policies/git-research.toml`
+`~/.onyx/policies/git-research.toml`
 
 ```toml
 [[rule]]
@@ -249,7 +249,7 @@ Mode. You can enable additional
 [custom subagents](../core/subagents.md#creating-custom-subagents) by adding a
 rule to your policy.
 
-`~/.gemini/policies/research-subagents.toml`
+`~/.onyx/policies/research-subagents.toml`
 
 ```toml
 [[rule]]
@@ -265,16 +265,16 @@ check ongoing changes in git."_
 ### Custom plan directory and policies
 
 By default, planning artifacts are stored in a managed temporary directory
-outside your project: `~/.gemini/tmp/<project>/<session-id>/plans/`.
+outside your project: `~/.onyx/tmp/<project>/<session-id>/plans/`.
 
 You can configure a custom directory for plans in your `settings.json`. For
-example, to store plans in a `.gemini/plans` directory within your project:
+example, to store plans in a `.onyx/plans` directory within your project:
 
 ```json
 {
   "general": {
     "plan": {
-      "directory": ".gemini/plans"
+      "directory": ".onyx/plans"
     }
   }
 }
@@ -289,8 +289,8 @@ within the project boundary.
 Using a custom directory requires updating your
 [policy engine](../reference/policy-engine.md) configurations to allow
 `write_file` and `replace` in that specific location. For example, to allow
-writing to the `.gemini/plans` directory within your project, create a policy
-file at `~/.gemini/policies/plan-custom-directory.toml`:
+writing to the `.onyx/plans` directory within your project, create a policy
+file at `~/.onyx/policies/plan-custom-directory.toml`:
 
 ```toml
 [[rule]]
@@ -299,8 +299,8 @@ decision = "allow"
 priority = 100
 modes = ["plan"]
 # Adjust the pattern to match your custom directory.
-# This example matches any .md file in a .gemini/plans directory within the project.
-argsPattern = "\"file_path\":\"[^\"]+[\\\\/]+\\.gemini[\\\\/]+plans[\\\\/]+[\\w-]+\\.md\""
+# This example matches any .md file in a .onyx/plans directory within the project.
+argsPattern = "\"file_path\":\"[^\"]+[\\\\/]+\\.onyx[\\\\/]+plans[\\\\/]+[\\w-]+\\.md\""
 ```
 
 ### Using hooks with Plan Mode
@@ -324,22 +324,22 @@ If your organizational policy requires a record of all execution plans, you can
 use an `AfterTool` hook to securely copy the plan artifact to Google Cloud
 Storage whenever Onyx CLI exits Plan Mode to start the implementation.
 
-**`.gemini/hooks/archive-plan.sh`:**
+**`.onyx/hooks/archive-plan.sh`:**
 
 ```bash
 #!/usr/bin/env bash
 # Extract the plan filename from the tool input JSON
 plan_filename=$(jq -r '.tool_input.plan_filename // empty')
 
-# Construct the absolute path using the GEMINI_PLANS_DIR environment variable
-plan_path="$GEMINI_PLANS_DIR/$plan_filename"
+# Construct the absolute path using the ONYX_PLANS_DIR environment variable
+plan_path="$ONYX_PLANS_DIR/$plan_filename"
 
 if [ -f "$plan_path" ]; then
   # Generate a unique filename using a timestamp
   filename="$(date +%s)_$(basename "$plan_path")"
 
   # Upload the plan to GCS in the background so it doesn't block the CLI
-  gsutil cp "$plan_path" "gs://my-audit-bucket/gemini-plans/$filename" > /dev/null 2>&1 &
+  gsutil cp "$plan_path" "gs://my-audit-bucket/onyx-plans/$filename" > /dev/null 2>&1 &
 fi
 
 # AfterTool hooks should generally allow the flow to continue
@@ -358,7 +358,7 @@ To register this `AfterTool` hook, add it to your `settings.json`:
           {
             "name": "archive-plan",
             "type": "command",
-            "command": "~/.gemini/hooks/archive-plan.sh"
+            "command": "~/.onyx/hooks/archive-plan.sh"
           }
         ]
       }
@@ -476,7 +476,7 @@ associated plan files and task trackers.
 
 Manual deletion also removes all associated artifacts:
 
-- **Command Line:** Use `gemini --delete-session <index|id>`.
+- **Command Line:** Use `onyx --delete-session <index|id>`.
 - **Session Browser:** Press `/resume`, navigate to a session, and press `x`.
 
 If you use a [custom plans directory](#custom-plan-directory-and-policies),
@@ -499,10 +499,10 @@ scripts or CI/CD pipelines), Plan Mode optimizes for automated workflows:
 **Example:**
 
 ```bash
-gemini --approval-mode plan -p "Analyze telemetry and suggest improvements"
+onyx --approval-mode plan -p "Analyze telemetry and suggest improvements"
 ```
 
 [`plan.toml`]:
-  https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/policy/policies/plan.toml
-[Conductor]: https://github.com/gemini-cli-extensions/conductor
-[open an issue]: https://github.com/google-gemini/gemini-cli/issues
+  https://github.com/google-onyx/onyx-cli/blob/main/packages/core/src/policy/policies/plan.toml
+[Conductor]: https://github.com/onyx-cli-extensions/conductor
+[open an issue]: https://github.com/google-onyx/onyx-cli/issues

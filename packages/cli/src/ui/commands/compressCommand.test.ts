@@ -7,7 +7,7 @@
 import {
   CompressionStatus,
   type ChatCompressionInfo,
-  type GeminiClient,
+  type OnyxClient,
 } from '@onyx/core';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { compressCommand } from './compressCommand.js';
@@ -23,9 +23,9 @@ describe('compressCommand', () => {
     context = createMockCommandContext({
       services: {
         agentContext: {
-          geminiClient: {
+          onyxClient: {
             tryCompressChat: mockTryCompressChat,
-          } as unknown as GeminiClient,
+          } as unknown as OnyxClient,
         },
       },
     });

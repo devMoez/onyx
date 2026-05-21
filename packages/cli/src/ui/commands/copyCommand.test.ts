@@ -30,7 +30,7 @@ describe('copyCommand', () => {
     mockContext = createMockCommandContext({
       services: {
         agentContext: {
-          geminiClient: {
+          onyxClient: {
             getChat: mockGetChat,
           },
         },

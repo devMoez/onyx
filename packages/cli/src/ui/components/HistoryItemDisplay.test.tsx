@@ -148,7 +148,7 @@ describe('<HistoryItemDisplay />', () => {
     const { lastFrame, unmount } = await renderWithProviders(
       <HistoryItemDisplay {...baseItem} item={item} />,
     );
-    expect(lastFrame()).toContain('About Gemini CLI');
+    expect(lastFrame()).toContain('About Onyx CLI');
     unmount();
   });
 
@@ -334,7 +334,7 @@ describe('<HistoryItemDisplay />', () => {
   });
 
   describe.each([true, false])(
-    'gemini items (alternateBuffer=%s)',
+    'onyx items (alternateBuffer=%s)',
     (useAlternateBuffer) => {
       const longCode =
         '# Example code block:\n' +
@@ -342,10 +342,10 @@ describe('<HistoryItemDisplay />', () => {
         Array.from({ length: 50 }, (_, i) => `Line ${i + 1}`).join('\n') +
         '\n```';
 
-      it('should render a truncated gemini item', async () => {
+      it('should render a truncated onyx item', async () => {
         const item: HistoryItem = {
           id: 1,
-          type: 'gemini',
+          type: 'onyx',
           text: longCode,
         };
         const { lastFrame, unmount } = await renderWithProviders(
@@ -364,10 +364,10 @@ describe('<HistoryItemDisplay />', () => {
         unmount();
       });
 
-      it('should render a full gemini item when using availableTerminalHeightGemini', async () => {
+      it('should render a full onyx item when using availableTerminalHeightOnyx', async () => {
         const item: HistoryItem = {
           id: 1,
-          type: 'gemini',
+          type: 'onyx',
           text: longCode,
         };
         const { lastFrame, unmount } = await renderWithProviders(
@@ -376,7 +376,7 @@ describe('<HistoryItemDisplay />', () => {
             isPending={false}
             terminalWidth={80}
             availableTerminalHeight={10}
-            availableTerminalHeightGemini={Number.MAX_SAFE_INTEGER}
+            availableTerminalHeightOnyx={Number.MAX_SAFE_INTEGER}
           />,
           {
             config: makeFakeConfig({ useAlternateBuffer }),
@@ -387,10 +387,10 @@ describe('<HistoryItemDisplay />', () => {
         unmount();
       });
 
-      it('should render a truncated gemini_content item', async () => {
+      it('should render a truncated onyx_content item', async () => {
         const item: HistoryItem = {
           id: 1,
-          type: 'gemini_content',
+          type: 'onyx_content',
           text: longCode,
         };
         const { lastFrame, unmount } = await renderWithProviders(
@@ -409,10 +409,10 @@ describe('<HistoryItemDisplay />', () => {
         unmount();
       });
 
-      it('should render a full gemini_content item when using availableTerminalHeightGemini', async () => {
+      it('should render a full onyx_content item when using availableTerminalHeightOnyx', async () => {
         const item: HistoryItem = {
           id: 1,
-          type: 'gemini_content',
+          type: 'onyx_content',
           text: longCode,
         };
         const { lastFrame, unmount } = await renderWithProviders(
@@ -421,7 +421,7 @@ describe('<HistoryItemDisplay />', () => {
             isPending={false}
             terminalWidth={80}
             availableTerminalHeight={10}
-            availableTerminalHeightGemini={Number.MAX_SAFE_INTEGER}
+            availableTerminalHeightOnyx={Number.MAX_SAFE_INTEGER}
           />,
           {
             config: makeFakeConfig({ useAlternateBuffer }),

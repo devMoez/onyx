@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-CIP Design Generator - Generate corporate identity mockups using Gemini Nano Banana
+CIP Design Generator - Generate corporate identity mockups using Onyx Nano Banana
 
-Uses Gemini's native image generation (Nano Banana Flash/Pro) for high-quality mockups.
+Uses Onyx's native image generation (Nano Banana Flash/Pro) for high-quality mockups.
 Supports text-and-image-to-image generation for using actual brand logos.
 
-- gemini-2.5-flash-image: Fast generation, cost-effective (default)
-- gemini-3-pro-image-preview: Pro quality, 4K text rendering
+- onyx-2.5-flash-image: Fast generation, cost-effective (default)
+- onyx-3-pro-image-preview: Pro quality, 4K text rendering
 
 Image Editing (text-and-image-to-image):
-  When --logo is provided, the script uses Gemini's image editing capability
+  When --logo is provided, the script uses Onyx's image editing capability
   to incorporate the actual logo into CIP mockups instead of generating one.
 """
 
@@ -27,14 +27,14 @@ from core import search, get_cip_brief
 
 # Model options
 MODELS = {
-    "flash": "gemini-2.5-flash-image",      # Nano Banana Flash - fast, default
-    "pro": "gemini-3-pro-image-preview"      # Nano Banana Pro - quality, 4K text
+    "flash": "onyx-2.5-flash-image",      # Nano Banana Flash - fast, default
+    "pro": "onyx-3-pro-image-preview"      # Nano Banana Pro - quality, 4K text
 }
 DEFAULT_MODEL = "flash"
 
 
 def load_logo_image(logo_path):
-    """Load logo image using PIL for Gemini image editing"""
+    """Load logo image using PIL for Onyx image editing"""
     try:
         from PIL import Image
     except ImportError:
@@ -49,7 +49,7 @@ def load_logo_image(logo_path):
 
     try:
         img = Image.open(logo_path)
-        # Convert to RGB if necessary (Gemini works best with RGB)
+        # Convert to RGB if necessary (Onyx works best with RGB)
         if img.mode in ('RGBA', 'P'):
             # Create white background for transparent images
             background = Image.new('RGB', img.size, (255, 255, 255))
@@ -184,15 +184,15 @@ def build_cip_prompt(deliverable, brand_name, style=None, industry=None, mockup=
 
 
 def generate_with_nano_banana(prompt_data, output_dir=None, model_key="flash", aspect_ratio="1:1", logo_image=None):
-    """Generate image using Gemini Nano Banana (native image generation)
+    """Generate image using Onyx Nano Banana (native image generation)
 
     Supports two modes:
     1. Text-to-image: Pure prompt-based generation (logo_image=None)
     2. Image editing: Text-and-image-to-image using provided logo (logo_image=PIL.Image)
 
     Models:
-    - flash: gemini-2.5-flash-image (fast, cost-effective) - DEFAULT
-    - pro: gemini-3-pro-image-preview (quality, 4K text rendering)
+    - flash: onyx-2.5-flash-image (fast, cost-effective) - DEFAULT
+    - pro: onyx-3-pro-image-preview (quality, 4K text rendering)
 
     Args:
         prompt_data: Dict with prompt, deliverable, brand, etc.
@@ -209,9 +209,9 @@ def generate_with_nano_banana(prompt_data, output_dir=None, model_key="flash", a
         print("Install with: pip install google-genai")
         return None
 
-    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    api_key = os.environ.get("ONYX_API_KEY") or os.environ.get("GOOGLE_API_KEY")
     if not api_key:
-        print("Error: GEMINI_API_KEY or GOOGLE_API_KEY not set")
+        print("Error: ONYX_API_KEY or GOOGLE_API_KEY not set")
         return None
 
     client = genai.Client(api_key=api_key)
@@ -369,7 +369,7 @@ def check_logo_required(brand_name, skip_prompt=False):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate CIP mockups using Gemini Nano Banana",
+        description="Generate CIP mockups using Onyx Nano Banana",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -389,11 +389,11 @@ Examples:
   python generate.py --brand "MyBrand" --logo logo.png --deliverable "vehicle" --output ./mockups --ratio 16:9
 
 Models:
-  flash (default): gemini-2.5-flash-image - Fast, cost-effective
-  pro: gemini-3-pro-image-preview - Quality, 4K text rendering
+  flash (default): onyx-2.5-flash-image - Fast, cost-effective
+  pro: onyx-3-pro-image-preview - Quality, 4K text rendering
 
 Image Editing Mode:
-  When --logo is provided, uses Gemini's text-and-image-to-image capability
+  When --logo is provided, uses Onyx's text-and-image-to-image capability
   to incorporate your ACTUAL logo into the CIP mockups.
         """
     )

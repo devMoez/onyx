@@ -54,7 +54,7 @@ vi.mock('../hooks/useSessionBrowser.js', () => ({
   convertSessionToHistoryFormats: vi.fn().mockReturnValue({
     uiHistory: [
       { type: 'user', text: 'old user' },
-      { type: 'gemini', text: 'old gemini' },
+      { type: 'onyx', text: 'old onyx' },
     ],
     clientHistory: [{ role: 'user', parts: [{ text: 'old user' }] }],
   }),
@@ -98,7 +98,7 @@ describe('rewindCommand', () => {
     mockContext = createMockCommandContext({
       services: {
         agentContext: {
-          geminiClient: {
+          onyxClient: {
             getChatRecordingService: mockGetChatRecordingService,
             setHistory: mockSetHistory,
             sendMessageStream: mockSendMessageStream,
@@ -146,7 +146,7 @@ describe('rewindCommand', () => {
       expect(mockLoadHistory).toHaveBeenCalledWith(
         [
           expect.objectContaining({ text: 'old user', id: 1 }),
-          expect.objectContaining({ text: 'old gemini', id: 2 }),
+          expect.objectContaining({ text: 'old onyx', id: 2 }),
         ],
         'New Prompt',
       );
@@ -296,7 +296,7 @@ describe('rewindCommand', () => {
     const context = createMockCommandContext({
       services: {
         agentContext: {
-          geminiClient: undefined,
+          onyxClient: undefined,
           get config() {
             return this;
           },
@@ -317,7 +317,7 @@ describe('rewindCommand', () => {
     const context = createMockCommandContext({
       services: {
         agentContext: {
-          geminiClient: { getChatRecordingService: () => undefined },
+          onyxClient: { getChatRecordingService: () => undefined },
           get config() {
             return this;
           },
@@ -348,7 +348,7 @@ describe('rewindCommand', () => {
 
   it('should return info if no user interactions found', () => {
     mockGetConversation.mockReturnValue({
-      messages: [{ id: 'msg-1', type: 'gemini', content: 'hello' }],
+      messages: [{ id: 'msg-1', type: 'onyx', content: 'hello' }],
       sessionId: 'test-session',
     });
 

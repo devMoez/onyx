@@ -102,3 +102,4 @@ describe('skill-creator scripts e2e', () => {
     expect(zipList).not.toContain(`${skillName}/SKILL.md`);
   });
 });
+

@@ -58,7 +58,7 @@ describe('coreTools snapshots for specific models', () => {
     vi.unstubAllGlobals();
   });
 
-  const modelIds = ['gemini-2.5-pro', 'gemini-3-pro-preview'];
+  const modelIds = ['onyx-2.5-pro', 'onyx-3-pro-preview'];
   const tools = [
     { name: 'read_file', definition: READ_FILE_DEFINITION },
     { name: 'write_file', definition: WRITE_FILE_DEFINITION },

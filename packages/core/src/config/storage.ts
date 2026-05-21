@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -88,8 +88,8 @@ export class Storage {
   }
 
   static getTrustedFoldersPath(): string {
-    if (process.env['GEMINI_CLI_TRUSTED_FOLDERS_PATH']) {
-      return process.env['GEMINI_CLI_TRUSTED_FOLDERS_PATH'];
+    if (process.env['ONYX_CLI_TRUST_WORKSPACE']) {
+      return process.env['ONYX_CLI_TRUST_WORKSPACE'];
     }
     return path.join(Storage.getGlobalOnyxDir(), TRUSTED_FOLDERS_FILENAME);
   }
@@ -132,17 +132,17 @@ export class Storage {
 
   private static getSystemConfigDir(): string {
     if (os.platform() === 'darwin') {
-      return '/Library/Application Support/GeminiCli';
+      return '/Library/Application Support/OnyxCli';
     } else if (os.platform() === 'win32') {
-      return 'C:\\ProgramData\\gemini-cli';
+      return 'C:\ProgramData\onyx-cli';
     } else {
-      return '/etc/gemini-cli';
+      return '/etc/onyx-cli';
     }
   }
 
   static getSystemSettingsPath(): string {
-    if (process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH']) {
-      return process.env['GEMINI_CLI_SYSTEM_SETTINGS_PATH'];
+    if (process.env['ONYX_CLI_SYSTEM_SETTINGS_PATH']) {
+      return process.env['ONYX_CLI_SYSTEM_SETTINGS_PATH'];
     }
     return path.join(Storage.getSystemConfigDir(), 'settings.json');
   }
@@ -152,7 +152,7 @@ export class Storage {
   }
 
   static getGlobalTempDir(): string {
-    return path.join(Storage.getGlobalGeminiDir(), TMP_DIR_NAME);
+    return path.join(Storage.getGlobalOnyxDir(), TMP_DIR_NAME);
   }
 
   static getGlobalBinDir(): string {
@@ -204,7 +204,7 @@ export class Storage {
   }
 
   static getOAuthCredsPath(): string {
-    return path.join(Storage.getGlobalGeminiDir(), OAUTH_FILE);
+    return path.join(Storage.getGlobalOnyxDir(), OAUTH_FILE);
   }
 
   getProjectRoot(): string {
@@ -236,12 +236,12 @@ export class Storage {
       }
 
       const registryPath = path.join(
-        Storage.getGlobalGeminiDir(),
+        Storage.getGlobalOnyxDir(),
         'projects.json',
       );
       const registry = new ProjectRegistry(registryPath, [
         Storage.getGlobalTempDir(),
-        path.join(Storage.getGlobalGeminiDir(), 'history'),
+        path.join(Storage.getGlobalOnyxDir(), 'history'),
       ]);
       await registry.initialize();
 
@@ -266,7 +266,7 @@ export class Storage {
     await StorageMigration.migrateDirectory(oldTempDir, newTempDir);
 
     // Migrate History Dir
-    const historyDir = path.join(Storage.getGlobalGeminiDir(), 'history');
+    const historyDir = path.join(Storage.getGlobalOnyxDir(), 'history');
     const newHistoryDir = path.join(historyDir, shortId);
     const oldHistoryDir = path.join(historyDir, oldHash);
     await StorageMigration.migrateDirectory(oldHistoryDir, newHistoryDir);
@@ -274,7 +274,7 @@ export class Storage {
 
   getHistoryDir(): string {
     const identifier = this.getProjectIdentifier();
-    const historyDir = path.join(Storage.getGlobalGeminiDir(), 'history');
+    const historyDir = path.join(Storage.getGlobalOnyxDir(), 'history');
     return path.join(historyDir, identifier);
   }
 
@@ -300,6 +300,10 @@ export class Storage {
 
   getProjectSkillsDir(): string {
     return path.join(this.getOnyxDir(), 'skills');
+  }
+
+  getProjectAgentSkillsDir(): string {
+    return path.join(this.getAgentsDir(), 'skills');
   }
 
   getProjectAgentsDir(): string {
@@ -418,12 +422,8 @@ export class Storage {
     }
   }
 
-  getExtensionsDir(): string {
-    return path.join(this.getGeminiDir(), 'extensions');
-  }
-
   getExtensionsConfigPath(): string {
-    return path.join(this.getExtensionsDir(), 'gemini-extension.json');
+    return path.join(this.getExtensionsDir(), 'onyx-extension.json');
   }
 
   getHistoryFilePath(): string {

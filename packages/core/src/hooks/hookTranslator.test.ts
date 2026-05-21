@@ -35,7 +35,7 @@ describe('HookTranslator', () => {
   describe('LLM Request Translation', () => {
     it('should convert SDK request to hook format', () => {
       const sdkRequest: GenerateContentParameters = {
-        model: 'gemini-1.5-flash',
+        model: 'onyx-1.5-flash',
         contents: [
           {
             role: 'user',
@@ -51,7 +51,7 @@ describe('HookTranslator', () => {
       const hookRequest = translator.toHookLLMRequest(sdkRequest);
 
       expect(hookRequest).toEqual({
-        model: 'gemini-1.5-flash',
+        model: 'onyx-1.5-flash',
         messages: [
           {
             role: 'user',
@@ -69,7 +69,7 @@ describe('HookTranslator', () => {
 
     it('should handle string contents', () => {
       const sdkRequest: GenerateContentParameters = {
-        model: 'gemini-1.5-flash',
+        model: 'onyx-1.5-flash',
         contents: ['Simple string message'],
       } as unknown as GenerateContentParameters;
 
@@ -85,7 +85,7 @@ describe('HookTranslator', () => {
 
     it('should handle conversion errors gracefully', () => {
       const sdkRequest: GenerateContentParameters = {
-        model: 'gemini-1.5-flash',
+        model: 'onyx-1.5-flash',
         contents: [null as unknown as ContentListUnion], // Invalid content
       } as unknown as GenerateContentParameters;
 
@@ -93,12 +93,12 @@ describe('HookTranslator', () => {
 
       // When contents are invalid, the translator skips them and returns empty messages
       expect(hookRequest.messages).toEqual([]);
-      expect(hookRequest.model).toBe('gemini-1.5-flash');
+      expect(hookRequest.model).toBe('onyx-1.5-flash');
     });
 
     it('should convert hook request back to SDK format', () => {
       const hookRequest: LLMRequest = {
-        model: 'gemini-1.5-flash',
+        model: 'onyx-1.5-flash',
         messages: [
           {
             role: 'user',
@@ -113,7 +113,7 @@ describe('HookTranslator', () => {
 
       const sdkRequest = translator.fromHookLLMRequest(hookRequest);
 
-      expect(sdkRequest.model).toBe('gemini-1.5-flash');
+      expect(sdkRequest.model).toBe('onyx-1.5-flash');
       expect(sdkRequest.contents).toEqual([
         {
           role: 'user',
@@ -124,7 +124,7 @@ describe('HookTranslator', () => {
 
     it('should apply model override when hook returns only model field', () => {
       const baseRequest: GenerateContentParameters = {
-        model: 'gemini-2.5-flash-lite',
+        model: 'onyx-2.5-flash-lite',
         contents: [
           {
             role: 'user',
@@ -135,7 +135,7 @@ describe('HookTranslator', () => {
 
       // Simulate a hook that only overrides the model — no messages field
       const hookRequest = {
-        model: 'gemini-2.5-flash',
+        model: 'onyx-2.5-flash',
       } as unknown as LLMRequest;
 
       const sdkRequest = translator.fromHookLLMRequest(
@@ -144,14 +144,14 @@ describe('HookTranslator', () => {
       );
 
       // Model should be overridden
-      expect(sdkRequest.model).toBe('gemini-2.5-flash');
+      expect(sdkRequest.model).toBe('onyx-2.5-flash');
       // Original conversation contents should be preserved
       expect(sdkRequest.contents).toEqual(baseRequest.contents);
     });
 
     it('should preserve base request contents when hook messages is undefined', () => {
       const baseRequest: GenerateContentParameters = {
-        model: 'gemini-1.5-flash',
+        model: 'onyx-1.5-flash',
         contents: [
           { role: 'user', parts: [{ text: 'original message' }] },
           { role: 'model', parts: [{ text: 'original reply' }] },
@@ -159,7 +159,7 @@ describe('HookTranslator', () => {
       } as unknown as GenerateContentParameters;
 
       const hookRequest = {
-        model: 'gemini-1.5-pro',
+        model: 'onyx-1.5-pro',
         // messages intentionally omitted
       } as unknown as LLMRequest;
 
@@ -168,12 +168,12 @@ describe('HookTranslator', () => {
         baseRequest,
       );
 
-      expect(sdkRequest.model).toBe('gemini-1.5-pro');
+      expect(sdkRequest.model).toBe('onyx-1.5-pro');
       expect(sdkRequest.contents).toEqual(baseRequest.contents);
     });
   });
 
-  // Regression tests for https://github.com/google-gemini/gemini-cli/issues/25558
+  // Regression tests for https://github.com/google-onyx/onyx-cli/issues/25558
   // BeforeModel hooks that modify text in conversations containing tool calls
   // were destroying functionCall/functionResponse parts because
   // fromHookLLMRequest rebuilt contents text-only. The fix merges hook text
@@ -181,7 +181,7 @@ describe('HookTranslator', () => {
   describe('fromHookLLMRequest with baseRequest (non-text part preservation)', () => {
     it('should preserve functionCall parts when merging hook text back', () => {
       const baseRequest = {
-        model: 'gemini-2.0-flash',
+        model: 'onyx-2.0-flash',
         contents: [
           {
             role: 'user',
@@ -213,7 +213,7 @@ describe('HookTranslator', () => {
       } as unknown as GenerateContentParameters;
 
       const hookRequest: LLMRequest = {
-        model: 'gemini-2.0-flash',
+        model: 'onyx-2.0-flash',
         messages: [
           { role: 'user', content: 'Hello [MODIFIED]' },
           { role: 'model', content: 'Let me check that.' },
@@ -248,7 +248,7 @@ describe('HookTranslator', () => {
 
     it('should handle text-only entries interleaved with function-only entries', () => {
       const baseRequest = {
-        model: 'gemini-2.0-flash',
+        model: 'onyx-2.0-flash',
         contents: [
           { role: 'user', parts: [{ text: 'Q1' }] },
           {
@@ -271,7 +271,7 @@ describe('HookTranslator', () => {
       } as unknown as GenerateContentParameters;
 
       const hookRequest: LLMRequest = {
-        model: 'gemini-2.0-flash',
+        model: 'onyx-2.0-flash',
         messages: [
           { role: 'user', content: 'Q1-modified' },
           // contents[1] and [2] skipped (no text)
@@ -294,7 +294,7 @@ describe('HookTranslator', () => {
 
     it('should collapse multiple text parts and preserve non-text parts', () => {
       const baseRequest = {
-        model: 'gemini-2.0-flash',
+        model: 'onyx-2.0-flash',
         contents: [
           {
             role: 'model',
@@ -308,7 +308,7 @@ describe('HookTranslator', () => {
       } as unknown as GenerateContentParameters;
 
       const hookRequest: LLMRequest = {
-        model: 'gemini-2.0-flash',
+        model: 'onyx-2.0-flash',
         messages: [
           { role: 'model', content: 'I will search for you. [BLINDED]' },
         ],
@@ -330,7 +330,7 @@ describe('HookTranslator', () => {
 
     it('should fall back to text-only when baseRequest is undefined', () => {
       const hookRequest: LLMRequest = {
-        model: 'gemini-2.0-flash',
+        model: 'onyx-2.0-flash',
         messages: [{ role: 'user', content: 'Hello' }],
       };
 
@@ -343,11 +343,11 @@ describe('HookTranslator', () => {
 
     it('should fall back to text-only when baseRequest has no contents', () => {
       const hookRequest: LLMRequest = {
-        model: 'gemini-2.0-flash',
+        model: 'onyx-2.0-flash',
         messages: [{ role: 'user', content: 'Hello' }],
       };
       const baseRequest = {
-        model: 'gemini-2.0-flash',
+        model: 'onyx-2.0-flash',
       } as GenerateContentParameters;
 
       const result = translator.fromHookLLMRequest(hookRequest, baseRequest);
@@ -359,12 +359,12 @@ describe('HookTranslator', () => {
 
     it('should append extra hook messages beyond base contents', () => {
       const baseRequest = {
-        model: 'gemini-2.0-flash',
+        model: 'onyx-2.0-flash',
         contents: [{ role: 'user', parts: [{ text: 'Hello' }] }],
       } as unknown as GenerateContentParameters;
 
       const hookRequest: LLMRequest = {
-        model: 'gemini-2.0-flash',
+        model: 'onyx-2.0-flash',
         messages: [
           { role: 'user', content: 'Hello' },
           { role: 'model', content: 'Extra message added by hook' },

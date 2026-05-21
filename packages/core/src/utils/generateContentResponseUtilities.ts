@@ -18,7 +18,7 @@ import type { Config } from '../config/config.js';
 export const BINARY_INJECTION_KEY = '__binary_injection__';
 
 /**
- * Formats tool output for a Gemini FunctionResponse.
+ * Formats tool output for a Onyx FunctionResponse.
  */
 function createFunctionResponsePart(
   callId: string,

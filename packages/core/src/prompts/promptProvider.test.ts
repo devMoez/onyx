@@ -9,7 +9,7 @@ import { PromptProvider } from './promptProvider.js';
 import type { Config } from '../config/config.js';
 import { makeRelative } from '../utils/paths.js';
 import {
-  getAllGeminiMdFilenames,
+  getAllOnyxMdFilenames,
   DEFAULT_CONTEXT_FILENAME,
 } from '../tools/memoryTool.js';
 import {
@@ -29,7 +29,7 @@ vi.mock('../tools/memoryTool.js', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...(actual as object),
-    getAllGeminiMdFilenames: vi.fn(),
+    getAllOnyxMdFilenames: vi.fn(),
   };
 });
 
@@ -43,8 +43,8 @@ describe('PromptProvider', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.stubEnv('ONYX_SYSTEM_MD', '');
-    vi.stubEnv('GEMINI_SYSTEM_MD', '');
-    vi.stubEnv('GEMINI_WRITE_SYSTEM_MD', '');
+    vi.stubEnv('ONYX_SYSTEM_MD', '');
+    vi.stubEnv('ONYX_WRITE_SYSTEM_MD', '');
 
     const mockToolRegistry = {
       getAllToolNames: vi.fn().mockReturnValue([]),
@@ -89,7 +89,7 @@ describe('PromptProvider', () => {
       getApprovalMode: vi.fn(),
       isTrackerEnabled: vi.fn().mockReturnValue(false),
       getHasAccessToPreviewModel: vi.fn().mockReturnValue(true),
-      getGemini31LaunchedSync: vi.fn().mockReturnValue(true),
+      getOnyx31LaunchedSync: vi.fn().mockReturnValue(true),
     } as unknown as Config;
   });
 
@@ -98,7 +98,7 @@ describe('PromptProvider', () => {
   });
 
   it('should handle multiple context filenames in the system prompt', () => {
-    vi.mocked(getAllGeminiMdFilenames).mockReturnValue([
+    vi.mocked(getAllOnyxMdFilenames).mockReturnValue([
       DEFAULT_CONTEXT_FILENAME,
       'CUSTOM.md',
       'ANOTHER.md',
@@ -144,7 +144,7 @@ describe('PromptProvider', () => {
   });
 
   it('should handle multiple context filenames in user memory section', () => {
-    vi.mocked(getAllGeminiMdFilenames).mockReturnValue([
+    vi.mocked(getAllOnyxMdFilenames).mockReturnValue([
       DEFAULT_CONTEXT_FILENAME,
       'CUSTOM.md',
     ]);
@@ -169,7 +169,7 @@ describe('PromptProvider', () => {
     } as unknown as MessageBus;
 
     beforeEach(() => {
-      vi.mocked(getAllGeminiMdFilenames).mockReturnValue([
+      vi.mocked(getAllOnyxMdFilenames).mockReturnValue([
         DEFAULT_CONTEXT_FILENAME,
       ]);
       (mockConfig.getApprovalMode as ReturnType<typeof vi.fn>).mockReturnValue(
@@ -353,7 +353,7 @@ describe('PromptProvider', () => {
         ]),
       });
       vi.mocked(mockConfig.getHasAccessToPreviewModel).mockReturnValue(true);
-      vi.mocked(mockConfig.getGemini31LaunchedSync).mockReturnValue(true);
+      vi.mocked(mockConfig.getOnyx31LaunchedSync).mockReturnValue(true);
     });
 
     it('should include active topic context when narration is enabled', () => {

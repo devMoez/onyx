@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Logo Generation Script using Gemini Nano Banana API
-Uses Gemini 2.5 Flash Image and Gemini 3 Pro Image Preview models
+Logo Generation Script using Onyx Nano Banana API
+Uses Onyx 2.5 Flash Image and Onyx 3 Pro Image Preview models
 
 Models:
-- Nano Banana (default): gemini-2.5-flash-image - fast, high-volume, low-latency
-- Nano Banana Pro (--pro): gemini-3-pro-image-preview - professional quality, advanced reasoning
+- Nano Banana (default): onyx-2.5-flash-image - fast, high-volume, low-latency
+- Nano Banana Pro (--pro): onyx-3-pro-image-preview - professional quality, advanced reasoning
 
 Usage:
     python generate.py --prompt "tech startup logo minimalist blue"
@@ -56,11 +56,11 @@ except ImportError:
 
 
 # ============ CONFIGURATION ============
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+ONYX_API_KEY = os.environ.get("ONYX_API_KEY")
 
-# Gemini "Nano Banana" model configurations for image generation
-GEMINI_FLASH = "gemini-2.5-flash-image"  # Nano Banana: fast, high-volume, low-latency
-GEMINI_PRO = "gemini-3-pro-image-preview"  # Nano Banana Pro: professional quality, advanced reasoning
+# Onyx "Nano Banana" model configurations for image generation
+ONYX_FLASH = "onyx-2.5-flash-image"  # Nano Banana: fast, high-volume, low-latency
+ONYX_PRO = "onyx-3-pro-image-preview"  # Nano Banana Pro: professional quality, advanced reasoning
 
 # Supported aspect ratios
 ASPECT_RATIOS = ["1:1", "16:9", "9:16", "4:3", "3:4"]
@@ -135,27 +135,27 @@ def enhance_prompt(base_prompt, style=None, industry=None, brand_name=None):
 
 def generate_logo(prompt, style=None, industry=None, brand_name=None,
                   output_path=None, use_pro=False, aspect_ratio=None):
-    """Generate a logo using Gemini models with image generation
+    """Generate a logo using Onyx models with image generation
 
     Args:
         aspect_ratio: Image aspect ratio. Options: "1:1", "16:9", "9:16", "4:3", "3:4"
                       Default is "1:1" (square) for logos.
     """
 
-    if not GEMINI_API_KEY:
-        print("Error: GEMINI_API_KEY not set")
-        print("Set it with: export GEMINI_API_KEY='your-key'")
+    if not ONYX_API_KEY:
+        print("Error: ONYX_API_KEY not set")
+        print("Set it with: export ONYX_API_KEY='your-key'")
         return None
 
     # Initialize client
-    client = genai.Client(api_key=GEMINI_API_KEY)
+    client = genai.Client(api_key=ONYX_API_KEY)
 
     # Enhance the prompt
     full_prompt = enhance_prompt(prompt, style, industry, brand_name)
 
     # Select model
-    model = GEMINI_PRO if use_pro else GEMINI_FLASH
-    model_label = "Nano Banana Pro (gemini-3-pro-image-preview)" if use_pro else "Nano Banana (gemini-2.5-flash-image)"
+    model = ONYX_PRO if use_pro else ONYX_FLASH
+    model_label = "Nano Banana Pro (onyx-3-pro-image-preview)" if use_pro else "Nano Banana (onyx-2.5-flash-image)"
 
     # Set aspect ratio (default to 1:1 for logos)
     ratio = aspect_ratio if aspect_ratio in ASPECT_RATIOS else DEFAULT_ASPECT_RATIO
@@ -166,7 +166,7 @@ def generate_logo(prompt, style=None, industry=None, brand_name=None,
     print()
 
     try:
-        # Generate image using Gemini with image generation capability
+        # Generate image using Onyx with image generation capability
         response = client.models.generate_content(
             model=model,
             contents=full_prompt,
@@ -300,7 +300,7 @@ def generate_batch(prompt, brand_name, count, output_dir, use_pro=False, brand_c
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate logos using Gemini Nano Banana models")
+    parser = argparse.ArgumentParser(description="Generate logos using Onyx Nano Banana models")
     parser.add_argument("--prompt", "-p", type=str, help="Logo description prompt")
     parser.add_argument("--brand", "-b", type=str, help="Brand name")
     parser.add_argument("--style", "-s", choices=list(STYLE_MODIFIERS.keys()), help="Logo style")
@@ -309,7 +309,7 @@ def main():
     parser.add_argument("--output-dir", type=str, help="Output directory for batch generation")
     parser.add_argument("--batch", type=int, help="Number of logo variants to generate (batch mode)")
     parser.add_argument("--brand-context", type=str, help="Additional brand context for prompts")
-    parser.add_argument("--pro", action="store_true", help="Use Nano Banana Pro (gemini-3-pro-image-preview) for professional quality")
+    parser.add_argument("--pro", action="store_true", help="Use Nano Banana Pro (onyx-3-pro-image-preview) for professional quality")
     parser.add_argument("--aspect-ratio", "-r", choices=ASPECT_RATIOS, default=DEFAULT_ASPECT_RATIO,
                         help=f"Image aspect ratio (default: {DEFAULT_ASPECT_RATIO} for logos)")
     parser.add_argument("--list-styles", action="store_true", help="List available styles")

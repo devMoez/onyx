@@ -11,7 +11,7 @@ import type { ExtensionConfig } from '../extension.js';
 import {
   debugLogger,
   type ExtensionInstallMetadata,
-  type GeminiCLIExtension,
+  type OnyxCLIExtension,
   coreEvents,
 } from '@onyx/core';
 import { ExtensionManager } from '../extension-manager.js';
@@ -220,14 +220,14 @@ describe('extensionUpdates', () => {
           settings: [],
           resolvedSettings: [],
           skills: [],
-        } as unknown as GeminiCLIExtension,
+        } as unknown as OnyxCLIExtension,
       ]);
       vi.spyOn(manager, 'uninstallExtension').mockResolvedValue(undefined);
       // Mock loadExtension to return something so the method doesn't crash at the end
       vi.spyOn(manager, 'loadExtension').mockResolvedValue({
         name: 'test-ext',
         version: '1.1.0',
-      } as unknown as GeminiCLIExtension);
+      } as unknown as OnyxCLIExtension);
 
       // 4. Mock External Helpers
       // This is the key fix: we explicitly mock `getMissingSettings` to return
@@ -252,7 +252,7 @@ describe('extensionUpdates', () => {
       expect(coreEvents.emitFeedback).toHaveBeenCalledWith(
         'warning',
         expect.stringContaining(
-          'Please run "gemini extensions config test-ext [setting-name]"',
+          'Please run "onyx extensions config test-ext [setting-name]"',
         ),
       );
     });
@@ -289,13 +289,13 @@ describe('extensionUpdates', () => {
           installMetadata,
           path: '/mock/extensions/test-ext',
           isActive: true,
-        } as unknown as GeminiCLIExtension,
+        } as unknown as OnyxCLIExtension,
       ]);
       vi.spyOn(manager, 'uninstallExtension').mockResolvedValue(undefined);
       vi.spyOn(manager, 'loadExtension').mockResolvedValue({
         name: 'test-ext',
         version: '1.1.0',
-      } as unknown as GeminiCLIExtension);
+      } as unknown as OnyxCLIExtension);
 
       const storeSpy = vi.spyOn(manager, 'storeExtensionIntegrity');
 

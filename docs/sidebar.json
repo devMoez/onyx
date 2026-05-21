@@ -14,8 +14,8 @@
           },
           { "label": "CLI cheatsheet", "slug": "docs/cli/cli-reference" },
           {
-            "label": "Gemini 3 on Onyx CLI",
-            "slug": "docs/get-started/gemini-3"
+            "label": "Onyx 3 on Onyx CLI",
+            "slug": "docs/get-started/onyx-3"
           }
         ]
       },
@@ -194,16 +194,16 @@
             "slug": "docs/cli/enterprise"
           },
           {
-            "label": "Ignore files (.geminiignore)",
-            "slug": "docs/cli/gemini-ignore"
+            "label": "Ignore files (.onyxignore)",
+            "slug": "docs/cli/onyx-ignore"
           },
           {
             "label": "Model configuration",
             "slug": "docs/cli/generation-settings"
           },
           {
-            "label": "Project context (GEMINI.md)",
-            "slug": "docs/cli/gemini-md"
+            "label": "Project context (ONYX.md)",
+            "slug": "docs/cli/onyx-md"
           },
           { "label": "Settings", "slug": "docs/cli/settings" },
           {

@@ -124,7 +124,7 @@ describe('relaunchAppInChildProcess', () => {
     vi.clearAllMocks();
     mocks.writeToStderr.mockClear();
 
-    vi.stubEnv('GEMINI_CLI_NO_RELAUNCH', '');
+    vi.stubEnv('ONYX_CLI_NO_RELAUNCH', '');
     vi.stubEnv('IS_BINARY', '');
     vi.stubEnv('NODE_OPTIONS', '');
 
@@ -154,9 +154,9 @@ describe('relaunchAppInChildProcess', () => {
     stdinResumeSpy.mockRestore();
   });
 
-  describe('when GEMINI_CLI_NO_RELAUNCH is set', () => {
+  describe('when ONYX_CLI_NO_RELAUNCH is set', () => {
     it('should return early without spawning a child process', async () => {
-      vi.stubEnv('GEMINI_CLI_NO_RELAUNCH', 'true');
+      vi.stubEnv('ONYX_CLI_NO_RELAUNCH', 'true');
 
       await relaunchAppInChildProcess(['--test'], ['--verbose']);
 
@@ -165,9 +165,9 @@ describe('relaunchAppInChildProcess', () => {
     });
   });
 
-  describe('when GEMINI_CLI_NO_RELAUNCH is not set', () => {
+  describe('when ONYX_CLI_NO_RELAUNCH is not set', () => {
     beforeEach(() => {
-      vi.stubEnv('GEMINI_CLI_NO_RELAUNCH', '');
+      vi.stubEnv('ONYX_CLI_NO_RELAUNCH', '');
     });
 
     it('should construct correct spawn arguments and use command line for node arguments in standard Node mode', async () => {
@@ -184,7 +184,7 @@ describe('relaunchAppInChildProcess', () => {
         '--max-old-space-size=4096',
         '--experimental-modules',
       ];
-      const additionalScriptArgs = ['--model', 'gemini-1.5-pro', '--debug'];
+      const additionalScriptArgs = ['--model', 'onyx-1.5-pro', '--debug'];
 
       const mockChild = createMockChildProcess(0, true);
       mockedSpawn.mockReturnValue(mockChild);
@@ -202,7 +202,7 @@ describe('relaunchAppInChildProcess', () => {
           '--experimental-modules',
           '/path/to/cli.js',
           '--model',
-          'gemini-1.5-pro',
+          'onyx-1.5-pro',
           '--debug',
           'command',
           '--flag=value',
@@ -210,7 +210,7 @@ describe('relaunchAppInChildProcess', () => {
         ],
         expect.objectContaining({
           env: expect.objectContaining({
-            GEMINI_CLI_NO_RELAUNCH: 'true',
+            ONYX_CLI_NO_RELAUNCH: 'true',
           }),
         }),
       );
@@ -229,8 +229,8 @@ describe('relaunchAppInChildProcess', () => {
       // execArgv should be inherited, not duplicated in NODE_OPTIONS
       process.execArgv = ['--inspect=9229'];
       process.argv = [
-        '/usr/bin/gemini',
-        '/usr/bin/gemini',
+        '/usr/bin/onyx',
+        '/usr/bin/onyx',
         'command',
         '--verbose',
       ];
@@ -250,7 +250,7 @@ describe('relaunchAppInChildProcess', () => {
         ['/usr/bin/node', 'command', '--verbose'],
         expect.objectContaining({
           env: expect.objectContaining({
-            GEMINI_CLI_NO_RELAUNCH: 'true',
+            ONYX_CLI_NO_RELAUNCH: 'true',
             NODE_OPTIONS: '--max-old-space-size=8192',
           }),
         }),
@@ -261,7 +261,7 @@ describe('relaunchAppInChildProcess', () => {
       vi.stubEnv('IS_BINARY', 'true');
       vi.stubEnv('NODE_OPTIONS', '--existing-flag');
       process.execArgv = ['--inspect']; // inherited from env/binary, should not be duplicated
-      process.argv = ['/usr/bin/gemini', '/usr/bin/gemini', 'command'];
+      process.argv = ['/usr/bin/onyx', '/usr/bin/onyx', 'command'];
 
       // In our use case, these are simple flags like --max-old-space-size=X
       const additionalNodeArgs = ['--max-old-space-size=8192'];

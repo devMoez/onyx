@@ -9,7 +9,7 @@
 
 /**
  * Script to backfill a process change notification comment to all open PRs
- * not created by members of the 'gemini-cli-maintainers' team.
+ * not created by members of the 'onyx-cli-maintainers' team.
  *
  * Skip PRs that are already associated with an issue.
  */
@@ -17,11 +17,11 @@
 const { execFileSync } = require('child_process');
 
 const isDryRun = process.argv.includes('--dry-run');
-const REPO = 'google-gemini/gemini-cli';
-const ORG = 'google-gemini';
-const TEAM_SLUG = 'gemini-cli-maintainers';
+const REPO = 'google-onyx/onyx-cli';
+const ORG = 'google-onyx';
+const TEAM_SLUG = 'onyx-cli-maintainers';
 const DISCUSSION_URL =
-  'https://github.com/google-gemini/gemini-cli/discussions/16706';
+  'https://github.com/google-onyx/onyx-cli/discussions/16706';
 
 /**
  * Executes a GitHub CLI command safely using an argument array.

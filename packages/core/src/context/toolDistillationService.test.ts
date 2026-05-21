@@ -7,7 +7,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ToolOutputDistillationService } from './toolDistillationService.js';
 import type { Config, Part } from '../index.js';
-import type { GeminiClient } from '../core/client.js';
+import type { OnyxClient } from '../core/client.js';
 
 vi.mock('../utils/fileUtils.js', () => ({
   saveTruncatedToolOutput: vi.fn().mockResolvedValue('mocked-path'),
@@ -15,7 +15,7 @@ vi.mock('../utils/fileUtils.js', () => ({
 
 describe('ToolOutputDistillationService', () => {
   let mockConfig: Config;
-  let mockGeminiClient: GeminiClient;
+  let mockOnyxClient: OnyxClient;
   let service: ToolOutputDistillationService;
 
   beforeEach(() => {
@@ -24,20 +24,20 @@ describe('ToolOutputDistillationService', () => {
       getToolSummarizationThresholdTokens: vi.fn().mockReturnValue(100),
       getUsageStatisticsEnabled: vi.fn().mockReturnValue(false),
       storage: {
-        getProjectTempDir: vi.fn().mockReturnValue('/tmp/gemini'),
+        getProjectTempDir: vi.fn().mockReturnValue('/tmp/onyx'),
       },
       telemetry: {
         logEvent: vi.fn(),
       },
     } as unknown as Config;
-    mockGeminiClient = {
+    mockOnyxClient = {
       generateContent: vi.fn().mockResolvedValue({
         candidates: [{ content: { parts: [{ text: 'Mock Intent Summary' }] } }],
       }),
-    } as unknown as GeminiClient;
+    } as unknown as OnyxClient;
     service = new ToolOutputDistillationService(
       mockConfig,
-      mockGeminiClient,
+      mockOnyxClient,
       'test-prompt-id',
     );
   });
@@ -47,7 +47,7 @@ describe('ToolOutputDistillationService', () => {
     const largeContent = 'A'.repeat(500);
     const result = await service.distill('test-tool', 'call-1', largeContent);
 
-    expect(mockGeminiClient.generateContent).toHaveBeenCalled();
+    expect(mockOnyxClient.generateContent).toHaveBeenCalled();
     const text =
       typeof result.truncatedContent === 'string'
         ? result.truncatedContent
@@ -86,7 +86,7 @@ describe('ToolOutputDistillationService', () => {
     const massiveContent = 'A'.repeat(1_000_001); // > MAX_DISTILLATION_SIZE
     const result = await service.distill('test-tool', 'call-2', massiveContent);
 
-    expect(mockGeminiClient.generateContent).not.toHaveBeenCalled();
+    expect(mockOnyxClient.generateContent).not.toHaveBeenCalled();
     const text =
       typeof result.truncatedContent === 'string'
         ? result.truncatedContent
@@ -99,7 +99,7 @@ describe('ToolOutputDistillationService', () => {
     const mediumContent = 'A'.repeat(110);
     const result = await service.distill('test-tool', 'call-3', mediumContent);
 
-    expect(mockGeminiClient.generateContent).not.toHaveBeenCalled();
+    expect(mockOnyxClient.generateContent).not.toHaveBeenCalled();
     expect(result.truncatedContent).not.toContain('Mock Intent Summary');
   });
 });

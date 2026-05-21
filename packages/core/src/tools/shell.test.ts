@@ -114,7 +114,7 @@ describe('ShellTool', () => {
       get config() {
         return this;
       },
-      geminiClient: {
+      onyxClient: {
         stripThoughtsFromHistory: vi.fn(),
       },
 
@@ -149,7 +149,7 @@ describe('ShellTool', () => {
         const projectTempDir = this.storage.getProjectTempDir();
         return `Path not in workspace: Attempted path "${absolutePath}" resolves outside the allowed workspace directories: ${workspaceDirs.join(', ')} or the project temp directory: ${projectTempDir}`;
       },
-      getGeminiClient: vi.fn().mockReturnValue({}),
+      getOnyxClient: vi.fn().mockReturnValue({}),
       getShellToolInactivityTimeout: vi.fn().mockReturnValue(1000),
       getEnableInteractiveShell: vi.fn().mockReturnValue(false),
       getShellBackgroundCompletionBehavior: vi.fn().mockReturnValue('silent'),
@@ -320,7 +320,7 @@ describe('ShellTool', () => {
       const result = await promise;
 
       expect(mockShellExecutionService).toHaveBeenCalledWith(
-        expect.stringMatching(/pgrep -g 0 >.*gemini-shell-.*[/\\]pgrep\.tmp/),
+        expect.stringMatching(/pgrep -g 0 >.*onyx-shell-.*[/\\]pgrep\.tmp/),
         tempRootDir,
         expect.any(Function),
         expect.any(AbortSignal),
@@ -343,7 +343,7 @@ describe('ShellTool', () => {
       await promise;
 
       expect(mockShellExecutionService).toHaveBeenCalledWith(
-        expect.stringMatching(/pgrep -g 0 >.*gemini-shell-.*[/\\]pgrep\.tmp/),
+        expect.stringMatching(/pgrep -g 0 >.*onyx-shell-.*[/\\]pgrep\.tmp/),
         tempRootDir,
         expect.any(Function),
         expect.any(AbortSignal),
@@ -359,7 +359,7 @@ describe('ShellTool', () => {
       await promise;
 
       expect(mockShellExecutionService).toHaveBeenCalledWith(
-        expect.stringMatching(/pgrep -g 0 >.*gemini-shell-.*[/\\]pgrep\.tmp/),
+        expect.stringMatching(/pgrep -g 0 >.*onyx-shell-.*[/\\]pgrep\.tmp/),
         tempRootDir,
         expect.any(Function),
         expect.any(AbortSignal),
@@ -379,7 +379,7 @@ describe('ShellTool', () => {
       await promise;
 
       expect(mockShellExecutionService).toHaveBeenCalledWith(
-        expect.stringMatching(/pgrep -g 0 >.*gemini-shell-.*[/\\]pgrep\.tmp/),
+        expect.stringMatching(/pgrep -g 0 >.*onyx-shell-.*[/\\]pgrep\.tmp/),
         subdir,
         expect.any(Function),
         expect.any(AbortSignal),
@@ -402,7 +402,7 @@ describe('ShellTool', () => {
       await promise;
 
       expect(mockShellExecutionService).toHaveBeenCalledWith(
-        expect.stringMatching(/pgrep -g 0 >.*gemini-shell-.*[/\\]pgrep\.tmp/),
+        expect.stringMatching(/pgrep -g 0 >.*onyx-shell-.*[/\\]pgrep\.tmp/),
         path.join(tempRootDir, 'subdir'),
         expect.any(Function),
         expect.any(AbortSignal),
@@ -481,7 +481,7 @@ EOF`;
       await promise;
 
       expect(mockShellExecutionService).toHaveBeenCalledWith(
-        expect.stringMatching(/pgrep -g 0 >.*gemini-shell-.*[/\\]pgrep\.tmp/),
+        expect.stringMatching(/pgrep -g 0 >.*onyx-shell-.*[/\\]pgrep\.tmp/),
         tempRootDir,
         expect.any(Function),
         expect.any(AbortSignal),
@@ -567,7 +567,7 @@ EOF`;
         mockConfig,
         { model: 'summarizer-shell' },
         expect.any(String),
-        mockConfig.geminiClient,
+        mockConfig.onyxClient,
         mockAbortSignal,
       );
       expect(result.llmContent).toBe('summarized output');
@@ -1406,7 +1406,7 @@ EOF`;
     });
 
     it('should return the schema from the resolver when modelId is provided', () => {
-      const modelId = 'gemini-2.0-flash';
+      const modelId = 'onyx-2.0-flash';
       const schema = shellTool.getSchema(modelId);
       expect(schema.name).toBe(SHELL_TOOL_NAME);
       expect(schema.description).toMatchSnapshot();

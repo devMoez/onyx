@@ -8,7 +8,7 @@ Onyx CLI agent and a client.
 To start Onyx CLI in ACP mode, use the `--acp` flag:
 
 ```bash
-gemini --acp
+onyx --acp
 ```
 
 ## Agent Client Protocol (ACP)
@@ -55,7 +55,7 @@ The core of the ACP implementation can be found in
 ### Extending with MCP
 
 ACP can be used with the Model Context Protocol (MCP). This lets an ACP client
-(like an IDE) expose its own functionality as "tools" that the Gemini model can
+(like an IDE) expose its own functionality as "tools" that the Onyx model can
 use.
 
 1.  The client implements an **MCP server** that advertises its tools.
@@ -108,7 +108,7 @@ debugging logs and telemetry.
 To enable general debugging logs, start Onyx CLI with the `--debug` flag:
 
 ```bash
-gemini --acp --debug
+onyx --acp --debug
 ```
 
 ### Telemetry
@@ -116,9 +116,9 @@ gemini --acp --debug
 For more detailed telemetry, you can use the following environment variables to
 capture telemetry data to a file:
 
-- `GEMINI_TELEMETRY_ENABLED=true`
-- `GEMINI_TELEMETRY_TARGET=local`
-- `GEMINI_TELEMETRY_OUTFILE=/path/to/your/log.json`
+- `ONYX_TELEMETRY_ENABLED=true`
+- `ONYX_TELEMETRY_TARGET=local`
+- `ONYX_TELEMETRY_OUTFILE=/path/to/your/log.json`
 
 This will write a JSON log file containing detailed information about all the
 events happening within the agent, including ACP requests and responses. The

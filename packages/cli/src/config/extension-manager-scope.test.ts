@@ -46,17 +46,17 @@ describe('ExtensionManager Settings Scope', () => {
     });
     vi.mocked(loadSkillsFromDir).mockResolvedValue([]);
     currentTempHome = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'gemini-cli-test-home-'),
+      path.join(os.tmpdir(), 'onyx-cli-test-home-'),
     );
     tempWorkspace = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'gemini-cli-test-workspace-'),
+      path.join(os.tmpdir(), 'onyx-cli-test-workspace-'),
     );
     extensionsDir = path.join(currentTempHome, '.onyx', 'extensions');
     extensionDir = path.join(extensionsDir, extensionName);
 
     fs.mkdirSync(extensionDir, { recursive: true });
 
-    // Create gemini-extension.json
+    // Create onyx-extension.json
     const extensionConfig = {
       name: extensionName,
       version: '1.0.0',
@@ -69,7 +69,7 @@ describe('ExtensionManager Settings Scope', () => {
       ],
     };
     fs.writeFileSync(
-      path.join(extensionDir, 'gemini-extension.json'),
+      path.join(extensionDir, 'onyx-extension.json'),
       JSON.stringify(extensionConfig),
     );
 
