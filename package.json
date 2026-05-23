@@ -1,19 +1,20 @@
 {
-  "name": "openclaw",
+  "name": "onyx",
   "version": "2026.5.22",
-  "description": "Multi-channel AI gateway with extensible messaging integrations",
+  "description": "Onyx — Your Personal AI. Autonomous, persistent, desktop-aware.",
   "keywords": [],
-  "homepage": "https://github.com/openclaw/openclaw#readme",
+  "homepage": "https://github.com/devMoez/onyx#readme",
   "bugs": {
-    "url": "https://github.com/openclaw/openclaw/issues"
+    "url": "https://github.com/devMoez/onyx/issues"
   },
   "license": "MIT",
   "author": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openclaw/openclaw.git"
+    "url": "git+https://github.com/devMoez/onyx.git"
   },
   "bin": {
+    "onyx": "onyx.mjs",
     "openclaw": "openclaw.mjs"
   },
   "directories": {
