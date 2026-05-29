@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+env/
+venv/
+build/
+dist/
+
+# Node
+node_modules/
+frontend/node_modules/
+onyx-frontend/node_modules/
+.eslintcache
+.stylelintcache
+
+# Logs
+logs/
+*.log
+
+# Databases
+data/
+*.db
+*.sqlite
+
+# OS
+.DS_Store
+Thumbs.db

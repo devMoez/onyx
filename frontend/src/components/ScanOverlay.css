@@ -1,0 +1,33 @@
+.scan-overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to bottom, transparent, rgba(0, 210, 255, 0.05), transparent);
+  pointer-events: none;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  padding-right: 50px;
+}
+
+.scan-line {
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 210, 255, 0.5);
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.8);
+}
+
+.scan-data {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #00d2ff;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin-top: 10px;
+  text-shadow: 0 0 5px rgba(0, 210, 255, 0.5);
+}

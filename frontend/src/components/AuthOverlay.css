@@ -1,0 +1,115 @@
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(10, 14, 39, 0.95) 0%, #000 100%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.auth-content {
+  width: 100%;
+  max-width: 450px;
+  padding: 20px;
+}
+
+.auth-box {
+  background: rgba(160, 175, 190, 0.04);
+  border: 1px solid rgba(0, 210, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0, 210, 255, 0.1);
+  font-family: 'Space Mono', monospace;
+}
+
+.auth-box.auth-error {
+  border-color: rgba(255, 0, 50, 0.5);
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.auth-header {
+  background: rgba(0, 210, 255, 0.1);
+  padding: 12px 20px;
+  color: #00d2ff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(0, 210, 255, 0.1);
+}
+
+.auth-body {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-text {
+  color: rgba(0, 210, 255, 0.7);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-align: center;
+}
+
+.auth-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-input {
+  background: rgba(0, 210, 255, 0.05);
+  border: 1px solid rgba(0, 210, 255, 0.2);
+  padding: 12px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  letter-spacing: 4px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.auth-input:focus {
+  border-color: rgba(0, 210, 255, 0.5);
+}
+
+.auth-btn {
+  background: rgba(0, 210, 255, 0.1);
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  color: #00d2ff;
+  padding: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  transition: all 0.3s;
+}
+
+.auth-error-text {
+  color: #ff0032;
+  font-size: 9px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.auth-footer {
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(0, 210, 255, 0.3);
+  font-size: 8px;
+  text-align: center;
+  letter-spacing: 1px;
+}
