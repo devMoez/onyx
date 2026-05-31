@@ -82,7 +82,7 @@
 /* Footer / Stats */
 .app-footer {
   position: fixed;
-  bottom: 20px;
+  bottom: 10px;
   right: 30px;
   display: flex;
   flex-direction: column;

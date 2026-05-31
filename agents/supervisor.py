@@ -28,8 +28,8 @@ class SupervisorAgent(BaseAgent):
     
     async def parse_intent(self, task_input: str) -> Dict[str, Any]:
         """Parse user input to understand intent using LLM and Intent Architect skill"""
-        self.add_reasoning("Parsing Intent", f"Analyzing input: {task_input}")
-        
+        self._add_reasoning_trace(f"Parsing Intent: Analyzing input: {task_input}")
+
         from core.skill_loader import SkillLoader
         intent_skill = SkillLoader.get_skill("Intent Architect")
         
@@ -60,7 +60,7 @@ class SupervisorAgent(BaseAgent):
                 clean_resp = clean_resp.split("```")[1].split("```")[0].strip()
             
             intent_data = json.loads(clean_resp)
-            self.add_reasoning("Intent Parsed", f"Detected intent: {intent_data.get('intent')}")
+            self._add_reasoning_trace(f"Intent Parsed: Detected intent: {intent_data.get('intent')}")
             return intent_data
         except Exception:
             # Fallback
@@ -88,13 +88,13 @@ class SupervisorAgent(BaseAgent):
                 "status": "pending"
             })
             
-        self.add_reasoning("Decomposition", f"Created {len(subtasks)} subtasks")
+        self._add_reasoning_trace(f"Decomposition: Created {len(subtasks)} subtasks")
         return subtasks
 
     async def execute_task(self, task_input: str) -> Dict[str, Any]:
         """Primary entry point for task execution"""
         self.set_status("processing")
-        self.add_reasoning("Execution Start", f"Supervising task: {task_input}")
+        self._add_reasoning_trace(f"Execution Start: Supervising task: {task_input}")
         
         try:
             # Step 1: Parse Intent
@@ -108,7 +108,7 @@ class SupervisorAgent(BaseAgent):
             
             # Check if LLM router returned an error message
             if "not available" in final_response.lower() or "error" in final_response.lower():
-                self.add_reasoning("Error", final_response)
+                self._add_reasoning_trace(f"Error: {final_response}")
                 self.set_status("error")
                 return {"status": "error", "error": final_response}
             
@@ -121,7 +121,7 @@ class SupervisorAgent(BaseAgent):
             }
             
         except Exception as e:
-            self.add_reasoning("Error", str(e))
+            self._add_reasoning_trace(f"Error: {str(e)}")
             self.set_status("error")
             return {"status": "error", "error": str(e)}
 

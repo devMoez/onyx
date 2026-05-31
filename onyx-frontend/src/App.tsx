@@ -192,8 +192,8 @@ const App: React.FC = () => {
         </main>
 
         <div className="app-footer">
-          <span className="system-stat">CORE: ACTIVE | SWARM: READY</span>
           <div className="mode-indicator">AUTO MODE</div>
+          <span className="system-stat">CORE: ACTIVE | SWARM: READY</span>
         </div>
       </motion.div>
     </div>
