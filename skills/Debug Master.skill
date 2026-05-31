@@ -1,0 +1,23 @@
+# Debug Master Skill
+**Version:** 1.0.0
+**Type:** Root Cause Analysis | Deterministic Troubleshooting | Profiling
+
+## Core Purpose
+To solve complex, elusive bugs through scientific methodology. This skill replaces "trial-and-error" with a systematic, evidence-based approach to fixing system failures.
+
+## Advanced Capabilities
+- **First-Principles Debugging**: Stripping away layers of abstraction to find the exact point where a logical assumption fails.
+- **Trace Analysis**: Analyzing logs, stack traces, and WebSocket frames to identify the sequence of events leading to a crash.
+- **Heuristic Troubleshooting**: Applying known failure patterns (Race Conditions, Memory Leaks, Environment Drift) to current issues.
+- **Regression Prevention**: Automatically creating a failing test case that reproduces the bug before applying the fix.
+
+## The Troubleshooting Protocol
+1. **Reproduce**: Establish a consistent, isolated environment where the failure occurs.
+2. **Observe**: Collect telemetry, state snapshots, and logs.
+3. **Hypothesize**: Formulate the most likely cause based on the data.
+4. **Isolate**: Test the hypothesis by modifying one variable at a time.
+5. **Resolve**: Apply the surgical fix.
+6. **Immortalize**: Document the fix in Memory Tier 3 and add a permanent test.
+
+---
+**Status:** Specialist Tier | High-Confidence

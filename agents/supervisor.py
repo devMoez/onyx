@@ -27,17 +27,26 @@ class SupervisorAgent(BaseAgent):
         self.active_plan = None
     
     async def parse_intent(self, task_input: str) -> Dict[str, Any]:
-        """Parse user input to understand intent using LLM"""
+        """Parse user input to understand intent using LLM and Intent Architect skill"""
         self.add_reasoning("Parsing Intent", f"Analyzing input: {task_input}")
         
+        from core.skill_loader import SkillLoader
+        intent_skill = SkillLoader.get_skill("Intent Architect")
+        
         prompt = f"""
-        Analyze the following user task for an AI OS named ONYX.
+        {intent_skill if intent_skill else ""}
+        
+        Analyze the following user task for an AI OS named ONYX using the 'Intent Architect' framework.
         Task: "{task_input}"
         
+        Proactively identify the core problem and suggest the 'Best Approach'.
         Respond with a JSON object containing:
         - intent: (e.g., programming, research, analysis, general_query)
+        - core_problem: (The underlying issue being solved)
+        - best_approach: (Your proactive recommendation)
+        - options: {{ "User Path": "...", "Onyx Path": "...", "Expert Path": "..." }}
         - complexity: (low, medium, high)
-        - requirements: list of specific needs
+        - requirements: list of specific subtasks or needs
         - suggested_agent: (programmer, researcher, analyzer, or executor)
         """
         
@@ -96,6 +105,12 @@ class SupervisorAgent(BaseAgent):
             # if it's a general query, or use specialized logic for complex ones.
             
             final_response = await self.llm_router.chat(task_input)
+            
+            # Check if LLM router returned an error message
+            if "not available" in final_response.lower() or "error" in final_response.lower():
+                self.add_reasoning("Error", final_response)
+                self.set_status("error")
+                return {"status": "error", "error": final_response}
             
             self.set_status("idle")
             return {

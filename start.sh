@@ -1,31 +1,26 @@
 #!/bin/bash
+# ONYX System Startup Script for Linux/Mac - AUTO-RELOAD MODE
 
-echo "🚀 Starting ONYX System..."
-echo ""
+echo -e "\n========================================"
+echo "  ONYX - Autonomous AI System"
+echo "  Mode: Development (Auto-Reload)"
+echo -e "========================================\n"
 
-# Backend
-echo "📦 Starting FastAPI Backend on http://localhost:8000..."
-cd C:\onyx
-python main.py &
-BACKEND_PID=$!
+# Start Backend with --reload
+echo "[1/2] Starting FastAPI Backend (Port 8000)..."
+python3 -m uvicorn main:app --host localhost --port 8000 --reload &
 
-# Wait for backend to start
+# Wait for backend
 sleep 3
 
-# Frontend
-echo "⚛️  Starting React Frontend on http://localhost:3000..."
-cd C:\onyx\frontend
-npm install > /dev/null 2>&1
-npm run dev &
-FRONTEND_PID=$!
+# Start Frontend
+echo "[2/2] Starting React Frontend (Port 3000)..."
+cd onyx-frontend && npm run dev &
 
-echo ""
-echo "✅ ONYX System Started!"
-echo ""
-echo "📊 Dashboard: http://localhost:3000"
-echo "🔌 Backend API: http://localhost:8000"
-echo "📚 API Docs: http://localhost:8000/docs"
-echo ""
-echo "Press Ctrl+C to stop..."
+echo -e "\n🚀 ONYX System is running!"
+echo "  🖥️  Dashboard: http://localhost:3000"
+echo "  🔌 Backend API: http://localhost:8000"
+echo -e "\n  [!] Note: Changes to Python or React files will restart the servers automatically.\n"
 
-wait $BACKEND_PID $FRONTEND_PID
+# Keep script running
+wait

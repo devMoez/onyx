@@ -37,6 +37,7 @@ class TaskRequest(BaseModel):
 
 class ConfigKeysRequest(BaseModel):
     keys: Dict[str, str]
+    models: Optional[Dict[str, str]] = None
 
 class ConfigProviderRequest(BaseModel):
     provider: str
@@ -50,19 +51,12 @@ async def auth_copilot():
     )
     return {"status": "triggered"}
 
-@app.post("/api/auth/gemini")
-async def auth_gemini():
-    """Trigger Gemini CLI Auth in a new visible window"""
-    subprocess.Popen(
-        ["cmd", "/c", "start", "cmd", "/k", "gemini-cli auth login"], 
-        shell=True
-    )
-    return {"status": "triggered"}
-
 @app.post("/api/config/keys")
 async def update_keys(request: ConfigKeysRequest):
-    """Update LLM API keys"""
+    """Update LLM API keys and models"""
     llm_router.update_keys(request.keys)
+    if request.models:
+        llm_router.update_models(request.models)
     return {"status": "updated"}
 
 @app.post("/api/config/provider")
@@ -71,36 +65,78 @@ async def set_provider(request: ConfigProviderRequest):
     llm_router.set_provider(request.provider)
     return {"status": "provider_set", "provider": request.provider}
 
-@app.get("/api/status")
-async def get_status():
-    """Get current system status"""
-    return session_manager.get_state_summary()
+import subprocess
+import os
+@app.get("/api/auth/status")
+async def check_auth_status():
+    """Check CLI auth status"""
+    # Check for gh auth
+    copilot_ok = os.path.exists(os.path.expanduser("~/.config/gh/hosts.yml"))
+    return {"copilot": copilot_ok, "gemini": False}
+
+@app.get("/api/models/{provider}")
+async def get_models(provider: str):
+    """Fetch available models for a provider"""
+    return {"models": llm_router.list_models(provider)}
+
+
+import base64
+from io import BytesIO
+import pyautogui
+
+@app.get("/api/screen/capture")
+async def capture_screen():
+    """Capture screen and return as base64 image"""
+    try:
+        screenshot = pyautogui.screenshot()
+        buffered = BytesIO()
+        screenshot.save(buffered, format="PNG")
+        img_str = base64.b64encode(buffered.getvalue()).decode()
+        return {"image_base64": img_str}
+    except Exception as e:
+        return {"error": str(e)}
 
 @app.websocket("/ws/stream")
 async def websocket_stream(websocket: WebSocket):
     """WebSocket endpoint for real-time task streaming"""
     await websocket.accept()
+    print("DEBUG: WebSocket connected")
     try:
         while True:
             data = await websocket.receive_text()
+            print(f"DEBUG: Received WebSocket data: {data}")
             message = json.loads(data)
             
             if message.get("type") == "task":
                 task_input = message.get("input")
+                print(f"DEBUG: Executing task: {task_input}")
+                
                 # Add user message to session
                 session_manager.add_message("user", task_input)
                 
                 # Execute via Supervisor (REAL LLM CALL)
-                result = await supervisor.execute_task(task_input)
-                
-                # Add assistant response to session
-                if result.get("status") == "completed":
-                    session_manager.add_message("assistant", result.get("response"))
-                
-                await websocket.send_json({
-                    "type": "task_result",
-                    "data": result
-                })
+                try:
+                    result = await supervisor.execute_task(task_input)
+                    print(f"DEBUG: Task result: {result}")
+                    
+                    # Add assistant response to session
+                    if result.get("status") == "completed":
+                        session_manager.add_message("assistant", result.get("response"))
+                    else:
+                        # Add error message to chat as assistant message for visibility
+                        session_manager.add_message("assistant", f"SYSTEM ERROR: {result.get('error', 'Unknown failure')}")
+                    
+                    await websocket.send_json({
+                        "type": "task_result",
+                        "data": result
+                    })
+                except Exception as task_e:
+                    error_msg = f"INTERNAL SYSTEM ERROR: {str(task_e)}"
+                    print(f"DEBUG: Task execution exception: {error_msg}")
+                    await websocket.send_json({
+                        "type": "task_result",
+                        "data": {"status": "error", "error": error_msg}
+                    })
             
             elif message.get("type") == "ping":
                 await websocket.send_json({"type": "pong"})

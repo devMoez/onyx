@@ -4,9 +4,23 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Cinematic Cyber-Steel Palette */
+  --bg-center: #0f172a;     /* Midnight Blue Glow */
+  --bg-edge: #050812;       /* Deep Onyx Edge */
+  --bg-glass: rgba(13, 20, 38, 0.75); 
+  --accent-cyan: #00d2ff;
+  --accent-green: #00ffb9;
+  --text-main: #e0e6ed;
+  --text-dim: rgba(160, 175, 190, 0.6);
+  --border-glow: rgba(0, 210, 255, 0.12);
+}
+
 @layer base {
   body {
-    background: #000;
+    /* ── DYNAMIC THEMATIC GRADIENT ── */
+    background: radial-gradient(circle at center, var(--bg-center) 0%, var(--bg-edge) 100%);
+    
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,35 +31,40 @@
     overflow: hidden;
     margin: 0;
     padding: 0;
+    color: var(--text-main);
   }
 
+  /* ── SCANLINE TEXTURE ── */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: radial-gradient(circle, rgba(160, 175, 190, 0.32) 1px, transparent 1px);
-    background-size: 18px 18px;
+    background: linear-gradient(
+      rgba(18, 16, 16, 0) 50%,
+      rgba(0, 0, 0, 0.05) 50%
+    );
+    background-size: 100% 4px;
     pointer-events: none;
-    z-index: 0;
-    -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 0%, black 22%, transparent 58%);
-    mask-image: radial-gradient(ellipse at 50% 50%, black 0%, black 22%, transparent 58%);
+    z-index: 1;
+    opacity: 0.4;
   }
 
+  /* ── THEMATIC DOT GRID (Layer 2) ── */
   body::after {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: radial-gradient(circle, rgba(160, 175, 190, 0.10) 1px, transparent 1px);
-    background-size: 28px 28px;
-    -webkit-mask-image: radial-gradient(ellipse at 50% 50%, transparent 25%, black 50%, black 70%, transparent 100%);
-    mask-image: radial-gradient(ellipse at 50% 50%, transparent 25%, black 50%, black 70%, transparent 100%);
+    background-image: radial-gradient(circle, rgba(0, 210, 255, 0.12) 1px, transparent 1px);
+    background-size: 32px 32px;
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 0%, black 20%, transparent 85%);
+    mask-image: radial-gradient(ellipse at 50% 50%, black 0%, black 20%, transparent 85%);
   }
 
   .wrapper {
     position: relative;
-    z-index: 2;
+    z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -67,7 +86,7 @@
   }
 
   .status-line.processing {
-    color: rgba(0, 255, 185, 0.65);
+    color: var(--accent-green);
   }
 
   .status-cursor {
@@ -81,111 +100,84 @@
   }
 
   .status-line.processing .status-cursor {
-    background: rgba(0, 255, 185, 0.65);
+    background: var(--accent-green);
   }
 
   .dock {
     margin-top: 12px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    background: transparent;
-    border: none;
+    gap: 12px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(0, 210, 255, 0.08);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
   }
 
   .dock-btn {
     width: 44px;
     height: 44px;
-    border-radius: 12px;
-    border: 1px solid rgba(160, 175, 190, 0.13);
+    border-radius: 10px;
+    border: 1px solid rgba(160, 175, 190, 0.1);
     background: rgba(160, 175, 190, 0.04);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 180ms ease;
+    transition: all 200ms ease;
     position: relative;
-    opacity: 0;
-    transform: scale(0.7) translateY(4px);
+    color: var(--text-dim);
   }
 
   .dock-btn:hover {
-    background: rgba(160, 175, 190, 0.09);
-    border-color: rgba(160, 175, 190, 0.28);
-    transform: translateY(-2px) scale(1);
+    background: rgba(0, 210, 255, 0.08);
+    border-color: var(--accent-cyan);
+    transform: translateY(-2px);
+    color: var(--accent-cyan);
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
   }
 
   .dock-btn:active {
-    transform: translateY(0) scale(0.97);
-  }
-
-  .dock-btn svg {
-    width: 18px;
-    height: 18px;
-    stroke: rgba(165, 178, 192, 0.7);
-    fill: none;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    transition: stroke 180ms ease;
-  }
-
-  .dock-btn:hover svg {
-    stroke: rgba(200, 212, 224, 0.95);
+    transform: translateY(0) scale(0.95);
   }
 
   .dock-btn.active {
-    background: rgba(160, 175, 190, 0.11);
-    border-color: rgba(165, 178, 192, 0.32);
-  }
-
-  .dock-btn.active svg {
-    stroke: rgba(215, 225, 235, 1);
-  }
-
-  .dock-btn.active::after {
-    content: '';
-    position: absolute;
-    bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: rgba(195, 210, 225, 0.85);
+    background: rgba(0, 210, 255, 0.12);
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.1);
   }
 
   .live-dot {
     position: absolute;
-    top: 7px;
-    right: 7px;
-    width: 5px;
-    height: 5px;
+    top: 6px;
+    right: 6px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: #e03;
-    box-shadow: 0 0 5px rgba(238, 0, 51, 0.7);
+    background: #ff0055;
+    box-shadow: 0 0 8px #ff0055;
     animation: blink 1.4s ease-in-out infinite;
-  }
-
-  .dock-btn.boot-glow {
-    box-shadow: 0 0 18px rgba(0, 210, 255, 0.28), 0 0 6px rgba(0, 210, 255, 0.15);
   }
 
   .dock-btn[data-tip]::before {
     content: attr(data-tip);
     position: absolute;
-    bottom: calc(100% + 10px);
+    bottom: calc(100% + 12px);
     left: 50%;
-    transform: translateX(-50%) translateY(4px);
-    font-family: 'Space Mono', 'Courier New', monospace;
+    transform: translateX(-50%) translateY(5px);
     font-size: 8px;
-    letter-spacing: 0.12em;
-    color: rgba(160, 175, 190, 0.75);
+    letter-spacing: 0.1em;
+    color: var(--accent-cyan);
+    background: var(--bg-edge);
+    padding: 2px 6px;
+    border: 1px solid var(--border-glow);
+    border-radius: 4px;
     white-space: nowrap;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 160ms ease, transform 160ms ease;
+    transition: all 200ms ease;
   }
 
   .dock-btn[data-tip]:hover::before {
@@ -201,5 +193,5 @@
 
 @keyframes blink {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
+  50% { opacity: 0.3; }
 }

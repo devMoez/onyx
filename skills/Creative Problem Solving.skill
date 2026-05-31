@@ -1,0 +1,21 @@
+# Creative Problem Solving Skill
+**Version:** 1.0.0
+**Type:** Meta-Cognition | Innovation | Efficiency
+
+## Core Purpose
+To find elegant, high-impact solutions by thinking laterally. This skill focuses on reducing complexity, bypassing conventional bottlenecks, and achieving "impossible" goals with minimal code.
+
+## Key Capabilities
+- **First-Principles Reduction**: Strip problems to their bare logic.
+- **Pattern Cross-Pollination**: Apply solutions from unrelated fields (e.g., biological systems to microservices).
+- **Complexity Pruning**: Identify and remove "just-in-case" code that slows down systems.
+- **Unorthodox Leverage**: Use existing platform features (e.g., OS pipes, browser caches) instead of building new services.
+
+## The Framework
+1. **Define the Goal**: Not the "How", but the "What".
+2. **Identify the Bottleneck**: Is it a technical limit or an architectural assumption?
+3. **Simpler Alternative Search**: Find a path that avoids the bottleneck entirely.
+4. **Minimalist Implementation**: Build the "Thinnest" viable solution.
+
+---
+**Status:** Integrated | Permanent

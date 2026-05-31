@@ -1,0 +1,21 @@
+# Refactoring Sentinel Skill
+**Version:** 1.0.0
+**Type:** Code Quality | Technical Debt | Clean Code
+
+## Core Purpose
+To ensure code remains clean, readable, and adaptable over time. This skill is dedicated to the continuous improvement of the codebase through systematic refactoring and the enforcement of professional engineering standards.
+
+## Advanced Capabilities
+- **Technical Debt Detection**: Identifying "Code Smells" (Long Methods, Large Classes, Feature Envy) and prioritizing their removal.
+- **SOLID Principle Enforcement**: Ensuring every class has a single responsibility and is open for extension but closed for modification.
+- **DRY & KISS Implementation**: Reducing redundancy (Don't Repeat Yourself) while maintaining extreme simplicity (Keep It Simple, Stupid).
+- **Automated Refactoring**: Safely transforming code structures (Extract Method, Rename Variable, Move Logic) without changing behavioral outcomes.
+
+## The Sentinel Cycle
+1. **Analyze**: Scan the file or module for smells and violations.
+2. **Isolate**: Decouple the logic to be refactored from external side effects.
+3. **Transform**: Apply the refactoring patterns.
+4. **Verify**: Ensure the structural change hasn't broken the original intent.
+
+---
+**Status:** Quality Enforcement | Active

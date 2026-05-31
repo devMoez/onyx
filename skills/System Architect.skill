@@ -1,0 +1,21 @@
+# System Architect Skill
+**Version:** 1.0.0
+**Type:** Structural Design | Scalability | Architectural Integrity
+
+## Core Purpose
+To design robust, scalable, and maintainable software systems. This skill elevates "coding" to "engineering" by focusing on high-level components, data flow, and system-wide trade-offs.
+
+## Advanced Capabilities
+- **Design Pattern Orchestration**: Implementing Creational, Structural, and Behavioral patterns (Factory, Proxy, Observer, etc.) where they provide the most leverage.
+- **Structural Integrity Audit**: Analyzing a codebase to identify architectural bottlenecks, circular dependencies, and monolithic coupling.
+- **Scalability Modeling**: Planning for growth by designing asynchronous message flows, caching layers, and horizontal scaling strategies.
+- **Domain-Driven Design (DDD)**: Modeling the software around the business domain, ensuring high cohesion and low coupling between bounded contexts.
+
+## The Framework
+1. **Requirements Synthesis**: Distilling user requests into technical constraints and system goals.
+2. **Component Mapping**: Defining the modules, their responsibilities, and the contracts between them.
+3. **Infrastructure Selection**: Choosing the right database, cache, and communication protocols (SQLite, ChromaDB, Event Bus) based on the specific load.
+4. **Architectural Verification**: Ensuring the implementation matches the blueprint and hasn't drifted into "spaghetti" logic.
+
+---
+**Status:** Senior Architect Tier | Integrated

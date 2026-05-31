@@ -1,0 +1,21 @@
+# Performance Engineer Skill
+**Version:** 1.0.0
+**Type:** Latency Optimization | Resource Efficiency | Algorithmic Complexity
+
+## Core Purpose
+To make systems fast and efficient. This skill focuses on minimizing CPU usage, reducing RAM footprint, and ensuring the lowest possible latency for critical paths.
+
+## Advanced Capabilities
+- **Algorithmic Analysis**: Evaluating Big O complexity and replacing O(n^2) paths with O(n log n) or O(1) solutions.
+- **Resource Profiling**: Identifying memory leaks, "Hot Methods," and I/O bottlenecks that slow down the swarm.
+- **Concurrency Engineering**: Optimizing the use of `asyncio` and `threading` to maximize parallel execution without hitting race conditions.
+- **Caching Strategy**: Implementing layered caching (Tier 1 RAM, Tier 3 SQLite) for the most expensive computations.
+
+## The Optimization Loop
+1. **Profile**: Measure current performance metrics (ms per task, MB per agent).
+2. **Identify**: Locate the 20% of code causing 80% of the delay.
+3. **Optimize**: Rewrite the bottleneck using more efficient structures or better logic.
+4. **Benchmark**: Compare new results against the baseline to prove improvement.
+
+---
+**Status:** Efficiency Maximization | Active

@@ -2,6 +2,7 @@
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 import asyncio
+from tools.tool_registry import tools
 
 
 class BaseAgent:
@@ -19,23 +20,28 @@ class BaseAgent:
     ):
         """
         Initialize base agent.
-        
-        Args:
-            name: Agent name
-            role: Agent role/responsibility
-            llm_router: LLM Router instance for model selection
-            memory_manager: Memory Manager instance for context retention
         """
         self.name = name
         self.role = role
         self.llm = llm_router  # LLM Router for model selection
-        self.memory = memory_manager  # Memory Manager instance
-        self.status = "idle"  # idle, processing, completed, error
+        
+        # Default to global memory singleton if not provided
+        if memory_manager is None:
+            try:
+                from memory.memory_manager import memory
+                self.memory = memory
+            except ImportError:
+                self.memory = None
+        else:
+            self.memory = memory_manager
+            
+        self.status = "idle"
         self.current_task = None
         self.task_history = []  # Track completed tasks
         self.artifacts = []  # Code, documents, analysis, etc.
         self.reasoning_trace = []  # Transparent thinking for debugging
         self.created_at = datetime.now().isoformat()
+        self.tools = tools # Registry access
     
     async def initialize(self):
         """
